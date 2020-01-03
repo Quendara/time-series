@@ -58,7 +58,7 @@ class LineGraph extends React.Component {
     this.data = {
       datasets: [
         {
-          label: "My First dataset",
+          label: props.group_unit,
           type: "line",
           fill: false,
           backgroundColor: "rgba(75,192,192,0.4)",

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button, InputNumber } from "antd";
 
-const baseAwsUrl = "https://jnofjgywxe.execute-api.eu-central-1.amazonaws.com/dev/";
-
+import Settings from "./Settings";
 
 class SetComponent extends React.Component {
   constructor(props) {
@@ -17,7 +16,7 @@ class SetComponent extends React.Component {
 
     this.state = {
       lastValue: 0,
-      y: "",
+      y: "", 
       x: "" + Math.round(this.dateob.getTime() / 1000),
       dataValid: false,
       submitted: false,
@@ -44,7 +43,7 @@ class SetComponent extends React.Component {
       this.setState({ dataValid: false, submitted: true }); // disable button while submitting
       this.resource = "group/" + this.group_id + "/data";
 
-      fetch(baseAwsUrl + this.resource, {
+      fetch( Settings.baseAwsUrl + this.resource, {
         method: "POST",
         headers: {
           Accept: "application/json",

@@ -7,13 +7,12 @@ import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 import GetComponent from "./GetComponent"
 import SetComponent from "./SetComponent"
 
-import Hello from "./Hello";
+import Settings from "./Settings";
 
 import "antd/dist/antd.css";
 
 // https://jerairrest.github.io/react-chartjs-2/
 
-const baseAwsUrl = "https://jnofjgywxe.execute-api.eu-central-1.amazonaws.com/dev/";
 
 const fakeResponse = [
   {
@@ -90,7 +89,7 @@ class SingleTimeSerie extends React.Component {
   }
 
   componentDidMount() {
-    fetch(baseAwsUrl + this.resource)
+    fetch( Settings.baseAwsUrl + this.resource)
       .then(res => res.json())
       .then(
         result => {
