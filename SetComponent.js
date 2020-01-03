@@ -115,6 +115,7 @@ class SetComponent extends React.Component {
         );
       }
     }
+  
 
     return (
       <div className="container">
