@@ -37,7 +37,8 @@ class TimeSeries extends React.Component {
     return (
       <Row>
           {fakeResponse.map(item => (
-            <Col offset={2} span={20}>
+
+            <Col offset={2} span={20} >
               <SingleTimeSerie
                 key={item.group_id}
                 group_id={item.group_id}
@@ -45,6 +46,7 @@ class TimeSeries extends React.Component {
                 group_name={item.group_name}
               />
             </Col>
+            
           ))}
 
       </Row>
@@ -118,7 +120,7 @@ class SingleTimeSerie extends React.Component {
 
   render() {
     return (
-      <List border>
+      <List bordered >
       <List.Item>
       <h1>
               {this.group_name} <small>[ {this.group_unit} ]</small>
