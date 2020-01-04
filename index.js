@@ -120,13 +120,13 @@ class SingleTimeSerie extends React.Component {
 
   render() {
     return (
-      <List bordered >
+      <List bordered style={{ margin: 5 }}>
       <List.Item>
       <h1>
               {this.group_name} <small>[ {this.group_unit} ]</small>
             </h1>
                 </List.Item>
-      <List.Item>
+      <List.Item >
 
 
           <GetComponent
