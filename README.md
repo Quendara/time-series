@@ -6,11 +6,12 @@ Small appliation to collect data of time series.
 
 [Edit on StackBlitz ⚡️](https://stackblitz.com/edit/time-series)
 
-## 2019-01-09
+## Changelog
+### 2019-01-09
 
 * Support multiple users
 
-## Next Features
+### Next Features
 
 * Create new serie
 * Support Counter / Grauge
