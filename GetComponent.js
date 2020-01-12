@@ -29,6 +29,7 @@ class GetComponent extends React.Component {
     console.log("GetComponent.renders");
 
     const { error, isLoaded, items } = this.state;
+    
     if (error) {
       return <div>Error {error} </div>;
     } else if (!isLoaded) {
