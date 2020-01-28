@@ -18,7 +18,6 @@ class Child extends React.Component {
   }
   render(){
     return <h1> Just a test2 </h1>
-
   }
 }
 
