@@ -10,8 +10,9 @@ import { render } from "react-dom";
 
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
-import GetComponent from "./GetComponent";
-import SetComponent from "./SetComponent";
+import SingleTimeSerie from "./SingleTimeSerie";
+import TestComponent from "./TestComponent";
+
 
 import Settings from "./Settings";
 import queryString from "query-string";
@@ -124,114 +125,7 @@ class TimeSeries extends React.Component {
   }
 }
 
-class SingleTimeSerie extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.group_name = props.group_name;
-    this.group_id = props.group_id;
-    this.group_unit = props.group_unit;
-
-    this.resource = "group/" + props.group_id + "/data";
-
-    this.state = {
-      error: null,
-      isLoaded: false,
-      group_unit: props.group_unit,
-      items: [],
-      last_item: {}
-    };
-
-    // Bind the this context to the handler function
-    this.handleAddValue = this.handleAddValue.bind(this);
-  }
-
-  // gets and object x,y
-  handleAddValue(obj) {
-    console.log("SingleTimeSerie.handleAddValue");
-
-    console.log(obj);
-
-    this.setState({
-      last_item: obj
-    });
-
-    const items = this.state.items.push(this.state.last_item);
-    this.getComponent.setValues(items);
-  }
-
-  componentDidMount() {
-    fetch(Settings.baseAwsUrl + this.resource)
-      .then(res => res.json())
-      .then(
-        result => {
-          this.setState({
-            isLoaded: true,
-            items: result
-          });
-
-          if (result.length > 0) {
-            var last_element = result[result.length - 1];
-            this.setComponent.setLastValue(last_element.y);
-            this.getComponent.setValues(result);
-          }
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
-  }
-
-  render() {
-    return (
-      <List bordered style={{ margin: 5 }}>
-        <List.Item>
-          <h1>
-            {this.group_name} <small>[ {this.group_unit} ]</small>
-          </h1>
-        </List.Item>
-        <List.Item>
-          <GetComponent
-            ref={getComponent => {
-              this.getComponent = getComponent;
-            }}
-            group_unit={this.group_unit}
-            group_id={this.group_id}
-            group_name={this.group_name}
-          />
-        </List.Item>
-        <List.Item>
-          <SetComponent
-            ref={setComponent => {
-              this.setComponent = setComponent;
-            }}
-            addValueFcn={this.handleAddValue}
-            group_unit={this.group_unit}
-            group_id={this.group_id}
-            group_name={this.group_name}
-          />
-          <br />
-        </List.Item>
-      </List>
-    );
-  }
-}
-
-class CreateDummy extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render(){
-    return <h1> Just a test </h1>
-
-  }
-}
 
 class App extends React.Component {
   render() {
@@ -243,7 +137,7 @@ class App extends React.Component {
 
         <hr />
         <Route exact path="/search" component={TimeSeries} />
-        <Route exact path="/test" component={CreateDummy} />
+        <Route exact path="/test" component={TestComponent} />
       </Router>
     );
   }
