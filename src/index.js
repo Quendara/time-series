@@ -11,10 +11,6 @@ import { render } from "react-dom";
 import { Layout } from "antd";
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
-import { Layout } from 'antd';
-
-const { Header, Footer, Sider, Content } = Layout;
-
 import SingleTimeSerie from "./SingleTimeSerie";
 import TestComponent from "./TestComponent";
 
@@ -22,6 +18,8 @@ import Settings from "./Settings";
 import queryString from "query-string";
 
 import "antd/dist/antd.css";
+
+const { Header, Footer, Sider, Content } = Layout;
 
 // https://jerairrest.github.io/react-chartjs-2/
 
