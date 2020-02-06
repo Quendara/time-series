@@ -64,7 +64,7 @@ class SingleTimeSerie extends React.Component {
         body: JSON.stringify( this.state.item_to_send )
       }).then(
         result => {
-          this.setState({ submitted: true });
+          this.setState({ submitted: true }); 
         },
         error => {
           this.setState({
