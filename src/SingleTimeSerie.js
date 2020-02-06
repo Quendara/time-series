@@ -198,8 +198,9 @@ class SingleTimeSerie extends React.Component {
           <SetDialog>
             <div className="form-group">
               <label>
-                Enter a new value and submit ( at{" "}
-                {this.dateob.toLocaleTimeString()} ){" "}
+                Enter a new value ( at{" "}
+                {this.dateob.toLocaleTimeString()} ){" : "}
+                {this.state.item_to_send.y}
               </label>
               <br />
               <InputNumber
@@ -208,10 +209,7 @@ class SingleTimeSerie extends React.Component {
                 onChange={this.handleChange}
               />
               {button}
-              <hr />
-              last value : {this.state.lastValue}
-              <hr />
-              {this.state.item_to_send.x},{this.state.item_to_send.y}
+              
             </div>
 
             
@@ -219,6 +217,7 @@ class SingleTimeSerie extends React.Component {
         </List.Item>
       </List>
     );
+    // last value : {this.state.lastValue}
   }
 }
 
