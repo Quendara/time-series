@@ -24,6 +24,11 @@ import "antd/dist/antd.css";
 const fakeResponse = {};
 fakeResponse["andre"] = [
   {
+    group_name: "Dummy",
+    group_id: 99,
+    group_unit: "km"
+  },
+  {
     group_name: "Andres Auto",
     group_id: 2,
     group_unit: "km"

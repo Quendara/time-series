@@ -40,8 +40,6 @@ class SingleTimeSerie extends React.Component {
     // this.handleChange = this.handleChange.bind(this);
   }
 
-
-
   mySubmitHandler = event => {
     console.log("mySubmitHandler");
     console.log(this.state);
@@ -54,18 +52,16 @@ class SingleTimeSerie extends React.Component {
       this.setState({ dataValid: false, submitted: true }); // disable button while submitting
       this.resource = "group/" + this.group_id + "/data";
 
-      let val = {
-        x: this.state.x,
-        y: this.state.y
-      };
+      console.log( this.state.item_to_send  )
 
       fetch(Settings.baseAwsUrl + this.resource, {
+
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(val)
+        body: JSON.stringify( this.state.item_to_send )
       }).then(
         result => {
           this.setState({ submitted: true });
