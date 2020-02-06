@@ -5,7 +5,7 @@ import SetComponent from "./SetComponent";
 import SetDialog from "./SetDialog";
 
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import { Button, InputNumber } from "antd";
+import { InputNumber } from "antd";
 import Settings from "./Settings";
 
 class SingleTimeSerie extends React.Component {
