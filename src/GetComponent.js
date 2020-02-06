@@ -1,6 +1,5 @@
-import React from 'react';
+import React from "react";
 import { Scatter } from "react-chartjs-2";
-
 
 class GetComponent extends React.Component {
   constructor(props) {
@@ -12,54 +11,31 @@ class GetComponent extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
-      items: []
+      // items: []
     };
+
+    this.data = {};
+    this.options = {};
   }
 
   setValues(items) {
-    this.setState({
-      isLoaded: true,
-      items: items
-    });
 
-    console.log("GetComponent.setValues");
-  }
-
-  render() {
-    console.log("GetComponent.renders");
-
-    const { error, isLoaded, items } = this.state;
-    
-    if (error) {
-      return <div>Error {error} </div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
-    } else {
-      // console.log( items )
-      // plot( items )
-      return (
-        <LineGraph
-          group_unit={this.group_unit}
-          group_id={this.group_id}
-          group_data={items}
-        />
-      );
+    if( items == null || !Array.isArray( items ) )
+    {
+      console.error( "Array expected, got" )
+      console.error( items )
+      return
     }
-  }
-}
+   
 
-class LineGraph extends React.Component {
-  constructor(props) {
-    // this.data = props.group_data
-
-    const timedate = props.group_data.map(dataField => {
+    const timedate = items.map(dataField => {
       return { x: new Date(dataField.x * 1000), y: +dataField.y };
     });
 
     this.data = {
       datasets: [
         {
-          label: props.group_unit,
+          label: this.group_unit,
           type: "line",
           fill: false,
           backgroundColor: "rgba(75,192,192,0.4)",
@@ -76,28 +52,45 @@ class LineGraph extends React.Component {
         }
       ]
     };
-  }
-  render() {
-    return (
-      <Scatter
-        data={this.data}
-        options={{
-          scales: {
-            xAxes: [
-              {
-                type: "time",
-                time: {
-                  unit: "month"
-                }
-              }
-            ]
+
+    this.options = {
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            time: {
+              unit: "month"
+            }
           }
-        }}
-      />
-    );
+        ]
+      }
+    };
+
+    console.log("GetComponent.setValues");
+    console.log(this.state.items);
+     this.setState({
+      isLoaded: true,
+      // items: items
+    });
+
+    this.forceUpdate();
   }
 
-  componentDidMount() {}
+  render() {
+    console.log("GetComponent.renders");
+
+    const { error, isLoaded, items } = this.state;
+
+    if (error) {
+      return <div>Error {error} </div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      // console.log( items )
+      // plot( items )
+      return <Scatter data={this.data} options={this.options} />;
+    }
+  }
 }
 
 export default GetComponent;
