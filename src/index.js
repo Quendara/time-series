@@ -26,11 +26,6 @@ const { Header, Footer, Sider, Content } = Layout;
 const fakeResponse = {};
 fakeResponse["andre"] = [
   {
-    group_name: "Dummy",
-    group_id: 99,
-    group_unit: "km"
-  },
-  {
     group_name: "Andres Auto",
     group_id: 2,
     group_unit: "km"
@@ -39,6 +34,11 @@ fakeResponse["andre"] = [
     group_name: "Strom",
     group_id: 1,
     group_unit: "kWh"
+  },
+  {
+    group_name: "Dummy",
+    group_id: 99,
+    group_unit: "km"
   }
 ];
 
@@ -114,14 +114,14 @@ class TimeSeries extends React.Component {
       return (
         <Row>
           {this.state.timeseries.map(item => (
-            <Col offset={2} span={20}>
+            
               <SingleTimeSerie
                 key={item.group_id}
                 group_id={item.group_id}
                 group_unit={item.group_unit}
                 group_name={item.group_name}
               />
-            </Col>
+            
           ))}
         </Row>
       );

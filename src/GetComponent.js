@@ -1,6 +1,8 @@
 import React from "react";
 import { Scatter } from "react-chartjs-2";
 
+import "./Style.css"
+
 class GetComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -54,6 +56,8 @@ class GetComponent extends React.Component {
     };
 
     this.options = {
+      // aspectRatio:5,
+      maintainAspectRatio: false,
       scales: {
         xAxes: [
           {
@@ -88,7 +92,10 @@ class GetComponent extends React.Component {
     } else {
       // console.log( items )
       // plot( items )
-      return <Scatter data={this.data} options={this.options} />;
+      return ( 
+        <div className="chart-container" >
+        <Scatter data={this.data} options={this.options} /> 
+        </div> );
     }
   }
 }
