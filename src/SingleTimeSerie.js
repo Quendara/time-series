@@ -208,7 +208,8 @@ class SingleTimeSerie extends React.Component {
                 defaultValue={3}
                 onChange={this.handleChange}
               />
-              {button}
+              {button} <br/>
+              last value : {this.state.lastValue}
               
             </div>
 
@@ -217,7 +218,7 @@ class SingleTimeSerie extends React.Component {
         </List.Item>
       </List>
     );
-    // last value : {this.state.lastValue}
+    // 
   }
 }
 
