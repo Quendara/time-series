@@ -40,8 +40,6 @@ class TimeSeries extends React.Component {
       isLoaded: false,
       location: new URLSearchParams(props.location.search)
     };
-
-    
   }
 
   componentDidMount() {
@@ -53,18 +51,16 @@ class TimeSeries extends React.Component {
       .then(res => res.json())
       .then(
         result => {
+          //          {
+          //              group_name: "Dummy",
+          //              group_id: 99,
+          //              group_unit: "km"
+          //          }
 
-//          {
-//              group_name: "Dummy",
-//              group_id: 99,
-//              group_unit: "km"
-//          }
-          
-            this.setState({
-              isLoaded: true,
-              timeseries: result
-            });
-          
+          this.setState({
+            isLoaded: true,
+            timeseries: result
+          });
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -87,14 +83,12 @@ class TimeSeries extends React.Component {
       return (
         <Row>
           {this.state.timeseries.map(item => (
-            
-              <SingleTimeSerie
-                key={item.group_id}
-                group_id={item.group_id}
-                group_unit={item.group_unit}
-                group_name={item.group_name}
-              />
-            
+            <SingleTimeSerie
+              key={item.group_id}
+              group_id={item.group_id}
+              group_unit={item.group_unit}
+              group_name={item.group_name}
+            />
           ))}
         </Row>
       );
@@ -107,20 +101,19 @@ class TimeSeries extends React.Component {
 class App extends React.Component {
   render() {
     return (
-        <Router>
-      <Layout>
-          <Header> 
+      <Router>
+        <Layout>
+          <Header>
             <Link to="/search?user=andre">Andre</Link> |
             <Link to="/search?user=irena">Irena</Link> |
-            <Link to="/test">Test</Link> |
+            <Link to="/test">About</Link> |
           </Header>
           <Content>
             <Route exact path="/search" component={TimeSeries} />
             <Route exact path="/test" component={TestComponent} />
           </Content>
-        <Footer>Footer</Footer>
-      </Layout>
-        </Router>
+        </Layout>
+      </Router>
     );
   }
 }

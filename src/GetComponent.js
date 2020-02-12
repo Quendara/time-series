@@ -1,7 +1,7 @@
 import React from "react";
 import { Scatter } from "react-chartjs-2";
 
-import "./Style.css"
+import "./Style.css";
 
 class GetComponent extends React.Component {
   constructor(props) {
@@ -13,6 +13,9 @@ class GetComponent extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
+      avgDay: 0,
+      avgMonth: 0,
+      avgYear: 0
       // items: []
     };
 
@@ -20,37 +23,73 @@ class GetComponent extends React.Component {
     this.options = {};
   }
 
-  setValues(items) {
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
 
-    if( items == null || !Array.isArray( items ) )
-    {
-      console.error( "Array expected, got" )
-      console.error( items )
-      return
+  calAvg(timedate) {
+    const startDate = timedate[0];
+    const endDate = timedate[timedate.length - 1];
+
+    var one_day = 1000 * 60 * 60 * 24;
+
+    const days = (endDate.x.getTime() - startDate.x.getTime()) / one_day;
+    const usage = endDate.y - startDate.y;
+    const perDay = usage / days;
+
+    this.state.avgDay = Math.round(perDay);
+    this.state.avgMonth = Math.round(perDay * 30);
+    this.state.avgYear = this.numberWithCommas(Math.round(perDay * 365));
+  }
+
+  setValues(items) {
+    if (items == null || !Array.isArray(items)) {
+      console.error("Array expected, got");
+      console.error(items);
+      return;
     }
-   
 
     const timedate = items.map(dataField => {
       return { x: new Date(dataField.x * 1000), y: +dataField.y };
     });
+
+    this.calAvg(timedate);
+
+    const avgLine = [];
+    avgLine.push(timedate[0]);
+    avgLine.push(timedate[timedate.length - 1]);
+
+    const color01 = "rgba(75, 192, 192, ";
+    const color02 = "rgba(0,0,0, ";
 
     this.data = {
       datasets: [
         {
           label: this.group_unit,
           type: "line",
-          fill: false,
-          backgroundColor: "rgba(75,192,192,0.4)",
-          pointBorderColor: "rgba(75,192,192,1)",
-          pointBackgroundColor: "#fff",
-          pointBorderWidth: 5,
+          fill: true,
+          backgroundColor: color01 + "0.3)",
+          pointBorderColor: color01 + "0.7)",
+          borderColor: color01 + "0.4)",
+          pointBorderWidth: 4,
           pointHoverRadius: 7,
-          pointHoverBackgroundColor: "rgba(75,192,192,1)",
-          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBackgroundColor: color01 + "0.4)",
+          pointHoverBorderColor: color01 + "0.4)",
           pointHoverBorderWidth: 2,
           pointRadius: 1,
           pointHitRadius: 10,
           data: timedate
+        },
+        {
+          label: "avg",
+          type: "line",
+          borderDash: [5, 5],
+          backgroundColor: color02 + "0.0)",
+          borderColor: color02 + "0.4)",
+          borderWidth: 1,
+          fill: false,
+
+          data: avgLine
         }
       ]
     };
@@ -72,8 +111,8 @@ class GetComponent extends React.Component {
 
     console.log("GetComponent.setValues");
     console.log(this.state.items);
-     this.setState({
-      isLoaded: true,
+    this.setState({
+      isLoaded: true
       // items: items
     });
 
@@ -92,10 +131,16 @@ class GetComponent extends React.Component {
     } else {
       // console.log( items )
       // plot( items )
-      return ( 
+      return (
         <div className="chart-container" >
-        <Scatter data={this.data} options={this.options} /> 
-        </div> );
+          <div className="chart-container">
+            <Scatter data={this.data} options={this.options} />
+          </div>
+          {this.state.avgDay + " " + this.group_unit + " per day"} ,
+          {this.state.avgMonth + " " + this.group_unit + " per month"} ,
+          {this.state.avgYear + " " + this.group_unit + " per year"}
+        </div>
+      );
     }
   }
 }

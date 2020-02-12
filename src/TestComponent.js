@@ -1,4 +1,7 @@
 import React from 'react';
+import { Row, Card, Layout, version } from "antd";
+
+const { Header, Footer, Sider, Content } = Layout;
 
 
 class TestComponent extends React.Component {
@@ -17,7 +20,7 @@ class Child extends React.Component {
     super(props);
   }
   render(){
-    return <h1> Just a test2 </h1>
+    return <Footer><Card>Track and visualize Time Series data</Card></Footer>
   }
 }
 
