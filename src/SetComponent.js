@@ -1,3 +1,5 @@
+"use strict";
+
 import React, { Component, useState } from "react";
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
@@ -14,7 +16,7 @@ const SetComponent = ({ lastValue, submitted, onChange, onSubmit }) => {
   };
 
   const getButton = () => {
-    const button = "";
+    let button = "";
     if (!submitted) {
       if (valid) {
         button = (

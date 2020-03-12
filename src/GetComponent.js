@@ -1,3 +1,5 @@
+"use strict";
+
 import React from "react";
 import { Scatter } from "react-chartjs-2";
 
