@@ -1,6 +1,8 @@
 import React from "react";
 
 import GetComponent from "./GetComponent";
+import SetComponent from "./SetComponent";
+
 import SetDialog from "./SetDialog";
 
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
@@ -204,6 +206,8 @@ class SingleTimeSerie extends React.Component {
               group_name={this.group_name}
             />
           </li>
+            
+
           <li class="list-group-item">
             <SetDialog>
               <div className="form-group">
@@ -219,7 +223,7 @@ class SingleTimeSerie extends React.Component {
                   onChange={this.handleChange}
                 />
                 {button} <br />
-                last value : {this.formatDate(this.state.lastValue.x)},{" "}
+                last value : {this.formatDate(this.state.lastValue.x)},
                 {this.state.lastValue.y}
               </div>
             </SetDialog>
@@ -230,5 +234,16 @@ class SingleTimeSerie extends React.Component {
     //
   }
 }
+
+    //       <li class="list-group-item">
+    // <SetComponent
+    //           lastValue={this.state.lastValue}
+    //           submitted={false}
+    //           onChange={this.handleChange}
+    //           onSubmit={this.mySubmitHandler}
+
+    //         />    
+        
+    //       </li>    
 
 export default SingleTimeSerie;
