@@ -1,7 +1,6 @@
 import React from "react";
 
 import GetComponent from "./GetComponent";
-import SetComponent from "./SetComponent";
 import SetDialog from "./SetDialog";
 
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
@@ -19,7 +18,7 @@ class SingleTimeSerie extends React.Component {
     this.group_id = props.group_id;
     this.group_unit = props.group_unit;
     this.dateob = new Date();
- 
+
     this.resource = "group/" + props.group_id + "/data";
 
     this.state = {
@@ -27,8 +26,8 @@ class SingleTimeSerie extends React.Component {
       isLoaded: false,
       group_unit: props.group_unit,
       items: [],
-      last_item: {}, 
-      lastValue: 0,
+      last_item: {},
+      lastValue: { x: 0, y: 0 },
       item_to_send: {
         x: "" + Math.round(this.dateob.getTime() / 1000),
         y: 0
@@ -52,19 +51,18 @@ class SingleTimeSerie extends React.Component {
       this.setState({ dataValid: false, submitted: true }); // disable button while submitting
       this.resource = "group/" + this.group_id + "/data";
 
-      console.log( this.state.item_to_send  )
+      console.log(this.state.item_to_send);
 
       fetch(Settings.baseAwsUrl + this.resource, {
-
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify( this.state.item_to_send )
+        body: JSON.stringify(this.state.item_to_send)
       }).then(
         result => {
-          this.setState({ submitted: true }); 
+          this.setState({ submitted: true });
         },
         error => {
           this.setState({
@@ -85,17 +83,15 @@ class SingleTimeSerie extends React.Component {
     console.log(value);
     // set state is a automatic setter for this.state
 
-    if (value > this.state.lastValue) {
-
+    if (value > this.state.lastValue.y) {
       let valObj = {
-        x : this.state.item_to_send.x,
-        y : value
-      }
-
+        x: this.state.item_to_send.x,
+        y: value
+      };
 
       // const items = this.state.items.push(this.state.last_item);
-      let local_items = this.state.items.slice()
-      local_items.push( valObj )
+      let local_items = this.state.items.slice();
+      local_items.push(valObj);
 
       this.getComponent.setValues(local_items);
 
@@ -125,7 +121,7 @@ class SingleTimeSerie extends React.Component {
             var last_element = result[result.length - 1];
 
             this.setState({
-              lastValue: last_element.y,
+              lastValue: last_element,
               isLoaded: true
             });
 
@@ -138,7 +134,7 @@ class SingleTimeSerie extends React.Component {
         // exceptions from actual bugs in components.
         error => {
           this.setState({
-            lastValue: 0,
+            lastValue: { x: 0, y: 0 },
             isLoaded: true,
             error
           });
@@ -146,15 +142,28 @@ class SingleTimeSerie extends React.Component {
       );
   }
 
+  formatDate(x) {
+    const d = new Date(x * 1000);
+    const ret = "" + d.getFullYear();
+    ret += "-" + (+d.getMonth() + 1);
+    ret += "-" + d.getDay();
+
+    return ret;
+  }
+
   render() {
     let button;
 
     if (!this.state.submitted) {
       if (this.state.dataValid) {
-        button = <Button type="primary" onClick={this.mySubmitHandler} >Submit</Button>;
+        button = (
+          <Button type="primary" onClick={this.mySubmitHandler}>
+            Submit
+          </Button>
+        );
       } else {
         button = (
-          <Button type="primary"  disabled>
+          <Button type="primary" disabled>
             Submit
           </Button>
         );
@@ -176,60 +185,50 @@ class SingleTimeSerie extends React.Component {
       }
     }
 
-
     return (
-      <List bordered style={{ margin: 5 }}>
-        <List.Item>
-          <h1>
-            {this.group_name} <small>[ {this.group_unit} ]</small>
-          </h1>
-        </List.Item>
-        <List.Item>
-          <GetComponent
-            ref={getComponent => {
-              this.getComponent = getComponent;
-            }}
-            group_unit={this.group_unit}
-            group_id={this.group_id}
-            group_name={this.group_name}
-          />
-        </List.Item>
-        <List.Item>
-          <SetDialog>
-            <div className="form-group">
-              <label>
-                Enter a new value ( at{" "}
-                {this.dateob.toLocaleTimeString()} ){" : "}
-                {this.state.item_to_send.y}
-              </label>
-              <br />
-              <InputNumber
-                min={this.state.lastValue}
-                defaultValue={3}
-                onChange={this.handleChange}
-              />
-              {button} <br/>
-              last value : {this.state.lastValue}
-              
-            </div>
-
-            
-          </SetDialog>
-        </List.Item>
-      </List>
+      <>
+        <br />
+        <ul class="list-group">
+          <li class="list-group-item">
+            <h5>
+              {this.group_name} <small>[ {this.group_unit} ]</small>
+            </h5>
+          </li>
+          <li class="list-group-item">
+            <GetComponent
+              ref={getComponent => {
+                this.getComponent = getComponent;
+              }}
+              group_unit={this.group_unit}
+              group_id={this.group_id}
+              group_name={this.group_name}
+            />
+          </li>
+          <li class="list-group-item">
+            <SetDialog>
+              <div className="form-group">
+                <label>
+                  Enter a new value ( at {this.dateob.toLocaleTimeString()} )
+                  {" : "}
+                  {this.state.item_to_send.y}
+                </label>
+                <br />
+                <InputNumber
+                  min={this.state.lastValue.y}
+                  defaultValue={3}
+                  onChange={this.handleChange}
+                />
+                {button} <br />
+                last value : {this.formatDate(this.state.lastValue.x)},{" "}
+                {this.state.lastValue.y}
+              </div>
+            </SetDialog>
+          </li>
+        </ul>
+      </>
     );
-    // 
+    //
   }
 }
-
-//  <SetComponent
-//             ref={setComponent => {
-//               this.setComponent = setComponent;
-//             }}
-//             addValueFcn={this.handleAddValue}
-//             group_unit={this.group_unit}
-//             group_id={this.group_id}
-//             group_name={this.group_name}
-//           />
 
 export default SingleTimeSerie;

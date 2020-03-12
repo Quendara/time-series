@@ -59,8 +59,8 @@ class GetComponent extends React.Component {
     avgLine.push(timedate[0]);
     avgLine.push(timedate[timedate.length - 1]);
 
-    const color01 = "rgba(75, 192, 192, ";
-    const color02 = "rgba(0,0,0, ";
+    const color01 = "rgba(153, 102, 255, ";
+    const color02 = "rgba(54, 162, 235, ";
 
     this.data = {
       datasets: [
@@ -72,7 +72,7 @@ class GetComponent extends React.Component {
           pointBorderColor: color01 + "0.7)",
           borderColor: color01 + "0.4)",
           pointBorderWidth: 4,
-          pointHoverRadius: 7,
+          pointHoverRadius: 8,
           pointHoverBackgroundColor: color01 + "0.4)",
           pointHoverBorderColor: color01 + "0.4)",
           pointHoverBorderWidth: 2,
@@ -132,14 +132,16 @@ class GetComponent extends React.Component {
       // console.log( items )
       // plot( items )
       return (
-        <div className="chart-container" >
+        <>
           <div className="chart-container">
-            <Scatter data={this.data} options={this.options} />
+            <div className="chart-container">
+              <Scatter data={this.data} options={this.options} />
+            </div>
           </div>
           {this.state.avgDay + " " + this.group_unit + " per day"} ,
           {this.state.avgMonth + " " + this.group_unit + " per month"} ,
           {this.state.avgYear + " " + this.group_unit + " per year"}
-        </div>
+        </>
       );
     }
   }

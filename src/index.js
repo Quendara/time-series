@@ -6,13 +6,15 @@ import {
   useLocation
 } from "react-router-dom";
 
+// /search?user=andre
+
 import { render } from "react-dom";
 
 import { Layout } from "antd";
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
 import SingleTimeSerie from "./SingleTimeSerie";
-import TestComponent from "./TestComponent";
+
 
 import Settings from "./Settings";
 import queryString from "query-string";
@@ -102,17 +104,7 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <Layout>
-          <Header>
-            <Link to="/search?user=andre">Andre</Link> |
-            <Link to="/search?user=irena">Irena</Link> |
-            <Link to="/test">About</Link> |
-          </Header>
-          <Content>
             <Route exact path="/search" component={TimeSeries} />
-            <Route exact path="/test" component={TestComponent} />
-          </Content>
-        </Layout>
       </Router>
     );
   }
