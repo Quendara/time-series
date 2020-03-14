@@ -1,5 +1,3 @@
-"use strict";
-
 import React, { Component, useState } from "react";
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 

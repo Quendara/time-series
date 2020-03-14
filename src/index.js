@@ -19,8 +19,6 @@ import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 import SingleTimeSerie from "./SingleTimeSerie";
 import TestComponent from "./TestComponent";
 
-
-
 import Settings from "./Settings";
 import queryString from "query-string";
 
