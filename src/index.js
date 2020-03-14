@@ -16,6 +16,8 @@ import { Layout } from "antd";
 import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
 import SingleTimeSerie from "./SingleTimeSerie";
+import TestComponent from "./TestComponent";
+
 
 
 import Settings from "./Settings";
@@ -107,6 +109,7 @@ class App extends React.Component {
     return (
       <Router>
             <Route exact path="/search" component={TimeSeries} />
+            <Route exact path="/test" component={TestComponent} />
       </Router>
     );
   }
