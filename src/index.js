@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Route,
+  Redirect,
   Link,
   useLocation
 } from "react-router-dom";
@@ -108,6 +109,7 @@ class App extends React.Component {
   render() {
     return (
       <Router>
+            <Redirect exact from="/" to="test" />
             <Route exact path="/search" component={TimeSeries} />
             <Route exact path="/test" component={TestComponent} />
       </Router>
