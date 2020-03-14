@@ -146,7 +146,7 @@ class SingleTimeSerie extends React.Component {
 
   formatDate(x) {
     const d = new Date(x * 1000);
-    const ret = "" + d.getFullYear();
+    let ret = "" + d.getFullYear();
     ret += "-" + (+d.getMonth() + 1);
     ret += "-" + d.getDay();
 
