@@ -86,16 +86,20 @@ class TimeSeries extends React.Component {
       return <div>Error {error} </div>;
     } else if (this.state.timeseries.length > 0) {
       return (
-        <Row>
-          {this.state.timeseries.map(item => (
-            <SingleTimeSerie
-              key={item.group_id}
-              group_id={item.group_id}
-              group_unit={item.group_unit}
-              group_name={item.group_name}
-            />
-          ))}
-        </Row>
+        <div className="container">
+          <div className="row">
+            {this.state.timeseries.map(item => (
+              <div className="col-md-12 col-lg-4">
+                <SingleTimeSerie
+                  key={item.group_id}
+                  group_id={item.group_id}
+                  group_unit={item.group_unit}
+                  group_name={item.group_name}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       );
     } else {
       return <Row>No time series created</Row>;
@@ -107,9 +111,8 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-            
-            <Route exact path="/search" component={TimeSeries} />
-            <Route exact path="/test" component={TestComponent} />
+        <Route exact path="/search" component={TimeSeries} />
+        <Route exact path="/test" component={TestComponent} />
       </Router>
     );
   }

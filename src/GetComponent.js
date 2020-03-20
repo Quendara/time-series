@@ -138,8 +138,8 @@ class GetComponent extends React.Component {
               <Scatter data={this.data} options={this.options} />
             </div>
           </div>
-          {this.state.avgDay + " " + this.group_unit + " per day"} ,
-          {this.state.avgMonth + " " + this.group_unit + " per month"} ,
+          {this.state.avgDay + " " + this.group_unit + " per day"} <br/>
+          {this.state.avgMonth + " " + this.group_unit + " per month"} <br/>
           {this.state.avgYear + " " + this.group_unit + " per year"}
         </>
       );

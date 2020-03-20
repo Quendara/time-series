@@ -223,8 +223,7 @@ class SingleTimeSerie extends React.Component {
                   onChange={this.handleChange}
                 />
                 {button} <br />
-                last value : {this.formatDate(this.state.lastValue.x)},
-                {this.state.lastValue.y}
+                last value : {this.formatDate(this.state.lastValue.x)}, <b> {this.state.lastValue.y} </b>
               </div>
             </SetDialog>
           </li>
