@@ -38,7 +38,6 @@ class TimeSeriesQuery extends React.Component {
     super(props);
 
     this.props = props;
-    props.username;
 
     console.log(props);
     this.state = {
