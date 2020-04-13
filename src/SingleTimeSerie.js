@@ -148,7 +148,7 @@ class SingleTimeSerie extends React.Component {
     const d = new Date(x * 1000);
     let ret = "" + d.getFullYear();
     ret += "-" + (+d.getMonth() + 1);
-    ret += "-" + d.getDay();
+    ret += "-" + d.getDate();
 
     return ret;
   }
@@ -211,19 +211,13 @@ class SingleTimeSerie extends React.Component {
           <li class="list-group-item">
             <SetDialog>
               <div className="form-group">
-                <label>
-                  Enter a new value ( at {this.dateob.toLocaleTimeString()} )
-                  {" : "}
-                  {this.state.item_to_send.y}
-                </label>
-                <br />
                 <InputNumber
                   min={this.state.lastValue.y}
                   defaultValue={3}
                   onChange={this.handleChange}
                 />
                 {button} <br />
-                last value : {this.formatDate(this.state.lastValue.x)}, <b> {this.state.lastValue.y} </b>
+                last value : <b> {this.state.lastValue.y} </b> from {this.formatDate(this.state.lastValue.x)} <br /><br />                
               </div>
             </SetDialog>
           </li>
@@ -233,6 +227,12 @@ class SingleTimeSerie extends React.Component {
     //
   }
 }
+
+                // <label>
+                //   New value ( at {this.dateob.toLocaleTimeString()} )
+                //   {" : "}
+                //   {this.state.item_to_send.y}
+                // </label>
 
     //       <li class="list-group-item">
     // <SetComponent

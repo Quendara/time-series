@@ -169,10 +169,9 @@ class TimeSeries extends React.Component {
       return <div>Error {error} </div>;
     } else if (this.state.timeseries.length > 0) {
       return (
-        <div className="container">
           <div className="row">
             {this.state.timeseries.map(item => (
-              <div className="col-md-12 col-lg-4">
+              <div className="col-md-12 col-lg-2">
                 <SingleTimeSerie
                   key={item.group_id}
                   group_id={item.group_id}
@@ -182,7 +181,6 @@ class TimeSeries extends React.Component {
               </div>
             ))}
           </div>
-        </div>
       );
     } else {
       return <Row>No time series created</Row>;
@@ -203,7 +201,7 @@ const App = () => {
   };
 
   return (
-    <div className="container"> 
+    <div className="container-fluid"> 
       <br />
       <nav className="navbar navbar-dark bg-dark">
         <a className="navbar-brand mr-auto " href="#">
