@@ -1,5 +1,6 @@
 import React from "react";
 import { Scatter } from "react-chartjs-2";
+import { sortBy, groupBy } from "underscore";
 
 import "./Style.css";
 
@@ -42,6 +43,21 @@ class GetComponent extends React.Component {
     this.state.avgYear = this.numberWithCommas(Math.round(perDay * 365));
   }
 
+  splitDataInYears(timedate) {
+    const year = timedate[0].x.getFullYear();
+
+    const datasets = [];
+
+    // timedate.map(     )
+
+    let groupsArr = groupBy(timedate, function(date) {
+      return date.x.getFullYear();
+    });
+
+    console.log("splitDataInYears", groupsArr);
+    return groupsArr;
+  }
+
   setValues(items) {
     if (items == null || !Array.isArray(items)) {
       console.error("Array expected, got");
@@ -62,10 +78,56 @@ class GetComponent extends React.Component {
     const color01 = "rgba(153, 102, 255, ";
     const color02 = "rgba(54, 162, 235, ";
 
-    this.data = {
-      datasets: [
-        {
-          label: this.group_unit,
+    if (false) {
+      this.data = {
+        datasets: [
+          {
+            label: this.group_unit,
+            type: "line",
+            fill: true,
+            backgroundColor: color01 + "0.3)",
+            pointBorderColor: color01 + "0.7)",
+            borderColor: color01 + "0.4)",
+            pointBorderWidth: 4,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: color01 + "0.4)",
+            pointHoverBorderColor: color01 + "0.4)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: timedate
+          },
+          {
+            label: "avg",
+            type: "line",
+            borderDash: [5, 5],
+            backgroundColor: color02 + "0.0)",
+            borderColor: color02 + "0.4)",
+            borderWidth: 1,
+            fill: false,
+
+            data: avgLine
+          }
+        ]
+      };
+    } else {
+      const dataInGroups = this.splitDataInYears(timedate);
+
+      this.data.datasets = [];
+
+      console.log( "dataInGroups", dataInGroups )
+
+      for (var key in dataInGroups) {
+        // console.log("o." + prop + " = " + obj[prop]);
+
+        const localtimedate = dataInGroups[key];
+
+        console.log( "plot", key )
+        console.log( "localtimedate", localtimedate )
+
+
+        this.data.datasets.push({
+          label: key,
           type: "line",
           fill: true,
           backgroundColor: color01 + "0.3)",
@@ -78,21 +140,10 @@ class GetComponent extends React.Component {
           pointHoverBorderWidth: 2,
           pointRadius: 1,
           pointHitRadius: 10,
-          data: timedate
-        },
-        {
-          label: "avg",
-          type: "line",
-          borderDash: [5, 5],
-          backgroundColor: color02 + "0.0)",
-          borderColor: color02 + "0.4)",
-          borderWidth: 1,
-          fill: false,
-
-          data: avgLine
-        }
-      ]
-    };
+          data: localtimedate
+        });
+      }
+    }
 
     this.options = {
       // aspectRatio:5,
@@ -138,8 +189,8 @@ class GetComponent extends React.Component {
               <Scatter data={this.data} options={this.options} />
             </div>
           </div>
-          {this.state.avgDay + " " + this.group_unit + " per day"} <br/>
-          {this.state.avgMonth + " " + this.group_unit + " per month"} <br/>
+          {this.state.avgDay + " " + this.group_unit + " per day"} <br />
+          {this.state.avgMonth + " " + this.group_unit + " per month"} <br />
           {this.state.avgYear + " " + this.group_unit + " per year"}
         </>
       );
