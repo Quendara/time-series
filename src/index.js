@@ -67,9 +67,8 @@ const App = () => {
         </nav>
         <br></br>
         <Grid container justify="center" spacing={ 2 } >
-          <Grid item xs={ 12 } lg={ 10 }>
+          <Grid item xs={ 11 } lg={ 10 }>
             { username.length > 0 &&
-
               <Route exact path="/" >
                 <TimeSeries username={ username } token={ jwtTocken } />
               </Route> }
