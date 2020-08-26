@@ -66,7 +66,7 @@ const App = () => {
           <Auth authSuccessCallback={ authSuccessCallback } />
         </nav>
         <br></br>
-        <Grid container justify="center" spacing={ 2 } >
+        <Grid container justify="center" >
           <Grid item xs={ 11 } lg={ 10 }>
             { username.length > 0 &&
               <Route exact path="/" >
