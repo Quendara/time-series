@@ -18,7 +18,7 @@ import { Auth } from "./Auth";
 import { ThemeProvider, Grid, CssBaseline } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/styles";
 
-import './style.css';
+import './mstyle.css';
 
 import {
   BrowserRouter as Router,
