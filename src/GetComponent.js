@@ -3,30 +3,10 @@ import { Scatter } from "react-chartjs-2";
 import { sortBy, groupBy } from "underscore";
 
 const GetComponent = ({ group_unit, group_id, values }) => {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.group_unit = props.group_unit;
-  //   this.group_id = props.group_id;
-
-  //   this.state = {
-  //     error: null,
-  //     isLoaded: false,
-  //     avgDay: 0,
-  //     avgMonth: 0,
-  //     avgYear: 0
-  //     // items: []
-  //   };
-
-  //   this.data = {};
-  //   this.options = {};
-  // }
 
   let avgDay = 0;
   let avgMonth = 0;
   let avgYear = 0;
-
-  // const datasets = [];
 
   const data = {
     datasets: []
@@ -171,17 +151,6 @@ const GetComponent = ({ group_unit, group_id, values }) => {
 
       return data
     }
-
-
-
-    // console.log("GetComponent.setValues");
-    // console.log(this.state.items);
-    // this.setState({
-    //   isLoaded: true
-    //   // items: items
-    // });
-
-    // this.forceUpdate();
   }
 
   return (
@@ -196,26 +165,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
       { avgMonth + " " + group_unit + " per month" } <br />
       { avgYear + " " + group_unit + " per year" }
     </>
-
   )
-
-  // render() {
-  //   console.log("GetComponent.renders");
-
-  //   const { error, isLoaded, items } = this.state;
-
-  //   if (error) {
-  //     return <div>Error {error} </div>;
-  //   } else if (!isLoaded) {
-  //     return <div>Loading...</div>;
-  //   } else {
-  //     // console.log( items )
-  //     // plot( items )
-  //     return (
-
-  //     );
-  //   }
-  // }
 }
 
 export default GetComponent;

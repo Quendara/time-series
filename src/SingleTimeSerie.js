@@ -1,7 +1,7 @@
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import GetComponent from "./GetComponent";
-import SetComponent from "./SetComponent";
+// import SetComponent from "./SetComponent";
 
 import SetDialog from "./SetDialog";
 
@@ -13,11 +13,11 @@ import { Card, CardContent, Typography, TextField } from '@material-ui/core';
 import Settings from "./Settings";
 
 // class SingleTimeSerie extends React.Component {
-  const SingleTimeSerie = ({group_name, group_id, group_unit}) => {
+const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
 
-  const [lastValue, setLastValue] = useState({x:0, y:0})
-  const [itemToSend, setItemToSend] = useState( undefined )
-  
+  const [lastValue, setLastValue] = useState({ x: 0, y: 0 })
+  const [itemToSend, setItemToSend] = useState(undefined)
+
   const [fetchedItems, setFetchedItems] = useState(undefined)
   const [localItems, setLocalItems] = useState(undefined)
 
@@ -34,56 +34,47 @@ import Settings from "./Settings";
 
     // event.preventDefault();
     // check if submitting is allowed
-    if ( dataValid && !submitted) {
+    if (dataValid && !submitted) {
       console.log("Submitting... ");
 
       // this.setState({ dataValid: false, submitted: true }); // disable button while submitting
       let resource = "group/" + group_id + "/data";
 
-      console.log( itemToSend );
-      
+      console.log(itemToSend);
+
       fetch(Settings.baseAwsUrl + resource, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify( itemToSend)
+        body: JSON.stringify(itemToSend)
       }).then(
         result => {
-          // this.setState({ submitted: true });
-          setSubmitted( true )
+          setSubmitted(true)
         },
         error => {
-          setError( true )
-          // this.setState({
-          //   errorFlag: true,
-          //   error
-          // });
+          setError(true)
           console.error(error);
         }
       );
     } else {
       console.log("Submit not allowed yet.!");
     }
-
-    // this.setState( { submitted:true } )
   };
 
   const handleKeyPress = (event) => {
-    console.log(event.key);    
+    console.log(event.key);
   }
 
- const handleChange = event => {
+  const handleChange = event => {
 
     const value = +event.target.value
 
-    console.log(event.target.value);    
-    // set state is a automatic setter for this.state
-
+    console.log(event.target.value);
     if (value > lastValue.y) {
 
-      const dateob = new Date();      
+      const dateob = new Date();
       let valObj = {
         x: dateob, // Math.round( dateob.getTime() / 1000 ),
         y: value
@@ -92,30 +83,27 @@ import Settings from "./Settings";
       // add elemet to line / graph 
       let local_items = fetchedItems.slice();
       local_items.push(valObj);
-      setLocalItems( local_items )
+
 
       let item_2_send = {
-        x: Math.round( dateob.getTime() / 1000 ),
+        x: Math.round(dateob.getTime() / 1000),
         y: value
-      };      
+      };
 
-      setItemToSend( item_2_send )
-
-      // this.getComponent.setValues(local_items);
-      // this.setState({ item_to_send: valObj, dataValid: true });
-      setDataValid( true )
-
+      setLocalItems(local_items)
+      setItemToSend(item_2_send)
+      setDataValid(true)
 
     } else {
       // cannot submit invalid data
       // this.setState({ y: value, dataValid: false });
-      setLocalItems( fetchedItems )
-      setDataValid( false )
-      
+      setItemToSend(undefined)
+      setLocalItems(fetchedItems)
+      setDataValid(false)
     }
   };
 
-  useEffect(() => {    
+  useEffect(() => {
     myFetchData()
   }, []); // second parameter avoid frequent loading
 
@@ -126,38 +114,30 @@ import Settings from "./Settings";
       .then(res => res.json())
       .then(
         result => {
-          // this.setState({
-          //   isLoaded: true,
-          //   items: result
-          // });
+
           const timedata = result.map(dataField => {
             return { x: new Date(dataField.x * 1000), y: +dataField.y };
           });
 
-          setFetchedItems( timedata )
-          setLocalItems( timedata )
-          setIsLoaded( result )
+          setFetchedItems(timedata)
+          setLocalItems(timedata)
+          setIsLoaded(result)
 
           if (result.length > 0) {
             var last_element = result[result.length - 1];
-            setLastValue( result[result.length - 1] )
+            setLastValue(result[result.length - 1])
           }
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         error => {
-          setError( true )
-          // this.setState({
-          //   lastValue: { x: 0, y: 0 },
-          //   isLoaded: true,
-          //   error
-          // });
+          setError(true)
         }
       );
   }
 
-  
+
 
   const formatDate = (x) => {
     const d = new Date(x * 1000);
@@ -172,9 +152,9 @@ import Settings from "./Settings";
     let button;
 
     if (!submitted) {
-      if ( dataValid) {
+      if (dataValid) {
         button = (
-          ( <Button variant="contained" color="primary" onClick={ mySubmitHandler }>
+          (<Button variant="contained" color="primary" onClick={ mySubmitHandler }>
             Submit
           </Button>
           )
@@ -204,45 +184,33 @@ import Settings from "./Settings";
     }
 
     return button
-  
   }
 
 
-    return (
-      <Card>
-          <CardContent>
-            <Typography variant="h5" component="h2">
-              { group_name } - <small>[ { group_unit } ]</small>
-            </Typography>
-          </CardContent>
-          <CardContent>
-            
-            <GetComponent
-              values= { localItems }  
-              group_unit={ group_unit }
-              group_id={ group_id }
-              group_name={ group_name }
-            /> 
-          </CardContent>
+  return (
+    <Card>
+      <CardContent>
+        <Typography variant="h5" component="h2">
+          { group_name } - <small>[ { group_unit } ]</small>
+        </Typography>
+      </CardContent>
+      <CardContent>
 
+        <GetComponent
+          values={ localItems }
+          group_unit={ group_unit }
+          group_id={ group_id }
+          group_name={ group_name }
+        />
+      </CardContent>
+      <CardContent>
+        <TextField variant="outlined" id="standard-basic" label="Value" onChange={ handleChange } />
+        { getButton() } <br />
+                last value : <b> { lastValue.y } </b> from { formatDate(lastValue.x) } <br /><br />
+      </CardContent>
+    </Card>
 
-          <CardContent>
-            <SetDialog>
-              <div className="form-group">
-                {/* <InputNumber
-                  min={ .lastValue.y }
-                  defaultValue={ 3 }
-                  onChange={ this.handleChange }
-                /> */}
-                <TextField id="standard-basic" label="Value" defaultValue={ lastValue.y } onKeyPress={ handleKeyPress} onChange={ handleChange} />
-                { getButton() } <br />
-                last value : <b> {  lastValue.y } </b> from { formatDate( lastValue.x ) } <br /><br />
-              </div>
-            </SetDialog>
-          </CardContent>
-      </Card>
-
-    );
+  );
 }
 
 // <label>

@@ -12,16 +12,12 @@ import React, { Component, useState } from "react";
 // /search?user=andre
 
 import { render } from "react-dom";
-import TimeSeries from "./TimeSeries";
-import { Auth } from "./Auth";
 
-import { ThemeProvider, Grid, CssBaseline } from "@material-ui/core";
-import { createMuiTheme } from "@material-ui/core/styles";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   //  faPlus,
-  faAngleDoubleRight,  
+  faAngleDoubleRight,
   faUserAstronaut,
   faCameraRetro
 
@@ -32,6 +28,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+
+
+import TimeSeries from "./TimeSeries";
+import { Auth } from "./Auth";
+
+import { ThemeProvider, Grid, CssBaseline } from "@material-ui/core";
+import { createMuiTheme } from "@material-ui/core/styles";
+
+import { ListMain } from './listMain';
+
+
 
 
 import './mstyle.css';
@@ -95,12 +102,13 @@ const App = () => {
           <Auth authSuccessCallback={ authSuccessCallback } >
             <AppBar position="static">
               <Toolbar>
-                <NavLink to="/grid" className={ classes.title }   >
+                <NavLink to="/links" className={ classes.title }   >
                   <Typography variant="h6" >
                     <FontAwesomeIcon icon={ faCameraRetro } className="mr-2" />
-                    Time Series
+                    Links
                 </Typography>
                 </NavLink>
+                <NavLink to="/time" className={ classes.title }   >time</NavLink>
                 <FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /><Button color="inherit">{ username } </Button>
               </Toolbar>
             </AppBar>
@@ -111,9 +119,17 @@ const App = () => {
         <Grid container justify="center" >
           <Grid item xs={ 11 } lg={ 10 }>
             { username.length > 0 &&
-              <Route exact path="/" >
-                <TimeSeries username={ username } token={ jwtTocken } />
-              </Route> }
+              <>
+                <Route exact path="/time" >
+                  <TimeSeries username={ username } token={ jwtTocken } />
+                </Route>
+                <Route exact path="/links" >
+                  <ListMain token={ jwtTocken } />
+                </Route>
+              </>
+            }
+
+
           </Grid>
         </Grid>
       </Router>

@@ -24,19 +24,13 @@ class Child extends React.Component {
   }
   render() {
 
-
-
-
-
     return (
       <>
-
         <Link to="/search?user=andre">Andre</Link> |
             <Link to="/search?user=irena">Irena</Link> |
             <Link to="/test">About</Link> |
 
        <Footer><Card>Track and visualize Time Series data</Card></Footer>
-
       </>
     )
   }
