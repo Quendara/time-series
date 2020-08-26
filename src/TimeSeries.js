@@ -65,7 +65,7 @@ class TimeSeries extends React.Component {
         <Grid container  spacing={2} >
             {this.state.timeseries.map((item, index) => (
               
-                <Grid key={index} item xs={12} lg={3}>                  
+                <Grid key={index} item xs={12} lg={4}>                  
                 <SingleTimeSerie
                   key={item.group_id}
                   group_id={item.group_id}

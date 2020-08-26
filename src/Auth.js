@@ -2,18 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   //  faPlus,
-  faAngleDoubleRight,  
-  faUserAstronaut,
-  faCameraRetro
-
+  faAngleDoubleRight
 } from "@fortawesome/free-solid-svg-icons";
-
-import {
-  BrowserRouter as Router,
-  NavLink,
-} from "react-router-dom";
-
-// import { AmazonCognitoIdentity } from "amazon-cognito-identity-js";
 
 import jwt_decode from "jwt-decode";
 
@@ -32,15 +22,15 @@ const poolData = {
 
 const Auth = ({ authSuccessCallback, children }) => {
 
-  const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
+  // const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
 
-  const menuHandleClick = (event) => { // : React.MouseEvent<HTMLButtonElement>
-    setAnchorEl(event.currentTarget);
-  };
+  // const menuHandleClick = (event) => { // : React.MouseEvent<HTMLButtonElement>
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
 
 

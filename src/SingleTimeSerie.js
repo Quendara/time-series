@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import GetComponent from "./GetComponent";
 // import SetComponent from "./SetComponent";
-
-import SetDialog from "./SetDialog";
+// import SetDialog from "./SetDialog";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 import { Button } from '@material-ui/core';

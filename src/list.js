@@ -77,7 +77,11 @@ const ListEl = ({ name, link, id, removeClickFunction }) => {
 
     return (
         <ListItem>
-            <ListItemText onClick={ () => window.open(link, "_blank") } primary={ <Typography variant="h6" color="primary">{name}</Typography> } secondary={ link } />
+            <ListItemText 
+                onClick={ () => window.open(link, "_blank") } 
+                primary=    { <Typography variant="h6" color="primary">{name}</Typography> } 
+                secondary=  { <Typography variant="inherit" noWrap >{link}</Typography> } 
+                />
             <ListItemSecondaryAction onClick={ handleDeleteClick } >
                 <Button variant="contained"  color="secondary">
                     <FontAwesomeIcon icon={ faMinusCircle } />

@@ -108,7 +108,7 @@ const App = () => {
                     Links
                 </Typography>
                 </NavLink>
-                <NavLink to="/time" className={ classes.title }   >time</NavLink>
+                <NavLink to="/time" className={ classes.title }   >Time-Series</NavLink>
                 <FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /><Button color="inherit">{ username } </Button>
               </Toolbar>
             </AppBar>

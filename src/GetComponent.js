@@ -1,6 +1,8 @@
 import React from "react";
 import { Scatter } from "react-chartjs-2";
-import { sortBy, groupBy } from "underscore";
+import { groupBy } from "underscore";
+
+import { Grid } from '@material-ui/core';
 
 const GetComponent = ({ group_unit, group_id, values }) => {
 
@@ -33,7 +35,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
 
   const calAvg = (timedate) => {
 
-    if( timedate === undefined ){
+    if (timedate === undefined) {
       return 2
     }
 
@@ -54,10 +56,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
   }
 
   const splitDataInYears = (timedate) => {
-    const year = timedate[0].x.getFullYear();
-
-
-    // timedate.map(     )
+    // const year = timedate[0].x.getFullYear();
 
     let groupsArr = groupBy(timedate, function (date) {
       return date.x.getFullYear();
@@ -155,15 +154,19 @@ const GetComponent = ({ group_unit, group_id, values }) => {
 
   return (
     <>
-      <div className="chart-container">
-        <div className="chart-container" style={ { "height": "35vh" } }>
-          <Scatter data={ getDatasets( values ) } options={ options } />
-        </div>
+      <div className="chart-container" style={ { "height": "35vh" } }>
+        <Scatter data={ getDatasets(values) } options={ options } />
       </div>
-      { calAvg( values ) }
-      { avgDay + " " + group_unit + " per day" } <br />
-      { avgMonth + " " + group_unit + " per month" } <br />
-      { avgYear + " " + group_unit + " per year" }
+
+      <Grid container >
+        <Grid item xs={ 12 } >
+          <Grid container spacing={ 3 } alignItems="center" >
+            <Grid item>{ calAvg(values) } { " " + group_unit + " per day" } </Grid>
+            <Grid item>{ avgMonth + " " + group_unit + " per month" } </Grid>
+            <Grid item>{ avgYear + " " + group_unit + " per year" }</Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   )
 }
