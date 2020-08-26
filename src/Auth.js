@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
   //  faPlus,
   faAngleDoubleRight,  
@@ -8,12 +7,6 @@ import {
   faCameraRetro
 
 } from "@fortawesome/free-solid-svg-icons";
-
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 
 import {
   BrowserRouter as Router,
@@ -35,30 +28,9 @@ const poolData = {
   ClientId: "5v3et57vfoqijj81g3ksbidm5k"
 };
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(6),
-      color: "#FFFFFF",
-      textDecoration: "none"
-    },
-    title: {
-      flexGrow: 1,
-      color: "#FFFFFF",
-      textDecoration: "none"
-    },
-    selected: {
-      color: "#FFFF00",
-    }
-  }),
-);
 
-const Auth = ({ authSuccessCallback }) => {
 
-  const classes = useStyles();
+const Auth = ({ authSuccessCallback, children }) => {
 
   const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
 
@@ -256,17 +228,7 @@ const Auth = ({ authSuccessCallback }) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar position="static">
-          <Toolbar>
-              <NavLink to="/grid" className={ classes.title }   >
-                <Typography variant="h6" >
-                  <FontAwesomeIcon icon={ faCameraRetro } className="mr-2" />
-                  Time Series
-               </Typography>
-              </NavLink>
-              <FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /><Button color="inherit">{ username } </Button>
-          </Toolbar>
-        </AppBar>
+        {children}
       </>
     );
   }
