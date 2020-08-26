@@ -2,31 +2,62 @@ import React from "react";
 import { Scatter } from "react-chartjs-2";
 import { sortBy, groupBy } from "underscore";
 
-class GetComponent extends React.Component {
-  constructor(props) {
-    super(props);
+const GetComponent = ({ group_unit, group_id, values }) => {
+  // constructor(props) {
+  //   super(props);
 
-    this.group_unit = props.group_unit;
-    this.group_id = props.group_id;
+  //   this.group_unit = props.group_unit;
+  //   this.group_id = props.group_id;
 
-    this.state = {
-      error: null,
-      isLoaded: false,
-      avgDay: 0,
-      avgMonth: 0,
-      avgYear: 0
-      // items: []
-    };
+  //   this.state = {
+  //     error: null,
+  //     isLoaded: false,
+  //     avgDay: 0,
+  //     avgMonth: 0,
+  //     avgYear: 0
+  //     // items: []
+  //   };
 
-    this.data = {};
-    this.options = {};
+  //   this.data = {};
+  //   this.options = {};
+  // }
+
+  let avgDay = 0;
+  let avgMonth = 0;
+  let avgYear = 0;
+
+  // const datasets = [];
+
+  const data = {
+    datasets: []
   }
 
-  numberWithCommas(x) {
+  const options = {
+    // aspectRatio:5,
+    maintainAspectRatio: false,
+    scales: {
+      xAxes: [
+        {
+          type: "time",
+          time: {
+            unit: "month"
+          }
+        }
+      ]
+    }
+  };
+
+  const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
 
-  calAvg(timedate) {
+  const calAvg = (timedate) => {
+
+    if( timedate === undefined ){
+      return 2
+    }
+
+
     const startDate = timedate[0];
     const endDate = timedate[timedate.length - 1];
 
@@ -36,19 +67,19 @@ class GetComponent extends React.Component {
     const usage = endDate.y - startDate.y;
     const perDay = usage / days;
 
-    this.state.avgDay = Math.round(perDay);
-    this.state.avgMonth = Math.round(perDay * 30);
-    this.state.avgYear = this.numberWithCommas(Math.round(perDay * 365));
+    avgDay = Math.round(perDay);
+    avgMonth = Math.round(perDay * 30);
+    avgYear = numberWithCommas(Math.round(perDay * 365));
+    return avgDay;
   }
 
-  splitDataInYears(timedate) {
+  const splitDataInYears = (timedate) => {
     const year = timedate[0].x.getFullYear();
 
-    const datasets = [];
 
     // timedate.map(     )
 
-    let groupsArr = groupBy(timedate, function(date) {
+    let groupsArr = groupBy(timedate, function (date) {
       return date.x.getFullYear();
     });
 
@@ -56,18 +87,15 @@ class GetComponent extends React.Component {
     return groupsArr;
   }
 
-  setValues(items) {
+  const getDatasets = (items) => {
     if (items == null || !Array.isArray(items)) {
       console.error("Array expected, got");
       console.error(items);
       return;
     }
 
-    const timedate = items.map(dataField => {
-      return { x: new Date(dataField.x * 1000), y: +dataField.y };
-    });
-
-    this.calAvg(timedate);
+    const timedate = items
+    // calAvg(timedate);
 
     const avgLine = [];
     avgLine.push(timedate[0]);
@@ -109,22 +137,21 @@ class GetComponent extends React.Component {
         ]
       };
     } else {
-      const dataInGroups = this.splitDataInYears(timedate);
+      const dataInGroups = splitDataInYears(timedate);
 
-      this.data.datasets = [];
+      data.datasets = [];
 
-      console.log( "dataInGroups", dataInGroups )
+      console.log("dataInGroups", dataInGroups)
 
       for (var key in dataInGroups) {
         // console.log("o." + prop + " = " + obj[prop]);
 
         const localtimedate = dataInGroups[key];
 
-        console.log( "plot", key )
-        console.log( "localtimedate", localtimedate )
+        console.log("plot", key)
+        console.log("localtimedate", localtimedate)
 
-
-        this.data.datasets.push({
+        data.datasets.push({
           label: key,
           type: "line",
           fill: true,
@@ -141,66 +168,55 @@ class GetComponent extends React.Component {
           data: localtimedate
         });
       }
+
+      return data
     }
 
-    this.options = {
-      // aspectRatio:5,
-      maintainAspectRatio: false,
-      scales: {
-        xAxes: [
-          {
-            type: "time",
-            time: {
-              unit: "month"
-            }
-          }
-        ]
-      }
-    };
 
-    console.log("GetComponent.setValues");
-    console.log(this.state.items);
-    this.setState({
-      isLoaded: true
-      // items: items
-    });
 
-    this.forceUpdate();
+    // console.log("GetComponent.setValues");
+    // console.log(this.state.items);
+    // this.setState({
+    //   isLoaded: true
+    //   // items: items
+    // });
+
+    // this.forceUpdate();
   }
 
-  render() {
-    console.log("GetComponent.renders");
+  return (
+    <>
+      <div className="chart-container">
+        <div className="chart-container" style={ { "height": "35vh" } }>
+          <Scatter data={ getDatasets( values ) } options={ options } />
+        </div>
+      </div>
+      { calAvg( values ) }
+      { avgDay + " " + group_unit + " per day" } <br />
+      { avgMonth + " " + group_unit + " per month" } <br />
+      { avgYear + " " + group_unit + " per year" }
+    </>
 
-    const { error, isLoaded, items } = this.state;
+  )
 
-    if (error) {
-      return <div>Error {error} </div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
-    } else {
-      // console.log( items )
-      // plot( items )
-      return (
-        <>
-          <div className="chart-container">
-            <div className="chart-container" style={{ "height":"35vh" }}>
-              <Scatter data={this.data} options={this.options} />
-            </div>
-          </div>
-          {this.state.avgDay + " " + this.group_unit + " per day"} <br />
-          {this.state.avgMonth + " " + this.group_unit + " per month"} <br />
-          {this.state.avgYear + " " + this.group_unit + " per year"}
-        </>
-      );
-    }
-  }
+  // render() {
+  //   console.log("GetComponent.renders");
+
+  //   const { error, isLoaded, items } = this.state;
+
+  //   if (error) {
+  //     return <div>Error {error} </div>;
+  //   } else if (!isLoaded) {
+  //     return <div>Loading...</div>;
+  //   } else {
+  //     // console.log( items )
+  //     // plot( items )
+  //     return (
+
+  //     );
+  //   }
+  // }
 }
 
 export default GetComponent;
 
-// .chart-container {
-//   position: relative;
-//   margin: auto;
-//   height: 35vh;
-//   width: 100%;
-// }

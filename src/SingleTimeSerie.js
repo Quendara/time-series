@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect } from "react";
 
 import GetComponent from "./GetComponent";
 import SetComponent from "./SetComponent";
@@ -12,68 +12,54 @@ import { Card, CardContent, Typography, TextField } from '@material-ui/core';
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
 
-class SingleTimeSerie extends React.Component {
-  constructor(props) {
-    super(props);
+// class SingleTimeSerie extends React.Component {
+  const SingleTimeSerie = ({group_name, group_id, group_unit}) => {
 
-    this.handleChange = this.handleChange.bind(this);
-    this.mySubmitHandler = this.mySubmitHandler.bind(this);
+  const [lastValue, setLastValue] = useState({x:0, y:0})
+  const [itemToSend, setItemToSend] = useState( undefined )
+  
+  const [fetchedItems, setFetchedItems] = useState(undefined)
+  const [localItems, setLocalItems] = useState(undefined)
 
-    this.group_name = props.group_name;
-    this.group_id = props.group_id;
-    this.group_unit = props.group_unit;
-    this.dateob = new Date();
+  const [submitted, setSubmitted] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState(false)
+  const [dataValid, setDataValid] = useState(false)
 
-    this.resource = "group/" + props.group_id + "/data";
 
-    this.state = {
-      error: null,
-      isLoaded: false,
-      group_unit: props.group_unit,
-      items: [],
-      last_item: {},
-      lastValue: { x: 0, y: 0 },
-      item_to_send: {
-        x: "" + Math.round(this.dateob.getTime() / 1000),
-        y: 0
-      }
-    };
 
-    // Bind the this context to the handler function
-    // this.handleAddValue = this.handleAddValue.bind(this);
-    // this.handleChange = this.handleChange.bind(this);
-  }
-
-  mySubmitHandler = event => {
+  const mySubmitHandler = event => {
     console.log("mySubmitHandler");
-    console.log(this.state);
+    console.log();
 
     // event.preventDefault();
     // check if submitting is allowed
-    if (this.state.dataValid && !this.state.submitted) {
+    if ( dataValid && !submitted) {
       console.log("Submitting... ");
 
-      this.setState({ dataValid: false, submitted: true }); // disable button while submitting
-      this.resource = "group/" + this.group_id + "/data";
+      // this.setState({ dataValid: false, submitted: true }); // disable button while submitting
+      let resource = "group/" + group_id + "/data";
 
-      console.log(this.state.item_to_send);
-
-      fetch(Settings.baseAwsUrl + this.resource, {
+      console.log( itemToSend );
+      
+      fetch(Settings.baseAwsUrl + resource, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(this.state.item_to_send)
+        body: JSON.stringify( itemToSend)
       }).then(
         result => {
-          this.setState({ submitted: true });
+          // this.setState({ submitted: true });
+          setSubmitted( true )
         },
         error => {
-          this.setState({
-            errorFlag: true,
-            error
-          });
+          setError( true )
+          // this.setState({
+          //   errorFlag: true,
+          //   error
+          // });
           console.error(error);
         }
       );
@@ -84,77 +70,96 @@ class SingleTimeSerie extends React.Component {
     // this.setState( { submitted:true } )
   };
 
-  handleKeyPress = (event) => {
+  const handleKeyPress = (event) => {
     console.log(event.key);    
   }
 
-  handleChange = event => {
+ const handleChange = event => {
 
     const value = +event.target.value
 
     console.log(event.target.value);    
     // set state is a automatic setter for this.state
 
-    if (value > this.state.lastValue.y) {
+    if (value > lastValue.y) {
+
+      const dateob = new Date();      
       let valObj = {
-        x: this.state.item_to_send.x,
+        x: dateob, // Math.round( dateob.getTime() / 1000 ),
         y: value
       };
 
-      // const items = this.state.items.push(this.state.last_item);
-      let local_items = this.state.items.slice();
+      // add elemet to line / graph 
+      let local_items = fetchedItems.slice();
       local_items.push(valObj);
+      setLocalItems( local_items )
 
-      this.getComponent.setValues(local_items);
+      let item_2_send = {
+        x: Math.round( dateob.getTime() / 1000 ),
+        y: value
+      };      
 
-      this.setState({ item_to_send: valObj, dataValid: true });
+      setItemToSend( item_2_send )
 
-      // this.addValueCallback({
-      //   x: this.state.x,
-      //   y: value
-      // });
+      // this.getComponent.setValues(local_items);
+      // this.setState({ item_to_send: valObj, dataValid: true });
+      setDataValid( true )
+
+
     } else {
       // cannot submit invalid data
-      this.setState({ y: value, dataValid: false });
+      // this.setState({ y: value, dataValid: false });
+      setLocalItems( fetchedItems )
+      setDataValid( false )
+      
     }
   };
 
-  componentDidMount() {
-    fetch(Settings.baseAwsUrl + this.resource)
+  useEffect(() => {    
+    myFetchData()
+  }, []); // second parameter avoid frequent loading
+
+  const myFetchData = () => {
+
+    const resource = "group/" + group_id + "/data";
+    fetch(Settings.baseAwsUrl + resource)
       .then(res => res.json())
       .then(
         result => {
-          this.setState({
-            isLoaded: true,
-            items: result
+          // this.setState({
+          //   isLoaded: true,
+          //   items: result
+          // });
+          const timedata = result.map(dataField => {
+            return { x: new Date(dataField.x * 1000), y: +dataField.y };
           });
+
+          setFetchedItems( timedata )
+          setLocalItems( timedata )
+          setIsLoaded( result )
 
           if (result.length > 0) {
             var last_element = result[result.length - 1];
-
-            this.setState({
-              lastValue: last_element,
-              isLoaded: true
-            });
-
-            // this.setComponent.setLastValue();
-            this.getComponent.setValues(result);
+            setLastValue( result[result.length - 1] )
           }
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         error => {
-          this.setState({
-            lastValue: { x: 0, y: 0 },
-            isLoaded: true,
-            error
-          });
+          setError( true )
+          // this.setState({
+          //   lastValue: { x: 0, y: 0 },
+          //   isLoaded: true,
+          //   error
+          // });
         }
       );
   }
 
-  formatDate(x) {
+  
+
+  const formatDate = (x) => {
     const d = new Date(x * 1000);
     let ret = "" + d.getFullYear();
     ret += "-" + (+d.getMonth() + 1);
@@ -163,15 +168,16 @@ class SingleTimeSerie extends React.Component {
     return ret;
   }
 
-  render() {
+  const getButton = () => {
     let button;
 
-    if (!this.state.submitted) {
-      if (this.state.dataValid) {
+    if (!submitted) {
+      if ( dataValid) {
         button = (
-          <Button variant="contained" color="primary" onClick={ this.mySubmitHandler }>
+          ( <Button variant="contained" color="primary" onClick={ mySubmitHandler }>
             Submit
           </Button>
+          )
         );
       } else {
         button = (
@@ -182,7 +188,7 @@ class SingleTimeSerie extends React.Component {
       }
     } else {
       // submitted
-      if (!this.state.error) {
+      if (!error) {
         button = (
           <Button type="dashed" disabled>
             Ok
@@ -197,23 +203,26 @@ class SingleTimeSerie extends React.Component {
       }
     }
 
+    return button
+  
+  }
+
 
     return (
       <Card>
           <CardContent>
             <Typography variant="h5" component="h2">
-              { this.group_name } - <small>[ { this.group_unit } ]</small>
+              { group_name } - <small>[ { group_unit } ]</small>
             </Typography>
           </CardContent>
           <CardContent>
+            
             <GetComponent
-              ref={ getComponent => {
-                this.getComponent = getComponent;
-              } }
-              group_unit={ this.group_unit }
-              group_id={ this.group_id }
-              group_name={ this.group_name }
-            />
+              values= { localItems }  
+              group_unit={ group_unit }
+              group_id={ group_id }
+              group_name={ group_name }
+            /> 
           </CardContent>
 
 
@@ -221,32 +230,30 @@ class SingleTimeSerie extends React.Component {
             <SetDialog>
               <div className="form-group">
                 {/* <InputNumber
-                  min={ this.state.lastValue.y }
+                  min={ .lastValue.y }
                   defaultValue={ 3 }
                   onChange={ this.handleChange }
                 /> */}
-                <TextField id="standard-basic" label="Value" defaultValue={ this.state.lastValue.y } onKeyPress={this.handleKeyPress} onChange={this.handleChange} />
-                { button } <br />
-                last value : <b> { this.state.lastValue.y } </b> from { this.formatDate(this.state.lastValue.x) } <br /><br />
+                <TextField id="standard-basic" label="Value" defaultValue={ lastValue.y } onKeyPress={ handleKeyPress} onChange={ handleChange} />
+                { getButton() } <br />
+                last value : <b> {  lastValue.y } </b> from { formatDate( lastValue.x ) } <br /><br />
               </div>
             </SetDialog>
           </CardContent>
       </Card>
 
     );
-    //
-  }
 }
 
 // <label>
 //   New value ( at {this.dateob.toLocaleTimeString()} )
 //   {" : "}
-//   {this.state.item_to_send.y}
+//   {.item_to_send.y}
 // </label>
 
 //       <CardContent>
 // <SetComponent
-//           lastValue={this.state.lastValue}
+//           lastValue={.lastValue}
 //           submitted={false}
 //           onChange={this.handleChange}
 //           onSubmit={this.mySubmitHandler}
