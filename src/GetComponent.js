@@ -2,7 +2,7 @@ import React from "react";
 import { Scatter } from "react-chartjs-2";
 import { sortBy, groupBy } from "underscore";
 
-import "./Style.css";
+import "./mstyle.css";
 
 class GetComponent extends React.Component {
   constructor(props) {
