@@ -2,8 +2,6 @@ import React from "react";
 import { Scatter } from "react-chartjs-2";
 import { sortBy, groupBy } from "underscore";
 
-import "./mstyle.css";
-
 class GetComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -185,7 +183,7 @@ class GetComponent extends React.Component {
       return (
         <>
           <div className="chart-container">
-            <div className="chart-container">
+            <div className="chart-container" style={{ "height":"35vh" }}>
               <Scatter data={this.data} options={this.options} />
             </div>
           </div>
@@ -199,3 +197,10 @@ class GetComponent extends React.Component {
 }
 
 export default GetComponent;
+
+// .chart-container {
+//   position: relative;
+//   margin: auto;
+//   height: 35vh;
+//   width: 100%;
+// }
