@@ -1,10 +1,28 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
-  faPlus,
-  faAngleDoubleRight,
-  faSignOutAlt
+  //  faPlus,
+  faAngleDoubleRight,  
+  faUserAstronaut,
+  faCameraRetro
+
 } from "@fortawesome/free-solid-svg-icons";
+
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+
+import {
+  BrowserRouter as Router,
+  NavLink,
+} from "react-router-dom";
 
 // import { AmazonCognitoIdentity } from "amazon-cognito-identity-js";
 
@@ -21,16 +39,52 @@ const poolData = {
   ClientId: "5v3et57vfoqijj81g3ksbidm5k"
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(6),
+      color: "#FFFFFF",
+      textDecoration: "none"
+    },
+    title: {
+      flexGrow: 1,
+      color: "#FFFFFF",
+      textDecoration: "none"
+    },
+    selected: {
+      color: "#FFFF00",
+    }
+  }),
+);
+
 const Auth = ({ authSuccessCallback }) => {
-  const [username, setUsername] = useState("Test");
-  const [password, setPassword] = useState("TestUser123");
+
+  const classes = useStyles();
+
+  const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
+
+  const menuHandleClick = (event) => { // : React.MouseEvent<HTMLButtonElement>
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
-  const [token, setToken] = useState("");
+  //  const [token, setToken] = useState("");
   const [trySend, setTrySend] = useState(false);
 
   const [cognitoUser, setCognitoUser] = useState(null);
 
-  useEffect(() => { 
+  useEffect(() => {
     // check if user is already logged in
     if (cognitoUser == null) {
       // Update the document title using the browser API
@@ -41,7 +95,7 @@ const Auth = ({ authSuccessCallback }) => {
       console.log("cognitoUser", cognitoUser);
 
       if (cognitoUser != null) {
-        cognitoUser.getSession(function(err, session) {
+        cognitoUser.getSession(function (err, session) {
           if (err) {
             alert(err.message || JSON.stringify(err));
             return;
@@ -67,6 +121,8 @@ const Auth = ({ authSuccessCallback }) => {
       // send ONLY when it's filled out
       // authSuccessCallback(token);
 
+      setTrySend(true);
+
       authImpl(username, password);
     } else {
     }
@@ -76,15 +132,14 @@ const Auth = ({ authSuccessCallback }) => {
     console.log("signOut");
     if (cognitoUser != null) {
       console.log("cognitoUser", cognitoUser);
-      
+
       setUsername("");
       setPassword("");
-      setAuthError("")
+      setAuthError("");
       setCognitoUser(null);
 
       cognitoUser.signOut();
-      
-      
+
       authSuccessCallback("", "");
     }
   };
@@ -119,7 +174,7 @@ const Auth = ({ authSuccessCallback }) => {
     // });
 
     cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function(result) {
+      onSuccess: function (result) {
         var accessToken = result.getAccessToken().getJwtToken();
 
         // Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer
@@ -135,9 +190,10 @@ const Auth = ({ authSuccessCallback }) => {
 
         setAuthError("Success" + JSON.stringify(decoded));
         setCognitoUser(cognitoUser);
+        setTrySend(false);
       },
-
-      onFailure: function(err) {
+      onFailure: function (err) {
+        setTrySend(false);
         console.error("Cannot log in ", JSON.stringify(err));
         setAuthError("Cannot log in " + JSON.stringify(err));
       }
@@ -145,7 +201,7 @@ const Auth = ({ authSuccessCallback }) => {
   };
 
   const getInputClass = val => {
-    let ret = "form-control mr-sm-2";
+    let ret = "form-control m-2";
     if (val.length > 0) {
       ret += " is-valid";
     } else if (trySend) {
@@ -157,31 +213,64 @@ const Auth = ({ authSuccessCallback }) => {
 
   if (cognitoUser == null) {
     return (
-      <form className="form-inline" onSubmit={handleClick}>
-        <input
-          value={username}
-          className={getInputClass(username)}
-          placeholder="Name"
-          onChange={e => setUsername(e.target.value)}
-        />
-        <input
-          value={password}
-          className={getInputClass(password)}
-          placeholder="Password"
-          onChange={e => setPassword(e.target.value)}
-        />
-        <button className="btn btn-primary">
-          <FontAwesomeIcon icon={faAngleDoubleRight} />
-        </button>
-        { authError }
-      </form>
+      <>
+        <>
+          <div className="nav-wrapper" id="navbarNavDropdown">
+            <div className="row">
+              <div className=" col s12" >
+                <a href="#" className="brand-logo hide-on-med-and-down">Photos</a>
+                <ul id="nav-mobile" className="right">
+
+                  <form className="form-inline" onSubmit={ handleClick }>
+
+                    <li>
+                      <input
+                        value={ username }
+                        className={ getInputClass(username) }
+                        placeholder="Name"
+                        onChange={ e => setUsername(e.target.value) }
+                      />
+                    </li>
+                    <li>
+                      <input
+                        type="password"
+                        value={ password }
+                        className={ getInputClass(password) }
+                        placeholder="Password"
+                        onChange={ e => setPassword(e.target.value) }
+                      />
+                    </li>
+                    <li>
+                      <button className="btn btn-primary m-2">
+                        { trySend ? "Loading" : "Sign-In" }
+                        <FontAwesomeIcon icon={ faAngleDoubleRight } className="ml-2" />
+                      </button>
+                    </li>
+                  </form>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </>
+
+        <h2>{ authError }</h2>
+      </>
     );
   } else {
+    //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <button className="btn btn-primary mr-sm-2" onClick={signOut} >
-          {username} {" "} <FontAwesomeIcon icon={faSignOutAlt} />
-        </button>
+        <AppBar position="static">
+          <Toolbar>
+              <NavLink to="/grid" className={ classes.title }   >
+                <Typography variant="h6" >
+                  <FontAwesomeIcon icon={ faCameraRetro } className="mr-2" />
+                  Time Series
+               </Typography>
+              </NavLink>
+              <FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /><Button color="inherit">{ username } </Button>
+          </Toolbar>
+        </AppBar>
       </>
     );
   }
@@ -189,8 +278,3 @@ const Auth = ({ authSuccessCallback }) => {
 
 export { Auth };
 
-/*
-
-
-
-*/

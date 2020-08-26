@@ -5,8 +5,11 @@ import SetComponent from "./SetComponent";
 
 import SetDialog from "./SetDialog";
 
-import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import { InputNumber } from "antd";
+// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
+import { Button } from '@material-ui/core';
+import { Card, CardContent, Typography, TextField } from '@material-ui/core';
+
+// import { InputNumber } from "antd";
 import Settings from "./Settings";
 
 class SingleTimeSerie extends React.Component {
@@ -81,8 +84,15 @@ class SingleTimeSerie extends React.Component {
     // this.setState( { submitted:true } )
   };
 
-  handleChange = value => {
-    console.log(value);
+  handleKeyPress = (event) => {
+    console.log(event.key);    
+  }
+
+  handleChange = event => {
+
+    const value = +event.target.value
+
+    console.log(event.target.value);    
     // set state is a automatic setter for this.state
 
     if (value > this.state.lastValue.y) {
@@ -159,13 +169,13 @@ class SingleTimeSerie extends React.Component {
     if (!this.state.submitted) {
       if (this.state.dataValid) {
         button = (
-          <Button type="primary" onClick={this.mySubmitHandler}>
+          <Button variant="contained" color="primary" onClick={ this.mySubmitHandler }>
             Submit
           </Button>
         );
       } else {
         button = (
-          <Button type="primary" disabled>
+          <Button color="primary" disabled>
             Submit
           </Button>
         );
@@ -187,62 +197,62 @@ class SingleTimeSerie extends React.Component {
       }
     }
 
-    return (
-      <>
-        <br />
-        <ul class="list-group">
-          <li class="list-group-item">
-            <h5>
-              {this.group_name} <small>[ {this.group_unit} ]</small>
-            </h5>
-          </li>
-          <li class="list-group-item">
-            <GetComponent
-              ref={getComponent => {
-                this.getComponent = getComponent;
-              }}
-              group_unit={this.group_unit}
-              group_id={this.group_id}
-              group_name={this.group_name}
-            />
-          </li>
-            
 
-          <li class="list-group-item">
+    return (
+      <Card>
+          <CardContent>
+            <Typography variant="h5" component="h2">
+              { this.group_name } - <small>[ { this.group_unit } ]</small>
+            </Typography>
+          </CardContent>
+          <CardContent>
+            <GetComponent
+              ref={ getComponent => {
+                this.getComponent = getComponent;
+              } }
+              group_unit={ this.group_unit }
+              group_id={ this.group_id }
+              group_name={ this.group_name }
+            />
+          </CardContent>
+
+
+          <CardContent>
             <SetDialog>
               <div className="form-group">
-                <InputNumber
-                  min={this.state.lastValue.y}
-                  defaultValue={3}
-                  onChange={this.handleChange}
-                />
-                {button} <br />
-                last value : <b> {this.state.lastValue.y} </b> from {this.formatDate(this.state.lastValue.x)} <br /><br />                
+                {/* <InputNumber
+                  min={ this.state.lastValue.y }
+                  defaultValue={ 3 }
+                  onChange={ this.handleChange }
+                /> */}
+                <TextField id="standard-basic" label="Value" defaultValue={ this.state.lastValue.y } onKeyPress={this.handleKeyPress} onChange={this.handleChange} />
+                { button } <br />
+                last value : <b> { this.state.lastValue.y } </b> from { this.formatDate(this.state.lastValue.x) } <br /><br />
               </div>
             </SetDialog>
-          </li>
-        </ul>
-      </>
+          </CardContent>
+      </Card>
+
     );
     //
   }
 }
 
-                // <label>
-                //   New value ( at {this.dateob.toLocaleTimeString()} )
-                //   {" : "}
-                //   {this.state.item_to_send.y}
-                // </label>
+// <label>
+//   New value ( at {this.dateob.toLocaleTimeString()} )
+//   {" : "}
+//   {this.state.item_to_send.y}
+// </label>
 
-    //       <li class="list-group-item">
-    // <SetComponent
-    //           lastValue={this.state.lastValue}
-    //           submitted={false}
-    //           onChange={this.handleChange}
-    //           onSubmit={this.mySubmitHandler}
+//       <CardContent>
+// <SetComponent
+//           lastValue={this.state.lastValue}
+//           submitted={false}
+//           onChange={this.handleChange}
+//           onSubmit={this.mySubmitHandler}
 
-    //         />    
-        
-    //       </li>    
+//         />    
+
+//       </li>    
 
 export default SingleTimeSerie;

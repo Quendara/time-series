@@ -1,83 +1,11 @@
 
 import React, { Component, useState } from "react";
-import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
+// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 import Settings from "./Settings";
 import SingleTimeSerie from "./SingleTimeSerie";
 
-class TimeSeriesQuery extends React.Component {
-  constructor(props) {
-    super(props);
+import { Grid } from '@material-ui/core';
 
-    this.props = props;
-
-    console.log(props);
-    this.state = {
-      timeseries: [],
-      error: null,
-      isLoaded: false,
-      location: new URLSearchParams(props.location.search)
-    };
-  }
-
-  componentDidMount() {
-    const user = this.state.location.get("user");
-
-    this.resource = "groups/" + user;
-
-    fetch(Settings.baseAwsUrl + this.resource)
-      .then(res => res.json())
-      .then(
-        result => {
-          //          {
-          //              group_name: "Dummy",
-          //              group_id: 99,
-          //              group_unit: "km"
-          //          }
-
-          this.setState({
-            isLoaded: true,
-            timeseries: result
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
-  }
-
-  render() {
-    const { error, isLoaded, items, location } = this.state;
-
-    if (error) {
-      return <div>Error {error} </div>;
-    } else if (this.state.timeseries.length > 0) {
-      return (
-        <div className="container">
-          <div className="row">
-            {this.state.timeseries.map(item => (
-              <div className="col-md-12 col-lg-4">
-                <SingleTimeSerie
-                  key={item.group_id}
-                  group_id={item.group_id}
-                  group_unit={item.group_unit}
-                  group_name={item.group_name}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    } else {
-      return <Row>No time series created</Row>;
-    }
-  }
-}
 
 class TimeSeries extends React.Component {
   constructor(props) {
@@ -110,12 +38,6 @@ class TimeSeries extends React.Component {
       .then(res => res.json())
       .then(
         result => {
-          //          {
-          //              group_name: "Dummy",
-          //              group_id: 99,
-          //              group_unit: "km"
-          //          }
-
           this.setState({
             isLoaded: true,
             timeseries: result 
@@ -140,21 +62,22 @@ class TimeSeries extends React.Component {
       return <div>Error {error} </div>;
     } else if (this.state.timeseries.length > 0) {
       return (
-          <div className="row">
-            {this.state.timeseries.map(item => (
-              <div className="col-md-12 col-lg-2">
+        <Grid container  spacing={2} >
+            {this.state.timeseries.map((item, index) => (
+              
+                <Grid key={index} item xs={12} lg={3}>                  
                 <SingleTimeSerie
                   key={item.group_id}
                   group_id={item.group_id}
                   group_unit={item.group_unit}
                   group_name={item.group_name}
                 />
-              </div>
+              </Grid>
             ))}
-          </div>
+          </Grid>
       );
     } else {
-      return <Row>No time series created</Row>;
+      return <Grid >No time series created</Grid>;
     }
   }
 }

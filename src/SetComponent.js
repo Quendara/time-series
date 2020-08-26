@@ -1,5 +1,6 @@
 import React, { Component, useState } from "react";
-import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
+// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
+import { Button } from '@material-ui/core';
 
 const SetComponent = ({ lastValue, submitted, onChange, onSubmit }) => {
   const [valid, setValid] = useState(false);
@@ -37,14 +38,6 @@ const SetComponent = ({ lastValue, submitted, onChange, onSubmit }) => {
           Ok
         </Button>
       );
-      // } else {
-      //   button = (
-      //     <Button type="error" disabled>
-      //       Error..
-      //     </Button>
-      //   );
-      // }
-      // }
     }
     return button;
   };

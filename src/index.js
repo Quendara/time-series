@@ -12,14 +12,23 @@ import React, { Component, useState } from "react";
 // /search?user=andre
 
 import { render } from "react-dom";
-import { Layout } from "antd";
-
 import TimeSeries from "./TimeSeries";
-import TestComponent from "./TestComponent";
-
 import { Auth } from "./Auth";
 
-import "antd/dist/antd.css";
+import { ThemeProvider, Grid, CssBaseline } from "@material-ui/core";
+import { createMuiTheme } from "@material-ui/core/styles";
+
+import './style.css';
+
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  IndexRoute,
+  useLocation
+} from "react-router-dom";
+
+// import "antd/dist/antd.css";
 
 // const { Header, Footer, Sider, Content } = Layout;
 
@@ -42,18 +51,34 @@ const App = () => {
     console.log("authSuccess", token);
   };
 
+  const theme = createMuiTheme({
+    palette: {
+      type: "dark"
+    },
+  });
+
   return (
-    <div className="container-fluid"> 
-      <br />
-      <nav className="navbar navbar-dark bg-dark">
-        <a className="navbar-brand mr-auto " href="#">
-          Home
-        </a>
-        <Auth authSuccessCallback={authSuccessCallback} />
-      </nav>
-      <hr />
-      {username.length > 0 && <TimeSeries username={username} token={ jwtTocken } />}
-    </div>
+    <ThemeProvider theme={ theme }>
+      <CssBaseline />
+
+      <Router>
+        <nav>
+          <Auth authSuccessCallback={ authSuccessCallback } />
+        </nav>
+        <br></br>
+        <Grid container justify="center" spacing={ 2 } >
+          <Grid item xs={ 12 } lg={ 10 }>
+            { username.length > 0 &&
+
+              <Route exact path="/" >
+                <TimeSeries username={ username } token={ jwtTocken } />
+              </Route> }
+          </Grid>
+        </Grid>
+      </Router>
+
+    </ThemeProvider>
+
   );
 };
 

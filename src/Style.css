@@ -4,3 +4,14 @@
   height: 35vh;
   width: 100%;
 }
+
+.ml-2{
+	margin-left: 1em;
+}
+.ml-4{
+	margin-left: 1.5em;
+}
+
+.mr-2{
+	margin-right: 0.5em;
+}
