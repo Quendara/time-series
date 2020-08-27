@@ -49,6 +49,7 @@ const AddForm = ({ onClickFunction, name }) => {
                         value={ linkName }
                         error={ hasError(linkName) }
                         label="Name"
+                        fullWidth
                         variant="outlined"
                         onChange={ e => setLinkName(e.target.value) }
                     />
@@ -58,6 +59,7 @@ const AddForm = ({ onClickFunction, name }) => {
                         error={ hasError(linkUrl) }
                         value={ linkUrl }
                         label="URL"
+                        fullWidth
                         variant="outlined"
                         onChange={ e => setLinkUrl(e.target.value) }
                     />
@@ -83,7 +85,7 @@ const ListEl = ({ name, link, id, removeClickFunction }) => {
             <ListItemText
                 onClick={ () => window.open(link, "_blank") }
                 primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
-                secondary={ <Typography variant="inherit" color="secondary"  noWrap >{ link }</Typography> }
+                secondary={ <Typography variant="inherit" color="textSecondary"  noWrap >{ link }</Typography> }
             />
             <ListItemSecondaryAction onClick={ handleDeleteClick } >
                 <Button variant="contained" color="secondary">
@@ -103,6 +105,7 @@ export const ListQ = ({ items, removeItemHandle, addItemHandle }) => {
             <List>
                 { items.map((item, index) => (
                     <ListEl
+                        key={index}
                         id={ item.id }
                         name={ item.name }
                         link={ item.link }

@@ -26,6 +26,7 @@ const Auth = ({ authSuccessCallback, children }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
+  // let authError = {}
   //  const [token, setToken] = useState("");
   const [trySend, setTrySend] = useState(false);
 
@@ -59,7 +60,7 @@ const Auth = ({ authSuccessCallback, children }) => {
         });
       }
     }
-  } );
+  }, []);
 
   const signIn = event => {
     // event.preventDefault();
@@ -93,16 +94,14 @@ const Auth = ({ authSuccessCallback, children }) => {
     }
   };
 
-  const onPasswortChange = ( e ) => {
-    console.log( e.key )
-    if( e.key === "Enter") {
+  const onPasswortChange = (e) => {
+    
+    if (e.key === "Enter") {
       signIn(e)
     }
     else {
       // setPassword( e.target.value  )
     }
-    
-
   }
 
   const authImpl = (username, password) => {
@@ -149,15 +148,20 @@ const Auth = ({ authSuccessCallback, children }) => {
         // callback to parent
         authSuccessCallback(username, idToken);
 
-        setAuthError("Success" + JSON.stringify(decoded));
+        setAuthError("");
         setCognitoUser(cognitoUser);
         setTrySend(false);
       },
       onFailure: function (err) {
         setTrySend(false);
-        console.error("Cannot log in ", JSON.stringify(err));
-        setAuthError("Cannot log in " + JSON.stringify(err));
+        console.error("Cannot log in ", err );
+        setAuthError({
+          'code': err.code,
+          'message': err.message,
+          'name': err.name
+        })
       }
+
     });
   };
 
@@ -191,7 +195,7 @@ const Auth = ({ authSuccessCallback, children }) => {
               <List>
                 <ListItem>
                   <Typography variant="h4" >Log in</Typography>
-                  <Divider variant="middle"  />
+                  <Divider variant="middle" />
                 </ListItem>
                 <form className="form-inline" onSubmit={ signIn } >
                   <ListItem>
@@ -199,7 +203,7 @@ const Auth = ({ authSuccessCallback, children }) => {
                       value={ username }
                       error={ trySend }
                       fullWidth
-                      style={{ margin: 8 }}
+                      style={ { margin: 8 } }
                       variant="outlined"
                       className={ getInputClass(username) }
                       label="Name"
@@ -212,17 +216,17 @@ const Auth = ({ authSuccessCallback, children }) => {
                       value={ password }
                       error={ trySend }
                       fullWidth
-                      style={{ margin: 8 }}
+                      style={ { margin: 8 } }
                       variant="outlined"
                       className={ getInputClass(password) }
                       label="Password"
-                      onKeyPress={ e => onPasswortChange ( e ) }
+                      onKeyPress={ e => onPasswortChange(e) }
                       // onKeyPress={ e => onPasswortChange ( e.target.value ) }
                       onChange={ e => setPassword(e.target.value) }
                     />
                   </ListItem>
                   <ListItem>
-                    <Button color="primary" variant="contained" onClick={ signIn } style={{ margin: 8 }} >
+                    <Button color="primary" variant="contained" onClick={ signIn } style={ { margin: 8 } } >
                       { trySend ? "Loading" : "Sign-In" }
                       <FontAwesomeIcon icon={ faAngleDoubleRight } className="ml-2" />
                     </Button>
@@ -232,16 +236,11 @@ const Auth = ({ authSuccessCallback, children }) => {
             </Card>
             <Card>
               <CardContent>
-
-              
-            <h2>{ authError }</h2>
+                <h2>{ authError.message }</h2>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
-
-
-        
       </>
     );
   } else {
@@ -250,11 +249,9 @@ const Auth = ({ authSuccessCallback, children }) => {
       <>
         <AppBar position="static">
           <Toolbar>
-
             { children }
             <Button color="second"><FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /> { username }</Button>
             <Button color="second" onClick={ signOut }>Logout</Button>
-
           </Toolbar>
         </AppBar>
       </>

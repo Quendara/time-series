@@ -103,17 +103,17 @@ const App = () => {
       <CssBaseline />
 
       <Router>
-        
-          <Auth authSuccessCallback={ authSuccessCallback } >
-                <NavLink to="/links" className={ classes.title }   >
-                  <Typography variant="h6" >
-                    <FontAwesomeIcon icon={ faCameraRetro } className="mr-2" />
+
+        <Auth authSuccessCallback={ authSuccessCallback } >
+          <NavLink to="/" className={ classes.title }   >
+            <Typography variant="h6" >
+              <FontAwesomeIcon icon={ faCameraRetro } className="mr-2" />
                     Links
                 </Typography>
-                </NavLink>
-                <NavLink to="/time" className={ classes.title }   >Time-Series</NavLink>                
-          </Auth>
-        
+          </NavLink>
+          <NavLink to="/time" className={ classes.title }   >Time-Series</NavLink>
+        </Auth>
+
 
         <br></br>
         <Grid container justify="center" >
@@ -123,11 +123,15 @@ const App = () => {
                 <Route exact path="/time" >
                   <TimeSeries username={ username } token={ jwtTocken } />
                 </Route>
-                <Route exact path="/links" >
-                  <ListMain token={ jwtTocken } />
+                <Route exact path="/" >
+                  <Grid container justify="center" >
+                    <Grid item xs={ 12 } lg={ 10 }>
+                      <ListMain token={ jwtTocken } />
+                    </Grid>
+                  </Grid>
                 </Route>
                 <Route exact path="/demo" component={ StyleDemo }></Route>
-                
+
 
 
               </>
