@@ -125,19 +125,14 @@ const App = () => {
                 </Route>
                 <Route exact path="/" >
                   <Grid container justify="center" >
-                    <Grid item xs={ 12 } lg={ 10 }>
+                    <Grid item xs={ 12 } lg={ 8 }>
                       <ListMain token={ jwtTocken } />
                     </Grid>
                   </Grid>
                 </Route>
                 <Route exact path="/demo" component={ StyleDemo }></Route>
-
-
-
               </>
             }
-
-
           </Grid>
         </Grid>
       </Router>
