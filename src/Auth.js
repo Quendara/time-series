@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent } from '@material-ui/core/';
+import { List, ListItem } from '@material-ui/core/';
+
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  //  faPlus,
-  faAngleDoubleRight
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleDoubleRight, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 
 import jwt_decode from "jwt-decode";
 
@@ -21,18 +22,6 @@ const poolData = {
 
 
 const Auth = ({ authSuccessCallback, children }) => {
-
-  // const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
-
-  // const menuHandleClick = (event) => { // : React.MouseEvent<HTMLButtonElement>
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
-
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -70,10 +59,12 @@ const Auth = ({ authSuccessCallback, children }) => {
         });
       }
     }
-  });
+  } );
 
-  const handleClick = event => {
-    event.preventDefault();
+  const signIn = event => {
+    // event.preventDefault();
+    console.log("username ", username);
+    console.log("password ", password);
 
     if (username.length > 0 && password.length > 0) {
       // send ONLY when it's filled out
@@ -101,6 +92,18 @@ const Auth = ({ authSuccessCallback, children }) => {
       authSuccessCallback("", "");
     }
   };
+
+  const onPasswortChange = ( e ) => {
+    console.log( e.key )
+    if( e.key === "Enter") {
+      signIn(e)
+    }
+    else {
+      // setPassword( e.target.value  )
+    }
+    
+
+  }
 
   const authImpl = (username, password) => {
     // Amazon Cognito creates a session which includes the id, access, and refresh tokens of an authenticated user.
@@ -172,53 +175,88 @@ const Auth = ({ authSuccessCallback, children }) => {
   if (cognitoUser == null) {
     return (
       <>
-        <>
-          <div className="nav-wrapper" id="navbarNavDropdown">
-            <div className="row">
-              <div className=" col s12" >
-                <a href="#" className="brand-logo hide-on-med-and-down">Photos</a>
-                <ul id="nav-mobile" className="right">
+        <Grid
+          container
+          justify="center"
+          alignItems="center"  >
 
-                  <form className="form-inline" onSubmit={ handleClick }>
+          <Grid item xs={ 11 } lg={ 12 } >
+            x<br />
+            x<br />
+            x<br />
+            x<br />
+          </Grid>
+          <Grid item xs={ 11 } lg={ 4 } >
+            <Card>
+              <List>
+                <ListItem>
+                  <Typography variant="h4" >Log in</Typography>
+                  <Divider variant="middle"  />
+                </ListItem>
+                <form className="form-inline" onSubmit={ signIn } >
+                  <ListItem>
+                    <TextField
+                      value={ username }
+                      error={ trySend }
+                      fullWidth
+                      style={{ margin: 8 }}
+                      variant="outlined"
+                      className={ getInputClass(username) }
+                      label="Name"
+                      onChange={ e => setUsername(e.target.value) }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <TextField
+                      type="password"
+                      value={ password }
+                      error={ trySend }
+                      fullWidth
+                      style={{ margin: 8 }}
+                      variant="outlined"
+                      className={ getInputClass(password) }
+                      label="Password"
+                      onKeyPress={ e => onPasswortChange ( e ) }
+                      // onKeyPress={ e => onPasswortChange ( e.target.value ) }
+                      onChange={ e => setPassword(e.target.value) }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <Button color="primary" variant="contained" onClick={ signIn } style={{ margin: 8 }} >
+                      { trySend ? "Loading" : "Sign-In" }
+                      <FontAwesomeIcon icon={ faAngleDoubleRight } className="ml-2" />
+                    </Button>
+                  </ListItem>
+                </form>
+              </List>
+            </Card>
+            <Card>
+              <CardContent>
 
-                    <li>
-                      <input
-                        value={ username }
-                        className={ getInputClass(username) }
-                        placeholder="Name"
-                        onChange={ e => setUsername(e.target.value) }
-                      />
-                    </li>
-                    <li>
-                      <input
-                        type="password"
-                        value={ password }
-                        className={ getInputClass(password) }
-                        placeholder="Password"
-                        onChange={ e => setPassword(e.target.value) }
-                      />
-                    </li>
-                    <li>
-                      <button className="btn btn-primary m-2">
-                        { trySend ? "Loading" : "Sign-In" }
-                        <FontAwesomeIcon icon={ faAngleDoubleRight } className="ml-2" />
-                      </button>
-                    </li>
-                  </form>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </>
+              
+            <h2>{ authError }</h2>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
 
-        <h2>{ authError }</h2>
+
+        
       </>
     );
   } else {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        {children}
+        <AppBar position="static">
+          <Toolbar>
+
+            { children }
+            <Button color="second"><FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /> { username }</Button>
+            <Button color="second" onClick={ signOut }>Logout</Button>
+
+          </Toolbar>
+        </AppBar>
       </>
     );
   }

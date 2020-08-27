@@ -12,7 +12,13 @@ import React, { Component, useState } from "react";
 // /search?user=andre
 
 import { render } from "react-dom";
-
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  IndexRoute,
+  useLocation
+} from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -24,32 +30,35 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+
+
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
 
-import TimeSeries from "./TimeSeries";
-import { Auth } from "./Auth";
 
 import { ThemeProvider, Grid, CssBaseline } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/styles";
 
 import { ListMain } from './listMain';
+import TimeSeries from "./TimeSeries";
+import { StyleDemo } from "./StyleDemo";
+import { Auth } from "./Auth";
 
 
-
-
+import { purple, lightGreen, pink, lightBlue, red } from '@material-ui/core/colors/';
 import './mstyle.css';
 
-import {
-  BrowserRouter as Router,
-  Route,
-  NavLink,
-  IndexRoute,
-  useLocation
-} from "react-router-dom";
+
+
+const theme = createMuiTheme({
+  palette: {
+    type: "dark",
+    primary: lightBlue,
+    secondary: pink,
+    danger: red
+  }
+});
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -87,33 +96,24 @@ const App = () => {
     console.log("authSuccess", token);
   };
 
-  const theme = createMuiTheme({
-    palette: {
-      type: "dark"
-    },
-  });
+
 
   return (
     <ThemeProvider theme={ theme }>
       <CssBaseline />
 
       <Router>
-        <nav>
+        
           <Auth authSuccessCallback={ authSuccessCallback } >
-            <AppBar position="static">
-              <Toolbar>
                 <NavLink to="/links" className={ classes.title }   >
                   <Typography variant="h6" >
                     <FontAwesomeIcon icon={ faCameraRetro } className="mr-2" />
                     Links
                 </Typography>
                 </NavLink>
-                <NavLink to="/time" className={ classes.title }   >Time-Series</NavLink>
-                <FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /><Button color="inherit">{ username } </Button>
-              </Toolbar>
-            </AppBar>
+                <NavLink to="/time" className={ classes.title }   >Time-Series</NavLink>                
           </Auth>
-        </nav>
+        
 
         <br></br>
         <Grid container justify="center" >
@@ -126,6 +126,10 @@ const App = () => {
                 <Route exact path="/links" >
                   <ListMain token={ jwtTocken } />
                 </Route>
+                <Route exact path="/demo" component={ StyleDemo }></Route>
+                
+
+
               </>
             }
 

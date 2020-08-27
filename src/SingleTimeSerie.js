@@ -5,8 +5,9 @@ import GetComponent from "./GetComponent";
 // import SetDialog from "./SetDialog";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import { Button } from '@material-ui/core';
-import { Card, CardContent, Typography, TextField } from '@material-ui/core';
+// import { Button } from '@material-ui/core';
+import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
+import { MyCard } from "./StyledComponents"
 
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
@@ -160,7 +161,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
         );
       } else {
         button = (
-          <Button color="primary" disabled>
+          <Button variant="contained" disabled>
             Submit
           </Button>
         );
@@ -169,13 +170,13 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
       // submitted
       if (!error) {
         button = (
-          <Button type="dashed" disabled>
+          <Button variant="contained" disabled>
             Ok
           </Button>
         );
       } else {
         button = (
-          <Button type="error" disabled>
+          <Button variant="contained" disabled>
             Error..
           </Button>
         );
@@ -185,9 +186,13 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
     return button
   }
 
+  const helperText = (lastValue) => {
+    return "last value is " + lastValue.y + " from " + formatDate(lastValue.x)
+  }
+
 
   return (
-    <Card>
+    <MyCard>
       <CardContent>
         <Typography variant="h5" component="h2">
           { group_name } - <small>[ { group_unit } ]</small>
@@ -203,11 +208,24 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
         />
       </CardContent>
       <CardContent>
-        <TextField variant="outlined" id="standard-basic" label="Value" onChange={ handleChange } />
-        { getButton() } <br />
-                last value : <b> { lastValue.y } </b> from { formatDate(lastValue.x) } <br /><br />
+        <Grid container spacing={ 3 } justify="flex-start" alignItems="flex-start" >
+          <Grid item>
+            <TextField
+              variant="outlined"
+              id="standard-basic"
+              label="Value"
+              onChange={ handleChange }
+              helperText={ helperText(lastValue) }
+
+            />
+          </Grid>
+          <Grid item>
+            { getButton() }
+          </Grid>
+        </Grid>
+
       </CardContent>
-    </Card>
+    </MyCard>
 
   );
 }

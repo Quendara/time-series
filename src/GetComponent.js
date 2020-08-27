@@ -1,8 +1,9 @@
 import React from "react";
 import { Scatter } from "react-chartjs-2";
 import { groupBy } from "underscore";
-
 import { Grid } from '@material-ui/core';
+
+import {MyGridSpace} from "./StyledComponents"
 
 const GetComponent = ({ group_unit, group_id, values }) => {
 
@@ -14,15 +15,43 @@ const GetComponent = ({ group_unit, group_id, values }) => {
     datasets: []
   }
 
+  const fontColor = '#b0bec5'
+  const gridColor = '#102027'
+
   const options = {
     // aspectRatio:5,
     maintainAspectRatio: false,
+    legend: {
+      labels: {
+        // This more specific font property overrides the global property
+        fontColor: fontColor        
+      }
+    },
     scales: {
       xAxes: [
         {
           type: "time",
           time: {
             unit: "month"
+          },
+          ticks: {
+            fontColor: fontColor,
+          },
+          gridLines: {
+            display: true,
+            color: gridColor,
+
+          },
+        }
+      ],
+      yAxes: [
+        {
+          gridLines: {
+            display: true,
+            color: gridColor
+          },
+          ticks: {
+            fontColor: fontColor,
           }
         }
       ]
@@ -158,15 +187,13 @@ const GetComponent = ({ group_unit, group_id, values }) => {
         <Scatter data={ getDatasets(values) } options={ options } />
       </div>
 
-      <Grid container >
-        <Grid item xs={ 12 } >
-          <Grid container spacing={ 3 } alignItems="center" >
+      <MyGridSpace>
+          <Grid container spacing={ 3 } justify="space-evenly" alignItems="center" >
             <Grid item>{ calAvg(values) } { " " + group_unit + " per day" } </Grid>
             <Grid item>{ avgMonth + " " + group_unit + " per month" } </Grid>
             <Grid item>{ avgYear + " " + group_unit + " per year" }</Grid>
           </Grid>
-        </Grid>
-      </Grid>
+      </MyGridSpace>
     </>
   )
 }

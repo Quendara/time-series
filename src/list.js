@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { ListItem, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider } from '@material-ui/core';
 
+import {  MyCard } from "./StyledComponents"
+
+
 const AddForm = ({ onClickFunction, name }) => {
     // props replaced by
 
@@ -77,13 +80,13 @@ const ListEl = ({ name, link, id, removeClickFunction }) => {
 
     return (
         <ListItem>
-            <ListItemText 
-                onClick={ () => window.open(link, "_blank") } 
-                primary=    { <Typography variant="h6" color="primary">{name}</Typography> } 
-                secondary=  { <Typography variant="inherit" noWrap >{link}</Typography> } 
-                />
+            <ListItemText
+                onClick={ () => window.open(link, "_blank") }
+                primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
+                secondary={ <Typography variant="inherit" color="secondary"  noWrap >{ link }</Typography> }
+            />
             <ListItemSecondaryAction onClick={ handleDeleteClick } >
-                <Button variant="contained"  color="secondary">
+                <Button variant="contained" color="secondary">
                     <FontAwesomeIcon icon={ faMinusCircle } />
                 </Button>
             </ListItemSecondaryAction>
@@ -91,10 +94,12 @@ const ListEl = ({ name, link, id, removeClickFunction }) => {
     );
 };
 
-const ListQ = ({ items, removeItemHandle, addItemHandle }) => {
+
+
+export const ListQ = ({ items, removeItemHandle, addItemHandle }) => {
 
     return (
-        <Card>
+        <MyCard>  
             <List>
                 { items.map((item, index) => (
                     <ListEl
@@ -109,8 +114,7 @@ const ListQ = ({ items, removeItemHandle, addItemHandle }) => {
                     <AddForm onClickFunction={ addItemHandle } name={ "Add" } />
                 }
             </List>
-        </Card>
+        </MyCard>
     );
 }
 
-export { ListQ };
