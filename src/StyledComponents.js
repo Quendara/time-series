@@ -10,7 +10,7 @@ export const MyCard = styled(Card)({
     background: '#263238',
     border: 0,
     borderRadius: 10,        
-    padding: '10px',
+    
   });
 
   export const MyGridSpace = styled(Grid)({

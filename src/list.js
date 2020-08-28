@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { ListItem, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider } from '@material-ui/core';
 
-import {  MyCard } from "./StyledComponents"
 
 
 const AddForm = ({ onClickFunction, name }) => {
@@ -101,7 +100,6 @@ const ListEl = ({ name, link, id, removeClickFunction }) => {
 export const ListQ = ({ items, removeItemHandle, addItemHandle }) => {
 
     return (
-        <MyCard>  
             <List>
                 { items.map((item, index) => (
                     <ListEl
@@ -117,7 +115,7 @@ export const ListQ = ({ items, removeItemHandle, addItemHandle }) => {
                     <AddForm onClickFunction={ addItemHandle } name={ "Add" } />
                 }
             </List>
-        </MyCard>
+        
     );
 }
 
