@@ -64,7 +64,8 @@ export const ListMain = ({ token }) => {
   // handles
   const addItemHandle = (name, link) => {
     const id = new Date().getTime();
-    setItems([...items, { name, link, id }]); // push to the end
+    const group = tabValue
+    setItems([...items, { name, link, group, id }]); // push to the end
   };
 
   const removeItemHandle = id => {
