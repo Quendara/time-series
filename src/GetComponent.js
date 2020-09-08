@@ -68,6 +68,11 @@ const GetComponent = ({ group_unit, group_id, values }) => {
       return 2
     }
 
+    if( timedate.length == 0 )
+    {
+      return 0
+    }
+
 
     const startDate = timedate[0];
     const endDate = timedate[timedate.length - 1];
@@ -97,22 +102,23 @@ const GetComponent = ({ group_unit, group_id, values }) => {
 
   const getDatasets = (items) => {
     if (items == null || !Array.isArray(items)) {
-      console.error("Array expected, got");
+      console.error("Array expected, got (" + group_id + ") : "  );
       console.error(items);
-      return;
+      return undefined;
     }
 
     const timedate = items
     // calAvg(timedate);
 
-    const avgLine = [];
-    avgLine.push(timedate[0]);
-    avgLine.push(timedate[timedate.length - 1]);
 
     const color01 = "rgba(153, 102, 255, ";
     const color02 = "rgba(54, 162, 235, ";
 
     if (false) {
+      const avgLine = [];
+      avgLine.push(timedate[0]);
+      avgLine.push(timedate[timedate.length - 1]);
+  
       this.data = {
         datasets: [
           {
@@ -149,15 +155,15 @@ const GetComponent = ({ group_unit, group_id, values }) => {
 
       data.datasets = [];
 
-      console.log("dataInGroups", dataInGroups)
+      // console.log("dataInGroups", dataInGroups)
 
       for (var key in dataInGroups) {
         // console.log("o." + prop + " = " + obj[prop]);
 
         const localtimedate = dataInGroups[key];
 
-        console.log("plot", key)
-        console.log("localtimedate", localtimedate)
+        // console.log("plot", key)
+        // console.log("localtimedate", localtimedate)
 
         data.datasets.push({
           label: key,
@@ -184,7 +190,8 @@ const GetComponent = ({ group_unit, group_id, values }) => {
   return (
     <>
       <div className="chart-container" style={ { "height": "35vh" } }>
-        <Scatter data={ getDatasets(values) } options={ options } />
+        { data.datasets.length === undefined ? (<h1>No Data</h1>) : 
+        ( <Scatter data={ getDatasets(values) } options={ options } /> )}
       </div>
 
       <MyGridSpace>
