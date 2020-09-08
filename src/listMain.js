@@ -3,13 +3,9 @@ import { render } from "react-dom";
 import { ListQ } from "./list";
 import { findUnique } from "./helper";
 
-
 import { MyCard } from "./StyledComponents"
-
 import { Tab, Tabs, Card, Paper } from '@material-ui/core';
-
 import Settings from "./Settings";
-
 
 
 export const ListMain = ({ token }) => {
@@ -61,6 +57,13 @@ export const ListMain = ({ token }) => {
         .catch(err => { console.log("XX", err) })
     }
   };
+
+
+  // POST     /links {name, link, group, id}
+  // DELETE   /links/:id
+  // UPDATE   /links/:id/update/:type/:value 
+  
+
   // handles
   const addItemHandle = (name, link) => {
     const id = new Date().getTime();
@@ -72,6 +75,28 @@ export const ListMain = ({ token }) => {
     const items2 = items.filter(item => item.id !== id);
     setItems(items2); // push to the end
   };
+
+  const updateFunction = (id, name, link) => {
+    // const items2 = items.filter(item => item.id !== id);
+
+    const items2 = items.map(( e, index) => {
+
+      if (e.id === id) {
+          let newObject = Object.assign({}, e )
+          newObject['name'] = name
+          newObject['link'] = link
+          return newObject
+      }
+      return e
+    
+    })
+      
+
+    setItems(items2); // push to the end
+  };
+
+
+  
 
   const createHeader = (items) => {
     return findUnique(items, "group").map((item, index) => (
@@ -95,8 +120,7 @@ export const ListMain = ({ token }) => {
 
       <Paper square>
         <Tabs
-          value={tabIndex}
-          
+          value={tabIndex}          
           variant="fullWidth"
           indicatorColor="primary"
           textColor="primary"
@@ -113,6 +137,7 @@ export const ListMain = ({ token }) => {
           items={ filterItems( items ) }
           addItemHandle={ addItemHandle }
           removeItemHandle={ removeItemHandle }
+          updateFunction={updateFunction}
         />
       </MyCard >
     </>
