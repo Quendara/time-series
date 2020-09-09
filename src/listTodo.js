@@ -4,8 +4,11 @@ import { ListQ } from "./list";
 import { findUnique } from "./helper";
 
 import { MyCard } from "./StyledComponents"
-import { CardHeader, CardContent } from '@material-ui/core';
-import {useStyles, theme} from "./Styles"
+import { CardHeader, CardContent, Button, ButtonGroup, Divider } from '@material-ui/core';
+import { useStyles, theme } from "./Styles"
+
+import {todoListMockData} from "./data/todo"
+
 import Settings from "./Settings";
 
 export const ListTodo = ({ token }) => {
@@ -14,7 +17,13 @@ export const ListTodo = ({ token }) => {
 
     // const [tabValue, setTabValue] = useState("Start");
     // const [tabIndex, setTabIndex] = useState(0);
+
     const [items, setItems] = useState([]);
+
+    const [edit, setEdit] = useState(false);
+    const [hideCompleted, setHideCompleted] = useState(false);
+
+
     const loadWhenTokenSet = (token) => {
 
 
@@ -23,13 +32,8 @@ export const ListTodo = ({ token }) => {
         console.log("authSuccess", token);
 
         if (token.length > 0 && items.length == 0) {
-            const mock =
-                [
-                    { "id": 1, "group": "Start", "name": "Möhren", checked: true },
-                    { "id": 2, "group": "Start", "name": "Gurken", checked: false },
-                    { "id": 3, "group": "Kühltheke", "name": "Wurst", checked: false },
-                ]
-            setItems(mock);
+
+            setItems(todoListMockData);
 
 
             //       // fetch URL with valid token
@@ -68,7 +72,7 @@ export const ListTodo = ({ token }) => {
 
 
     // handles
-    const addItemHandle = (name, link, group="") => {
+    const addItemHandle = (name, link, group = "") => {
         const id = new Date().getTime();
         // const group = tabValue
         setItems([...items, { name, link, group, id }]); // push to the end
@@ -114,34 +118,49 @@ export const ListTodo = ({ token }) => {
         setItems(items2);
     };
 
-    const createHeader = (items) => {
+    const createLists = (items) => {
         return findUnique(items, "group").map((item, index) => (
             <>
-                <CardContent>                    
-                    <ListQ
-                        header={ item.value }
-                        group={ item.value }
-                        items={ item.photos }                        
-                        addItemHandle={ addItemHandle }
-                        type="todo"
-                        removeItemHandle={ removeItemHandle }
-                        updateFunction={ updateFunction }
-                        toggleFunction={ toggleFunction }
-
-                    />
-
-                </CardContent >
-
+                <ListQ
+                    editList={ edit }
+                    header={ item.value }
+                    group={ item.value }
+                    items={ item.photos }
+                    addItemHandle={ addItemHandle }
+                    type="todo"
+                    removeItemHandle={ removeItemHandle }
+                    updateFunction={ updateFunction }
+                    toggleFunction={ toggleFunction }
+                />
             </>
         ))
     }
+
+    const filterCompleted = ( items, hideCompleted ) => {
+        if( hideCompleted ){
+            return items.filter( item => {
+                return  item.checked === false
+              })      
+        }
+        else {
+            return items
+        }
+      }
+    
 
     return (
         <>
             { loadWhenTokenSet(token) }
 
+            <ButtonGroup variant="contained" >
+            <Button  color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >Edit Lists</Button>
+            <Button  color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >Hide Completed</Button>
+            </ButtonGroup>
+            <Divider variant="middle" />
+            <br />
+
             <MyCard>
-                { createHeader(items) }
+                { createLists(filterCompleted( items, hideCompleted )) }
             </MyCard >
         </>
     );
