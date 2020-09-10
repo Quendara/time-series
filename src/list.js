@@ -74,8 +74,8 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
 
     return (
         <ListItem>
-            <Grid container spacing={ 2 } >
-                <Grid item xs={ 10 } md={ 6 } >
+            <Grid container alignItems="flex-end" spacing={ 2 } >
+                <Grid item  xs={ 10 } md={ 6 } >
                     <TextField
                         value={ linkName }
                         error={ hasError(linkName) }
@@ -87,7 +87,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
                     />
                 </Grid>
                 { type !== "todo" &&
-                    <Grid xs={ 10 } md={ 6 } >
+                    <Grid item xs={ 10 } md={ 6 } >
                         <TextField
                             error={ hasError(linkUrl) }
                             value={ linkUrl }
@@ -200,9 +200,9 @@ const percentge = (float_value) => {
     return "" + (float_value * 100).toFixed(1) + "%"
 }
 
-const printRemaining = ( filtered, total ) => {
-    if( filtered === total ) return total;
-    return percentge( filtered/total )
+const printRemaining = (filtered, total) => {
+    if (filtered === total) return total;
+    return percentge(filtered / total)
 }
 
 export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, toggleFunction, type, group, editList }) => {
@@ -210,12 +210,14 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
     return (
         <List
             dense={ true }>
-            <MyListItemHeader>
-                { header }
-                <ListItemSecondaryAction>
-                    { printRemaining( filterCompleted(items).length, items.length )}
-                </ListItemSecondaryAction>
-            </MyListItemHeader>
+            { type === "todo" &&
+                <MyListItemHeader>
+                    { header }
+                    <ListItemSecondaryAction>
+                        { printRemaining(filterCompleted(items).length, items.length) }
+                    </ListItemSecondaryAction>
+                </MyListItemHeader>
+            }
 
             { items.map((item, index) => (
                 <ListEl

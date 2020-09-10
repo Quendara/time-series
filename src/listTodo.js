@@ -74,8 +74,9 @@ export const ListTodo = ({ token }) => {
     // handles
     const addItemHandle = (name, link, group = "") => {
         const id = new Date().getTime();
+        const checked = false
         // const group = tabValue
-        setItems([...items, { name, link, group, id }]); // push to the end
+        setItems([...items, { id, name, link, group, checked }]); // push to the end
     };
 
     const removeItemHandle = id => {
@@ -92,6 +93,7 @@ export const ListTodo = ({ token }) => {
                 let newObject = Object.assign({}, e)
                 newObject['name'] = name
                 newObject['link'] = link
+                newObject['checked'] = false
                 return newObject
             }
             return e
