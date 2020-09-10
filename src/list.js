@@ -147,12 +147,12 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
             { edit ? (<AddForm name={ name } url={ link } group={ group } onClickFunction={ onClickFunction } type={ type } />) : (
                 <>
                     { type === "todo" ? (
-                        <ListItem button  >
-                            <ListItemIcon onClick={ onCheckToggle }>
+                        <ListItem button onClick={ () => toggleFunction(id) }  >
+                            <ListItemIcon>
                                 { checked ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked  /> }
                             </ListItemIcon>
                             <ListItemText
-                                onClick={ () => toggleFunction(id) }
+                                
                                 primary={ checked ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
                             { editList &&
                                 <ListItemSecondaryAction >
