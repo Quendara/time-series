@@ -23,15 +23,15 @@ export const ListTodo = ({ token }) => {
     const [edit, setEdit] = useState(false);
     const [hideCompleted, setHideCompleted] = useState(false);
 
-
+    
     const loadWhenTokenSet = (token) => {
 
-
-
         // console.log("username", username);
-        console.log("authSuccess", token);
+        console.log( "loadWhenTokenSet" );
 
         if (token.length > 0 && items.length == 0) {
+
+            console.log("authSuccess", token);
 
             setItems(todoListMockData);
 
@@ -120,10 +120,15 @@ export const ListTodo = ({ token }) => {
         setItems(items2);
     };
 
+    const groupedItems = ( items, hideCompleted ) =>{
+        return findUnique(items, "group")
+    }
+    
+
     const createLists = (items) => {
         return findUnique(items, "group").map((item, index) => (
-            <>
                 <ListQ
+                    key={index}
                     editList={ edit }
                     header={ item.value }
                     group={ item.value }
@@ -134,7 +139,6 @@ export const ListTodo = ({ token }) => {
                     updateFunction={ updateFunction }
                     toggleFunction={ toggleFunction }
                 />
-            </>
         ))
     }
 

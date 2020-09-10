@@ -32,7 +32,7 @@ export const ListMain = ({ token }) => {
       // fetch URL with valid token
       const url = Settings.baseAwsUrl + "links";
 
-      console.log("useEffect");
+      console.log("useEffect"); 
 
       const fakeToken = "bnbvbnvbnvnb";
 
@@ -69,7 +69,7 @@ export const ListMain = ({ token }) => {
     const id = new Date().getTime();
     const group = tabValue
     setItems([...items, { name, link, group, id }]); // push to the end
-  };
+  }; 
 
   const removeItemHandle = id => {
     const items2 = items.filter(item => item.id !== id);

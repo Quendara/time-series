@@ -70,7 +70,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
             // alert("Enter")
             handleClick(e)
         }
-    }
+    }  
 
     return (
         <ListItem>
@@ -96,7 +96,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
                             variant="standard"
                             onChange={ e => setLinkUrl(e.target.value) }
                         />
-                    </Grid> }
+                    </Grid> } 
             </Grid>
 
             <ListItemSecondaryAction onClick={ handleClick } >
@@ -149,7 +149,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                     { type === "todo" ? (
                         <ListItem button  >
                             <ListItemIcon onClick={ onCheckToggle }>
-                                { checked ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked color="" /> }
+                                { checked ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked  /> }
                             </ListItemIcon>
                             <ListItemText
                                 onClick={ () => toggleFunction(id) }
