@@ -250,8 +250,8 @@ const Auth = ({ authSuccessCallback, children }) => {
         <AppBar position="static">
           <Toolbar>
             { children }
-            <Button color="secondary"><FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /> { username }</Button>
-            <Button color="secondary" onClick={ signOut }>Logout</Button>
+            <Button><FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /> { username }</Button>
+            <Button onClick={ signOut }>Logout</Button>
           </Toolbar>
         </AppBar>
       </>
