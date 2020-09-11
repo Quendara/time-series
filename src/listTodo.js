@@ -1,19 +1,21 @@
 import React, { Component, useState, useEffect } from "react";
 import { render } from "react-dom";
 import { ListQ } from "./list";
-import { findUnique } from "./helper";
+import { findUnique, restCallToBackendAsync } from "./helper";
 
 import { MyCard } from "./StyledComponents"
 import { CardHeader, CardContent, Button, ButtonGroup, Divider } from '@material-ui/core';
 import { useStyles, theme } from "./Styles"
 
-import {todoListMockData} from "./data/todo"
-
+import { todoListMockData } from "./data/todo"
 import Settings from "./Settings";
+
+
 
 export const ListTodo = ({ token }) => {
 
     const classes = useStyles();
+    const baseRestApi = "https://obhvr3tr3h.execute-api.eu-central-1.amazonaws.com/Prod"
 
     // const [tabValue, setTabValue] = useState("Start");
     // const [tabIndex, setTabIndex] = useState(0);
@@ -22,46 +24,41 @@ export const ListTodo = ({ token }) => {
 
     const [edit, setEdit] = useState(false);
     const [hideCompleted, setHideCompleted] = useState(false);
-
-    
     const loadWhenTokenSet = (token) => {
 
         // console.log("username", username);
-        console.log( "loadWhenTokenSet" );
+        console.log("loadWhenTokenSet");
 
         if (token.length > 0 && items.length == 0) {
 
             console.log("authSuccess", token);
 
-            setItems(todoListMockData);
+            // setItems(todoListMockData);
 
 
             //       // fetch URL with valid token
             //       const url = Settings.baseAwsUrl + "links";
 
-            //       console.log("useEffect");
+            const url = [ baseRestApi, "todos"].join("/")
+            const options = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token
+                }
+            };
 
-            //       const fakeToken = "bnbvbnvbnvnb";
-
-            //       const options = {
-            //         headers: {
-            //           "Content-Type": "application/json",
-            //           Authorization: token
-            //         }
-            //       };
-
-            //       fetch(url, options)
-            //         .then(res => res.json())
-            //         .then(
-            //           result => {
-            //             console.log("result", result);
-            //             setItems(result);
-            //           },
-            //           (error) => {
-            //             console.error("Could not load links : ", error.message);
-            //           }
-            //         )
-            //         .catch(err => { console.log("XX", err) })
+            fetch(url, options)
+                .then(res => res.json())
+                .then(
+                    result => {
+                        console.log("result.body", result.body);
+                        setItems(JSON.parse(result.body));
+                    },
+                    (error) => {
+                        console.error("Could not load links : ", error.message);
+                    }
+                )
+                .catch(err => { console.log("XX", err) })
         }
     };
 
@@ -99,74 +96,95 @@ export const ListTodo = ({ token }) => {
             return e
         })
 
-        setItems(items2);
+        setItems(items2);   
     };
+
+    const isChecked = ( checked ) => {
+        if( typeof checked === "boolean"){ return checked}
+        if( typeof checked === "string"){ return checked==="true"}
+        return false
+    }
+
+
     const toggleFunction = (id) => {
         // const items2 = items.filter(item => item.id !== id);
 
         console.log("toggleFunction " + id)
+        let newStatus = false
 
         const items2 = items.map((e, index) => {
 
             if (e.id === id) {
                 let newObject = Object.assign({}, e)
-                newObject['checked'] = !e.checked
+                newObject['checked'] = !isChecked(e.checked)
+                newStatus = !e.checked
                 // newObject['link'] = link
                 return newObject
             }
             return e
         })
 
+        const url = [baseRestApi, 'todos', id, "checked", newStatus ].join("/")
+
+        const loggingMessage = "toggle todo "
+        restCallToBackendAsync(url, token.access, loggingMessage).then(data => {
+
+            //const res = JSON.parse(data)
+            console.log("restCallToBackendAsync : ", data)
+            
+        })             
+
         setItems(items2);
     };
 
-    const groupedItems = ( items, hideCompleted ) =>{
+    const groupedItems = (items, hideCompleted) => {
         return findUnique(items, "group")
     }
-    
+
 
     const createLists = (items) => {
         return findUnique(items, "group").map((item, index) => (
-                <ListQ
-                    key={index}
-                    editList={ edit }
-                    header={ item.value }
-                    group={ item.value }
-                    items={ item.photos }
-                    addItemHandle={ addItemHandle }
-                    type="todo"
-                    removeItemHandle={ removeItemHandle }
-                    updateFunction={ updateFunction }
-                    toggleFunction={ toggleFunction }
-                />
+            <ListQ
+                key={ index }
+                editList={ edit }
+                header={ item.value }
+                group={ item.value }
+                items={ item.photos }
+                addItemHandle={ addItemHandle }
+                type="todo"
+                removeItemHandle={ removeItemHandle }
+                updateFunction={ updateFunction }
+                toggleFunction={ toggleFunction }
+            />
         ))
     }
 
-    const filterCompleted = ( items, hideCompleted ) => {
-        if( hideCompleted ){
-            return items.filter( item => {
-                return  item.checked === false
-              })      
+    const filterCompleted = (items, hideCompleted) => {
+        if (hideCompleted) {
+            return items.filter(item => {
+                return item.checked === false
+            })
         }
         else {
             return items
         }
-      }
-    
+    }
+
 
     return (
         <>
             { loadWhenTokenSet(token) }
 
             <ButtonGroup variant="contained" >
-            <Button  color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >Edit Lists</Button>
-            <Button  color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >Hide Completed</Button>
+                <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >Edit Lists</Button>
+                <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >Hide Completed</Button>
             </ButtonGroup>
             <Divider variant="middle" />
+            
             <br />
 
             <MyCard>
-                { createLists(filterCompleted( items, hideCompleted )) }
+                { createLists(filterCompleted(items, hideCompleted)) }
             </MyCard >
         </>
     );

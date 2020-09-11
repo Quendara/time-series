@@ -139,7 +139,12 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         else {
             window.open(link, "_blank")
         }
+    }
 
+    const isChecked = ( checked ) => {
+        if( typeof checked === "boolean"){ return checked}
+        if( typeof checked === "string"){ return checked==="true"}
+        return false
     }
 
     return (
@@ -149,11 +154,11 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                     { type === "todo" ? (
                         <ListItem button onClick={ () => toggleFunction(id) }  >
                             <ListItemIcon>
-                                { checked ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked  /> }
+                                { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked  /> }
                             </ListItemIcon>
                             <ListItemText
                                 
-                                primary={ checked ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
+                                primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
                             { editList &&
                                 <ListItemSecondaryAction >
                                     <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
