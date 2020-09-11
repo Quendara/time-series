@@ -143,7 +143,7 @@ export const ListTodo = ({ token }) => {
 
 
     const createLists = (items) => {
-        return findUnique(items, "group").map((item, index) => (
+        return findUnique(items, "group", false).map((item, index) => (
             <ListQ
                 key={ index }
                 editList={ edit }
