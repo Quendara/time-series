@@ -15,7 +15,7 @@ import Settings from "./Settings";
 export const ListTodo = ({ token }) => {
 
     const classes = useStyles();
-    const baseRestApi = "https://obhvr3tr3h.execute-api.eu-central-1.amazonaws.com/Prod"
+    const baseRestApi = "https://f7oa7pm5ig.execute-api.eu-central-1.amazonaws.com/Prod"
 
     // const [tabValue, setTabValue] = useState("Start");
     // const [tabIndex, setTabIndex] = useState(0);
@@ -24,6 +24,8 @@ export const ListTodo = ({ token }) => {
 
     const [edit, setEdit] = useState(false);
     const [hideCompleted, setHideCompleted] = useState(false);
+    
+    
     const loadWhenTokenSet = (token) => {
 
         // console.log("username", username);
@@ -74,6 +76,40 @@ export const ListTodo = ({ token }) => {
         const checked = false
         // const group = tabValue
         setItems([...items, { id, name, link, group, checked }]); // push to the end
+
+        console.log("Submitting... ");
+
+        // this.setState({ dataValid: false, submitted: true }); // disable button while submitting
+
+        const url = [ baseRestApi, "todos"].join("/")
+
+        const itemToSend = {
+            name, // :name
+            group
+        }
+
+        console.log(itemToSend);
+
+        fetch(url, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: token
+        },
+        body: JSON.stringify(itemToSend)
+        }).then(
+        result => {
+            // setSubmitted(true)
+            console.log(result);
+        },
+        error => {
+            // setError(true)
+            console.error(error);
+        }
+        );
+
+          
     };
 
     const removeItemHandle = id => {

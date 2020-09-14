@@ -5,6 +5,7 @@ import { List, ListItem } from '@material-ui/core/';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleRight, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import jwt_decode from "jwt-decode";
 
@@ -250,14 +251,15 @@ const Auth = ({ authSuccessCallback, children }) => {
         <AppBar position="static">
           <Toolbar>
             { children }
-            <Button><FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /> { username }</Button>
-            <Button onClick={ signOut }>Logout</Button>
+
+            
+            <Button onClick={ signOut }><ExitToAppIcon /></Button>
           </Toolbar>
         </AppBar>
       </>
     );
   }
 };
-
+// <Button><FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /> { username }</Button>
 export { Auth };
 

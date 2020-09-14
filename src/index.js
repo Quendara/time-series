@@ -13,13 +13,11 @@ import {
 } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  //  faPlus,
-  faAngleDoubleRight,
-  faUserAstronaut,
-  faCameraRetro
 
-} from "@fortawesome/free-solid-svg-icons";
+
+import TimelineIcon from '@material-ui/icons/Timeline';
+import ShareIcon from '@material-ui/icons/Share';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 // import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
@@ -70,10 +68,10 @@ const App = () => {
 
         <Auth authSuccessCallback={ authSuccessCallback } >
           <NavLink to="/" className={ classes.title }   >
-            <Typography variant="h6" ><FontAwesomeIcon icon={ faCameraRetro } className="mr-2" />Links</Typography>
+            <ShareIcon />
           </NavLink>
-          <NavLink to="/time" className={ classes.title }   >Time-Series</NavLink>
-          <NavLink to="/todo" className={ classes.title }   >Todos</NavLink>
+          <NavLink to="/time" className={ classes.title }   ><TimelineIcon /></NavLink>
+          <NavLink to="/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
         </Auth>
 
 
