@@ -15,7 +15,7 @@ export const sumArray = ( list, key ) => {
 
 
 
-export const findUnique = ( list, group, sortByCount = true, limit=5 ) => {
+export const findUnique = ( list, group, sortByCount = true, limit=50 ) => {
     let groups = groupBy(list, group);
     let uniqueItems = []
     for (var key in groups) {
@@ -38,7 +38,7 @@ export const findUnique = ( list, group, sortByCount = true, limit=5 ) => {
     if( sortByCount ){ sortByCriteria='count'}
 
     uniqueItems = sortBy(uniqueItems, sortByCriteria ); // sort (str) is ascending 
-    uniqueItems = uniqueItems.reverse() // to reverse the order, of course replace with better impl
+    // uniqueItems = uniqueItems.reverse() // to reverse the order, of course replace with better impl
 
     // console.log("uniqueItems (SORTED) : ", uniqueItems);
     return uniqueItems.slice(0, limit) // reduce

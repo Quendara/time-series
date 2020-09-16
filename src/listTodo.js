@@ -10,6 +10,8 @@ import { useStyles, theme } from "./Styles"
 import { todoListMockData } from "./data/todo"
 import Settings from "./Settings";
 
+import EditIcon from '@material-ui/icons/Edit';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 
 export const ListTodo = ({ token }) => {
@@ -24,8 +26,8 @@ export const ListTodo = ({ token }) => {
 
     const [edit, setEdit] = useState(false);
     const [hideCompleted, setHideCompleted] = useState(false);
-    
-    
+
+
     const loadWhenTokenSet = (token) => {
 
         // console.log("username", username);
@@ -35,13 +37,7 @@ export const ListTodo = ({ token }) => {
 
             console.log("authSuccess", token);
 
-            // setItems(todoListMockData);
-
-
-            //       // fetch URL with valid token
-            //       const url = Settings.baseAwsUrl + "links";
-
-            const url = [ baseRestApi, "todos"].join("/")
+            const url = [baseRestApi, "todos"].join("/")
             const options = {
                 headers: {
                     "Content-Type": "application/json",
@@ -54,7 +50,7 @@ export const ListTodo = ({ token }) => {
                 .then(
                     result => {
                         console.log("result.body", result.body);
-                        setItems(JSON.parse(result.body));
+                        setItems(cleanUpItems(JSON.parse(result.body)));
                     },
                     (error) => {
                         console.error("Could not load links : ", error.message);
@@ -63,6 +59,19 @@ export const ListTodo = ({ token }) => {
                 .catch(err => { console.log("XX", err) })
         }
     };
+
+    const cleanUpItems = (items) => {
+
+        return items.map((i) => {
+
+            let retItem = Object.assign({}, i)
+
+            retItem['checked'] = isChecked(retItem['checked'])
+
+            return retItem
+        })
+
+    }
 
 
     // POST     /links {name, link, group, id}
@@ -81,7 +90,7 @@ export const ListTodo = ({ token }) => {
 
         // this.setState({ dataValid: false, submitted: true }); // disable button while submitting
 
-        const url = [ baseRestApi, "todos"].join("/")
+        const url = [baseRestApi, "todos"].join("/")
 
         const itemToSend = {
             name, // :name
@@ -91,30 +100,45 @@ export const ListTodo = ({ token }) => {
         console.log(itemToSend);
 
         fetch(url, {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token
-        },
-        body: JSON.stringify(itemToSend)
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: token
+            },
+            body: JSON.stringify(itemToSend)
         }).then(
-        result => {
-            // setSubmitted(true)
-            console.log(result);
-        },
-        error => {
-            // setError(true)
-            console.error(error);
-        }
+            result => {
+                // setSubmitted(true)
+                console.log(result);
+            },
+            error => {
+                // setError(true)
+                console.error(error);
+            }
         );
 
-          
+
     };
 
     const removeItemHandle = id => {
         const items2 = items.filter(item => item.id !== id);
         setItems(items2); // push to the end
+
+        const url = [baseRestApi, "todos", id].join("/")
+
+        fetch(url, {
+            method: "DELETE",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: token
+            },
+            // body: JSON.stringify(itemToSend)
+        }).then(
+            result => { console.log(result); },
+            error => { console.error(error); }
+        );
     };
 
     const updateFunction = (id, name, link) => {
@@ -132,12 +156,12 @@ export const ListTodo = ({ token }) => {
             return e
         })
 
-        setItems(items2);   
+        setItems(items2);
     };
 
-    const isChecked = ( checked ) => {
-        if( typeof checked === "boolean"){ return checked}
-        if( typeof checked === "string"){ return checked==="true"}
+    const isChecked = (checked) => {
+        if (typeof checked === "boolean") { return checked }
+        if (typeof checked === "string") { return checked === "true" }
         return false
     }
 
@@ -153,22 +177,22 @@ export const ListTodo = ({ token }) => {
             if (e.id === id) {
                 let newObject = Object.assign({}, e)
                 newObject['checked'] = !isChecked(e.checked)
-                newStatus = !e.checked
+                newStatus = newObject['checked']
                 // newObject['link'] = link
                 return newObject
             }
             return e
         })
 
-        const url = [baseRestApi, 'todos', id, "checked", newStatus ].join("/")
+        const url = [baseRestApi, 'todos', id, "checked", newStatus].join("/")
 
         const loggingMessage = "toggle todo "
         restCallToBackendAsync(url, token.access, loggingMessage).then(data => {
 
             //const res = JSON.parse(data)
             console.log("restCallToBackendAsync : ", data)
-            
-        })             
+
+        })
 
         setItems(items2);
     };
@@ -207,16 +231,17 @@ export const ListTodo = ({ token }) => {
     }
 
 
+
     return (
         <>
             { loadWhenTokenSet(token) }
 
             <ButtonGroup variant="contained" >
-                <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >Edit Lists</Button>
-                <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >Hide Completed</Button>
+                <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } startIcon={ <EditIcon /> }> Edit Lists</Button>
+                <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } startIcon={ <VisibilityIcon /> } >Hide Completed</Button>
             </ButtonGroup>
             <Divider variant="middle" />
-            
+
             <br />
 
             <MyCard>

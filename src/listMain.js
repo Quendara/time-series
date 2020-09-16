@@ -48,7 +48,7 @@ export const ListMain = ({ token }) => {
         .then(
           result => {
             console.log("result", result);
-            setItems(result);
+            setItems(cleanUpItems( result ));
           },
           (error) => {
             console.error("Could not load links : ", error.message);
@@ -57,6 +57,10 @@ export const ListMain = ({ token }) => {
         .catch(err => { console.log("XX", err) })
     }
   };
+
+  const cleanUpItems = (items) => {
+    return items
+  }
 
 
   // POST     /links {name, link, group, id}
