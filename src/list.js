@@ -245,6 +245,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                     key={ index }
                     id={ item.id }
                     name={ item.name }
+                    group={ group } 
                     checked={ item.checked }
                     link={ item.link }
                     updateFunction={ updateFunction }
