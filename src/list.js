@@ -19,6 +19,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
     // props replaced by
 
     const [linkName, setLinkName] = useState(name);
+    const [groupName, setGroupName] = useState(group);
     const [linkUrl, setLinkUrl] = useState(url);
     const [trySend, setTrySend] = useState(false);
 
@@ -32,6 +33,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
 
                 setLinkName("");
                 setLinkUrl("");
+                setGroupName("");
                 setTrySend(false);
             } else {
                 // indicate that user has tried to send, now how potenial issues on UI
@@ -86,6 +88,17 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
                         onChange={ e => setLinkName(e.target.value) }
                     />
                 </Grid>
+                <Grid item xs={ 10 } md={ 6 } >
+                    <TextField
+                        value={ groupName }
+                        error={ hasError(groupName) }
+                        label="Group"
+                        fullWidth
+                        variant="standard"
+                        onKeyPress={ e => checkEnter(e) }
+                        onChange={ e => setGroupName(e.target.value) }
+                    />
+                </Grid>                
                 { type !== "todo" &&
                     <Grid item xs={ 10 } md={ 6 } >
                         <TextField
@@ -170,21 +183,23 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                 </ListItemSecondaryAction> }
                         </ListItem>
                     ) : (
-                            <ListItem>
+                            <ListItem button>
                                 <ListItemText
                                     onClick={ () => window.open(link, "_blank") }
                                     primary={ <Typography variant="h5" color="primary" >{ name }</Typography> }
                                     secondary={ <Typography variant="inherit" color="textSecondary" noWrap >{ link }</Typography> }
                                 />
 
-                                <ListItemSecondaryAction >
-                                    <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemSecondaryAction>
+                                { editList &&
+                                    <ListItemSecondaryAction >
+                                        <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItemSecondaryAction> }
+
                             </ListItem>
                         ) }
                 </>
@@ -214,7 +229,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
     return (
         <List
-            dense={ true }>
+            dense={ false }>
             <MyListItemHeader>
                 { header }
                 { type === "todo" &&
@@ -239,9 +254,9 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                 />
             )) }
 
-            { addItemHandle != undefined &&
+            { ( ( addItemHandle !== undefined) && editList ) &&
                 <AddForm onClickFunction={ addItemHandle } group={ group } label={ "Add" } type={ type } />
-            }
+            } 
         </List>
 
     );

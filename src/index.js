@@ -31,11 +31,10 @@ import Button from '@material-ui/core/Button';
 
 import { ThemeProvider, Grid, CssBaseline } from "@material-ui/core";
 
-import { ListMain } from './listMain';
 import { ListTodo } from './listTodo';
 
 import TimeSeries from "./TimeSeries";
-import { StyleDemo } from "./StyleDemo";
+import { StyleDemo } from "./StyleDemo"; 
 import { Auth } from "./Auth";
 
 

@@ -32,10 +32,13 @@ export const TypographyEnabled = styled(Typography)({
 
 export const MyListItemHeader = styled(ListItem)({
   background: '#102027',
-  color: lightBlue[500],
+  color: lightBlue[200],
   fontWeight: "100",
-  fontSize:"1.2em",
-  padding:"10px"
+  fontSize:"1.5em",
+  fontWeight:"900",
+  letterSpacing:"0.2em",
+
+  padding:"20px"
 
 });
 
