@@ -86,14 +86,14 @@ const App = () => {
                 <Route exact path="/" >
                   <Grid container justify="center" >
                     <Grid item xs={ 12 } lg={ 8 }>
-                      <ListMain token={ jwtTocken } />
+                    <ListTodo token={ jwtTocken } listid={0} />
                     </Grid>
                   </Grid>
                 </Route>
                 <Route exact path="/todo" >
                   <Grid container justify="center" >
                     <Grid item xs={ 12 } lg={ 8 }>
-                      <ListTodo token={ jwtTocken } />
+                      <ListTodo token={ jwtTocken } listid={1} />
                     </Grid>
                   </Grid>
                 </Route>                

@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import { render } from "react-dom";
-import { ListQ } from "./list";
+import { ListQ } from "./list"
 import { findUnique, restCallToBackendAsync } from "./helper";
 
 import { MyCard } from "./StyledComponents"
@@ -14,13 +14,15 @@ import EditIcon from '@material-ui/icons/Edit';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 
 
-export const ListTodo = ({ token }) => {
+export const ListTodo = ({ token, listid }) => {
 
     const classes = useStyles();
     const baseRestApi = "https://f7oa7pm5ig.execute-api.eu-central-1.amazonaws.com/Prod"
 
     // const [tabValue, setTabValue] = useState("Start");
     // const [tabIndex, setTabIndex] = useState(0);
+
+    // const listid = 1 // TODO: Fixed id of this todo list
 
     const [items, setItems] = useState([]);
 
@@ -37,7 +39,7 @@ export const ListTodo = ({ token }) => {
 
             console.log("authSuccess", token);
 
-            const url = [baseRestApi, "todos"].join("/")
+            const url = [baseRestApi, "list", listid, "items"].join("/")
             const options = {
                 headers: {
                     "Content-Type": "application/json",
@@ -90,11 +92,14 @@ export const ListTodo = ({ token }) => {
 
         // this.setState({ dataValid: false, submitted: true }); // disable button while submitting
 
-        const url = [baseRestApi, "todos"].join("/")
+        // const url = [baseRestApi, "todos"].join("/")
+        const url = [baseRestApi, "list", listid, "items"].join("/")
+
 
         const itemToSend = {
             name, // :name
-            group
+            group,
+            link
         }
 
         console.log(itemToSend);
@@ -211,7 +216,7 @@ export const ListTodo = ({ token }) => {
                 group={ item.value }
                 items={ item.photos }
                 addItemHandle={ addItemHandle }
-                type="todo"
+                type={ listid === 1 ? 'todo' : '' }
                 removeItemHandle={ removeItemHandle }
                 updateFunction={ updateFunction }
                 toggleFunction={ toggleFunction }

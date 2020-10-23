@@ -70,12 +70,12 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
             // alert("Enter")
             handleClick(e)
         }
-    }  
+    }
 
     return (
         <ListItem>
             <Grid container alignItems="flex-end" spacing={ 2 } >
-                <Grid item  xs={ 10 } md={ 6 } >
+                <Grid item xs={ 10 } md={ 6 } >
                     <TextField
                         value={ linkName }
                         error={ hasError(linkName) }
@@ -96,7 +96,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
                             variant="standard"
                             onChange={ e => setLinkUrl(e.target.value) }
                         />
-                    </Grid> } 
+                    </Grid> }
             </Grid>
 
             <ListItemSecondaryAction onClick={ handleClick } >
@@ -141,9 +141,9 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         }
     }
 
-    const isChecked = ( checked ) => {
-        if( typeof checked === "boolean"){ return checked}
-        if( typeof checked === "string"){ return checked==="true"}
+    const isChecked = (checked) => {
+        if (typeof checked === "boolean") { return checked }
+        if (typeof checked === "string") { return checked === "true" }
         return false
     }
 
@@ -154,10 +154,10 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                     { type === "todo" ? (
                         <ListItem button onClick={ () => toggleFunction(id) }  >
                             <ListItemIcon>
-                                { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked  /> }
+                                { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
                             </ListItemIcon>
                             <ListItemText
-                                
+
                                 primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
                             { editList &&
                                 <ListItemSecondaryAction >
@@ -215,14 +215,14 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
     return (
         <List
             dense={ true }>
-            { type === "todo" &&
-                <MyListItemHeader>
-                    { header }
+            <MyListItemHeader>
+                { header }
+                { type === "todo" &&
                     <ListItemSecondaryAction>
                         { printRemaining(filterCompleted(items).length, items.length) }
                     </ListItemSecondaryAction>
-                </MyListItemHeader>
-            }
+                }
+            </MyListItemHeader>
 
             { items.map((item, index) => (
                 <ListEl
