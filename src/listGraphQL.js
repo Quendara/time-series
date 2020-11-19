@@ -107,7 +107,7 @@ const FilterComponent = ({ items, filterText, callback }) => {
 export const ListGraphQL = ({ token, apikey }) => {
 
 
-    
+
 
     // // const token = 'big long jwt here';
     // const domainOrProviderName = 'cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXXXXXXX';
@@ -116,10 +116,10 @@ export const ListGraphQL = ({ token, apikey }) => {
 
     // // // tslint:disable-next-line: max-line-length
     // const fedSignin = await Auth.federatedSignIn(domainOrProviderName, { token, expires_at: expiresIn }, { name: 'andre' });
-  
 
 
-    
+
+
 
     const classes = useStyles();
 
@@ -143,15 +143,15 @@ export const ListGraphQL = ({ token, apikey }) => {
                 "aws_appsync_region": "eu-central-1",
                 "aws_appsync_authenticationType": "API_KEY",
                 "aws_appsync_apiKey": apikey
-            };            
+            };
             Amplify.configure(awsmobile);
 
             // const poolData = {
             //     UserPoolId: "eu-central-1_8LkzpXcOV",
             //     ClientId: "5v3et57vfoqijj81g3ksbidm5k"
             //   };
-              
-        
+
+
             // const awsconfig = {
             //     "aws_project_region": "eu-central-1",
             //     "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
@@ -161,7 +161,7 @@ export const ListGraphQL = ({ token, apikey }) => {
             //     "aws_user_pools_web_client_id": poolData.ClientId,
             //     "oauth": {}
             // };
-            
+
             // Amplify.configure(awsconfig);            
 
             fetchTodos()
@@ -378,17 +378,19 @@ export const ListGraphQL = ({ token, apikey }) => {
 
                 <Grid container justify="center" spacing={ 2 }>
                     <Grid item xs={ 11 } lg={ 9 }>
-                        <Card>
-                            <Grid container justify="center" spacing={ 2 }>
-                                <Grid item xs={ 6 } lg={ 6 }>
+                        <Card style={{ padding: 10 }}>
+                            <Grid container justify="center" alignItems="center" spacing={ 2 }>
+                            
+                                <Grid item xs={ 8 } lg={ 8 } spacing={3}>                                    
                                     <FilterComponent items={ todos } callback={ callbackFilter } /> { filterText }
                                 </Grid>
-                                <Grid item xs={ 6 } lg={ 6 }>
+                                <Grid item xs={ 3 } lg={ 3 } spacing={3}>
                                     <ButtonGroup variant="contained" >
-                                        <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } startIcon={ <EditIcon /> }> Edit Lists</Button>
-                                        <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } startIcon={ <VisibilityIcon /> } >Hide Completed</Button>
+                                        <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } startIcon={ <EditIcon /> }></Button>
+                                        <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } startIcon={ <VisibilityIcon /> } ></Button>
                                     </ButtonGroup>
                                 </Grid>
+                                
                             </Grid>
                         </Card>
                     </Grid>
