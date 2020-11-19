@@ -208,12 +208,16 @@ export const ListTodo = ({ token, listid }) => {
 
 
     const createLists = (items) => {
-        return findUnique(items, "group", false).map((item, index) => (
+
+        const groups = findUnique(items, "group", false)
+
+        return groups.map((item, index) => (
             <ListQ
                 key={ index }
                 editList={ edit }
                 header={ item.value }
                 group={ item.value }
+                groups={ groups }
                 items={ item.photos }
                 addItemHandle={ addItemHandle }
                 type={ listid === 1 ? 'todo' : '' }

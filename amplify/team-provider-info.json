@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-timeseries-dev-132634-authRole",
+      "UnauthRoleArn": "arn:aws:iam::283058259228:role/amplify-timeseries-dev-132634-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::283058259228:role/amplify-timeseries-dev-132634-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-timeseries-dev-132634-deployment",
+      "UnauthRoleName": "amplify-timeseries-dev-132634-unauthRole",
+      "StackName": "amplify-timeseries-dev-132634",
+      "StackId": "arn:aws:cloudformation:eu-central-1:283058259228:stack/amplify-timeseries-dev-132634/784dac50-2a62-11eb-8003-0215706d8a3a",
+      "AmplifyAppId": "d2z8d7k8kqupr8"
+    }
+  }
+}

@@ -1,8 +1,8 @@
 import React, { Component, useState } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider, MenuItem } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,11 +11,10 @@ import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 
-import { findUnique } from './helper';
 
 
 
-const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }) => {
+export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups }) => {
     // props replaced by
 
     const [linkName, setLinkName] = useState(name);
@@ -23,13 +22,21 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
     const [linkUrl, setLinkUrl] = useState(url);
     const [trySend, setTrySend] = useState(false);
 
+    const handleGroupChange = (event) => {
+        console.log(event)
+        console.log("groups", groups)
+        setGroupName(event.target.value);
+    };
+
+    const simpleGroups = groups.map( (x) => { return x.value } )
+
     const handleClick = event => {
         event.preventDefault();
 
         if (type === "todo") {
             if (linkName.length > 0) {
                 // send ONLY when it's filled out
-                onClickFunction(linkName, "", group);
+                onClickFunction(linkName, "", groupName);
 
                 setLinkName("");
                 setLinkUrl("");
@@ -45,7 +52,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
 
             if (linkName.length > 0 && linkUrl.length > 0) {
                 // send ONLY when it's filled out
-                onClickFunction(linkName, linkUrl, group);
+                onClickFunction(linkName, linkUrl, groupName);
 
                 setLinkName("");
                 setLinkUrl("");
@@ -77,36 +84,95 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
     return (
         <ListItem>
             <Grid container alignItems="flex-end" spacing={ 2 } >
-                <Grid item xs={ 10 } md={ 6 } >
+                <Grid item xs={ 10 } md={ 4 } >
                     <TextField
                         value={ linkName }
                         error={ hasError(linkName) }
                         label="Name"
                         fullWidth
-                        variant="standard"
+                        variant="outlined"
                         onKeyPress={ e => checkEnter(e) }
                         onChange={ e => setLinkName(e.target.value) }
                     />
                 </Grid>
-                <Grid item xs={ 10 } md={ 6 } >
-                    <TextField
-                        value={ groupName }
-                        error={ hasError(groupName) }
-                        label="Group"
-                        fullWidth
-                        variant="standard"
-                        onKeyPress={ e => checkEnter(e) }
-                        onChange={ e => setGroupName(e.target.value) }
-                    />
-                </Grid>                
+                <Grid item xs={ 10 } md={ 4 } >
+                    { groups == undefined ?
+                        (
+                            <TextField
+                                value={ groupName }
+                                error={ hasError(groupName) }
+                                label="Group"
+                                fullWidth
+                                variant="outlined"
+                                onKeyPress={ e => checkEnter(e) }
+                                onChange={ e => setGroupName(e.target.value) }
+                            />
+                        ) : (
+
+                            // <TextField
+                            //     value={ groupName }
+                            //     error={ hasError(groupName) }
+                            //     label="Group"
+                            //     fullWidth
+                            //     variant="outlined"
+                            //     onKeyPress={ e => checkEnter(e) }
+                            //     onChange={ e => setGroupName(e.target.value) }
+                            // />
+
+                            <Autocomplete
+                                id="combo-box-demo"
+                                options={ groups }
+                                freeSolo
+                                value={ { value: groupName } }
+                                // error={ groupName === undefined || groupName.length == 0 }
+                                getOptionLabel={ (option) => option.value }
+                                style={ { width: 300 } }            
+                                onKeyPress={ e => checkEnter(e) }                    
+                                onChange={ (event, newValue) => {
+                                    if (typeof newValue === 'string') {
+                                        setGroupName(
+                                            newValue
+                                        );
+                                    } else if (newValue && newValue.value) {
+                                        // Create a new value from the user input
+                                        setGroupName(
+                                            newValue.value,
+                                        );
+                                    } else {
+                                        setGroupName(newValue);
+                                    }
+                                } } 
+                                renderInput={ (params) => <TextField { ...params } label="Groups" fullWidth variant="outlined" /> }
+                            />
+                            // <TextField
+                            //     variant="outlined"
+                            //     select="true"
+                            //     error={ groupName === undefined || groupName.length == 0 }
+                            //     // helperText={ unit }
+                            //     value={ groupName }
+                            //     onChange={ handleGroupChange }
+                            //     label="Group"
+                            //     fullWidth
+                            // >
+                            //     {groups.map((item) => (
+                            //         <MenuItem key={ item.value } value={ item.value }>
+                            //             {item.value }
+                            //         </MenuItem>
+                            //     )) }
+                            // </TextField>
+                        ) }
+                    
+
+
+                </Grid>
                 { type !== "todo" &&
-                    <Grid item xs={ 10 } md={ 6 } >
+                    <Grid item xs={ 10 } md={ 4 } >
                         <TextField
                             error={ hasError(linkUrl) }
                             value={ linkUrl }
                             label="URL"
                             fullWidth
-                            variant="standard"
+                            variant="outlined"
                             onChange={ e => setLinkUrl(e.target.value) }
                         />
                     </Grid> }
@@ -121,7 +187,7 @@ const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "" }
     );
 };
 
-const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, toggleFunction, type, group, editList }) => {
+const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, toggleFunction, type, groups, group, editList }) => {
 
     const [edit, setEdit] = useState(false);
     // const [checked, setChecked] = useState(false);
@@ -131,11 +197,11 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     }
 
     const handleEditClick = () => {
-        setEdit(true)
+        setEdit( !edit )
     }
 
-    const onClickFunction = (linkName, linkUrl) => {
-        updateFunction(id, linkName, linkUrl)
+    const onClickFunction = (linkName, linkUrl, groupname) => {
+        updateFunction(id, linkName, linkUrl, groupname)
         setEdit(false)
     }
 
@@ -162,10 +228,10 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
 
     return (
         <>
-            { edit ? (<AddForm name={ name } url={ link } group={ group } onClickFunction={ onClickFunction } type={ type } />) : (
+            { edit ? (<AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } />) : (
                 <>
                     { type === "todo" ? (
-                        <ListItem button onClick={ () => toggleFunction(id) }  >
+                        <ListItem button onClick={ () => editList ? handleEditClick() : toggleFunction(id) }  >
                             <ListItemIcon>
                                 { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
                             </ListItemIcon>
@@ -225,7 +291,7 @@ const printRemaining = (filtered, total) => {
     return percentge(filtered / total)
 }
 
-export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, toggleFunction, type, group, editList }) => {
+export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, toggleFunction, type, group, groups, editList }) => {
 
     return (
         <List
@@ -245,7 +311,8 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                     key={ index }
                     id={ item.id }
                     name={ item.name }
-                    group={ group } 
+                    group={ group }
+                    groups={ groups }
                     checked={ item.checked }
                     link={ item.link }
                     updateFunction={ updateFunction }
@@ -255,9 +322,9 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                 />
             )) }
 
-            { ( ( addItemHandle !== undefined) && editList ) &&
+            {/* { ((addItemHandle !== undefined) && editList) &&
                 <AddForm onClickFunction={ addItemHandle } group={ group } label={ "Add" } type={ type } />
-            } 
+            } */}
         </List>
 
     );
