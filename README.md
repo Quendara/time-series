@@ -40,6 +40,6 @@ amplify push
 
 
 aws cognito-idp add-custom-attributes --user-pool-id eu-central-1_8LkzpXcOV --custom-attributes Name="APIKEY",AttributeDataType="String",DeveloperOnlyAttribute=false,Required=false,StringAttributeConstraints="{MinLength=1,MaxLength=45}"
-aws cognito-idp admin-update-user-attributes --user-pool-id eu-central-1_8LkzpXcOV --username andre --user-attributes Name="custom:APIKEY",Value="da2-gtsl6yf2fbefpganif6n7ushpy"
+aws cognito-idp admin-update-user-attributes --user-pool-id eu-central-1_8LkzpXcOV --username andre --user-attributes Name="custom:APIKEY",Value="XXXX"
 
 
