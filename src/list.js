@@ -28,7 +28,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
         setGroupName(event.target.value);
     };
 
-    const simpleGroups = groups.map( (x) => { return x.value } )
+    const simpleGroups = groups.map((x) => { return x.value })
 
     const handleClick = event => {
         event.preventDefault();
@@ -83,7 +83,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
 
     return (
         <ListItem>
-            <Grid container alignItems="flex-end" spacing={ 2 } >
+            <Grid container alignItems="center" justify="center" spacing={ 2 } >
                 <Grid item xs={ 10 } md={ 4 } >
                     <TextField
                         value={ linkName }
@@ -126,8 +126,8 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                 value={ { value: groupName } }
                                 // error={ groupName === undefined || groupName.length == 0 }
                                 getOptionLabel={ (option) => option.value }
-                                style={ { width: 300 } }            
-                                onKeyPress={ e => checkEnter(e) }                    
+                                style={ { width: 300 } }
+                                onKeyPress={ e => checkEnter(e) }
                                 onChange={ (event, newValue) => {
                                     if (typeof newValue === 'string') {
                                         setGroupName(
@@ -141,7 +141,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                     } else {
                                         setGroupName(newValue);
                                     }
-                                } } 
+                                } }
                                 renderInput={ (params) => <TextField { ...params } label="Groups" fullWidth variant="outlined" /> }
                             />
                             // <TextField
@@ -161,9 +161,6 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                             //     )) }
                             // </TextField>
                         ) }
-                    
-
-
                 </Grid>
                 { type !== "todo" &&
                     <Grid item xs={ 10 } md={ 4 } >
@@ -176,13 +173,15 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                             onChange={ e => setLinkUrl(e.target.value) }
                         />
                     </Grid> }
-            </Grid>
 
-            <ListItemSecondaryAction onClick={ handleClick } >
-                <IconButton edge="end" color="primary" aria-label="delete">
-                    <AddIcon />
-                </IconButton>
-            </ListItemSecondaryAction>
+
+                <Grid item xs={ 10 } md={ 4 } >
+                    <IconButton onClick={ handleClick } edge="end" color="primary" aria-label="delete">
+                        <AddIcon />
+                    </IconButton>
+                </Grid>
+
+            </Grid>
         </ListItem>
     );
 };
@@ -197,7 +196,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     }
 
     const handleEditClick = () => {
-        setEdit( !edit )
+        setEdit(!edit)
     }
 
     const onClickFunction = (linkName, linkUrl, groupname) => {

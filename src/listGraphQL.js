@@ -9,7 +9,7 @@ import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 
 
 
-import { Grid, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List, ListItem, Divider } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
@@ -27,6 +27,7 @@ import { useStyles, theme } from "./Styles"
 import { ListQ, AddForm } from './list';
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 import { findUnique, restCallToBackendAsync } from "./helper";
+import { MyCard } from "./StyledComponents"
 
 
 // import awsconfig from './aws-exports';
@@ -376,47 +377,46 @@ export const ListGraphQL = ({ token, apikey }) => {
 
                 <br />
 
-                <Grid container justify="center" spacing={ 2 }>
-                    <Grid item xs={ 11 } lg={ 9 }>
-                        <Card style={{ padding: 10 }}>
-                            <Grid container justify="center" alignItems="center" spacing={ 2 }>
-                            
-                                <Grid item xs={ 8 } lg={ 8 } spacing={3}>                                    
-                                    <FilterComponent items={ todos } callback={ callbackFilter } /> { filterText }
+
+                <MyCard>
+                    <List>
+                        <ListItem>
+                            <Grid container alignItems="center" justify="space-between" spacing={ 2 } >
+                                <Grid item xs={ 6 } lg={ 6 } >
+                                    <FilterComponent items={ todos } callback={ callbackFilter } />
                                 </Grid>
-                                <Grid item xs={ 3 } lg={ 3 } spacing={3}>
+                                <Grid item xs={ 2 } lg={ 2 } >
                                     <ButtonGroup variant="contained" >
-                                        <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } startIcon={ <EditIcon /> }></Button>
-                                        <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } startIcon={ <VisibilityIcon /> } ></Button>
+                                        <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } ><EditIcon /> </Button>
+                                        <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } > <VisibilityIcon /></Button>
                                     </ButtonGroup>
                                 </Grid>
-                                
                             </Grid>
-                        </Card>
-                    </Grid>
+                        </ListItem>
 
+                        { edit && <>
 
-                    <Grid item xs={ 11 } lg={ 9 }>
-                        <Card>
-                            <List>
-
-
-
-                                <MyListItemHeader>Add
-                </MyListItemHeader>
-                                <Grid item xs={ 11 } lg={ 12 }>
-                                    <AddForm onClickFunction={ addItemHandle } type={ 'todo' } groups={ findUnique(todos, "group", false) } ></AddForm>
+                            <ListItem>
+                                <Grid item xs={ 12 } lg={ 12 }>
+                                    Add
+                            <Divider></Divider>
                                 </Grid>
+                            </ListItem>
 
-                            </List>
+                            <Grid item xs={ 12 } lg={ 12 }>
+                                <AddForm onClickFunction={ addItemHandle } type={ 'todo' } groups={ findUnique(todos, "group", false) } ></AddForm>
+                            </Grid>
 
-                            { todos &&
-                                <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </>
-                            }
-                        </Card>
+                        </> }
 
-                    </Grid>
-                </Grid>
+                    </List>
+
+                    { todos &&
+                        <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </>
+                    }
+                </MyCard>
+
+
             </div>
         </ThemeProvider>
     );
