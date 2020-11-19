@@ -48,15 +48,18 @@ import './mstyle.css';
 const App = () => {
   const [username, setUsername] = useState("");
   const [jwtTocken, setJwtToken] = useState("");
+  const [apikey, setApi] = useState("");
 
   const classes = useStyles();
 
-  const authSuccessCallback = (username, token) => {
+  const authSuccessCallback = (username, token, apikey) => {
     setUsername(username);
     setJwtToken(token);
+    setApi( apikey );
 
-    console.log("username", username);
-    console.log("authSuccess", token);
+    console.log("username : ", username);
+    console.log("authSuccess : ", token);
+    console.log("apikey : ", apikey);
   };
 
 
@@ -101,7 +104,7 @@ const App = () => {
                 <Route exact path="/todoQL" >
                   <Grid container justify="center" >
                     <Grid item xs={ 12 } lg={ 8 }>
-                      <ListGraphQL token={ jwtTocken } listid={9} />
+                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={9} />
                     </Grid>
                   </Grid>
                 </Route>                             
@@ -111,6 +114,7 @@ const App = () => {
           </Grid>
         </Grid>
       </Router>
+
 
     </ThemeProvider>
 

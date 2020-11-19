@@ -11,6 +11,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "amazon-cognito-identity-js": "3.3.3",
     "aws-amplify": "2.2.6",
+    "aws-appsync": "^4.0.1",
     "aws-sdk": "2.642.0",
     "chart.js": "^2.9.3",
     "cross-fetch": "^3.0.4",

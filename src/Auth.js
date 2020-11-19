@@ -53,11 +53,15 @@ const Auth = ({ authSuccessCallback, children }) => {
 
           const username = cognitoUser["username"];
           const jwtToken = session.getIdToken().getJwtToken();
-
+          
+          let decoded = jwt_decode(jwtToken);
+          let apikey = decoded["custom:APIKEY"];  
+          
+  
           setCognitoUser(cognitoUser);
           setUsername(username);
           // callback to parent
-          authSuccessCallback(username, jwtToken);
+          authSuccessCallback(username, jwtToken, apikey);
         });
       }
     }
@@ -91,7 +95,7 @@ const Auth = ({ authSuccessCallback, children }) => {
 
       cognitoUser.signOut();
 
-      authSuccessCallback("", "");
+      authSuccessCallback("", "", "");
     }
   };
 
@@ -126,14 +130,6 @@ const Auth = ({ authSuccessCallback, children }) => {
     };
     const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
-    // cognitoUser.changePassword('Test123!', 'UserTest123!', function(err, result) {
-    //     if (err) {
-    //         alert(err.message || JSON.stringify(err));
-    //         return;
-    //     }
-    //     console.log('call result: ' + result);
-    // });
-
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: function (result) {
         var accessToken = result.getAccessToken().getJwtToken();
@@ -142,12 +138,12 @@ const Auth = ({ authSuccessCallback, children }) => {
         let idToken = result.idToken.jwtToken;
 
         let decoded = jwt_decode(idToken);
-        console.log(decoded);
 
         let username = decoded["cognito:username"];
+        let apikey = decoded["custom:APIKEY"]; 
 
         // callback to parent
-        authSuccessCallback(username, idToken);
+        authSuccessCallback(username, idToken, apikey);
 
         setAuthError("");
         setCognitoUser(cognitoUser);
