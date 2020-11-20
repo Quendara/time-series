@@ -8,6 +8,7 @@ export const getTodos = /* GraphQL */ `
       owner
       listid
       name
+      link
       checked
       group
     }
@@ -25,6 +26,7 @@ export const listTodos = /* GraphQL */ `
         owner
         listid
         name
+        link
         checked
         group
       }

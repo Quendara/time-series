@@ -7,6 +7,7 @@ export const onCreateTodos = /* GraphQL */ `
     $owner: String
     $listid: String
     $name: String
+    $link: String
     $checked: Boolean
     $group: String
   ) {
@@ -15,6 +16,7 @@ export const onCreateTodos = /* GraphQL */ `
       owner: $owner
       listid: $listid
       name: $name
+      link: $link
       checked: $checked
       group: $group
     ) {
@@ -22,6 +24,7 @@ export const onCreateTodos = /* GraphQL */ `
       owner
       listid
       name
+      link
       checked
       group
     }
@@ -48,6 +51,7 @@ export const onUpdateTodos = /* GraphQL */ `
       owner
       listid
       name
+      link
       checked
       group
     }
@@ -59,6 +63,7 @@ export const onDeleteTodos = /* GraphQL */ `
     $owner: String
     $listid: String
     $name: String
+    $link: String
     $checked: Boolean
     $group: String
   ) {
@@ -67,6 +72,7 @@ export const onDeleteTodos = /* GraphQL */ `
       owner: $owner
       listid: $listid
       name: $name
+      link: $link
       checked: $checked
       group: $group
     ) {
@@ -74,6 +80,7 @@ export const onDeleteTodos = /* GraphQL */ `
       owner
       listid
       name
+      link
       checked
       group
     }

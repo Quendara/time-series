@@ -91,7 +91,7 @@ const App = () => {
                 <Route exact path="/" >
                   <Grid container justify="center" >
                     <Grid item xs={ 12 } lg={ 8 }>
-                    <ListTodo token={ jwtTocken } listid={0} />
+                    <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={0} listtype="links"  />
                     </Grid>
                   </Grid>
                 </Route>
@@ -105,7 +105,7 @@ const App = () => {
                 <Route exact path="/todoQL" >
                   <Grid container justify="center" >
                     <Grid item xs={ 12 } lg={ 8 }>
-                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={9} />
+                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={1} listtype="todo" />
                     </Grid>
                   </Grid>
                 </Route>                             

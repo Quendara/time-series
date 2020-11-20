@@ -40,6 +40,7 @@ export const onMyUpdateTodos = /* GraphQL */ `
       id
       owner
       name
+      link
       checked
       group
     }
@@ -53,6 +54,7 @@ export const onMyDeleteTodos = /* GraphQL */ `
       owner
       listid
       name
+      link
       checked
       group
     }
@@ -67,13 +69,14 @@ export const onMyCreateTodos = /* GraphQL */ `
       owner
       listid
       name
+      link
       checked
       group
     }
   }
 `;
 
-const FilterComponent = ({ items, filterText, callback }) => {
+const FilterComponent = ({ items, filterText, callback, listtype }) => {
 
     const [item, setItem] = useState(undefined);
     const setFilter = (text) => {
@@ -105,7 +108,7 @@ const FilterComponent = ({ items, filterText, callback }) => {
 
 
 
-export const ListGraphQL = ({ token, apikey }) => {
+export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
 
 
@@ -124,7 +127,7 @@ export const ListGraphQL = ({ token, apikey }) => {
 
     const classes = useStyles();
 
-    const listid = 1;
+    // const listid = 1;
     const [todos, setTodos] = useState(undefined);
 
     const [edit, setEdit] = useState(false);
@@ -251,7 +254,7 @@ export const ListGraphQL = ({ token, apikey }) => {
                 let newObject = Object.assign({}, e)
                 newObject['name'] = todo.name
                 newObject['group'] = todo.group
-                // newObject['link'] = link
+                newObject['link'] = todo.link
                 newObject['checked'] = todo.checked
                 return newObject
             }
@@ -293,6 +296,8 @@ export const ListGraphQL = ({ token, apikey }) => {
             return e
         })
 
+        setTodos( items2 )
+
         /* update a todo */
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: "andre", checked: newStatus } }));
     }
@@ -300,14 +305,14 @@ export const ListGraphQL = ({ token, apikey }) => {
     async function updateFunction(todoid, name, link, group) {
         // const items2 = items.filter(item => item.id !== id);
 
-        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, group: group, owner: "andre", name: name } }));
+        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link:link, group: group, owner: "andre", name: name } }));
     };
 
     // handles
     async function addItemHandle(name, link, group = "") {
         const id = new Date().getTime();
 
-        await API.graphql(graphqlOperation(createTodos, { input: { id: "" + id, group: group, listid: listid, owner: "andre", name: name, checked: false } }));
+        await API.graphql(graphqlOperation(createTodos, { input: { id: "" + id, group: group, link:link, listid: listid, owner: "andre", name: name, checked: false } }));
 
         // const itemToSend = {
         //   name, // :name
@@ -339,7 +344,7 @@ export const ListGraphQL = ({ token, apikey }) => {
                 items={ item.photos }
                 groups={ groups }
                 addItemHandle={ addItemHandle }
-                type={ 'todo' }
+                type={ listtype }
                 removeItemHandle={ removeItemHandle }
                 updateFunction={ updateFunction }
                 toggleFunction={ toggleFunction }
@@ -378,7 +383,7 @@ export const ListGraphQL = ({ token, apikey }) => {
                     <List>
                         <ListItem>
                             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-                                <Grid item xs={ 6 } lg={ 5 } >
+                                <Grid item xs={ 6 } lg={ 4 } >
                                     <FilterComponent items={ todos } callback={ callbackFilter } />
                                 </Grid>
                                 <Grid item xs={ 2 } lg={ 2 } >
@@ -400,7 +405,7 @@ export const ListGraphQL = ({ token, apikey }) => {
                             </ListItem>
 
                             <Grid item xs={ 12 } lg={ 12 }>
-                                <AddForm onClickFunction={ addItemHandle } type={ 'todo' } groups={ findUnique(todos, "group", false) } ></AddForm>
+                                <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
                             </Grid>
                         </> }
                     </List>

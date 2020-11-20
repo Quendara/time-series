@@ -65,8 +65,8 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
     };
 
     const hasError = val => {
-
-        if (val.length > 0) {
+        if( val === undefined || val === null ) return true;
+        if ( val.length > 0) {
             return false
         } else if (trySend) {
             // show issues when length is 0 and the user has tried to send
@@ -83,8 +83,8 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
 
     return (
         <ListItem>
-            <Grid container alignItems="center" justify="center" spacing={ 2 } >
-                <Grid item xs={ 10 } md={ 4 } >
+            <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
+                <Grid item xs={ 10 } md={ 3 } >
                     <TextField
                         value={ linkName }
                         error={ hasError(linkName) }
@@ -95,7 +95,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                         onChange={ e => setLinkName(e.target.value) }
                     />
                 </Grid>
-                <Grid item xs={ 10 } md={ 4 } >
+                <Grid item xs={ 10 } md={ 3 } >
                     { groups == undefined ?
                         (
                             <TextField
@@ -123,10 +123,10 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                 id="combo-box-demo"
                                 options={ groups }
                                 freeSolo
+                                fullWidth
                                 value={ { value: groupName } }
                                 // error={ groupName === undefined || groupName.length == 0 }
-                                getOptionLabel={ (option) => option.value }
-                                style={ { width: 300 } }
+                                getOptionLabel={ (option) => option.value }                                
                                 onKeyPress={ e => checkEnter(e) }
                                 onChange={ (event, newValue) => {
                                     if (typeof newValue === 'string') {
@@ -163,19 +163,20 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                         ) }
                 </Grid>
                 { type !== "todo" &&
-                    <Grid item xs={ 10 } md={ 4 } >
+                    <Grid item xs={ 10 } md={ 3 } >
                         <TextField
                             error={ hasError(linkUrl) }
                             value={ linkUrl }
                             label="URL"
                             fullWidth
                             variant="outlined"
+                            onKeyPress={ e => checkEnter(e) }
                             onChange={ e => setLinkUrl(e.target.value) }
                         />
                     </Grid> }
 
 
-                <Grid item xs={ 10 } md={ 4 } >
+                <Grid item xs={ 10 } md={ 3 } >
                     <IconButton onClick={ handleClick } edge="end" color="primary" aria-label="delete">
                         <AddIcon />
                     </IconButton>
