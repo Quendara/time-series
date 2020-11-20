@@ -373,16 +373,12 @@ export const ListGraphQL = ({ token, apikey }) => {
         <ThemeProvider theme={ theme }>
             <CssBaseline />
             <div className="App">
-
-
                 <br />
-
-
                 <MyCard>
                     <List>
                         <ListItem>
-                            <Grid container alignItems="center" justify="space-between" spacing={ 2 } >
-                                <Grid item xs={ 6 } lg={ 6 } >
+                            <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
+                                <Grid item xs={ 6 } lg={ 5 } >
                                     <FilterComponent items={ todos } callback={ callbackFilter } />
                                 </Grid>
                                 <Grid item xs={ 2 } lg={ 2 } >
@@ -394,26 +390,21 @@ export const ListGraphQL = ({ token, apikey }) => {
                             </Grid>
                         </ListItem>
 
-                        { edit && <>
-
+                        { edit && 
+                        <>
                             <ListItem>
                                 <Grid item xs={ 12 } lg={ 12 }>
                                     Add
-                            <Divider></Divider>
+                                    <Divider></Divider>
                                 </Grid>
                             </ListItem>
 
                             <Grid item xs={ 12 } lg={ 12 }>
                                 <AddForm onClickFunction={ addItemHandle } type={ 'todo' } groups={ findUnique(todos, "group", false) } ></AddForm>
                             </Grid>
-
                         </> }
-
                     </List>
-
-                    { todos &&
-                        <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </>
-                    }
+                    { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </> }
                 </MyCard>
 
 
