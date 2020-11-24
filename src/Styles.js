@@ -18,6 +18,11 @@ export const useStyles = makeStyles((theme) =>
       root: {
         flexGrow: 1,
       },
+      paper: {
+        // paddingTop: 50,
+        // opacity: 0.5,
+        backgroundImage: "https://s3.eu-central-1.amazonaws.com/quendara.de/background/Grafitti-Stonewall-2.jpg"
+      },      
       menuButton: {
         marginRight: theme.spacing(6),
         color: "#FFFFFF",
@@ -30,7 +35,11 @@ export const useStyles = makeStyles((theme) =>
       },
       selected: {
         color: "#FFFF00",
-      }
+      },
+      appBar: {
+        //top: 'auto',
+        //bottom: 0,
+      },      
     }),
   );
   

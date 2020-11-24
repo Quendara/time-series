@@ -68,7 +68,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
       return 2
     }
 
-    if( timedate.length == 0 )
+    if( timedate.length === 0 )
     {
       return 0
     }

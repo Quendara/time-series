@@ -35,7 +35,7 @@ export const ListTodo = ({ token, listid }) => {
         // console.log("username", username);
         console.log("loadWhenTokenSet");
 
-        if (token.length > 0 && items.length == 0) {
+        if (token.length > 0 && items.length === 0) {
 
             console.log("authSuccess", token);
 

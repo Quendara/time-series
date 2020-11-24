@@ -249,11 +249,16 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                 </ListItemSecondaryAction> }
                         </ListItem>
                     ) : (
+
+//
+// primary={ <Typography variant="inherit" color="primary" >{ name }</Typography> }
+// secondary={ <Typography variant="inherit" color="textSecondary" noWrap >{ link }</Typography> }
+
                             <ListItem button>
                                 <ListItemText
                                     onClick={ () => window.open(link, "_blank") }
-                                    primary={ <Typography variant="h5" color="primary" >{ name }</Typography> }
-                                    secondary={ <Typography variant="inherit" color="textSecondary" noWrap >{ link }</Typography> }
+                                    primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
+                                    secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
                                 />
 
                                 { editList &&

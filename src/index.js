@@ -29,7 +29,7 @@ import Button from '@material-ui/core/Button';
 
 
 
-import { ThemeProvider, Grid, CssBaseline, Badge } from "@material-ui/core";
+import { ThemeProvider, Grid, CssBaseline, Badge, Paper } from "@material-ui/core";
 
 import { ListTodo } from './listTodo';
 import { ListGraphQL } from './listGraphQL';
@@ -76,12 +76,11 @@ const App = () => {
           </NavLink>
           <NavLink to="/time" className={ classes.title }   ><TimelineIcon /></NavLink>
           <NavLink to="/todoQL" className={ classes.title }   ><Badge badgeContent={"n"} color="secondary"><AssignmentTurnedInIcon /></Badge></NavLink>
-          <NavLink to="/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
+          {/* <NavLink to="/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink> */}
         </Auth>
 
 
-        <br></br>
-        <Grid container justify="center" >
+        <Grid container justify="center" spacing={1} >
           <Grid item xs={ 11 } lg={ 10 }>
             { username.length > 0 &&
               <>

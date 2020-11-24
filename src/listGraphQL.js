@@ -363,7 +363,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
         const FILTER = filterText.toUpperCase()
 
-        if (filterText.length != 0) {
+        if (filterText.length !== 0) {
             filteredItems = filteredItems.filter(item => {
                 const currentItem = item.name.toUpperCase()
                 return (currentItem.indexOf(FILTER) != -1)

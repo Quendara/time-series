@@ -5,6 +5,8 @@ import { List, ListItem } from '@material-ui/core/';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleRight, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
+import {useStyles, theme} from "./Styles"
+
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import jwt_decode from "jwt-decode";
@@ -23,6 +25,8 @@ const poolData = {
 
 
 const Auth = ({ authSuccessCallback, children }) => {
+
+  const classes = useStyles();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +47,7 @@ const Auth = ({ authSuccessCallback, children }) => {
 
       console.log("cognitoUser", cognitoUser);
 
-      if (cognitoUser != null) {
+      if (cognitoUser !== null) {
         cognitoUser.getSession(function (err, session) {
           if (err) {
             alert(err.message || JSON.stringify(err));
@@ -244,10 +248,9 @@ const Auth = ({ authSuccessCallback, children }) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar position="static">
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             { children }
-
             
             <Button onClick={ signOut }><ExitToAppIcon /></Button>
           </Toolbar>
