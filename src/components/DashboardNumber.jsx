@@ -11,7 +11,7 @@ export const DashboardNumber = ({ value, unit, info }) => {
         return val
     }
     return (
-      <Grid item >
+      <Grid item xs={4}>
         <DashboardValue>{ formatValue(value) }</DashboardValue>
         <DashboardInfo>{ "[" + unit + "] " + info }</DashboardInfo>      
       </Grid>
