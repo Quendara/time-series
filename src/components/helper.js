@@ -43,6 +43,10 @@ export const findUnique = ( list, group, sortByCount = true, limit=50 ) => {
     // console.log("uniqueItems (SORTED) : ", uniqueItems);
     return uniqueItems.slice(0, limit) // reduce
 }  
+
+export const numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
  
 export async function restCallToBackendAsync(url, token, loggingMessage = "Generic Call")
 {

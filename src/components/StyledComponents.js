@@ -21,7 +21,13 @@ export const DashboardValue = styled(Typography)({
   fontWeight:"10",
   color: "#FFF",
   fontWeight: "100"
+});
 
+export const DashboardInfo = styled(Typography)({
+  fontSize:"0.9em",
+  fontWeight:"10",
+  color: "#AAA",
+  fontWeight: "100"
 });
 
 export const TypographyEnabled = styled(Typography)({

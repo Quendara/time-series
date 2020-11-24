@@ -8,6 +8,10 @@ import React, { useState, useEffect } from "react";
 import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
 import { MyCard } from "./components/StyledComponents"
 import { LineChart } from "./components/LineChart";
+import {DashboardNumber} from "./components/DashboardNumber"
+
+import AddIcon from '@material-ui/icons/Add';
+import CheckIcon from '@material-ui/icons/Check';
 
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
@@ -155,14 +159,14 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
       if (dataValid) {
         button = (
           (<Button variant="contained" color="primary" onClick={ mySubmitHandler }>
-            Submit
+            <AddIcon />
           </Button>
           )
         );
       } else {
         button = (
           <Button variant="contained" disabled>
-            Submit
+            <AddIcon />
           </Button>
         );
       }
@@ -171,7 +175,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
       if (!error) {
         button = (
           <Button variant="contained" disabled>
-            Ok
+            <CheckIcon />
           </Button>
         );
       } else {
@@ -187,7 +191,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
   }
 
   const helperText = (lastValue) => {
-    return "last value is " + lastValue.y + " from " + formatDate(lastValue.x)
+    return "last value was " + lastValue.y + " from " + formatDate(lastValue.x)
   }
 
 
@@ -208,20 +212,25 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
         />
       </CardContent>
       <CardContent>
-        <Grid container spacing={ 3 } justify="flex-start" alignItems="flex-start" >
-          <Grid item>
+        <Grid item container
+          spacing={ 2 } >
+          
+          <DashboardNumber value={ lastValue.y } unit={ group_unit } info={ "latest value from " + formatDate(lastValue.x) } />
+
+          <Grid item xs={ 9 }>
             <TextField
               variant="outlined"
               id="standard-basic"
-              label="Value"
+              fullWidth
+              label="New Value"
               onChange={ handleChange }
-              helperText={ helperText(lastValue) }
-
+              // helperText={ helperText(lastValue) }
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={ 1 }>
             { getButton() }
           </Grid>
+          
         </Grid>
 
       </CardContent>

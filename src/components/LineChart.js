@@ -2,8 +2,10 @@ import React from "react";
 import { Scatter } from "react-chartjs-2";
 import { groupBy } from "underscore";
 import { Divider, Grid } from '@material-ui/core';
-import { Dashboard } from "@material-ui/icons";
-import { DashboardValue, TypographyDisabled } from "./StyledComponents"
+
+import {DashboardNumber} from "./DashboardNumber"
+// import {numberWithCommas} from "./helpers"
+// import { Dashboard } from "@material-ui/icons";
 
 export const LineChart = ({ group_unit, group_id, values }) => {
 
@@ -58,9 +60,7 @@ export const LineChart = ({ group_unit, group_id, values }) => {
     }
   };
 
-  const numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
+
 
   const calAvg = (timedate) => {
 
@@ -84,7 +84,7 @@ export const LineChart = ({ group_unit, group_id, values }) => {
 
     avgDay = Math.round(perDay);
     avgMonth = Math.round(perDay * 30);
-    avgYear = numberWithCommas(Math.round(perDay * 365));
+    avgYear = Math.round(perDay * 365);
     return avgDay;
   }
 
@@ -204,14 +204,4 @@ export const LineChart = ({ group_unit, group_id, values }) => {
     </>
   )
 }
-
-const DashboardNumber = ({ value, unit, info }) => {
-  return (
-    <Grid item>
-      <DashboardValue>{ value }</DashboardValue>
-      <TypographyDisabled>{ " " + unit + info }</TypographyDisabled>
-    </Grid>
-  )
-}
-
 
