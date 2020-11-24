@@ -1,11 +1,11 @@
 import React from "react";
 import { Scatter } from "react-chartjs-2";
 import { groupBy } from "underscore";
-import { Grid } from '@material-ui/core';
+import { Divider, Grid } from '@material-ui/core';
+import { Dashboard } from "@material-ui/icons";
+import { DashboardValue, TypographyDisabled } from "./StyledComponents"
 
-import {MyGridSpace} from "./StyledComponents"
-
-const GetComponent = ({ group_unit, group_id, values }) => {
+export const LineChart = ({ group_unit, group_id, values }) => {
 
   let avgDay = 0;
   let avgMonth = 0;
@@ -24,7 +24,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
     legend: {
       labels: {
         // This more specific font property overrides the global property
-        fontColor: fontColor        
+        fontColor: fontColor
       }
     },
     scales: {
@@ -68,8 +68,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
       return 2
     }
 
-    if( timedate.length === 0 )
-    {
+    if (timedate.length === 0) {
       return 0
     }
 
@@ -102,7 +101,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
 
   const getDatasets = (items) => {
     if (items == null || !Array.isArray(items)) {
-      console.error("Array expected, got (" + group_id + ") : "  );
+      console.error("Array expected, got (" + group_id + ") : ");
       console.error(items);
       return undefined;
     }
@@ -118,7 +117,7 @@ const GetComponent = ({ group_unit, group_id, values }) => {
       const avgLine = [];
       avgLine.push(timedate[0]);
       avgLine.push(timedate[timedate.length - 1]);
-  
+
       this.data = {
         datasets: [
           {
@@ -190,20 +189,29 @@ const GetComponent = ({ group_unit, group_id, values }) => {
   return (
     <>
       <div className="chart-container" style={ { "height": "35vh" } }>
-        { data.datasets.length === undefined ? (<h1>No Data</h1>) : 
-        ( <Scatter data={ getDatasets(values) } options={ options } /> )}
+        { data.datasets.length === undefined ? (<h1>No Data</h1>) :
+          (<Scatter data={ getDatasets(values) } options={ options } />) }
       </div>
+      <br/>
+      <Divider variant="middle" />
 
-      <MyGridSpace>
-          <Grid container spacing={ 3 } justify="space-evenly" alignItems="center" >
-            <Grid item>{ calAvg(values) } { " " + group_unit + " per day" } </Grid>
-            <Grid item>{ avgMonth + " " + group_unit + " per month" } </Grid>
-            <Grid item>{ avgYear + " " + group_unit + " per year" }</Grid>
-          </Grid>
-      </MyGridSpace>
+      <Grid container spacing={ 3 } justify="space-evenly" alignItems="center" >
+        <DashboardNumber value={ calAvg(values) } unit={ group_unit } info=" per day" />
+        <DashboardNumber value={ avgMonth } unit={ group_unit } info=" per month" />
+        <DashboardNumber value={ avgYear } unit={ group_unit } info=" per year" />
+      </Grid>
+
     </>
   )
 }
 
-export default GetComponent;
+const DashboardNumber = ({ value, unit, info }) => {
+  return (
+    <Grid item>
+      <DashboardValue>{ value }</DashboardValue>
+      <TypographyDisabled>{ " " + unit + info }</TypographyDisabled>
+    </Grid>
+  )
+}
+
 

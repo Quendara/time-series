@@ -12,14 +12,15 @@ export const MyCard = styled(Card)({
   borderRadius: 10,
 });
 
-export const MyGridSpace = styled(Grid)({
-  // background: 'linear-gradient(45deg, #102027 30%, #263238 90%)',
-  paddingTop: '20px'
+export const TypographyDisabled = styled(Typography)({
+  color: "#AAA",
 });
 
-export const TypographyDisabled = styled(Typography)({
-
-  color: "#AAA",
+export const DashboardValue = styled(Typography)({
+  fontSize:"2em",
+  fontWeight:"10",
+  color: "#FFF",
+  fontWeight: "100"
 
 });
 

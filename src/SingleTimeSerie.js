@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import GetComponent from "./components/GetComponent";
 // import SetComponent from "./SetComponent";
 // import SetDialog from "./SetDialog";
 
@@ -8,6 +7,7 @@ import GetComponent from "./components/GetComponent";
 // import { Button } from '@material-ui/core';
 import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
 import { MyCard } from "./components/StyledComponents"
+import { LineChart } from "./components/LineChart";
 
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
@@ -35,7 +35,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
     // event.preventDefault();
     // check if submitting is allowed
     if (dataValid && !submitted) {
-      console.log("Submitting... "); 
+      console.log("Submitting... ");
 
       // this.setState({ dataValid: false, submitted: true }); // disable button while submitting
       let resource = "group/" + group_id + "/data";
@@ -200,7 +200,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
       </CardContent>
       <CardContent>
 
-        <GetComponent
+        <LineChart
           values={ localItems }
           group_unit={ group_unit }
           group_id={ group_id }

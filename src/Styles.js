@@ -22,7 +22,7 @@ export const useStyles = makeStyles((theme) =>
         // paddingTop: 50,
         // opacity: 0.5,
         // backgroundImage: "https://s3.eu-central-1.amazonaws.com/quendara.de/background/Grafitti-Stonewall-2.jpg"
-      },      
+      },    
       menuButton: {
         marginRight: theme.spacing(6),
         color: "#FFFFFF",
