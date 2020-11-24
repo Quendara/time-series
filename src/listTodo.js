@@ -1,9 +1,9 @@
 import React, { Component, useState, useEffect } from "react";
 import { render } from "react-dom";
 import { ListQ } from "./list"
-import { findUnique, restCallToBackendAsync } from "./helper";
+import { findUnique, restCallToBackendAsync } from "./components/helper";
 
-import { MyCard } from "./StyledComponents"
+import { MyCard } from "./components/StyledComponents"
 import { CardHeader, CardContent, Button, ButtonGroup, Divider } from '@material-ui/core';
 import { useStyles, theme } from "./Styles"
 

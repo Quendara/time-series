@@ -24,10 +24,11 @@ import { updateTodos, deleteTodos, createTodos } from './graphql/mutations';
 import { useStyles, theme } from "./Styles"
 
 // own
-import { ListQ, AddForm } from './list';
-import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
-import { findUnique, restCallToBackendAsync } from "./helper";
-import { MyCard } from "./StyledComponents"
+import { ListQ } from './components/List';
+import { AddForm } from './components/AddForm';
+import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./components/StyledComponents"
+import { findUnique, restCallToBackendAsync } from "./components/helper";
+import { MyCard } from "./components/StyledComponents"
 
 
 // import awsconfig from './aws-exports';
@@ -140,37 +141,39 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
     useEffect(
         () => {
-            // works
-            const awsmobile = {
-                "aws_project_region": "eu-central-1",
-                "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
-                "aws_appsync_region": "eu-central-1",
-                "aws_appsync_authenticationType": "API_KEY",
-                "aws_appsync_apiKey": apikey
-            };
-            Amplify.configure(awsmobile);
+            if (apikey) {
+                // works
+                const awsmobile = {
+                    "aws_project_region": "eu-central-1",
+                    "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
+                    "aws_appsync_region": "eu-central-1",
+                    "aws_appsync_authenticationType": "API_KEY",
+                    "aws_appsync_apiKey": apikey
+                };
+                Amplify.configure(awsmobile);
 
-            // const poolData = {
-            //     UserPoolId: "eu-central-1_8LkzpXcOV",
-            //     ClientId: "5v3et57vfoqijj81g3ksbidm5k"
-            //   };
+                // const poolData = {
+                //     UserPoolId: "eu-central-1_8LkzpXcOV",
+                //     ClientId: "5v3et57vfoqijj81g3ksbidm5k"
+                //   };
 
 
-            // const awsconfig = {
-            //     "aws_project_region": "eu-central-1",
-            //     "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
-            //     "aws_appsync_region": "eu-central-1",
-            //     "aws_cognito_identity_pool_id": "eu-central-1_8LkzpXcOV",
-            //     "aws_user_pools_id": poolData.UserPoolId,
-            //     "aws_user_pools_web_client_id": poolData.ClientId,
-            //     "oauth": {}
-            // };
+                // const awsconfig = {
+                //     "aws_project_region": "eu-central-1",
+                //     "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
+                //     "aws_appsync_region": "eu-central-1",
+                //     "aws_cognito_identity_pool_id": "eu-central-1_8LkzpXcOV",
+                //     "aws_user_pools_id": poolData.UserPoolId,
+                //     "aws_user_pools_web_client_id": poolData.ClientId,
+                //     "oauth": {}
+                // };
 
-            // Amplify.configure(awsconfig);            
+                // Amplify.configure(awsconfig);            
 
-            fetchTodos()
-            console.log("useEffect - [] : ", todos);
-        }, [])
+                fetchTodos()
+                console.log("useEffect - [] : ", todos);
+            }
+        }, [apikey])
 
     useEffect(
         () => {
@@ -296,7 +299,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
             return e
         })
 
-        setTodos( items2 )
+        setTodos(items2)
 
         /* update a todo */
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: "andre", checked: newStatus } }));
@@ -305,14 +308,14 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
     async function updateFunction(todoid, name, link, group) {
         // const items2 = items.filter(item => item.id !== id);
 
-        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link:link, group: group, owner: "andre", name: name } }));
+        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: "andre", name: name } }));
     };
 
     // handles
     async function addItemHandle(name, link, group = "") {
         const id = new Date().getTime();
 
-        await API.graphql(graphqlOperation(createTodos, { input: { id: "" + id, group: group, link:link, listid: listid, owner: "andre", name: name, checked: false } }));
+        await API.graphql(graphqlOperation(createTodos, { input: { id: "" + id, group: group, link: link, listid: listid, owner: "andre", name: name, checked: false } }));
 
         // const itemToSend = {
         //   name, // :name
@@ -377,8 +380,6 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
     return (
         <ThemeProvider theme={ theme }>
             <CssBaseline />
-            <div className="App">
-                <br />
                 <MyCard>
                     <List>
                         <ListItem>
@@ -395,25 +396,22 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                             </Grid>
                         </ListItem>
 
-                        { edit && 
-                        <>
-                            <ListItem>
-                                <Grid item xs={ 12 } lg={ 12 }>
-                                    Add
+                        { edit &&
+                            <>
+                                <ListItem>
+                                    <Grid item xs={ 12 } lg={ 12 }>
+                                        Add
                                     <Divider></Divider>
-                                </Grid>
-                            </ListItem>
+                                    </Grid>
+                                </ListItem>
 
-                            <Grid item xs={ 12 } lg={ 12 }>
-                                <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
-                            </Grid>
-                        </> }
+                                <Grid item xs={ 12 } lg={ 12 }>
+                                    <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                                </Grid>
+                            </> }
                     </List>
                     { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </> }
                 </MyCard>
-
-
-            </div>
         </ThemeProvider>
     );
 }

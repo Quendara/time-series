@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import GetComponent from "./GetComponent";
+import GetComponent from "./components/GetComponent";
 // import SetComponent from "./SetComponent";
 // import SetDialog from "./SetDialog";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 // import { Button } from '@material-ui/core';
 import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
-import { MyCard } from "./StyledComponents"
+import { MyCard } from "./components/StyledComponents"
 
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
@@ -35,7 +35,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
     // event.preventDefault();
     // check if submitting is allowed
     if (dataValid && !submitted) {
-      console.log("Submitting... ");
+      console.log("Submitting... "); 
 
       // this.setState({ dataValid: false, submitted: true }); // disable button while submitting
       let resource = "group/" + group_id + "/data";
