@@ -195,7 +195,7 @@ export const LineChart = ({ group_unit, group_id, values }) => {
       <br/>
       <Divider variant="middle" />
 
-      <Grid container spacing={ 3 } justify="space-evenly" alignItems="center" >
+      <Grid container spacing={ 3 } justify="space-between" alignItems="flex-start" >
         <DashboardNumber value={ calAvg(values) } unit={ group_unit } info=" per day" />
         <DashboardNumber value={ avgMonth } unit={ group_unit } info=" per month" />
         <DashboardNumber value={ avgYear } unit={ group_unit } info=" per year" />

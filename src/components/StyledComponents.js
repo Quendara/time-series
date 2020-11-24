@@ -17,7 +17,7 @@ export const TypographyDisabled = styled(Typography)({
 });
 
 export const DashboardValue = styled(Typography)({
-  fontSize:"2em",
+  fontSize:"1.9em",
   fontWeight:"10",
   color: "#FFF",
   fontWeight: "100"
