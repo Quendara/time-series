@@ -26,7 +26,7 @@ import { useStyles, theme } from "./Styles"
 // own
 import { ListQ } from './components/List';
 import { AddForm } from './components/AddForm';
-import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./components/StyledComponents"
+// import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 import { findUnique, restCallToBackendAsync } from "./components/helper";
 import { MyCard } from "./components/StyledComponents"
 
@@ -380,6 +380,8 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
     return (
         <ThemeProvider theme={ theme }>
             <CssBaseline />
+            <div className="App">
+                <br />
                 <MyCard>
                     <List>
                         <ListItem>
@@ -412,6 +414,9 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                     </List>
                     { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </> }
                 </MyCard>
+
+
+            </div>
         </ThemeProvider>
     );
 }

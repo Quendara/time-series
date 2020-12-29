@@ -2,6 +2,8 @@ import React, { Component, useState } from "react";
 
 import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider, MenuItem } from '@material-ui/core';
 
+import useLongPress from "../hooks/useLongPress";
+
 
 import DeleteIcon from '@material-ui/icons/Delete';
 // import AddIcon from '@material-ui/icons/Add';
@@ -26,6 +28,10 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
 
     const handleEditClick = () => {
         setEdit(!edit)
+    }
+
+    const handleToggleFunction = () =>{
+        toggleFunction(id)
     }
 
     const onClickFunction = (linkName, linkUrl, groupname) => {
@@ -54,12 +60,20 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         return false
     }
 
+    const defaultOptions = {
+        shouldPreventDefault: true,
+        delay: 500,
+    };    
+
+    const longPressEvent = useLongPress(handleEditClick, handleToggleFunction, defaultOptions);
+
     return (
         <>
             { edit ? (<AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } />) : (
                 <>
                     { type === "todo" ? (
-                        <ListItem button onClick={ () => editList ? handleEditClick() : toggleFunction(id) }  >
+                        <ListItem button {...longPressEvent}  >
+                            
                             <ListItemIcon>
                                 { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
                             </ListItemIcon>

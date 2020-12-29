@@ -8,13 +8,14 @@ import React, { useState, useEffect } from "react";
 import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
 import { MyCard } from "./components/StyledComponents"
 import { LineChart } from "./components/LineChart";
-import {DashboardNumber} from "./components/DashboardNumber"
+import { DashboardNumber } from "./components/DashboardNumber"
 
 import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
+import { Edit } from "@material-ui/icons";
 
 // class SingleTimeSerie extends React.Component {
 const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
@@ -29,6 +30,8 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(false)
   const [dataValid, setDataValid] = useState(false)
+
+  const [edit, setEdit] = useState(false)
 
 
 
@@ -214,23 +217,36 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
       <CardContent>
         <Grid item container
           spacing={ 2 } >
-          
-          <DashboardNumber value={ lastValue.y } unit={ group_unit } info={ "latest value from " + formatDate(lastValue.x) } />
 
-          <Grid item xs={ 9 }>
-            <TextField
-              variant="outlined"
-              id="standard-basic"
-              fullWidth
-              label="New Value"
-              onChange={ handleChange }
-              // helperText={ helperText(lastValue) }
-            />
-          </Grid>
-          <Grid item xs={ 1 }>
-            { getButton() }
-          </Grid>
-          
+          { edit ? (
+            <>
+              <Grid item xs={ 9 }>
+                <TextField
+                  variant="outlined"
+                  id="standard-basic"
+                  fullWidth
+                  label="New Value"
+                  defaultValue={ lastValue.y }
+                  onChange={ handleChange }
+                  helperText={ helperText(lastValue) }
+                />
+              </Grid>
+              <Grid item xs={ 1 }>
+                { getButton() }
+              </Grid>
+            </>
+          ) :
+            (
+              <>
+                <DashboardNumber value={ lastValue.y } unit={ group_unit } info={ "latest value from " + formatDate(lastValue.x) } />
+                <Grid item xs={ 1 }>
+                  <Button onClick={ () => setEdit(true) }><Edit /></Button>
+                </Grid>
+              </>
+            )
+          }
+
+
         </Grid>
 
       </CardContent>
