@@ -7,14 +7,19 @@ import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 // import , {  } from 'aws-amplify';
 // import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 
+import SearchIcon from '@material-ui/icons/Search';
 
 
-import { Grid, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List, ListItem, Divider } from '@material-ui/core';
+
+import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List, ListItem, Divider } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
 import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import { listTodos } from './graphql/queries';
@@ -28,7 +33,7 @@ import { ListQ } from './components/List';
 import { AddForm } from './components/AddForm';
 // import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 import { findUnique, restCallToBackendAsync } from "./components/helper";
-import { MyCard } from "./components/StyledComponents"
+import { MyCard, MyCardHeader } from "./components/StyledComponents"
 
 
 // import awsconfig from './aws-exports';
@@ -77,13 +82,12 @@ export const onMyCreateTodos = /* GraphQL */ `
   }
 `;
 
-const FilterComponent = ({ items, filterText, callback, listtype }) => {
+const FilterComponent = ({ callback }) => {
 
     const [item, setItem] = useState(undefined);
     const setFilter = (text) => {
         setItem(text)
         callback(text)
-
     }
 
     const checkEnter = (e) => {
@@ -98,8 +102,16 @@ const FilterComponent = ({ items, filterText, callback, listtype }) => {
         <TextField
             value={ item }
             label="Filter"
+            
             fullWidth
             variant="outlined"
+            InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}            
             onKeyPress={ e => checkEnter(e) }
             onChange={ e => setFilter(e.target.value) }
         />
@@ -178,66 +190,69 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
     useEffect(
         () => {
 
-            console.log("useEffect - todos : ", todos);
+            if (apikey) {
 
-            // const subscription = props.source.subscribe();
+                console.log("useEffect - todos : ", todos);
 
-            const subscriptionCreateTodos = API.graphql(
-                graphqlOperation(onMyCreateTodos)
-            ).subscribe({
-                next: (x) => {
-                    // Do something with the data
-                    // console.log( x )          
-                    const item = x.value.data.onCreateTodos
-                    console.log("create Items : ", item);
-                    // console.log("items : ", items);
-                    // setItems([...items, { id, name, link, group, checked }]); // push to the end
-                    setTodos([...todos, item]); // push to the end
-                    console.log("Submitting... ");
+                // const subscription = props.source.subscribe();
 
-                },
-                error: error => {
-                    console.log("error : ", error);
-                }
-            })
+                const subscriptionCreateTodos = API.graphql(
+                    graphqlOperation(onMyCreateTodos)
+                ).subscribe({
+                    next: (x) => {
+                        // Do something with the data
+                        // console.log( x )          
+                        const item = x.value.data.onCreateTodos
+                        console.log("create Items : ", item);
+                        // console.log("items : ", items);
+                        // setItems([...items, { id, name, link, group, checked }]); // push to the end
+                        setTodos([...todos, item]); // push to the end
+                        console.log("Submitting... ");
 
-            const subscriptionUpdateTodos = API.graphql(
-                graphqlOperation(onMyUpdateTodos)
-            ).subscribe({
-                next: (x) => {
-                    // Do something with the data
-                    // console.log( x )          
-                    const item = x.value.data.onUpdateTodos
-                    console.log("updated Item : ", item);
+                    },
+                    error: error => {
+                        console.log("error : ", error);
+                    }
+                })
 
-                    const updatedList = uiUpdateTodo(todos, item)
-                    setTodos(updatedList)
-                },
-                error: error => {
-                    console.log("error : ", error);
-                }
-            })
+                const subscriptionUpdateTodos = API.graphql(
+                    graphqlOperation(onMyUpdateTodos)
+                ).subscribe({
+                    next: (x) => {
+                        // Do something with the data
+                        // console.log( x )          
+                        const item = x.value.data.onUpdateTodos
+                        console.log("updated Item : ", item);
 
-            const subscriptionDeleteTodos = API.graphql(
-                graphqlOperation(onMyDeleteTodos)
-            ).subscribe({
-                next: (x) => {
-                    // Do something with the data          
-                    const item = x.value.data.onDeleteTodos
-                    console.log("deleted Item : ", item);
-                    const updatedList = uiDeleteTodo(todos, item.id)
-                    setTodos(updatedList)
-                },
-                error: error => {
-                    console.log("error : ", error);
-                }
-            })
+                        const updatedList = uiUpdateTodo(todos, item)
+                        setTodos(updatedList)
+                    },
+                    error: error => {
+                        console.log("error : ", error);
+                    }
+                })
 
-            return () => {
-                subscriptionUpdateTodos.unsubscribe();
-                subscriptionDeleteTodos.unsubscribe();
-                subscriptionCreateTodos.unsubscribe();
-            };
+                const subscriptionDeleteTodos = API.graphql(
+                    graphqlOperation(onMyDeleteTodos)
+                ).subscribe({
+                    next: (x) => {
+                        // Do something with the data          
+                        const item = x.value.data.onDeleteTodos
+                        console.log("deleted Item : ", item);
+                        const updatedList = uiDeleteTodo(todos, item.id)
+                        setTodos(updatedList)
+                    },
+                    error: error => {
+                        console.log("error : ", error);
+                    }
+                })
+
+                return () => {
+                    subscriptionUpdateTodos.unsubscribe();
+                    subscriptionDeleteTodos.unsubscribe();
+                    subscriptionCreateTodos.unsubscribe();
+                };
+            }
         }
     );
 
@@ -383,35 +398,45 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
             <div className="App">
                 <br />
                 <MyCard>
+                <MyCardHeader >
                     <List>
                         <ListItem>
                             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-                                <Grid item xs={ 6 } lg={ 4 } >
-                                    <FilterComponent items={ todos } callback={ callbackFilter } />
+                                <Grid item xs={ 6 } lg={ 6 } >
+                                    <FilterComponent callback={ callbackFilter } />
                                 </Grid>
-                                <Grid item xs={ 2 } lg={ 2 } >
-                                    <ButtonGroup variant="contained" >
-                                        <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } ><EditIcon /> </Button>
-                                        <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } > <VisibilityIcon /></Button>
-                                    </ButtonGroup>
+                                
+                                <Grid item xs={ 6 } lg={ 6 } >
+                                <Grid container justify="flex-end">
+     
+
+                                    <IconButton color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >
+                                        <VisibilityIcon />
+                                    </IconButton>
+                                    </Grid>
+
+                                    {/* <ButtonGroup variant="outlined" >
+                                        <Button size="large" color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } ><EditIcon /> </Button>
+                                        <Button size="large" color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } > <VisibilityIcon /></Button>
+                                    </ButtonGroup> */}
                                 </Grid>
                             </Grid>
                         </ListItem>
+                        
+                        </List>
+                        </MyCardHeader>
+                        
 
                         { edit &&
                             <>
-                                <ListItem>
-                                    <Grid item xs={ 12 } lg={ 12 }>
-                                        Add
-                                    <Divider></Divider>
-                                    </Grid>
-                                </ListItem>
-
                                 <Grid item xs={ 12 } lg={ 12 }>
                                     <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
                                 </Grid>
                             </> }
-                    </List>
+                            
                     { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </> }
                 </MyCard>
 

@@ -69,7 +69,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
 
     return (
         <>
-            { edit ? (<AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } />) : (
+            { edit ? (<AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } buttonName="Update" />) : (
                 <>
                     { type === "todo" ? (
                         <ListItem button {...longPressEvent}  >

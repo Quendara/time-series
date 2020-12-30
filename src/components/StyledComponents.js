@@ -1,7 +1,7 @@
 import React from "react";
 
 import { makeStyles, styled } from '@material-ui/core/styles';
-import { Card, Grid, Typography, ListItem } from '@material-ui/core';
+import { Card, CardHeader, Grid, Typography, ListItem } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { purple, lightGreen, pink, lightBlue, red } from '@material-ui/core/colors/';
 
@@ -11,6 +11,11 @@ export const MyCard = styled(Card)({
   border: 0,
   borderRadius: 10,
 });
+
+export const MyCardHeader = styled(Paper)({
+  background: '#102027',
+});
+
 
 export const TypographyDisabled = styled(Typography)({
   color: "#AAA",
@@ -41,7 +46,7 @@ export const MyListItemHeader = styled(ListItem)({
   background: '#102027',
   color: lightBlue[200],  
   fontSize:"1em",
-  fontWeight:"10",
+  fontWeight:"100",
   letterSpacing:"0.2em",
   //#paddingTop:"0px"
 

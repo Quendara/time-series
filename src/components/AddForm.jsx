@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
 
-export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups }) => {
+export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName="Add" }) => {
     // props replaced by
 
     const [linkName, setLinkName] = useState(name);
@@ -20,7 +20,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
         setGroupName(event.target.value);
     };
 
-    const simpleGroups = groups.map((x) => { return x.value })
+    // const simpleGroups = groups.map((x) => { return x.value })
 
     const handleClick = event => {
         event.preventDefault();
@@ -57,8 +57,8 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
     };
 
     const hasError = val => {
-        if( val === undefined || val === null ) return true;
-        if ( val.length > 0) {
+        if (val === undefined || val === null) return true;
+        if (val.length > 0) {
             return false
         } else if (trySend) {
             // show issues when length is 0 and the user has tried to send
@@ -81,6 +81,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                         value={ linkName }
                         error={ hasError(linkName) }
                         label="Name"
+                        size="small"
                         fullWidth
                         variant="outlined"
                         onKeyPress={ e => checkEnter(e) }
@@ -94,6 +95,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                 value={ groupName }
                                 error={ hasError(groupName) }
                                 label="Group"
+                                size="small"
                                 fullWidth
                                 variant="outlined"
                                 onKeyPress={ e => checkEnter(e) }
@@ -114,11 +116,12 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                             <Autocomplete
                                 id="combo-box-demo"
                                 options={ groups }
+                                size="small"
                                 freeSolo
                                 fullWidth
                                 value={ { value: groupName } }
                                 // error={ groupName === undefined || groupName.length == 0 }
-                                getOptionLabel={ (option) => option.value }                                
+                                getOptionLabel={ (option) => option.value }
                                 onKeyPress={ e => checkEnter(e) }
                                 onChange={ (event, newValue) => {
                                     if (typeof newValue === 'string') {
@@ -159,6 +162,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                         <TextField
                             error={ hasError(linkUrl) }
                             value={ linkUrl }
+                            size="small"
                             label="URL"
                             fullWidth
                             variant="outlined"
@@ -169,9 +173,17 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
 
 
                 <Grid item xs={ 10 } md={ 3 } >
-                    <IconButton onClick={ handleClick } edge="end" color="primary" aria-label="delete">
+                    {/* <IconButton onClick={ handleClick } edge="end" color="primary" aria-label="delete">
                         <AddIcon />
-                    </IconButton>
+                    </IconButton> */}
+                    <Button
+                        onClick={ handleClick }
+                        variant="contained"
+                        color="primary"       
+                        size="medium"                                         
+                        startIcon={ <AddIcon /> }
+                    > {buttonName} </Button>
+
                 </Grid>
 
             </Grid>

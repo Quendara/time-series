@@ -45,7 +45,7 @@ import './mstyle.css';
 const App = () => {
   const [username, setUsername] = useState("");
   const [jwtTocken, setJwtToken] = useState("");
-  const [apikey, setApi] = useState("");
+  const [apikey, setApi] = useState( undefined );
 
   const classes = useStyles();
 
