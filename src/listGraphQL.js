@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Amplify, { API, input, Auth, graphqlOperation } from 'aws-amplify';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 // import , {  } from 'aws-amplify';
-// import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+
 
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -349,7 +349,13 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
         await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid, owner: "andre" } }));
     };
 
-    const createLists = (items) => {
+    const createLists = (items, filterText ) => {
+
+        if( items.length == 0 ){
+            return (
+                <AddForm name={filterText} onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+            )
+        }
 
         const groups = findUnique(items, "group", false)
 
@@ -438,7 +444,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
                       
                             
-                    { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </> }
+                    { todos && <>{ createLists( filterCompleted(todos, hideCompleted, filterText), filterText  ) } </> }
                 </MyCard>
 
 

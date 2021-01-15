@@ -14,7 +14,7 @@ import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 
-import {AddForm} from "./AddForm"
+import { AddForm } from "./AddForm"
 
 
 const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, toggleFunction, type, groups, group, editList }) => {
@@ -30,7 +30,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         setEdit(!edit)
     }
 
-    const handleToggleFunction = () =>{
+    const handleToggleFunction = () => {
         toggleFunction(id)
     }
 
@@ -63,63 +63,79 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     const defaultOptions = {
         shouldPreventDefault: true,
         delay: 500,
-    };    
+    };
 
     // const longPressEvent = useLongPress(handleEditClick, handleToggleFunction, defaultOptions);
-    const longPressEvent = useLongPress(handleEditClick, () => {} , defaultOptions);
+    const longPressEvent = useLongPress(handleEditClick, () => { }, defaultOptions);
 
 
     return (
         <>
-            { edit ? (<AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } buttonName="Update" />) : (
-                <>
-                    { type === "todo" ? (
-                        <ListItem {...longPressEvent}    >
-                            
-                            <ListItemIcon onClick={handleToggleFunction} >
-                                { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
-                            </ListItemIcon>
-                            <ListItemText 
+            <>
+                { type === "todo" ? (
+                    <ListItem button onClick={ handleToggleFunction }   >
 
-                                primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
-                            { editList &&
+                        <ListItemIcon onClick={ handleToggleFunction } >
+                            { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
+                        </ListItemIcon>
+
+
+                        { edit ? (
+                            <>
+                                <AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } buttonName="Update" />
+
                                 <ListItemSecondaryAction >
-                                    {/* <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
+                                    <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </>
+                        ) : (
+
+                                <>
+                                    <ListItemText
+
+                                        { ...longPressEvent }
+
+                                        primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
+                                    { editList &&
+                                        <ListItemSecondaryAction >
+                                            {/* <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
                                         <EditIcon />
                                     </IconButton> */}
+                                            <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </ListItemSecondaryAction> }
+                                </>
+                            ) }
+                    </ListItem>
+                ) : (
+
+                        //
+                        // primary={ <Typography variant="inherit" color="primary" >{ name }</Typography> }
+                        // secondary={ <Typography variant="inherit" color="textSecondary" noWrap >{ link }</Typography> }
+
+                        <ListItem button>
+                            <ListItemText
+                                onClick={ () => window.open(link, "_blank") }
+                                primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
+                                secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
+                            />
+
+                            { editList &&
+                                <ListItemSecondaryAction >
+                                    <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
+                                        <EditIcon />
+                                    </IconButton>
                                     <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
                                         <DeleteIcon />
                                     </IconButton>
                                 </ListItemSecondaryAction> }
+
                         </ListItem>
-                    ) : (
-
-//
-// primary={ <Typography variant="inherit" color="primary" >{ name }</Typography> }
-// secondary={ <Typography variant="inherit" color="textSecondary" noWrap >{ link }</Typography> }
-
-                            <ListItem button>
-                                <ListItemText
-                                    onClick={ () => window.open(link, "_blank") }
-                                    primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
-                                    secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
-                                />
-
-                                { editList &&
-                                    <ListItemSecondaryAction >
-                                        <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
-                                            <EditIcon />
-                                        </IconButton>
-                                        <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </ListItemSecondaryAction> }
-
-                            </ListItem>
-                        ) }
-                </>
-
-            ) }
+                    ) }
+            </>
         </>
     );
 };
