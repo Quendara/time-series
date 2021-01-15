@@ -24,6 +24,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
 
     const handleDeleteClick = () => {
         removeClickFunction(id)
+        setEdit(false)
     }
 
     const handleEditClick = () => {
