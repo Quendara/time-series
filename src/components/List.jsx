@@ -65,26 +65,28 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         delay: 500,
     };    
 
-    const longPressEvent = useLongPress(handleEditClick, handleToggleFunction, defaultOptions);
+    // const longPressEvent = useLongPress(handleEditClick, handleToggleFunction, defaultOptions);
+    const longPressEvent = useLongPress(handleEditClick, () => {} , defaultOptions);
+
 
     return (
         <>
             { edit ? (<AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } buttonName="Update" />) : (
                 <>
                     { type === "todo" ? (
-                        <ListItem button {...longPressEvent}  >
+                        <ListItem {...longPressEvent}    >
                             
-                            <ListItemIcon>
+                            <ListItemIcon onClick={handleToggleFunction} >
                                 { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
                             </ListItemIcon>
-                            <ListItemText
+                            <ListItemText 
 
                                 primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
                             { editList &&
                                 <ListItemSecondaryAction >
-                                    <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
+                                    {/* <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
                                         <EditIcon />
-                                    </IconButton>
+                                    </IconButton> */}
                                     <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
                                         <DeleteIcon />
                                     </IconButton>

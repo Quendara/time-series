@@ -123,6 +123,13 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                 // error={ groupName === undefined || groupName.length == 0 }
                                 getOptionLabel={ (option) => option.value }
                                 onKeyPress={ e => checkEnter(e) }
+                                onInputChange={  (event, newValue) => {
+                                    if (typeof newValue === 'string') {
+                                        setGroupName(
+                                            newValue
+                                        );
+                                    }
+                                }}                                
                                 onChange={ (event, newValue) => {
                                     if (typeof newValue === 'string') {
                                         setGroupName(

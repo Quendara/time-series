@@ -402,13 +402,19 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                     <List>
                         <ListItem>
                             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-                                <Grid item xs={ 6 } lg={ 6 } >
-                                    <FilterComponent callback={ callbackFilter } />
+
+                                <Grid item xs={ 8 } lg={ 8 } >
+                                    { edit ? (
+                                        <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                                    ) : (
+                                        <FilterComponent callback={ callbackFilter } />
+
+                                    )}
+
                                 </Grid>
                                 
-                                <Grid item xs={ 6 } lg={ 6 } >
-                                <Grid container justify="flex-end">
-     
+                                <Grid item xs={ 4 } lg={ 4 } >
+                                <Grid container justify="flex-end">     
 
                                     <IconButton color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >
                                         <EditIcon />
@@ -430,12 +436,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                         </MyCardHeader>
                         
 
-                        { edit &&
-                            <>
-                                <Grid item xs={ 12 } lg={ 12 }>
-                                    <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
-                                </Grid>
-                            </> }
+                      
                             
                     { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText)) } </> }
                 </MyCard>

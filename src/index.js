@@ -72,6 +72,7 @@ const App = () => {
             <ShareIcon />
           </NavLink>
           <NavLink to="/time" className={ classes.title }   ><TimelineIcon /></NavLink>
+          <NavLink to="/einkaufen" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
           <NavLink to="/todoQL" className={ classes.title }   ><Badge badgeContent={ "n" } color="secondary"><AssignmentTurnedInIcon /></Badge></NavLink>
           {/* <NavLink to="/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink> */ }
         </Auth>
@@ -100,13 +101,21 @@ const App = () => {
                     </Grid>
                   </Grid>
                 </Route>           */}
-                <Route exact path="/todoQL" >
+                <Route exact path="/einkaufen" >
                   <Grid container justify="center" >
                     <Grid item xs={ 12 } lg={ 8 }>
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 1 } listtype="todo" />
                     </Grid>
                   </Grid>
                 </Route>
+                <Route exact path="/todoQL" >
+                  <Grid container justify="center" >
+                    <Grid item xs={ 12 } lg={ 8 }>
+                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2} listtype="todo" />
+                    </Grid>
+                  </Grid>
+                </Route>
+
                 <Route exact path="/demo" component={ StyleDemo }></Route>
               </>
             }
