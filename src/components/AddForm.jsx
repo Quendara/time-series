@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider, MenuItem } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
 
-export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName="Add" }) => {
+export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName = "Add" }) => {
     // props replaced by
 
     const [linkName, setLinkName] = useState(name);
@@ -20,6 +20,17 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
         setGroupName(event.target.value);
     };
 
+    useEffect(() => {
+        setLinkName(name)
+    }, [name]);
+
+    useEffect(() => {
+        setGroupName(group)
+    }, [group]);
+
+
+
+
     // const simpleGroups = groups.map((x) => { return x.value })
 
     const handleClick = event => {
@@ -30,9 +41,9 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                 // send ONLY when it's filled out
                 onClickFunction(linkName, "", groupName);
 
-                setLinkName("");
-                setLinkUrl("");
-                setGroupName("");
+                // setLinkName("");
+                // setLinkUrl("");
+                // setGroupName("");
                 setTrySend(false);
             } else {
                 // indicate that user has tried to send, now how potenial issues on UI
@@ -123,13 +134,13 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                 // error={ groupName === undefined || groupName.length == 0 }
                                 getOptionLabel={ (option) => option.value }
                                 onKeyPress={ e => checkEnter(e) }
-                                onInputChange={  (event, newValue) => {
+                                onInputChange={ (event, newValue) => {
                                     if (typeof newValue === 'string') {
                                         setGroupName(
                                             newValue
                                         );
                                     }
-                                }}                                
+                                } }
                                 onChange={ (event, newValue) => {
                                     if (typeof newValue === 'string') {
                                         setGroupName(
@@ -186,10 +197,10 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                     <Button
                         onClick={ handleClick }
                         variant="contained"
-                        color="primary"       
-                        size="medium"                                         
+                        color="primary"
+                        size="medium"
                         startIcon={ <AddIcon /> }
-                    > {buttonName} </Button>
+                    > { buttonName } </Button>
 
                 </Grid>
 

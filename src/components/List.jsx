@@ -10,8 +10,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
-
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 
 import { AddForm } from "./AddForm"
@@ -74,43 +74,37 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         <>
             <>
                 { type === "todo" ? (
-                    <ListItem button onClick={ handleToggleFunction }   >
+                    <>
+                        { (edit || editList) ? (
+                            <ListItem>
 
-                        <ListItemIcon onClick={ handleToggleFunction } >
-                            { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
-                        </ListItemIcon>
+                                <ListItemIcon onClick={ handleToggleFunction } >
+                                    { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
+                                </ListItemIcon>
 
-
-                        { edit ? (
-                            <>
                                 <AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } buttonName="Update" />
-
                                 <ListItemSecondaryAction >
                                     <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
                                         <DeleteIcon />
                                     </IconButton>
                                 </ListItemSecondaryAction>
-                            </>
+                            </ListItem>
                         ) : (
+                                <ListItem button={ !(edit || editList) } onClick={ handleToggleFunction }   >
 
-                                <>
+                                    <ListItemIcon onClick={ handleToggleFunction } >
+                                        { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
+                                    </ListItemIcon>
+
                                     <ListItemText
-
                                         { ...longPressEvent }
+                                        primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> }
+                                    />
+                                </ListItem>
+                            )
+                        }
+                    </>
 
-                                        primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> } />
-                                    { editList &&
-                                        <ListItemSecondaryAction >
-                                            {/* <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
-                                        <EditIcon />
-                                    </IconButton> */}
-                                            <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction> }
-                                </>
-                            ) }
-                    </ListItem>
                 ) : (
 
                         //

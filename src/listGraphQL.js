@@ -11,7 +11,7 @@ import SearchIcon from '@material-ui/icons/Search';
 
 
 
-import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List, ListItem, Divider } from '@material-ui/core';
+import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List, ListItem, Divider, Hidden } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
@@ -21,6 +21,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import ClearIcon from '@material-ui/icons/Clear';
 
 import { listTodos } from './graphql/queries';
 // import * as subscriptions from './graphql/subscriptions';
@@ -84,7 +85,8 @@ export const onMyCreateTodos = /* GraphQL */ `
 
 const FilterComponent = ({ callback }) => {
 
-    const [item, setItem] = useState(undefined);
+    const [item, setItem] = useState( "" );
+    
     const setFilter = (text) => {
         setItem(text)
         callback(text)
@@ -102,16 +104,27 @@ const FilterComponent = ({ callback }) => {
         <TextField
             value={ item }
             label="Filter"
-            
+
             fullWidth
             variant="outlined"
-            InputProps={{
+            InputProps={ {
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
+                    <InputAdornment >
+                        <SearchIcon />
+                    </InputAdornment>
                 ),
-              }}            
+                endAdornment: (
+                    <InputAdornment >
+                        <IconButton
+                            disabled={ item.length === 0 }
+                          onClick={ () => setFilter("") }
+                  
+                        >
+                            <ClearIcon />
+                        </IconButton>
+                    </InputAdornment>
+                )
+            } }
             onKeyPress={ e => checkEnter(e) }
             onChange={ e => setFilter(e.target.value) }
         />
@@ -123,9 +136,6 @@ const FilterComponent = ({ callback }) => {
 
 export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
-
-
-
     // // const token = 'big long jwt here';
     // const domainOrProviderName = 'cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXXXXXXX';
     // const domainOrProviderName = "cognito-idp.eu-central-1.amazonaws.com/eu-central-1_8LkzpXcOV"
@@ -133,10 +143,6 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
     // // // tslint:disable-next-line: max-line-length
     // const fedSignin = await Auth.federatedSignIn(domainOrProviderName, { token, expires_at: expiresIn }, { name: 'andre' });
-
-
-
-
 
     const classes = useStyles();
 
@@ -183,7 +189,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                 // Amplify.configure(awsconfig);            
 
                 fetchTodos()
-                console.log("useEffect - [] : ", todos);
+                // console.log("useEffect - [] : ", todos);
             }
         }, [apikey])
 
@@ -349,11 +355,11 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
         await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid, owner: "andre" } }));
     };
 
-    const createLists = (items, filterText ) => {
+    const createLists = (items, filterText) => {
 
-        if( items.length == 0 ){
+        if (items.length == 0) {
             return (
-                <AddForm name={filterText} onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                <AddForm name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
             )
         }
 
@@ -404,47 +410,50 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
             <div className="App">
                 <br />
                 <MyCard>
-                <MyCardHeader >
-                    <List>
-                        <ListItem>
-                            <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
+                    <MyCardHeader >
+                        <List>
+                            <ListItem>
+                                <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
 
-                                <Grid item xs={ 8 } lg={ 8 } >
-                                    { edit ? (
-                                        <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
-                                    ) : (
-                                        <FilterComponent callback={ callbackFilter } />
+                                    <Grid item xs={ 10 } lg={ 8 } >
+                                        { edit ? (
+                                            <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                                        ) : (
+                                                <FilterComponent callback={ callbackFilter } />
 
-                                    )}
+                                            ) }
 
-                                </Grid>
-                                
-                                <Grid item xs={ 4 } lg={ 4 } >
-                                <Grid container justify="flex-end">     
-
-                                    <IconButton color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >
-                                        <VisibilityIcon />
-                                    </IconButton>
                                     </Grid>
 
-                                    {/* <ButtonGroup variant="outlined" >
+                                    <Grid item xs={ 2 } lg={ 4 } >
+                                        <Grid container justify="flex-end">
+
+                                            <Hidden mdDown>
+                                            <IconButton color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >
+                                                <EditIcon />
+                                            </IconButton>
+                                            </Hidden>
+                                            
+                                            <IconButton color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >
+                                                <VisibilityIcon />
+                                            </IconButton>
+                                        </Grid>
+
+                                        {/* <ButtonGroup variant="outlined" >
                                         <Button size="large" color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } ><EditIcon /> </Button>
                                         <Button size="large" color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } > <VisibilityIcon /></Button>
                                     </ButtonGroup> */}
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </ListItem>
-                        
-                        </List>
-                        </MyCardHeader>
-                        
+                            </ListItem>
 
-                      
-                            
-                    { todos && <>{ createLists( filterCompleted(todos, hideCompleted, filterText), filterText  ) } </> }
+                        </List>
+                    </MyCardHeader>
+
+
+
+
+                    { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText), filterText) } </> }
                 </MyCard>
 
 
