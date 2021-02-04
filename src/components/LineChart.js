@@ -182,7 +182,7 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }) =
             // let newObject = Object.assign({}, item)
 
             const newX = item.x.getTime() - (delta * secondsperyear)
-            console.log( "Print X, N", item.x, new Date(newX) )
+            // console.log( "Print X, N", item.x, new Date(newX) )
             return { x: new Date(newX), y: +item.y };
           })
         }
