@@ -149,7 +149,7 @@ export const ListTodo = ({ token, listid }) => {
     const updateFunction = (id, name, link) => {
         // const items2 = items.filter(item => item.id !== id);
 
-        const items2 = items.map((e, index) => {
+        const items2 = items((e, index) => {
 
             if (e.id === id) {
                 let newObject = Object.assign({}, e)

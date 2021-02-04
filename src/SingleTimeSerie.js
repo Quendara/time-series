@@ -9,6 +9,8 @@ import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/c
 import { MyCard } from "./components/StyledComponents"
 import { LineChart } from "./components/LineChart";
 import { DashboardNumber } from "./components/DashboardNumber"
+import { SelectionView } from "./components/SelectionView"
+
 
 import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
@@ -22,6 +24,8 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
 
   const [lastValue, setLastValue] = useState({ x: 0, y: 0 })
   const [itemToSend, setItemToSend] = useState(undefined)
+
+  const [renderMode, setRenderMode] = useState("simple")
 
   const [fetchedItems, setFetchedItems] = useState(undefined)
   const [localItems, setLocalItems] = useState(undefined)
@@ -204,11 +208,13 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
         <Typography variant="h5" component="h2">
           { group_name } - <small>[ { group_unit } ]</small>
         </Typography>
+        <SelectionView  currentValue={ renderMode } iconsOnly={ false } valueArr={ ['simple', 'year', 'compare'] } callback={ setRenderMode } ></SelectionView>
       </CardContent>
       <CardContent>
 
         <LineChart
           values={ localItems }
+          render={renderMode}
           group_unit={ group_unit }
           group_id={ group_id }
           group_name={ group_name }

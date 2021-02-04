@@ -85,8 +85,8 @@ export const onMyCreateTodos = /* GraphQL */ `
 
 const FilterComponent = ({ callback }) => {
 
-    const [item, setItem] = useState( "" );
-    
+    const [item, setItem] = useState("");
+
     const setFilter = (text) => {
         setItem(text)
         callback(text)
@@ -117,8 +117,8 @@ const FilterComponent = ({ callback }) => {
                     <InputAdornment >
                         <IconButton
                             disabled={ item.length === 0 }
-                          onClick={ () => setFilter("") }
-                  
+                            onClick={ () => setFilter("") }
+
                         >
                             <ClearIcon />
                         </IconButton>
@@ -420,20 +420,15 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                                             <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
                                         ) : (
                                                 <FilterComponent callback={ callbackFilter } />
-
                                             ) }
-
                                     </Grid>
-
                                     <Grid item xs={ 2 } lg={ 4 } >
                                         <Grid container justify="flex-end">
-
                                             <Hidden mdDown>
-                                            <IconButton color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >
-                                                <EditIcon />
-                                            </IconButton>
+                                                <IconButton color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >
+                                                    <EditIcon />
+                                                </IconButton>
                                             </Hidden>
-                                            
                                             <IconButton color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >
                                                 <VisibilityIcon />
                                             </IconButton>
@@ -449,9 +444,6 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
                         </List>
                     </MyCardHeader>
-
-
-
 
                     { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText), filterText) } </> }
                 </MyCard>

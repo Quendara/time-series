@@ -3,11 +3,11 @@ import { Scatter } from "react-chartjs-2";
 import { groupBy } from "underscore";
 import { Divider, Grid } from '@material-ui/core';
 
-import {DashboardNumber} from "./DashboardNumber"
+import { DashboardNumber } from "./DashboardNumber"
 // import {numberWithCommas} from "./helpers"
 // import { Dashboard } from "@material-ui/icons";
 
-export const LineChart = ({ group_unit, group_id, values }) => {
+export const LineChart = ({ group_unit, group_id, values, render = "simple" }) => {
 
   let avgDay = 0;
   let avgMonth = 0;
@@ -113,56 +113,79 @@ export const LineChart = ({ group_unit, group_id, values }) => {
     const color01 = "rgba(153, 102, 255, ";
     const color02 = "rgba(54, 162, 235, ";
 
-    if (false) {
+    if (render === "simple") {
       const avgLine = [];
       avgLine.push(timedate[0]);
       avgLine.push(timedate[timedate.length - 1]);
 
-      this.data = {
-        datasets: [
-          {
-            label: this.group_unit,
-            type: "line",
-            fill: true,
-            backgroundColor: color01 + "0.3)",
-            pointBorderColor: color01 + "0.7)",
-            borderColor: color01 + "0.4)",
-            pointBorderWidth: 4,
-            pointHoverRadius: 8,
-            pointHoverBackgroundColor: color01 + "0.4)",
-            pointHoverBorderColor: color01 + "0.4)",
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: timedate
-          },
-          {
-            label: "avg",
-            type: "line",
-            borderDash: [5, 5],
-            backgroundColor: color02 + "0.0)",
-            borderColor: color02 + "0.4)",
-            borderWidth: 1,
-            fill: false,
+      data.datasets = [
+        {
+          label: group_unit,
+          type: "line",
+          fill: true,
+          backgroundColor: color01 + "0.3)",
+          pointBorderColor: color01 + "0.7)",
+          borderColor: color01 + "0.4)",
+          pointBorderWidth: 4,
+          pointHoverRadius: 8,
+          pointHoverBackgroundColor: color01 + "0.4)",
+          pointHoverBorderColor: color01 + "0.4)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data: timedate
+        },
+        {
+          label: "avg",
+          type: "line",
+          borderDash: [5, 5],
+          backgroundColor: color02 + "0.0)",
+          borderColor: color02 + "0.4)",
+          borderWidth: 1,
+          fill: false,
 
-            data: avgLine
-          }
-        ]
-      };
+          data: avgLine
+        }
+      ]
     } else {
-      const dataInGroups = splitDataInYears(timedate);
 
+      const dataInGroups = splitDataInYears(timedate);
       data.datasets = [];
 
-      // console.log("dataInGroups", dataInGroups)
+      const firstvalue = timedate[0];
+      const firstyear = firstvalue.x.getFullYear();
+      const secondsperyear = 31536000000
 
       for (var key in dataInGroups) {
-        // console.log("o." + prop + " = " + obj[prop]);
 
-        const localtimedate = dataInGroups[key];
+        let localtimedate = dataInGroups[key];
 
-        // console.log("plot", key)
-        // console.log("localtimedate", localtimedate)
+        if (localtimedate == null || !Array.isArray(localtimedate)) {
+          console.error("Array expected, got (" + group_id + ") : ");
+          console.error("Array expected, got (" + key + ") : ");
+          console.error(items);
+          continue
+        }
+
+        const firstyearLocal = localtimedate[0].x.getFullYear();
+        const delta = firstyearLocal - firstyear
+
+        if (render === "compare") {
+          // firstyear
+
+          // const timedata = result.map(dataField => {
+          //   return { x: new Date(dataField.x * 1000), y: +dataField.y };
+          // });          
+
+          localtimedate = localtimedate.map((item, index) => 
+          {
+            // let newObject = Object.assign({}, item)
+
+            const newX = item.x.getTime() - (delta * secondsperyear)
+            console.log( "Print X, N", item.x, new Date(newX) )
+            return { x: new Date(newX), y: +item.y };
+          })
+        }
 
         data.datasets.push({
           label: key,
@@ -181,9 +204,9 @@ export const LineChart = ({ group_unit, group_id, values }) => {
           data: localtimedate
         });
       }
-
-      return data
     }
+
+    return data
   }
 
   return (
@@ -192,7 +215,7 @@ export const LineChart = ({ group_unit, group_id, values }) => {
         { data.datasets.length === undefined ? (<h1>No Data</h1>) :
           (<Scatter data={ getDatasets(values) } options={ options } />) }
       </div>
-      <br/>
+      <br />
       <Divider variant="middle" />
 
       <Grid container spacing={ 3 } justify="space-between" alignItems="flex-start" >
