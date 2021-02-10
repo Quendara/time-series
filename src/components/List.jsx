@@ -72,24 +72,24 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
 
     return (
         <>
-            <>
-                { type === "todo" ? (
+            { (edit || editList) ? (
+                <ListItem>
+
+                    <ListItemIcon onClick={ handleToggleFunction } >
+                        { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
+                    </ListItemIcon>
+
+                    <AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } buttonName="Update" />
+                    <ListItemSecondaryAction >
+                        <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
+                            <DeleteIcon />
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
+            ) :
+                (
                     <>
-                        { (edit || editList) ? (
-                            <ListItem>
-
-                                <ListItemIcon onClick={ handleToggleFunction } >
-                                    { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
-                                </ListItemIcon>
-
-                                <AddForm name={ name } url={ link } group={ group } groups={ groups } onClickFunction={ onClickFunction } type={ type } buttonName="Update" />
-                                <ListItemSecondaryAction >
-                                    <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemSecondaryAction>
-                            </ListItem>
-                        ) : (
+                        { type === "todo" ? (
                                 <ListItem button={ !(edit || editList) } onClick={ handleToggleFunction }   >
 
                                     <ListItemIcon onClick={ handleToggleFunction } >
@@ -101,36 +101,17 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                         primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> }
                                     />
                                 </ListItem>
-                            )
-                        }
+                        ) : (
+                                <ListItem button>
+                                    <ListItemText
+                                        onClick={ () => window.open(link, "_blank") }
+                                        primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
+                                        secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
+                                    />
+                                </ListItem>
+                            ) }
                     </>
-
-                ) : (
-
-                        //
-                        // primary={ <Typography variant="inherit" color="primary" >{ name }</Typography> }
-                        // secondary={ <Typography variant="inherit" color="textSecondary" noWrap >{ link }</Typography> }
-
-                        <ListItem button>
-                            <ListItemText
-                                onClick={ () => window.open(link, "_blank") }
-                                primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
-                                secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
-                            />
-
-                            { editList &&
-                                <ListItemSecondaryAction >
-                                    <IconButton edge="end" onClick={ handleEditClick } aria-label="delete">
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton edge="end" onClick={ handleDeleteClick } color="secondary" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemSecondaryAction> }
-
-                        </ListItem>
-                    ) }
-            </>
+                ) }
         </>
     );
 };
