@@ -35,10 +35,10 @@ import { ThemeProvider, Grid, CssBaseline, Badge, Paper } from "@material-ui/cor
 import { ListGraphQL } from './listGraphQL';
 
 
-import TimeSeries from "./TimeSeries";
+import TimeSeries from "./pages/TimeSeries";
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
-
+ 
 
 import './mstyle.css';
 
@@ -94,13 +94,6 @@ const App = () => {
                     </Grid>
                   </Grid>
                 </Route>
-                {/* <Route exact path="/todo" >
-                  <Grid container justify="center" >
-                    <Grid item xs={ 12 } lg={ 8 }>
-                      <ListTodo token={ jwtTocken } listid={1} />
-                    </Grid>
-                  </Grid>
-                </Route>           */}
                 <Route exact path="/einkaufen" >
                   <Grid container justify="center" >
                     <Grid item xs={ 12 } lg={ 8 }>
