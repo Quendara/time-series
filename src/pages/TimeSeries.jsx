@@ -4,12 +4,19 @@ import React, { Component, useState, useEffect } from "react";
 import Settings from "../Settings";
 import SingleTimeSerie from "../SingleTimeSerie";
 
-import { Grid, List, ListItem, Hidden } from '@material-ui/core';
+import { Grid, List, ListItem, Hidden, Box } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
+import { Navigation } from "../organisms/navigation"
+import { useStyles } from "../Styles"
+
+
 
 
 export const TimeSeries = ({ username, token }) => {
+
+  const classes = useStyles();
 
   const [timeseries, setTimeseries] = useState([]);
   const [error, setError] = useState("");
@@ -40,29 +47,15 @@ export const TimeSeries = ({ username, token }) => {
     }, [token]
   )
 
-  // <a href={ "#"+item.group_id } 
-
-  const jumpTo = (anchor) => {
-    window.location.href = "#" + anchor;
-  }
-
   return (
 
     <Grid container spacing={ 4 } >
 
       <Hidden mdDown>
-        <Grid item lg="2" h >
-          <MyCard>
-            <MyCardHeader >
-              <List>
-
-                { timeseries.map((item, index) => (
-                  <ListItem button onClick={ () => jumpTo(item.group_id) } key={ item.group_id } >{ item.group_name } </ListItem>
-                )) }
-
-              </List>
-            </MyCardHeader>
-          </MyCard>
+        <Grid item lg="2" elevation={ 3 } >
+          <Grid item className={ classes.navigation } >
+            <Navigation list={ timeseries } anchor="group_id" name="group_name" />
+          </Grid>
         </Grid>
       </Hidden>
 
@@ -73,7 +66,10 @@ export const TimeSeries = ({ username, token }) => {
               <MyCard>
                 <MyCardHeader >
                   <List>
-                    <ListItem>Loading</ListItem>
+                    <Grid container justify="center" alignItems="center" spacing={ 4 }>
+                      <Grid item><CircularProgress /></Grid>
+                      <Grid item><Box component="span" m={ 1 }> Loading ... </Box></Grid>
+                    </Grid>
                   </List>
                 </MyCardHeader>
               </MyCard>
