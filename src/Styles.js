@@ -18,6 +18,7 @@ export const useStyles = makeStyles((theme) =>
       root: {
         flexGrow: 1,
       },
+
       paper: {
         // paddingTop: 50,
         // opacity: 0.5,
@@ -28,6 +29,10 @@ export const useStyles = makeStyles((theme) =>
         color: "#FFFFFF",
         textDecoration: "none"
       },
+      navigation: {
+        position:"fixed",
+      },
+
       title: {
         flexGrow: 1,
         color: "#FFFFFF",

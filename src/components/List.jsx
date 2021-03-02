@@ -68,7 +68,9 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
 
     // const longPressEvent = useLongPress(handleEditClick, handleToggleFunction, defaultOptions);
     const longPressEvent = useLongPress(handleEditClick, () => { }, defaultOptions);
+    const longPressEventLink = useLongPress(handleEditClick, onMainClick, defaultOptions);
 
+    // onClick={ () => window.open(link, "_blank") }
 
     return (
         <>
@@ -104,7 +106,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                         ) : (
                                 <ListItem button>
                                     <ListItemText
-                                        onClick={ () => window.open(link, "_blank") }
+                                        { ...longPressEventLink  }
                                         primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
                                         secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
                                     />
@@ -136,7 +138,10 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
     return (
         <List
-            dense={ false }>
+            dense={ false }
+            id={header}
+            >
+            
             <MyListItemHeader>
                 { header }
                 { type === "todo" &&

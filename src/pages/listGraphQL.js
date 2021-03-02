@@ -6,10 +6,7 @@ import Amplify, { API, input, Auth, graphqlOperation } from 'aws-amplify';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 // import , {  } from 'aws-amplify';
 
-
 import SearchIcon from '@material-ui/icons/Search';
-
-
 
 import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List, ListItem, Divider, Hidden } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -23,23 +20,22 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ClearIcon from '@material-ui/icons/Clear';
 
-import { listTodos } from './graphql/queries';
+import { listTodos } from '../graphql/queries';
 // import * as subscriptions from './graphql/subscriptions';
-import { updateTodos, deleteTodos, createTodos } from './graphql/mutations';
+import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 
-import { useStyles, theme } from "./Styles"
+import { useStyles, theme } from "../Styles"
 
 // own
-import { ListQ } from './components/List';
-import { AddForm } from './components/AddForm';
+import { ListQ } from '../components/List';
+import { AddForm } from '../components/AddForm';
 // import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
-import { findUnique, restCallToBackendAsync } from "./components/helper";
-import { MyCard, MyCardHeader } from "./components/StyledComponents"
+import { findUnique, restCallToBackendAsync } from "../components/helper";
+import { MyCard, MyCardHeader } from "../components/StyledComponents"
 
+import { Navigation } from "../organisms/navigation"
 
 // import awsconfig from './aws-exports';
-
-
 
 export const onMyUpdateTodos = /* GraphQL */ `
   subscription OnUpdateTodos{
@@ -138,11 +134,9 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
     // // const token = 'big long jwt here';
     // const domainOrProviderName = 'cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXXXXXXX';
-    // const domainOrProviderName = "cognito-idp.eu-central-1.amazonaws.com/eu-central-1_8LkzpXcOV"
     // const expiresIn = 2700;
 
     // // // tslint:disable-next-line: max-line-length
-    // const fedSignin = await Auth.federatedSignIn(domainOrProviderName, { token, expires_at: expiresIn }, { name: 'andre' });
 
     const classes = useStyles();
 
@@ -365,21 +359,29 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
         const groups = findUnique(items, "group", false)
 
-        return groups.map((item, index) => (
-            <ListQ
-                key={ index }
-                editList={ edit }
-                header={ item.value }
-                group={ item.value }
-                items={ item.photos }
-                groups={ groups }
-                addItemHandle={ addItemHandle }
-                type={ listtype }
-                removeItemHandle={ removeItemHandle }
-                updateFunction={ updateFunction }
-                toggleFunction={ toggleFunction }
-            />
-        ))
+        return (
+            <>
+
+
+                { groups.map((item, index) => (
+                    <ListQ
+                        key={ index }
+                        editList={ edit }
+                        header={ item.value }
+                        group={ item.value }
+                        items={ item.photos }
+                        groups={ groups }
+                        addItemHandle={ addItemHandle }
+                        type={ listtype }
+                        removeItemHandle={ removeItemHandle }
+                        updateFunction={ updateFunction }
+                        toggleFunction={ toggleFunction }
+                    />
+
+
+                )) }
+            </>
+        )
     }
 
     const filterCompleted = (items, hideCompleted, filterText) => {
@@ -405,10 +407,17 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
 
     return (
-        <ThemeProvider theme={ theme }>
-            <CssBaseline />
-            <div className="App">
-                <br />
+
+        <Grid container spacing={ 4 } >
+
+            <Hidden mdDown>
+                <Grid item lg="2"  >
+                    <Grid item className={ classes.navigation } >
+                        <Navigation list={ findUnique(todos, "group", false) } name="value" anchor="value" />
+                    </Grid>
+                </Grid>
+            </Hidden>
+            <Grid item lg="10" xs={ 12 } >
                 <MyCard>
                     <MyCardHeader >
                         <List>
@@ -447,10 +456,10 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
                     { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText), filterText) } </> }
                 </MyCard>
+            </Grid>
+        </Grid>
 
 
-            </div>
-        </ThemeProvider>
     );
 }
 

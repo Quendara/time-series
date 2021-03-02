@@ -32,8 +32,7 @@ import Button from '@material-ui/core/Button';
 import { ThemeProvider, Grid, CssBaseline, Badge, Paper } from "@material-ui/core";
 
 // import { ListTodo } from './listTodo';
-import { ListGraphQL } from './listGraphQL';
-
+import { ListGraphQL } from './pages/listGraphQL';
 
 import TimeSeries from "./pages/TimeSeries";
 import { StyleDemo } from "./StyleDemo";
@@ -89,23 +88,17 @@ const App = () => {
                 </Route>
                 <Route exact path="/" >
                   <Grid container justify="center" >
-                    <Grid item xs={ 12 } lg={ 8 }>
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 0 } listtype="links" />
-                    </Grid>
                   </Grid>
                 </Route>
                 <Route exact path="/einkaufen" >
                   <Grid container justify="center" >
-                    <Grid item xs={ 12 } lg={ 8 }>
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 1 } listtype="todo" />
-                    </Grid>
                   </Grid>
                 </Route>
                 <Route exact path="/todoQL" >
                   <Grid container justify="center" >
-                    <Grid item xs={ 12 } lg={ 8 }>
-                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2} listtype="todo" />
-                    </Grid>
+                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2 } listtype="todo" />
                   </Grid>
                 </Route>
 
