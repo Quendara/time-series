@@ -432,13 +432,13 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
         <Grid container spacing={ 4 } >
 
             <Hidden mdDown>
-                <Grid item lg="2"  >
+                <Grid item lg={2}  >
                     <Grid item className={ classes.navigation } >
                         <Navigation list={ findUnique(todos, "group", false) } name="value" anchor="value" />
                     </Grid>
                 </Grid>
             </Hidden>
-            <Grid item lg="10" xs={ 12 } >
+            <Grid item lg={10} xs={ 12 } >
                 <MyCard>
                     <MyCardHeader >
                         <List>

@@ -129,7 +129,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     alignItems="center"
                                 >
 
-                                    <Grid item xs={ 6 } >
+                                    <Grid item xs={ 9 } md={6} >
                                         <Card { ...longPressEvent }>
                                             <Typography className={ classes.card_main } component="p">
                                                 { name }
