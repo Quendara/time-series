@@ -36,7 +36,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
     const handleClick = event => {
         event.preventDefault();
 
-        if (type === "todo") {
+        if (type !== "links") {
             if (linkName.length > 0) {
                 // send ONLY when it's filled out
                 onClickFunction(linkName, "", groupName);
@@ -175,7 +175,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                             // </TextField>
                         ) }
                 </Grid>
-                { type !== "todo" &&
+                { type === "links" &&
                     <Grid item xs={ 10 } md={ 3 } >
                         <TextField
                             error={ hasError(linkUrl) }

@@ -20,7 +20,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ClearIcon from '@material-ui/icons/Clear';
 
-import { listTodos } from '../graphql/queries';
+import { listTodos, getTodos } from '../graphql/queries';
 // import * as subscriptions from './graphql/subscriptions';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 
@@ -40,12 +40,14 @@ import { Navigation } from "../organisms/navigation"
 export const onMyUpdateTodos = /* GraphQL */ `
   subscription OnUpdateTodos{
     onUpdateTodos{
-      id
-      owner
-      name
-      link
-      checked
-      group
+        id
+        owner
+        listid
+        name
+        link
+        checked
+        group
+        datum
     }
   }
 `;
@@ -53,13 +55,15 @@ export const onMyUpdateTodos = /* GraphQL */ `
 export const onMyDeleteTodos = /* GraphQL */ `
   subscription OnDeleteTodos{
     onDeleteTodos {
-      id
-      owner
-      listid
-      name
-      link
-      checked
-      group
+        id
+        owner
+        listid
+        name
+        link
+        checked
+        group
+        datum
+
     }
   }
 `;
@@ -68,13 +72,14 @@ export const onMyDeleteTodos = /* GraphQL */ `
 export const onMyCreateTodos = /* GraphQL */ `
   subscription OnCreateTodos{
     onCreateTodos {
-      id
-      owner
-      listid
-      name
-      link
-      checked
-      group
+        id
+        owner
+        listid
+        name
+        link
+        checked
+        group
+        datum
     }
   }
 `;
@@ -224,7 +229,8 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                         const item = x.value.data.onUpdateTodos
                         console.log("updated Item : ", item);
 
-                        const updatedList = uiUpdateTodo(todos, item)
+                        // const fullitem = getTodosFcn( item.id, item.owner )                       
+                        const updatedList = uiUpdateTodo( todos, item )
                         setTodos(updatedList)
                     },
                     error: error => {
@@ -239,7 +245,10 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                         // Do something with the data          
                         const item = x.value.data.onDeleteTodos
                         console.log("deleted Item : ", item);
-                        const updatedList = uiDeleteTodo(todos, item.id)
+
+                        
+                        
+                        const updatedList = uiDeleteTodo(todos, item.id)                        
                         setTodos(updatedList)
                     },
                     error: error => {
@@ -283,13 +292,25 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
     }
 
     async function fetchTodos() {
-        const _todos = await API.graphql(graphqlOperation(listTodos, { filter: { listid: { eq: "" + listid } }, limit: 150 }));
+        const _todos = await API.graphql(graphqlOperation( listTodos, { filter: { listid: { eq: "" + listid } }, limit: 150 }));
 
         const items = _todos.data.listTodos.items
         console.log("fetchTodos : ", items);
         setTodos(items)
         return items
     }
+
+    async function getTodosFcn( id, owner ) {
+        const _todos = await API.graphql(graphqlOperation( getTodos, { id: "160361190804", owner: "andre" }  ));
+
+        const item = _todos.data.getTodos
+
+        // const items = _todos.data.listTodos.items
+        console.log("getTodos : ", item);
+        return item
+        // setTodos(items)
+        // return items
+    }    
 
     const isChecked = (checked) => {
         if (typeof checked === "boolean") { return checked }

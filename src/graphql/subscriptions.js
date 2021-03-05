@@ -3,23 +3,12 @@
 
 export const onCreateTodos = /* GraphQL */ `
   subscription OnCreateTodos(
-    $id: String
-    $owner: String
+    $id: String!
+    $owner: String!
     $listid: String
-    $name: String
-    $link: String
-    $checked: Boolean
     $group: String
   ) {
-    onCreateTodos(
-      id: $id
-      owner: $owner
-      listid: $listid
-      name: $name
-      link: $link
-      checked: $checked
-      group: $group
-    ) {
+    onCreateTodos(id: $id, owner: $owner, listid: $listid, group: $group) {
       id
       owner
       listid
@@ -27,15 +16,15 @@ export const onCreateTodos = /* GraphQL */ `
       link
       checked
       group
+      datum
     }
   }
 `;
 export const onUpdateTodos = /* GraphQL */ `
   subscription OnUpdateTodos(
-    $id: String
-    $owner: String
-    $listid: Int
-    $name: String
+    $id: String!
+    $owner: String!
+    $listid: String
     $checked: Boolean
     $group: String
   ) {
@@ -43,7 +32,6 @@ export const onUpdateTodos = /* GraphQL */ `
       id: $id
       owner: $owner
       listid: $listid
-      name: $name
       checked: $checked
       group: $group
     ) {
@@ -54,28 +42,13 @@ export const onUpdateTodos = /* GraphQL */ `
       link
       checked
       group
+      datum
     }
   }
 `;
 export const onDeleteTodos = /* GraphQL */ `
-  subscription OnDeleteTodos(
-    $id: String
-    $owner: String
-    $listid: String
-    $name: String
-    $link: String
-    $checked: Boolean
-    $group: String
-  ) {
-    onDeleteTodos(
-      id: $id
-      owner: $owner
-      listid: $listid
-      name: $name
-      link: $link
-      checked: $checked
-      group: $group
-    ) {
+  subscription OnDeleteTodos($id: String, $owner: String) {
+    onDeleteTodos(id: $id, owner: $owner) {
       id
       owner
       listid
@@ -83,6 +56,7 @@ export const onDeleteTodos = /* GraphQL */ `
       link
       checked
       group
+      datum
     }
   }
 `;

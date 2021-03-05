@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TimelineIcon from '@material-ui/icons/Timeline';
 import ShareIcon from '@material-ui/icons/Share';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import ChatIcon from '@material-ui/icons/Chat';
 
 // import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
@@ -72,6 +73,8 @@ const App = () => {
           </NavLink>
           <NavLink to="/time" className={ classes.title }   ><TimelineIcon /></NavLink>
           <NavLink to="/einkaufen" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
+          <NavLink to="/message" className={ classes.title }   ><ChatIcon /></NavLink>
+          
           <NavLink to="/todoQL" className={ classes.title }   ><Badge badgeContent={ "n" } color="secondary"><AssignmentTurnedInIcon /></Badge></NavLink>
           {/* <NavLink to="/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink> */ }
         </Auth>
@@ -101,6 +104,12 @@ const App = () => {
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2 } listtype="todo" />
                   </Grid>
                 </Route>
+                <Route exact path="/message" >
+                  <Grid container justify="center" >
+                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 3 } listtype="message" />
+                  </Grid>
+                </Route>
+
 
                 <Route exact path="/demo" component={ StyleDemo }></Route>
               </>

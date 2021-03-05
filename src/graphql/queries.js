@@ -11,6 +11,7 @@ export const getTodos = /* GraphQL */ `
       link
       checked
       group
+      datum
     }
   }
 `;
@@ -29,6 +30,7 @@ export const listTodos = /* GraphQL */ `
         link
         checked
         group
+        datum
       }
       nextToken
     }

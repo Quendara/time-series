@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 
-import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider, MenuItem } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, CardContent, Divider, MenuItem } from '@material-ui/core';
 
 import useLongPress from "../hooks/useLongPress";
 
@@ -9,15 +9,31 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // import AddIcon from '@material-ui/icons/Add';
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
+import { makeStyles } from '@material-ui/core/styles';
+import { EditIcon, ArrowDropDown, ArrowRight } from '@material-ui/icons';
 import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 
 import { AddForm } from "./AddForm"
 
+const useStyles = makeStyles({
+    card_main: {
+        fontSize: 16,
+        margin: 6,
+    },
+    card_sec: {
+        fontSize: 12,
+        textAlign: "right",
+        margin: 6,
+    },
+});
+
+
 
 const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, toggleFunction, type, groups, group, editList }) => {
+
+    const classes = useStyles();
 
     const [edit, setEdit] = useState(false);
     // const [checked, setChecked] = useState(false);
@@ -91,27 +107,53 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
             ) :
                 (
                     <>
-                        { type === "todo" ? (
-                                <ListItem button={ !(edit || editList) } onClick={ handleToggleFunction }   >
+                        { type === "todo" &&
+                            <ListItem button={ !(edit || editList) } onClick={ handleToggleFunction }   >
 
-                                    <ListItemIcon onClick={ handleToggleFunction } >
-                                        { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
-                                    </ListItemIcon>
+                                <ListItemIcon onClick={ handleToggleFunction } >
+                                    { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
+                                </ListItemIcon>
 
-                                    <ListItemText
-                                        { ...longPressEvent }
-                                        primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> }
-                                    />
-                                </ListItem>
-                        ) : (
-                                <ListItem button>
-                                    <ListItemText
-                                        { ...longPressEventLink  }
-                                        primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
-                                        secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
-                                    />
-                                </ListItem>
-                            ) }
+                                <ListItemText
+                                    { ...longPressEvent }
+                                    primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> }
+                                />
+                            </ListItem> }
+
+                        { type === "message" &&
+                            <ListItem>
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="flex-end"
+                                    alignItems="center"
+                                >
+
+                                    <Grid item xs={ 6 } >
+                                        <Card { ...longPressEvent }>
+                                            <Typography className={ classes.card_main } component="p">
+                                                { name }
+                                            </Typography>
+                                            <Typography color="textSecondary" className={ classes.card_sec } component="p">
+                                                { "11.24" }
+                                            </Typography>
+                                        </Card>
+                                    </Grid>
+
+                                </Grid>
+                            </ListItem>
+
+                        }
+
+                        { type === "links" &&
+                            <ListItem button>
+                                <ListItemText
+                                    { ...longPressEventLink }
+                                    primary={ <Typography variant="h6" color="primary" >{ name }</Typography> }
+                                    secondary={ <Typography variant="body2" color="textSecondary" noWrap >{ link }</Typography> }
+                                />
+                            </ListItem>
+                        }
                     </>
                 ) }
         </>
@@ -136,13 +178,30 @@ const printRemaining = (filtered, total) => {
 
 export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, toggleFunction, type, group, groups, editList }) => {
 
+    const [edit, setEdit] = useState(false);
+    const [name, setName] = useState("");
+
+    const onClickFunction = (name, link, groupname) => {
+        addItemHandle(name, link, groupname)
+        setName("")
+
+    }
+
+    // , ArrowRight
+
     return (
         <List
             dense={ false }
-            id={header}
-            >
-            
-            <MyListItemHeader>
+            id={ header }
+        >
+
+            <MyListItemHeader button onClick={ () => setEdit(!edit) }>
+                <ListItemIcon>
+                    { edit ? <ArrowDropDown /> : <ArrowRight /> }
+
+                </ListItemIcon>
+
+
                 { header }
                 { type === "todo" &&
                     <ListItemSecondaryAction>
@@ -150,6 +209,13 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                     </ListItemSecondaryAction>
                 }
             </MyListItemHeader>
+
+            { edit &&
+                <ListItem>
+                    <AddForm name={ name } group={ group } onClickFunction={ onClickFunction } type={ type } buttonName="Add" />
+                    <Divider />
+                </ListItem> }
+
 
             { items.map((item, index) => (
                 <ListEl
