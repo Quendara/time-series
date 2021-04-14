@@ -2,13 +2,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateTodos = /* GraphQL */ `
-  subscription OnCreateTodos(
-    $id: String!
-    $owner: String!
-    $listid: String
-    $group: String
-  ) {
-    onCreateTodos(id: $id, owner: $owner, listid: $listid, group: $group) {
+  subscription OnCreateTodos {
+    onCreateTodos {
       id
       owner
       listid
@@ -21,20 +16,8 @@ export const onCreateTodos = /* GraphQL */ `
   }
 `;
 export const onUpdateTodos = /* GraphQL */ `
-  subscription OnUpdateTodos(
-    $id: String!
-    $owner: String!
-    $listid: String
-    $checked: Boolean
-    $group: String
-  ) {
-    onUpdateTodos(
-      id: $id
-      owner: $owner
-      listid: $listid
-      checked: $checked
-      group: $group
-    ) {
+  subscription OnUpdateTodos {
+    onUpdateTodos {
       id
       owner
       listid

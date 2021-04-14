@@ -21,8 +21,11 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import ClearIcon from '@material-ui/icons/Clear';
 
 import { listTodos, getTodos } from '../graphql/queries';
-// import * as subscriptions from './graphql/subscriptions';
+import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscriptions';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
+// import * as subscriptions from './graphql/subscriptions';
+
+
 
 import { useStyles, theme } from "../Styles"
 
@@ -34,55 +37,6 @@ import { findUnique, restCallToBackendAsync } from "../components/helper";
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
 
 import { Navigation } from "../organisms/navigation"
-
-// import awsconfig from './aws-exports';
-
-export const onMyUpdateTodos = /* GraphQL */ `
-  subscription OnUpdateTodos{
-    onUpdateTodos{
-        id
-        owner
-        listid
-        name
-        link
-        checked
-        group
-        datum
-    }
-  }
-`;
-
-export const onMyDeleteTodos = /* GraphQL */ `
-  subscription OnDeleteTodos{
-    onDeleteTodos {
-        id
-        owner
-        listid
-        name
-        link
-        checked
-        group
-        datum
-
-    }
-  }
-`;
-
-
-export const onMyCreateTodos = /* GraphQL */ `
-  subscription OnCreateTodos{
-    onCreateTodos {
-        id
-        owner
-        listid
-        name
-        link
-        checked
-        group
-        datum
-    }
-  }
-`;
 
 const FilterComponent = ({ callback }) => {
 
@@ -168,27 +122,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                     "aws_appsync_apiKey": apikey
                 };
                 Amplify.configure(awsmobile);
-
-                // const poolData = {
-                //     UserPoolId: "eu-central-1_8LkzpXcOV",
-                //     ClientId: "5v3et57vfoqijj81g3ksbidm5k"
-                //   };
-
-
-                // const awsconfig = {
-                //     "aws_project_region": "eu-central-1",
-                //     "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
-                //     "aws_appsync_region": "eu-central-1",
-                //     "aws_cognito_identity_pool_id": "eu-central-1_8LkzpXcOV",
-                //     "aws_user_pools_id": poolData.UserPoolId,
-                //     "aws_user_pools_web_client_id": poolData.ClientId,
-                //     "oauth": {}
-                // };
-
-                // Amplify.configure(awsconfig);            
-
-                fetchTodos()
-                // console.log("useEffect - [] : ", todos);
+                fetchTodos()                
             }
         }, [apikey])
 
@@ -197,12 +131,11 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
             if (apikey) {
 
-                console.log("useEffect - todos : ", todos);
-
+                // console.log("useEffect - todos : ", todos);
                 // const subscription = props.source.subscribe();
 
                 const subscriptionCreateTodos = API.graphql(
-                    graphqlOperation(onMyCreateTodos)
+                    graphqlOperation(onCreateTodos)
                 ).subscribe({
                     next: (x) => {
                         // Do something with the data
@@ -221,7 +154,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                 })
 
                 const subscriptionUpdateTodos = API.graphql(
-                    graphqlOperation(onMyUpdateTodos)
+                    graphqlOperation(onUpdateTodos)
                 ).subscribe({
                     next: (x) => {
                         // Do something with the data
@@ -239,12 +172,13 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                 })
 
                 const subscriptionDeleteTodos = API.graphql(
-                    graphqlOperation(onMyDeleteTodos)
+                    graphqlOperation(onDeleteTodos)
                 ).subscribe({
                     next: (x) => {
                         // Do something with the data          
                         const item = x.value.data.onDeleteTodos
-                        console.log("deleted Item : ", item);
+                        console.log("deleted Item x    : ", x);
+                        console.log("deleted Item item : ", item);
 
                         
                         
@@ -302,14 +236,10 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
     async function getTodosFcn( id, owner ) {
         const _todos = await API.graphql(graphqlOperation( getTodos, { id: "160361190804", owner: "andre" }  ));
-
         const item = _todos.data.getTodos
 
-        // const items = _todos.data.listTodos.items
         console.log("getTodos : ", item);
         return item
-        // setTodos(items)
-        // return items
     }    
 
     const isChecked = (checked) => {
@@ -350,16 +280,17 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
     // handles
     async function addItemHandle(name, link, group = "") {
         const id = new Date().getTime();
+        await API.graphql(graphqlOperation(createTodos, 
+            { input: 
+                { id: "" + id, 
+                group: group, 
+                link: link,
+                listid: listid, 
+                owner: "andre", 
+                name: name, 
+                checked: false 
+            } }));
 
-        await API.graphql(graphqlOperation(createTodos, { input: { id: "" + id, group: group, link: link, listid: listid, owner: "andre", name: name, checked: false } }));
-
-        // const itemToSend = {
-        //   name, // :name
-        //   group,
-        //   link
-        // }
-
-        //console.log(itemToSend);
     }
 
 

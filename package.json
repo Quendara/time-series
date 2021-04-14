@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@apollo/react-hooks": "^4.0.0",
     "@fortawesome/fontawesome-svg-core": "1.2.27",
     "@fortawesome/free-solid-svg-icons": "5.12.1",
     "@fortawesome/react-fontawesome": "0.1.9",
@@ -10,11 +11,15 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "amazon-cognito-identity-js": "3.3.3",
+    "apollo-boost": "^0.4.9",
+    "apollo-link-ws": "^1.0.20",
     "aws-amplify": "2.2.6",
     "aws-appsync": "^4.0.1",
     "aws-sdk": "2.642.0",
     "chart.js": "^2.9.3",
     "cross-fetch": "^3.0.4",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.11.0",
     "jwt-decode": "^2.2.0",
     "lodash": "4.17.15",
     "query-string": "^6.10.1",
@@ -22,6 +27,7 @@
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
+    "subscriptions-transport-ws": "^0.9.18",
     "underscore": "^1.10.2"
   },
   "scripts": {

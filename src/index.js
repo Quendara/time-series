@@ -36,6 +36,7 @@ import { ThemeProvider, Grid, CssBaseline, Badge, Paper } from "@material-ui/cor
 import { ListGraphQL } from './pages/listGraphQL';
 
 import TimeSeries from "./pages/TimeSeries";
+import {Sandbox} from "./pages/sandbox";
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
  
@@ -74,6 +75,7 @@ const App = () => {
           <NavLink to="/time" className={ classes.title }   ><TimelineIcon /></NavLink>
           <NavLink to="/einkaufen" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
           <NavLink to="/message" className={ classes.title }   ><ChatIcon /></NavLink>
+          <NavLink to="/sandbox" className={ classes.title }   ><ChatIcon /></NavLink>
           
           <NavLink to="/todoQL" className={ classes.title }   ><Badge badgeContent={ "n" } color="secondary"><AssignmentTurnedInIcon /></Badge></NavLink>
           {/* <NavLink to="/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink> */ }
@@ -99,6 +101,12 @@ const App = () => {
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 1 } listtype="todo" />
                   </Grid>
                 </Route>
+                <Route exact path="/sandbox" >
+                  <Grid container justify="center" >
+                      <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } listtype="todo" />
+                  </Grid>
+                </Route>
+
                 <Route exact path="/todoQL" >
                   <Grid container justify="center" >
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2 } listtype="todo" />

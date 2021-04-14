@@ -41,7 +41,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                 // send ONLY when it's filled out
                 onClickFunction(linkName, "", groupName);
 
-                // setLinkName("");
+                setLinkName("");
                 // setLinkUrl("");
                 // setGroupName("");
                 setTrySend(false);
@@ -85,7 +85,6 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
     }
 
     return (
-        <ListItem>
             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
                 <Grid item xs={ 10 } md={ 3 } >
                     <TextField
@@ -203,8 +202,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                     > { buttonName } </Button>
 
                 </Grid>
-
             </Grid>
-        </ListItem>
+        
     );
 };
