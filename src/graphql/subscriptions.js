@@ -30,8 +30,8 @@ export const onUpdateTodos = /* GraphQL */ `
   }
 `;
 export const onDeleteTodos = /* GraphQL */ `
-  subscription OnDeleteTodos($id: String, $owner: String) {
-    onDeleteTodos(id: $id, owner: $owner) {
+  subscription OnDeleteTodos {
+    onDeleteTodos {
       id
       owner
       listid

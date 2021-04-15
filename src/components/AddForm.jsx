@@ -8,7 +8,7 @@ import EditIcon from '@material-ui/icons/Edit';
 // hideGroups: When this is in context of a group, the group can be hidden
 import { useStyles, theme } from "../Styles"
 
-export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName = "Add", showGroupsSelector=true }) => {
+export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName = "Add", showGroupsSelector = true }) => {
 
     // props replaced by
     const classes = useStyles();
@@ -38,9 +38,8 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                 return true
             }
         }
-        else{ 
-            if (linkName.length > 0 && linkUrl.length > 0) 
-            {
+        else {
+            if (linkName.length > 0 && linkUrl.length > 0) {
                 return true
             }
         }
@@ -103,93 +102,139 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
         }
     }
 
-    return (
-            <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-                <Grid item xs={ 9 } md={ 3 } >
-                    <TextField
-                        value={ linkName }
-                        error={ hasError(linkName) }
-                        label="Name"
-                        size="small"
-                        fullWidth
-                        variant="outlined"
-                        onKeyPress={ e => checkEnter(e) }
-                        onChange={ e => setLinkName(e.target.value) }
-                    />
-                </Grid>
-                { showGroupsSelector && 
-                <Grid item xs={ 9 } md={ 3 } >
-                    { groups == undefined ?
-                        (
-                            <TextField
-                                value={ groupName }
-                                error={ hasError(groupName) }
-                                label="Group"
-                                size="small"
-                                fullWidth
-                                variant="outlined"
-                                onKeyPress={ e => checkEnter(e) }
-                                onChange={ e => setGroupName(e.target.value) }
-                            />
-                        ) : (
+    //////
+    //////   LAYOUT //////////////
 
-                            <Autocomplete
-                                id="combo-box-demo"
-                                options={ groups }
-                                size="small"
-                                freeSolo
-                                fullWidth
-                                value={ { value: groupName } }
-                                // error={ groupName === undefined || groupName.length == 0 }
-                                getOptionLabel={ (option) => option.value }
-                                onKeyPress={ e => checkEnter(e) }
-                                onInputChange={ (event, newValue) => {
-                                    if (typeof newValue === 'string') {
-                                        setGroupName(
-                                            newValue
-                                        );
-                                    }
-                                } }
-                                onChange={ (event, newValue) => {
-                                    if (typeof newValue === 'string') {
-                                        setGroupName(
-                                            newValue
-                                        );
-                                    } else if (newValue && newValue.value) {
-                                        // Create a new value from the user input
-                                        setGroupName(
-                                            newValue.value,
-                                        );
-                                    } else {
-                                        setGroupName(newValue);
-                                    }
-                                } }
-                                renderInput={ (params) => <TextField { ...params } label="Groups" fullWidth variant="outlined" /> }
-                            />
-
-                        ) }
-                </Grid>
-                }
-                { type === "links" &&
-                    <Grid item xs={ 9 } md={ 3 } >
+    const getName = () => {
+        return (
+            <TextField
+                value={ linkName }
+                error={ hasError(linkName) }
+                label="Name"
+                size="small"
+                fullWidth
+                variant="outlined"
+                onKeyPress={ e => checkEnter(e) }
+                onChange={ e => setLinkName(e.target.value) }
+            />
+        )
+    }
+    const getGroup = () => {
+        return (
+            <>
+                { groups == undefined ?
+                    (
                         <TextField
-                            error={ hasError(linkUrl) }
-                            value={ linkUrl }
+                            value={ groupName }
+                            error={ hasError(groupName) }
+                            label="Group"
                             size="small"
-                            label="URL"
                             fullWidth
                             variant="outlined"
                             onKeyPress={ e => checkEnter(e) }
-                            onChange={ e => setLinkUrl(e.target.value) }
+                            onChange={ e => setGroupName(e.target.value) }
                         />
-                    </Grid> }
+                    ) : (
+
+                        <Autocomplete
+                            id="combo-box-demo"
+                            options={ groups }
+                            size="small"
+                            freeSolo
+                            fullWidth
+                            value={ { value: groupName } }
+                            // error={ groupName === undefined || groupName.length == 0 }
+                            getOptionLabel={ (option) => option.value }
+                            onKeyPress={ e => checkEnter(e) }
+                            onInputChange={ (event, newValue) => {
+                                if (typeof newValue === 'string') {
+                                    setGroupName(
+                                        newValue
+                                    );
+                                }
+                            } }
+                            onChange={ (event, newValue) => {
+                                if (typeof newValue === 'string') {
+                                    setGroupName(
+                                        newValue
+                                    );
+                                } else if (newValue && newValue.value) {
+                                    // Create a new value from the user input
+                                    setGroupName(
+                                        newValue.value,
+                                    );
+                                } else {
+                                    setGroupName(newValue);
+                                }
+                            } }
+                            renderInput={ (params) => <TextField { ...params } label="Groups" fullWidth variant="outlined" /> }
+                        />
+
+                    ) }
+            </>
+
+        )
+    }
+    const getLink = () => {
+        return (
+            <TextField
+                error={ hasError(linkUrl) }
+                value={ linkUrl }
+                size="small"
+                label="URL"
+                fullWidth
+                variant="outlined"
+                onKeyPress={ e => checkEnter(e) }
+                onChange={ e => setLinkUrl(e.target.value) }
+            />
+        )
+    }
+
+    const getWidthMd = () => {
+
+        let elementsToShow = 1
+        if (showGroupsSelector) {
+            elementsToShow += 1
+        }
+        if (type === "links") {
+            elementsToShow += 1
+        }
+
+        let width = 1
+
+        switch (elementsToShow) {
+            case 1: width = 8; break;
+            case 2: width = 4; break;
+            case 3: width = 3; break;
+            default:
+                console.error("Unexpected elementsToShow", elementsToShow)
+        }
+        // console.log( "elementsToShow : ", elementsToShow )         
+        return width
+
+    }
 
 
-                
-                <Grid item xs={ 3 } md={ 3 } >
-                <Button variant="contained" color={ isValid()?"primary":"default" } onClick={ handleClick } className={classes.green} >
+    return (
+        <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
+            <Grid item xs={ 9 } md={ getWidthMd() } >
+                { getName() }
+            </Grid>
+            { showGroupsSelector &&
+                <Grid item xs={ 9 } md={ getWidthMd() } >
+                    { getGroup() }
+                </Grid>
+            }
+            { type === "links" &&
+                <Grid item xs={ 9 } md={ getWidthMd() } >
+                    { getLink() }
+                </Grid> }
+
+            <Grid item xs={ 3 } md={ 3 } >
+                <Button variant="contained" color={ isValid() ? "primary" : "default" } onClick={ handleClick } className={ classes.green } >
                     <AddIcon />
-                </Button >                
+                </Button >
+
                 {/* <Button
                     onClick={ handleClick }
                     variant="contained"
@@ -198,9 +243,9 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                     startIcon={ <AddIcon /> }
                 > { buttonName } </Button> */}
 
-            </Grid>                    
-
             </Grid>
-        
+
+        </Grid>
+
     );
 };

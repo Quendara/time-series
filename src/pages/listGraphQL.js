@@ -177,11 +177,8 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                     next: (x) => {
                         // Do something with the data          
                         const item = x.value.data.onDeleteTodos
-                        console.log("deleted Item x    : ", x);
+                        // console.log("deleted Item x    : ", x);
                         console.log("deleted Item item : ", item);
-
-                        
-                        
                         const updatedList = uiDeleteTodo(todos, item.id)                        
                         setTodos(updatedList)
                     },
