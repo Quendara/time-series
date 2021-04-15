@@ -1,13 +1,17 @@
 import React, { Component, useState, useEffect } from "react";
-import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider, MenuItem } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider, MenuItem, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 
+// hideGroups: When this is in context of a group, the group can be hidden
+import { useStyles, theme } from "../Styles"
 
-export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName = "Add" }) => {
+export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName = "Add", showGroupsSelector=true }) => {
+
     // props replaced by
+    const classes = useStyles();
 
     const [linkName, setLinkName] = useState(name);
     const [groupName, setGroupName] = useState(group);
@@ -27,6 +31,21 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
     useEffect(() => {
         setGroupName(group)
     }, [group]);
+
+    const isValid = () => {
+        if (type !== "links") {
+            if (linkName.length > 0) {
+                return true
+            }
+        }
+        else{ 
+            if (linkName.length > 0 && linkUrl.length > 0) 
+            {
+                return true
+            }
+        }
+        return false
+    }
 
 
 
@@ -86,7 +105,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
 
     return (
             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-                <Grid item xs={ 10 } md={ 3 } >
+                <Grid item xs={ 9 } md={ 3 } >
                     <TextField
                         value={ linkName }
                         error={ hasError(linkName) }
@@ -98,7 +117,8 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                         onChange={ e => setLinkName(e.target.value) }
                     />
                 </Grid>
-                <Grid item xs={ 10 } md={ 3 } >
+                { showGroupsSelector && 
+                <Grid item xs={ 9 } md={ 3 } >
                     { groups == undefined ?
                         (
                             <TextField
@@ -112,16 +132,6 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                 onChange={ e => setGroupName(e.target.value) }
                             />
                         ) : (
-
-                            // <TextField
-                            //     value={ groupName }
-                            //     error={ hasError(groupName) }
-                            //     label="Group"
-                            //     fullWidth
-                            //     variant="outlined"
-                            //     onKeyPress={ e => checkEnter(e) }
-                            //     onChange={ e => setGroupName(e.target.value) }
-                            // />
 
                             <Autocomplete
                                 id="combo-box-demo"
@@ -156,26 +166,12 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                                 } }
                                 renderInput={ (params) => <TextField { ...params } label="Groups" fullWidth variant="outlined" /> }
                             />
-                            // <TextField
-                            //     variant="outlined"
-                            //     select="true"
-                            //     error={ groupName === undefined || groupName.length == 0 }
-                            //     // helperText={ unit }
-                            //     value={ groupName }
-                            //     onChange={ handleGroupChange }
-                            //     label="Group"
-                            //     fullWidth
-                            // >
-                            //     {groups.map((item) => (
-                            //         <MenuItem key={ item.value } value={ item.value }>
-                            //             {item.value }
-                            //         </MenuItem>
-                            //     )) }
-                            // </TextField>
+
                         ) }
                 </Grid>
+                }
                 { type === "links" &&
-                    <Grid item xs={ 10 } md={ 3 } >
+                    <Grid item xs={ 9 } md={ 3 } >
                         <TextField
                             error={ hasError(linkUrl) }
                             value={ linkUrl }
@@ -189,19 +185,21 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
                     </Grid> }
 
 
-                <Grid item xs={ 10 } md={ 3 } >
-                    {/* <IconButton onClick={ handleClick } edge="end" color="primary" aria-label="delete">
-                        <AddIcon />
-                    </IconButton> */}
-                    <Button
-                        onClick={ handleClick }
-                        variant="contained"
-                        color="primary"
-                        size="medium"
-                        startIcon={ <AddIcon /> }
-                    > { buttonName } </Button>
+                
+                <Grid item xs={ 3 } md={ 3 } >
+                <Button variant="contained" color={ isValid()?"primary":"default" } onClick={ handleClick } className={classes.green} >
+                    <AddIcon />
+                </Button >                
+                {/* <Button
+                    onClick={ handleClick }
+                    variant="contained"
+                    color="primary"
+                    size="medium"
+                    startIcon={ <AddIcon /> }
+                > { buttonName } </Button> */}
 
-                </Grid>
+            </Grid>                    
+
             </Grid>
         
     );

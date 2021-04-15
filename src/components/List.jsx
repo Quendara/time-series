@@ -212,7 +212,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
             { edit &&
                 <ListItem>
-                    <AddForm name={ name } group={ group } onClickFunction={ onClickFunction } type={ type } buttonName="Add" />
+                    <AddForm name={ name } group={ group } onClickFunction={ onClickFunction } type={ type } buttonName="Add" showGroupsSelector={false}  />
                     <Divider />
                 </ListItem> }
 

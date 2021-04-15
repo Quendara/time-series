@@ -1,7 +1,7 @@
 import React, { Component, useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { createMuiTheme } from "@material-ui/core/styles";
-import { purple, lightGreen, pink, lightBlue, red } from '@material-ui/core/colors/';
+import { purple, lightGreen, pink, lightBlue, red, green } from '@material-ui/core/colors/';
 
 
 export const theme = createMuiTheme({
@@ -18,12 +18,11 @@ export const useStyles = makeStyles((theme) =>
       root: {
         flexGrow: 1,
       },
-
       paper: {
         // paddingTop: 50,
         // opacity: 0.5,
         // backgroundImage: "https://s3.eu-central-1.amazonaws.com/quendara.de/background/Grafitti-Stonewall-2.jpg"
-      },    
+      },
       menuButton: {
         marginRight: theme.spacing(6),
         color: "#FFFFFF",
@@ -44,7 +43,11 @@ export const useStyles = makeStyles((theme) =>
       appBar: {
         //top: 'auto',
         //bottom: 0,
-      },      
+      },
+      green: {
+        color: '#fff',
+        backgroundColor: green[500],
+      },            
     }),
   );
   

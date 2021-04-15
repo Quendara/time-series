@@ -305,7 +305,10 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
         if (items.length == 0) {
             return (
-                <AddForm name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+
+                <ListItem>
+                    <AddForm name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                </ListItem>
             )
         }
 

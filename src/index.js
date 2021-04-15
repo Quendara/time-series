@@ -19,6 +19,9 @@ import TimelineIcon from '@material-ui/icons/Timeline';
 import ShareIcon from '@material-ui/icons/Share';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import ChatIcon from '@material-ui/icons/Chat';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import MoreIcon from '@material-ui/icons/MoreVert';          
+
 
 // import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
@@ -30,7 +33,7 @@ import Button from '@material-ui/core/Button';
 
 
 
-import { ThemeProvider, Grid, CssBaseline, Badge, Paper } from "@material-ui/core";
+import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton } from "@material-ui/core";
 
 // import { ListTodo } from './listTodo';
 import { ListGraphQL } from './pages/listGraphQL';
@@ -60,6 +63,14 @@ const App = () => {
     console.log("apikey : ", apikey);
   };
 
+  const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
+  const menuHandleClick = (event) => { // : React.MouseEvent<HTMLButtonElement>
+    setAnchorEl(event.currentTarget);
+  };  
+  const handleClose = () => {
+    setAnchorEl(null);
+  };  
+
 
 
   return (
@@ -69,16 +80,30 @@ const App = () => {
       <Router>
 
         <Auth authSuccessCallback={ authSuccessCallback } >
-          <NavLink to="/" className={ classes.title }   >
+          <NavLink to="/" className={ classes.menuButton }   >
             <ShareIcon />
           </NavLink>
-          <NavLink to="/time" className={ classes.title }   ><TimelineIcon /></NavLink>
-          <NavLink to="/einkaufen" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
-          <NavLink to="/message" className={ classes.title }   ><ChatIcon /></NavLink>
-          <NavLink to="/sandbox" className={ classes.title }   ><ChatIcon /></NavLink>
+          <NavLink to="/time" className={ classes.menuButton }   ><TimelineIcon /></NavLink>
+          <NavLink to="/einkaufen" className={ classes.menuButton }   ><ShoppingCartIcon /></NavLink>
           
           <NavLink to="/todoQL" className={ classes.title }   ><Badge badgeContent={ "n" } color="secondary"><AssignmentTurnedInIcon /></Badge></NavLink>
-          {/* <NavLink to="/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink> */ }
+
+          <IconButton  variant="inherit" className={ classes.menuButton } onClick={ menuHandleClick } ><MoreIcon /></IconButton>
+
+          <Menu
+                  id="simple-menu"
+                  anchorEl={ anchorEl }
+                  keepMounted
+                  open={ Boolean(anchorEl) }
+                  onClose={ handleClose }                  
+                  >
+                  <MenuItem>
+                  <NavLink to="/message" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon><Typography variant="inherit" color="inherit" >   Messages</Typography></NavLink>
+                  </MenuItem>
+                  <MenuItem>
+                  <NavLink to="/sandbox" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon>  <Typography variant="inherit" color="inherit" >Sandbox</Typography></NavLink>
+                  </MenuItem>
+                </Menu>          
         </Auth>
 
 
@@ -106,7 +131,6 @@ const App = () => {
                       <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } listtype="todo" />
                   </Grid>
                 </Route>
-
                 <Route exact path="/todoQL" >
                   <Grid container justify="center" >
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2 } listtype="todo" />
