@@ -238,7 +238,7 @@ export const Clock = () => {
                     <Letter word="zwei_uhr" letter="Z" ></Letter>
                     <Letter word="zwei_uhr" letter="W" ></Letter>
                     <Letter word="zwei_uhr" letter="E" ></Letter>
-                    <Letter word="zwei_uhr">         letter="I" ></Letter>
+                    <Letter word="zwei_uhr" letter="I" ></Letter>
                 </Grid>
 
                 <Grid container  spacing={4} >
