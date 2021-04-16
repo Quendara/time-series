@@ -40,6 +40,9 @@ import { ListGraphQL } from './pages/listGraphQL';
 
 import TimeSeries from "./pages/TimeSeries";
 import {Sandbox} from "./pages/sandbox";
+import {Clock} from "./components/Clock";
+
+
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
  
@@ -132,8 +135,15 @@ const App = () => {
                   </Grid>
                 </Route>
                 <Route exact path="/todoQL" >
-                  <Grid container justify="center" >
+                  <Grid container justify="center" spacing={8} >
+
+                    <Grid item xs={ 12 } md={6} >
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2 } listtype="todo" />
+                    </Grid>
+                    <Grid item xs={ 12 } md={6} >
+                      <Clock />
+                    </Grid>
+
                   </Grid>
                 </Route>
                 <Route exact path="/message" >
@@ -141,6 +151,11 @@ const App = () => {
                       <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 3 } listtype="message" />
                   </Grid>
                 </Route>
+                <Route exact path="/clock" >
+                  <Grid container justify="center" >
+                      <Clock  />
+                  </Grid>
+                </Route>                
 
 
                 <Route exact path="/demo" component={ StyleDemo }></Route>

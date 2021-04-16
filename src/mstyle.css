@@ -10,3 +10,11 @@
 .mr-2{
 	margin-right: 0.5em;
 }
+.letter{
+	width: 40px;
+	/* height: 40px; */
+	padding-top: 2.5%;
+  	font-size: x-large;
+  	color: #222;
+  	text-rendering: optimizeLegibility;        
+}
