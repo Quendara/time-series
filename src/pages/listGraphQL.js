@@ -6,7 +6,7 @@ import {
     Link,
     useRouteMatch,
     useParams
-  } from "react-router-dom";
+} from "react-router-dom";
 
 // import ViewEvent from './ViewEvent';
 
@@ -45,6 +45,8 @@ import { findUnique, restCallToBackendAsync } from "../components/helper";
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
 
 import { Navigation } from "../organisms/navigation"
+
+// import { error } from "../components/erros"
 
 const FilterComponent = ({ callback }) => {
 
@@ -97,7 +99,7 @@ const FilterComponent = ({ callback }) => {
 
 
 
-export const ListGraphQL = ({ token, apikey }) => {
+export const ListGraphQL = ({ token, apikey, errorHandle }) => {
 
     // let match = useRouteMatch();
     let { listid, listtype } = useParams();
@@ -111,7 +113,7 @@ export const ListGraphQL = ({ token, apikey }) => {
     const classes = useStyles();
 
     // const listid = 1;
-    const [todos, setTodos] = useState(undefined);
+    const [todos, setTodos] = useState([]);
 
     const [edit, setEdit] = useState(false);
     const [filterText, setFilterText] = useState("");
@@ -135,7 +137,7 @@ export const ListGraphQL = ({ token, apikey }) => {
                     "aws_appsync_apiKey": apikey
                 };
                 Amplify.configure(awsmobile);
-                fetchTodos()                
+                fetchTodos()
             }
         }, [apikey, listid])
 
@@ -160,6 +162,8 @@ export const ListGraphQL = ({ token, apikey }) => {
                         setTodos([...todos, item]); // push to the end
                         console.log("Submitting... ");
 
+
+
                     },
                     error: error => {
                         console.log("error : ", error);
@@ -176,7 +180,7 @@ export const ListGraphQL = ({ token, apikey }) => {
                         console.log("updated Item : ", item);
 
                         // const fullitem = getTodosFcn( item.id, item.owner )                       
-                        const updatedList = uiUpdateTodo( todos, item )
+                        const updatedList = uiUpdateTodo(todos, item)
                         setTodos(updatedList)
                     },
                     error: error => {
@@ -192,7 +196,7 @@ export const ListGraphQL = ({ token, apikey }) => {
                         const item = x.value.data.onDeleteTodos
                         // console.log("deleted Item x    : ", x);
                         console.log("deleted Item item : ", item);
-                        const updatedList = uiDeleteTodo(todos, item.id)                        
+                        const updatedList = uiDeleteTodo(todos, item.id)
                         setTodos(updatedList)
                     },
                     error: error => {
@@ -236,7 +240,7 @@ export const ListGraphQL = ({ token, apikey }) => {
     }
 
     async function fetchTodos() {
-        const _todos = await API.graphql(graphqlOperation( listTodos, { filter: { listid: { eq: "" + listid } }, limit: 150 }));
+        const _todos = await API.graphql(graphqlOperation(listTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
 
         const items = _todos.data.listTodos.items
         console.log("fetchTodos : ", items);
@@ -244,13 +248,13 @@ export const ListGraphQL = ({ token, apikey }) => {
         return items
     }
 
-    async function getTodosFcn( id, owner ) {
-        const _todos = await API.graphql(graphqlOperation( getTodos, { id: "160361190804", owner: "andre" }  ));
+    async function getTodosFcn(id, owner) {
+        const _todos = await API.graphql(graphqlOperation(getTodos, { id: "160361190804", owner: "andre" }));
         const item = _todos.data.getTodos
 
         console.log("getTodos : ", item);
         return item
-    }    
+    }
 
     const isChecked = (checked) => {
         if (typeof checked === "boolean") { return checked }
@@ -290,16 +294,19 @@ export const ListGraphQL = ({ token, apikey }) => {
     // handles
     async function addItemHandle(name, link, group = "") {
         const id = new Date().getTime();
-        await API.graphql(graphqlOperation(createTodos, 
-            { input: 
-                { id: "" + id, 
-                group: group, 
-                link: link,
-                listid: listid, 
-                owner: "andre", 
-                name: name, 
-                checked: false 
-            } }));
+        await API.graphql(graphqlOperation(createTodos,
+            {
+                input:
+                {
+                    id: "" + id,
+                    group: group,
+                    link: link,
+                    listid: listid,
+                    owner: "andre",
+                    name: name,
+                    checked: false
+                }
+            }));
 
     }
 
@@ -373,13 +380,13 @@ export const ListGraphQL = ({ token, apikey }) => {
 
         <Grid container spacing={ 4 } >
             <Hidden mdDown>
-                <Grid item lg={2}  >
+                <Grid item lg={ 2 }  >
                     <Grid item className={ classes.navigation } >
                         <Navigation list={ findUnique(todos, "group", false) } name="value" anchor="value" />
                     </Grid>
                 </Grid>
             </Hidden>
-            <Grid item lg={10} xs={ 12 } >                
+            <Grid item lg={ 10 } xs={ 12 } >
                 <MyCard>
                     <MyCardHeader >
                         <List>
@@ -390,8 +397,8 @@ export const ListGraphQL = ({ token, apikey }) => {
                                         { edit ? (
                                             <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
                                         ) : (
-                                                <FilterComponent callback={ callbackFilter } />
-                                            ) }
+                                            <FilterComponent callback={ callbackFilter } />
+                                        ) }
                                     </Grid>
                                     <Grid item xs={ 2 } lg={ 4 } >
                                         <Grid container justify="flex-end">
@@ -416,7 +423,23 @@ export const ListGraphQL = ({ token, apikey }) => {
                         </List>
                     </MyCardHeader>
 
-                    { todos && <>{ createLists(filterCompleted(todos, hideCompleted, filterText), filterText) } </> }
+                    { todos.length > 0 && <>{ createLists(filterCompleted(todos, hideCompleted, filterText), filterText) } </> }
+                    { todos.length === 0 && (
+                        <CardContent>
+
+
+                            <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
+                                <Grid xs={ 12 } >
+                                    <h1>Diese Liste ist leer !</h1>
+                                    <Divider />
+                                    <ListItem>
+                                        <AddForm name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                                    </ListItem>
+
+                                </Grid>
+
+                            </Grid>
+                        </CardContent>) }
                 </MyCard>
             </Grid>
         </Grid>

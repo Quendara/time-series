@@ -28,24 +28,23 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 
 import { useStyles, theme } from "./Styles"
 
-
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-
-
 
 import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar } from "@material-ui/core";
 
 // import { ListTodo } from './listTodo';
-import { ListGraphQL } from './pages/listGraphQL';
+import { Error } from "./components/Error"
 
+import { ListGraphQL } from './pages/listGraphQL';
 import TimeSeries from "./pages/TimeSeries";
 import { Sandbox } from "./pages/sandbox";
 import { Clock } from "./components/Clock";
-
-
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
+
+// import { Clock } from "./components/Clock";
+// import { error } from "./components/erros"
 
 
 import './mstyle.css';
@@ -53,6 +52,8 @@ import './mstyle.css';
 const App = () => {
   const [username, setUsername] = useState("");
   const [jwtTocken, setJwtToken] = useState("");
+  const [errors, setErrors] = useState([]);
+
   const [apikey, setApi] = useState(undefined);
 
   const classes = useStyles();
@@ -74,6 +75,12 @@ const App = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const errorHandle = ( message ) => {  
+  
+    let newArray = [...errors, message ];
+    setErrors( newArray )
+  }
 
   // listid={ 0 } listtype="links" 
   // listid={ 1 } listtype="todo" // einkaufen
@@ -99,7 +106,6 @@ const App = () => {
             <NavLink to="/list/10/links" className={ classes.menuButton }   ><ShareIcon /></NavLink>
             <NavLink to="/list/11/todo" className={ classes.menuButton }   ><ShoppingCartIcon /></NavLink>
             <NavLink to="/list/12/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
-
           </> )}
 
           <Menu
@@ -136,13 +142,13 @@ const App = () => {
             { username.length > 0 &&
               <>
                 <Route exact path="/time" >
-                  <TimeSeries username={ username } token={ jwtTocken } />
+                  <TimeSeries username={ username } token={ jwtTocken } errorHandle={errorHandle} />
                 </Route>
 
 
 
                 <Switch>
-                  <Route path="/list/:listid/:listtype" children={ <ListGraphQL token={ jwtTocken } apikey={ apikey } /> } />
+                  <Route path="/list/:listid/:listtype" children={ <ListGraphQL token={ jwtTocken } apikey={ apikey } errorHandle={errorHandle}  /> } />                  
                 </Switch>
                 {/* <Route exact path="/" >
                   <Grid container justify="center" >
@@ -180,6 +186,9 @@ const App = () => {
               </>
             }
           </Grid>
+          <Grid>
+            <Error errorMessages={errors}  />
+            </Grid>
         </Grid>
       </Router>
 
