@@ -42,5 +42,10 @@ aws cognito-idp add-custom-attributes --user-pool-id eu-central-1_8LkzpXcOV --cu
 aws appsync create-api-key --api-id 5lxum6sspnehrc7p24vjq6ckri
 aws cognito-idp admin-update-user-attributes --user-pool-id eu-central-1_8LkzpXcOV --username andre --user-attributes Name="custom:APIKEY",Value="XXXX"
 
+aws cognito-idp admin-set-user-password --user-pool-id eu-central-1_8LkzpXcOV --username jonna --password Jonna1109
+--user-pool-id <value>
+--username <value>
+--password <value>
+
 ## Update Schema
 amplify codegen
