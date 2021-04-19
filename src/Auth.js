@@ -4,8 +4,8 @@ import { List, ListItem } from '@material-ui/core/';
 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDoubleRight, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
-import {useStyles, theme} from "./Styles"
+import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
+import {useStyles} from "./Styles"
 
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
@@ -39,7 +39,7 @@ const Auth = ({ authSuccessCallback, children }) => {
 
   useEffect(() => {
     // check if user is already logged in
-    if (cognitoUser == null) {
+    if (cognitoUser === null) {
       // Update the document title using the browser API
       console.log("useEffect called");
       const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
@@ -69,7 +69,7 @@ const Auth = ({ authSuccessCallback, children }) => {
         });
       }
     }
-  }, []);
+  }, [ authSuccessCallback ]);
 
   const signIn = event => {
     // event.preventDefault();
@@ -136,7 +136,7 @@ const Auth = ({ authSuccessCallback, children }) => {
 
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: function (result) {
-        var accessToken = result.getAccessToken().getJwtToken();
+        // var accessToken = result.getAccessToken().getJwtToken();
 
         // Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer
         let idToken = result.idToken.jwtToken;
@@ -186,10 +186,12 @@ const Auth = ({ authSuccessCallback, children }) => {
           alignItems="center"  >
 
           <Grid item xs={ 11 } lg={ 12 } >
-            x<br />
-            x<br />
-            x<br />
-            x<br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
           </Grid>
           <Grid item xs={ 11 } lg={ 4 } >
             <Card>
@@ -234,8 +236,6 @@ const Auth = ({ authSuccessCallback, children }) => {
                   </ListItem>
                 </form>
               </List>
-            </Card>
-            <Card>
               <CardContent>
                 <h2>{ authError.message }</h2>
               </CardContent>

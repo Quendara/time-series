@@ -1,4 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useRouteMatch,
+    useParams
+  } from "react-router-dom";
 
 // import ViewEvent from './ViewEvent';
 
@@ -89,7 +97,10 @@ const FilterComponent = ({ callback }) => {
 
 
 
-export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
+export const ListGraphQL = ({ token, apikey }) => {
+
+    // let match = useRouteMatch();
+    let { listid, listtype } = useParams();
 
     // // const token = 'big long jwt here';
     // const domainOrProviderName = 'cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXXXXXXX';
@@ -112,6 +123,8 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
     useEffect(
         () => {
+            setTodos([]);
+
             if (apikey) {
                 // works
                 const awsmobile = {
@@ -124,7 +137,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                 Amplify.configure(awsmobile);
                 fetchTodos()                
             }
-        }, [apikey])
+        }, [apikey, listid])
 
     useEffect(
         () => {
@@ -313,8 +326,6 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
 
         return (
             <>
-
-
                 { groups.map((item, index) => (
                     <ListQ
                         key={ index }
@@ -361,7 +372,6 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
     return (
 
         <Grid container spacing={ 4 } >
-
             <Hidden mdDown>
                 <Grid item lg={2}  >
                     <Grid item className={ classes.navigation } >
@@ -369,7 +379,7 @@ export const ListGraphQL = ({ token, apikey, listid, listtype }) => {
                     </Grid>
                 </Grid>
             </Hidden>
-            <Grid item lg={10} xs={ 12 } >
+            <Grid item lg={10} xs={ 12 } >                
                 <MyCard>
                     <MyCardHeader >
                         <List>
