@@ -103,7 +103,7 @@ export const SandboxQl = ({ username, token, listid, listtype }) => {
                         editList={ edit }
                         header={ item.value }
                         group={ item.value }
-                        items={ item.photos }
+                        items={ item.listitems }
                         groups={ groups }
                         addItemHandle={ addItemHandle }
                         type={ listtype }

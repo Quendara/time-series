@@ -217,20 +217,20 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
 
     return (
         <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-            <Grid item xs={ 9 } md={ getWidthMd() } >
+            <Grid item xs={ 8 } md={ getWidthMd() } >
                 { getName() }
             </Grid>
             { showGroupsSelector &&
-                <Grid item xs={ 9 } md={ getWidthMd() } >
+                <Grid item xs={ 8 } md={ getWidthMd() } >
                     { getGroup() }
                 </Grid>
             }
             { type === "links" &&
-                <Grid item xs={ 9 } md={ getWidthMd() } >
+                <Grid item xs={ 8 } md={ getWidthMd() } >
                     { getLink() }
                 </Grid> }
 
-            <Grid item xs={ 3 } md={ 3 } >
+            <Grid item xs={ 2 } md={ 2 } >
                 <Button variant="contained" color={ isValid() ? "primary" : "default" } onClick={ handleClick } className={ classes.green } >
                     <AddIcon />
                 </Button >

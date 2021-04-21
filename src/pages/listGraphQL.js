@@ -27,10 +27,12 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ClearIcon from '@material-ui/icons/Clear';
+import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
 
 import { listTodos, getTodos } from '../graphql/queries';
 import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscriptions';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
+
 // import * as subscriptions from './graphql/subscriptions';
 
 
@@ -41,7 +43,7 @@ import { useStyles, theme } from "../Styles"
 import { ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
 // import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
-import { findUnique, restCallToBackendAsync } from "../components/helper";
+import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/helper";
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
 
 import { Navigation } from "../organisms/navigation"
@@ -99,7 +101,7 @@ const FilterComponent = ({ callback }) => {
 
 
 
-export const ListGraphQL = ({ token, apikey, errorHandle }) => {
+export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
 
     // let match = useRouteMatch();
     let { listid, listtype } = useParams();
@@ -118,6 +120,7 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
     const [edit, setEdit] = useState(false);
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
+    const [horizontally, setHorizontally] = useState(false);
 
     const callbackFilter = (text) => {
         setFilterText(text)
@@ -249,7 +252,7 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
     }
 
     async function getTodosFcn(id, owner) {
-        const _todos = await API.graphql(graphqlOperation(getTodos, { id: "160361190804", owner: "andre" }));
+        const _todos = await API.graphql(graphqlOperation(getTodos, { id: "160361190804", owner: username }));
         const item = _todos.data.getTodos
 
         console.log("getTodos : ", item);
@@ -282,13 +285,13 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
         setTodos(items2)
 
         /* update a todo */
-        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: "andre", checked: newStatus } }));
+        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
     }
 
     async function updateFunction(todoid, name, link, group) {
         // const items2 = items.filter(item => item.id !== id);
 
-        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: "andre", name: name } }));
+        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name } }));
     };
 
     // handles
@@ -302,7 +305,7 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
                     group: group,
                     link: link,
                     listid: listid,
-                    owner: "andre",
+                    owner: username,
                     name: name,
                     checked: false
                 }
@@ -315,42 +318,67 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
 
         // const items2 = uiDeleteTodo( todos, todoid )
         // setTodos(items2); // push to the end
-        await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid, owner: "andre" } }));
+        await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid, owner: username } }));
     };
 
-    const createLists = (items, filterText) => {
-
-        if (items.length == 0) {
-            return (
-
-                <ListItem>
-                    <AddForm name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
-                </ListItem>
-            )
-        }
+    const createLists = (items) => {
 
         const groups = findUnique(items, "group", false)
 
         return (
             <>
-                { groups.map((item, index) => (
-                    <ListQ
-                        key={ index }
-                        editList={ edit }
-                        header={ item.value }
-                        group={ item.value }
-                        items={ item.photos }
-                        groups={ groups }
-                        addItemHandle={ addItemHandle }
-                        type={ listtype }
-                        removeItemHandle={ removeItemHandle }
-                        updateFunction={ updateFunction }
-                        toggleFunction={ toggleFunction }
-                    />
+                { horizontally ? (
+                    <div style={ { "width": groups.length * 310 + "px" } }>
+                        { groups.map((item, index) => (
+                            <div key={index} style={ { "width": "300px", "float": "left", "marginRight": "10px" } } >
 
+                                <MyCard>
+                                    <ListQ
+                                        key={ index }
+                                        editList={ edit }
+                                        header={ item.value }
+                                        group={ item.value }
+                                        items={ sortArrayBy( item.listitems, "name" ) }
+                                        groups={ groups }
+                                        addItemHandle={ addItemHandle }
+                                        type={ listtype }
+                                        removeItemHandle={ removeItemHandle }
+                                        updateFunction={ updateFunction }
+                                        toggleFunction={ toggleFunction }
+                                    />
+                                </MyCard>
+                            </div>
+                        )) }
+                    </div>
 
-                )) }
+                ) : (
+                    <Grid container spacing={ 4 } >
+                        { groups.map((item, index) => (
+                            <Grid key={index} item xs={ 12 }>
+
+                                <MyCard>
+                                    <ListQ
+                                        key={ index }
+                                        editList={ edit }
+                                        header={ item.value }
+                                        group={ item.value }
+                                        items={ sortArrayBy( item.listitems, "name",  ) }
+                                        groups={ groups }
+                                        addItemHandle={ addItemHandle }
+                                        type={ listtype }
+                                        removeItemHandle={ removeItemHandle }
+                                        updateFunction={ updateFunction }
+                                        toggleFunction={ toggleFunction }
+                                    />
+                                </MyCard>
+                            </Grid>
+                        )) }
+                    </Grid>
+                )
+
+                }
             </>
+
         )
     }
 
@@ -375,18 +403,20 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
         return filteredItems
     }
 
+    const filteredTodos = filterCompleted(todos, hideCompleted, filterText)
+
 
     return (
 
         <Grid container spacing={ 4 } >
-            <Hidden mdDown>
+            {/* <Hidden mdDown>
                 <Grid item lg={ 2 }  >
                     <Grid item className={ classes.navigation } >
                         <Navigation list={ findUnique(todos, "group", false) } name="value" anchor="value" />
                     </Grid>
                 </Grid>
-            </Hidden>
-            <Grid item lg={ 10 } xs={ 12 } >
+            </Hidden> */}
+            <Grid item lg={ 12 } xs={ 12 } >
                 <MyCard>
                     <MyCardHeader >
                         <List>
@@ -407,6 +437,9 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
                                                     <EditIcon />
                                                 </IconButton>
                                             </Hidden>
+                                            <IconButton color={ horizontally ? "primary" : "default" } onClick={ () => setHorizontally(!horizontally) } >
+                                                <TextRotationNoneIcon />
+                                            </IconButton>
                                             <IconButton color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >
                                                 <VisibilityIcon />
                                             </IconButton>
@@ -419,28 +452,28 @@ export const ListGraphQL = ({ token, apikey, errorHandle }) => {
                                     </Grid>
                                 </Grid>
                             </ListItem>
-
                         </List>
                     </MyCardHeader>
 
-                    { todos.length > 0 && <>{ createLists(filterCompleted(todos, hideCompleted, filterText), filterText) } </> }
-                    { todos.length === 0 && (
+
+                    { filteredTodos.length === 0 && (
                         <CardContent>
-
-
                             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
                                 <Grid xs={ 12 } >
-                                    <h1>Diese Liste ist leer !</h1>
+                                    { todos.length === 0 &&
+                                        <h1>Diese Liste ist leer !</h1>
+                                    }
                                     <Divider />
                                     <ListItem>
                                         <AddForm name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
                                     </ListItem>
-
                                 </Grid>
 
                             </Grid>
                         </CardContent>) }
                 </MyCard>
+
+                { todos.length > 0 && <><br /> { createLists(filteredTodos) } </> }
             </Grid>
         </Grid>
 

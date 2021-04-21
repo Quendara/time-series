@@ -16,6 +16,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
+import Icon from '@material-ui/core/Icon';
+
 import TimelineIcon from '@material-ui/icons/Timeline';
 import ShareIcon from '@material-ui/icons/Share';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
@@ -43,8 +45,11 @@ import { Clock } from "./components/Clock";
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
 
+import { MyIcon } from "./components/MyIcon";
+
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
+
 
 
 import './mstyle.css';
@@ -53,6 +58,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [jwtTocken, setJwtToken] = useState("");
   const [errors, setErrors] = useState([]);
+  const [userConfiguration, setUserConfiguration] = useState([]);
 
   const [apikey, setApi] = useState(undefined);
 
@@ -60,6 +66,26 @@ const App = () => {
 
   const authSuccessCallback = (username, token, apikey) => {
     setUsername(username);
+
+    if (username === "andre") {
+      const config = [
+        { component: "list", id: 0, icon: "share", render: "links" },
+        { component: "time", id: "x", icon: "timeline", render: "x" },
+        { component: "list", id: 1, icon: "shoppingCart", render: "todo" },
+        { component: "list", id: 2, icon: "assignmentTurnedIn", render: "todo" }
+      ]
+      setUserConfiguration(config)
+    }
+    if (username === "jonna") {
+      const config = [
+        //         { component: "list", id: 10, icon: "share", render: "todo" },
+        { component: "list", id: 11, icon: "shoppingCart", render: "todo" },
+//         { component: "list", id: 12, icon: "assignmentTurnedIn", render: "todo" },
+        { component: "list", id: 13, icon: "assignmentTurnedIn", render: "todo" }
+      ]
+      setUserConfiguration(config)
+    }
+
     setJwtToken(token);
     setApi(apikey);
 
@@ -76,16 +102,11 @@ const App = () => {
     setAnchorEl(null);
   };
 
-  const errorHandle = ( message ) => {  
-  
-    let newArray = [...errors, message ];
-    setErrors( newArray )
-  }
+  const errorHandle = (message) => {
 
-  // listid={ 0 } listtype="links" 
-  // listid={ 1 } listtype="todo" // einkaufen
-  // - listid={ 2 } listtype="todo"    // todo
-  // listid={ 3 } listtype="message" // message
+    let newArray = [...errors, message];
+    setErrors(newArray)
+  }
 
   return (
     <ThemeProvider theme={ theme }>
@@ -94,19 +115,14 @@ const App = () => {
       <Router>
 
         <Auth authSuccessCallback={ authSuccessCallback } >
-        { username == "andre" && ( <>
-          <NavLink to="/list/0/links" className={ classes.menuButton }   ><ShareIcon /></NavLink>
-          <NavLink to="/time" className={ classes.menuButton }   ><TimelineIcon /></NavLink>
-          <NavLink to="/list/1/todo" className={ classes.menuButton }   ><ShoppingCartIcon /></NavLink>
-          <NavLink to="/list/2/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
-          <IconButton variant="inherit" className={ classes.menuButton } onClick={ menuHandleClick } ><MoreIcon /></IconButton>
-          </> )}
 
-          { username == "jonna" && ( <>          
-            <NavLink to="/list/10/links" className={ classes.menuButton }   ><ShareIcon /></NavLink>
-            <NavLink to="/list/11/todo" className={ classes.menuButton }   ><ShoppingCartIcon /></NavLink>
-            <NavLink to="/list/12/todo" className={ classes.title }   ><AssignmentTurnedInIcon /></NavLink>
-          </> )}
+          { userConfiguration.map((item, index) => (
+            // /list/0/links
+            <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
+          )) }
+
+          <IconButton variant="inherit" className={ classes.menuButton } onClick={ menuHandleClick } ><MyIcon icon="more" /> </IconButton>
+
 
           <Menu
             id="simple-menu"
@@ -116,21 +132,21 @@ const App = () => {
             onClose={ handleClose }
           >
             <MenuItem>
-              <ListItemIcon><Avatar>J</Avatar></ListItemIcon>
+              <ListItemIcon><Avatar>{username[0]}</Avatar></ListItemIcon>{username}
             </MenuItem>
 
 
             { username == "andre" && (
-                  <>
-                  <MenuItem><Divider /> </MenuItem>
-                  <MenuItem>
+              <>
+                <MenuItem><Divider /> </MenuItem>
+                <MenuItem>
                   <NavLink to="/list/3/message" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon><Typography variant="inherit" color="inherit" >   Messages</Typography></NavLink>
-                  </MenuItem>
-                  <MenuItem>
+                </MenuItem>
+                <MenuItem>
                   <NavLink to="/sandbox" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon>  <Typography variant="inherit" color="inherit" >Sandbox</Typography></NavLink>
-                  </MenuItem>
-                  </>
-                  ) }
+                </MenuItem>
+              </>
+            ) }
           </Menu>
         </Auth>
 
@@ -141,37 +157,13 @@ const App = () => {
           <Grid item xs={ 11 } lg={ 10 }>
             { username.length > 0 &&
               <>
-                <Route exact path="/time" >
-                  <TimeSeries username={ username } token={ jwtTocken } errorHandle={errorHandle} />
-                </Route>
-
-
-
                 <Switch>
-                  <Route path="/list/:listid/:listtype" children={ <ListGraphQL token={ jwtTocken } apikey={ apikey } errorHandle={errorHandle}  /> } />                  
+                  <Route path="/list/:listid/:listtype" children={ <ListGraphQL token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } /> } />
+                  <Route path="/time" >
+                  <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
+                </Route>
+
                 </Switch>
-                {/* <Route exact path="/" >
-                  <Grid container justify="center" >
-                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 0 } listtype="links" />
-                  </Grid>
-                </Route>
-                <Route exact path="/einkaufen" >
-                  <Grid container justify="center" >
-                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 1 } listtype="todo" />
-                  </Grid>
-                </Route>
-                <Route exact path="/todoQL" >
-                  <Grid container justify="center" spacing={8} >
-                    <Grid item xs={ 12 } md={6} >
-                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 2 } listtype="todo" />
-                    </Grid>
-                  </Grid>
-                </Route>
-                <Route exact path="/message" >
-                  <Grid container justify="center" >
-                      <ListGraphQL token={ jwtTocken } apikey={ apikey } listid={ 3 } listtype="message" />
-                  </Grid>
-                </Route> */}
                 <Route exact path="/" >
                   <Grid container justify="center" >
                     <Clock />
@@ -187,8 +179,8 @@ const App = () => {
             }
           </Grid>
           <Grid>
-            <Error errorMessages={errors}  />
-            </Grid>
+            <Error errorMessages={ errors } />
+          </Grid>
         </Grid>
       </Router>
 

@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { EditIcon, ArrowDropDown, ArrowRight } from '@material-ui/icons';
 import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
-import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
+import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader  } from "./StyledComponents"
 
 import { AddForm } from "./AddForm"
 
@@ -129,7 +129,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     alignItems="center"
                                 >
 
-                                    <Grid item xs={ 9 } md={6} >
+                                    <Grid item xs={ 9 } md={ 6 } >
                                         <Card { ...longPressEvent }>
                                             <Typography className={ classes.card_main } component="p">
                                                 { name }
@@ -190,12 +190,12 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
     // , ArrowRight
 
     return (
-        <List
-            dense={ false }
-            id={ header }
-        >
 
-            <MyListItemHeader button onClick={ () => setEdit(!edit) }>
+        <>
+
+            <MyCardHeader  button onClick={ () => setEdit(!edit) }>
+            <List>
+            <ListItem>
                 <ListItemIcon>
                     { edit ? <ArrowDropDown /> : <ArrowRight /> }
 
@@ -208,11 +208,18 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         { printRemaining(filterCompleted(items).length, items.length) }
                     </ListItemSecondaryAction>
                 }
-            </MyListItemHeader>
+            </ListItem>
+            </List>
+            </MyCardHeader >
+
+<List
+dense={ false }
+id={ header }
+>            
 
             { edit &&
                 <ListItem>
-                    <AddForm name={ name } group={ group } onClickFunction={ onClickFunction } type={ type } buttonName="Add" showGroupsSelector={false}  />
+                    <AddForm name={ name } group={ group } onClickFunction={ onClickFunction } type={ type } buttonName="Add" showGroupsSelector={ false } />
                     <Divider />
                 </ListItem> }
 
@@ -238,6 +245,8 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                 <AddForm onClickFunction={ addItemHandle } group={ group } label={ "Add" } type={ type } />
             } */}
         </List>
+
+        </>
 
     );
 }

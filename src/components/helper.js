@@ -13,6 +13,14 @@ export const sumArray = ( list, key ) => {
 
 }
 
+export const sortArrayBy = (items, sortByKey = 'rating', ascending=true) => {
+    items = sortBy(items, sortByKey);
+    if( !ascending ){
+        items = items.reverse()
+    }
+    return items; // .slice(0, 5);
+}
+
 
 
 export const findUnique = ( list, group, sortByCount = true, limit=50 ) => {
@@ -25,7 +33,7 @@ export const findUnique = ( list, group, sortByCount = true, limit=50 ) => {
             const item = {
                 value: key,
                 count: groups[key].length,
-                photos: groups[key]
+                listitems: groups[key]
             }
             uniqueItems.push(item)
         }

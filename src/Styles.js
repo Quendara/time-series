@@ -23,17 +23,17 @@ export const useStyles = makeStyles((theme) =>
         // opacity: 0.5,
         // backgroundImage: "https://s3.eu-central-1.amazonaws.com/quendara.de/background/Grafitti-Stonewall-2.jpg"
       },
+      navigation: {
+        position:"fixed",
+      },      
       menuButton: {
+        flexGrow: 1,
         marginRight: theme.spacing(6),
         color: "#FFFFFF",
         textDecoration: "none"
       },
-      navigation: {
-        position:"fixed",
-      },
-
       title: {
-        flexGrow: 1,
+        flexGrow: 2,
         color: "#FFFFFF",
         textDecoration: "none"
       },

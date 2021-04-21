@@ -218,7 +218,7 @@ export const ListTodo = ({ token, listid }) => {
                 header={ item.value }
                 group={ item.value }
                 groups={ groups }
-                items={ item.photos }
+                items={ item.listitems }
                 addItemHandle={ addItemHandle }
                 type={ listid === 1 ? 'todo' : '' }
                 removeItemHandle={ removeItemHandle }
