@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent } from '@material-ui/core/';
+import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton } from '@material-ui/core/';
 import { List, ListItem } from '@material-ui/core/';
 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
+import { MyIcon } from "./components/MyIcon";
 import {useStyles} from "./Styles"
 
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 
 import jwt_decode from "jwt-decode";
 
@@ -252,7 +253,8 @@ const Auth = ({ authSuccessCallback, children }) => {
           <Toolbar>
             { children }
             
-            <Button onClick={ signOut }><ExitToAppIcon /></Button>
+            {/* <Button onClick={ signOut }><ExitToAppIcon /></Button> */}
+            <IconButton variant="inherit" className={ classes.menuButton } onClick={ signOut }><MyIcon icon="exitToApp" /> </IconButton>
           </Toolbar>
         </AppBar>
       </>
