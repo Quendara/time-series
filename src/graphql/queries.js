@@ -7,6 +7,7 @@ export const getTodos = /* GraphQL */ `
       id
       owner
       listid
+      description
       name
       link
       checked
@@ -26,6 +27,25 @@ export const listTodos = /* GraphQL */ `
         id
         owner
         listid
+        description
+        name
+        link
+        checked
+        group
+        datum
+      }
+      nextToken
+    }
+  }
+`;
+export const queryTodos = /* GraphQL */ `
+  query QueryTodos($listid: String, $limit: Int, $nextToken: String) {
+    queryTodos(listid: $listid, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        owner
+        listid
+        description
         name
         link
         checked

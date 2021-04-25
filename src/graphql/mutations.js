@@ -7,6 +7,7 @@ export const createTodos = /* GraphQL */ `
       id
       owner
       listid
+      description
       name
       link
       checked
@@ -21,6 +22,7 @@ export const updateTodos = /* GraphQL */ `
       id
       owner
       listid
+      description
       name
       link
       checked
@@ -35,6 +37,7 @@ export const deleteTodos = /* GraphQL */ `
       id
       owner
       listid
+      description
       name
       link
       checked

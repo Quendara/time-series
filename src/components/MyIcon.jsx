@@ -7,6 +7,7 @@ import ChatIcon from '@material-ui/icons/Chat';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import UpdateIcon from '@material-ui/icons/Update';
 
 const textToIcon = {
     timeline: ( <TimelineIcon /> ),
@@ -15,6 +16,7 @@ const textToIcon = {
     shoppingCart: ( <ShoppingCartIcon /> ),
     assignmentTurnedIn: ( <AssignmentTurnedInIcon /> ),
     exitToApp: ( <ExitToAppIcon /> ),
+    update: ( <UpdateIcon /> ),
 
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { makeStyles, styled } from '@material-ui/core/styles';
-import { Card, CardHeader, Grid, Typography, ListItem } from '@material-ui/core';
+import { Card, CardHeader, Grid, Typography, ListItem, TextareaAutosize } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { purple, lightGreen, pink, lightBlue, red } from '@material-ui/core/colors/';
 
@@ -42,6 +42,7 @@ export const TypographyEnabled = styled(Typography)({
 
 });
 
+
 export const MyListItemHeader = styled(ListItem)({
   background: '#102027',
   color: lightBlue[200],  
@@ -51,5 +52,24 @@ export const MyListItemHeader = styled(ListItem)({
   //#paddingTop:"0px"
 
 });
+
+
+
+export const MyTextareaAutosize = styled(TextareaAutosize)({
+  background: '#102027',
+  color: lightBlue[200],  
+  fontSize:"1em",
+  fontWeight:"100",
+  width: "100%",
+  borderRadius: "5px"
+  // letterSpacing:"0.2em",
+  //#paddingTop:"0px"
+
+});
+
+export  const MyTextareaRead = styled(Typography)({
+  whiteSpace:"pre-line"
+});
+
 
 

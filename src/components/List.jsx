@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 
 
 
-const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, toggleFunction, type, groups, group, editList }) => {
+const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, selectFunction, toggleFunction, type, groups, group, editList }) => {
 
     const classes = useStyles();
 
@@ -50,6 +50,11 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     const handleToggleFunction = () => {
         toggleFunction(id)
     }
+
+    const handleSelect = () => {
+        console.log( "handleSelect : ", id)
+        selectFunction(id)
+    }    
 
     const onClickFunction = (linkName, linkUrl, groupname) => {
         updateFunction(id, linkName, linkUrl, groupname)
@@ -91,7 +96,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     return (
         <>
             { (edit || editList) ? (
-                <ListItem>
+                <ListItem  >
 
                     <ListItemIcon onClick={ handleToggleFunction } >
                         { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
@@ -108,7 +113,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                 (
                     <>
                         { type === "todo" &&
-                            <ListItem button={ !(edit || editList) } onClick={ handleToggleFunction }   >
+                            <ListItem button={ !(edit || editList) } onClick={ handleSelect }  >
 
                                 <ListItemIcon onClick={ handleToggleFunction } >
                                     { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
@@ -176,7 +181,7 @@ const printRemaining = (filtered, total) => {
     return percentge(filtered / total)
 }
 
-export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, toggleFunction, type, group, groups, editList }) => {
+export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, selectFunction, toggleFunction, type, group, groups, editList }) => {
 
     const [edit, setEdit] = useState(false);
     const [name, setName] = useState("");
@@ -234,6 +239,7 @@ id={ header }
                     groups={ groups }
                     checked={ item.checked }
                     link={ item.link }
+                    selectFunction={ selectFunction }
                     updateFunction={ updateFunction }
                     removeClickFunction={ removeItemHandle }
                     toggleFunction={ toggleFunction }

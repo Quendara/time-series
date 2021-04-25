@@ -42,6 +42,10 @@ import { useStyles, theme } from "../Styles"
 // own
 import { ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
+import { Details } from '../components/Details';
+
+
+
 // import { TypographyDisabled, TypographyEnabled, MyListItemHeader } from "./StyledComponents"
 import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/helper";
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
@@ -116,6 +120,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
 
     // const listid = 1;
     const [todos, setTodos] = useState([]);
+    const [selectedItem, setSelectedItem] = useState(undefined);
 
     const [edit, setEdit] = useState(false);
     const [filterText, setFilterText] = useState("");
@@ -234,6 +239,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                 newObject['group'] = todo.group
                 newObject['link'] = todo.link
                 newObject['checked'] = todo.checked
+                newObject['description'] = todo.description
                 return newObject
             }
             return e
@@ -252,7 +258,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
     }
 
     async function getTodosFcn(id, owner) {
-        const _todos = await API.graphql(graphqlOperation(getTodos, { id: "160361190804", owner: username }));
+        const _todos = await API.graphql(graphqlOperation(getTodos, { id: id, owner: owner }));
         const item = _todos.data.getTodos
 
         console.log("getTodos : ", item);
@@ -288,10 +294,10 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
     }
 
-    async function updateFunction(todoid, name, link, group) {
+    async function updateFunction(todoid, name, link, group, description=undefined ) {
         // const items2 = items.filter(item => item.id !== id);
 
-        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name } }));
+        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description:description } }));
     };
 
     // handles
@@ -310,7 +316,13 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                     checked: false
                 }
             }));
+    }
 
+    async function selectHandle(id) {
+        const currentItem = await getTodosFcn(id, username)
+        // console.log( "selectHandle : ", id  )
+        // console.log( currentItem)
+        setSelectedItem(currentItem)
     }
 
 
@@ -330,7 +342,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                 { horizontally ? (
                     <div style={ { "width": groups.length * 310 + "px" } }>
                         { groups.map((item, index) => (
-                            <div key={index} style={ { "width": "300px", "float": "left", "marginRight": "10px" } } >
+                            <div key={ index } style={ { "width": "300px", "float": "left", "marginRight": "10px" } } >
 
                                 <MyCard>
                                     <ListQ
@@ -338,10 +350,11 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                                         editList={ edit }
                                         header={ item.value }
                                         group={ item.value }
-                                        items={ sortArrayBy( item.listitems, "name" ) }
+                                        items={ sortArrayBy(item.listitems, "name") }
                                         groups={ groups }
                                         addItemHandle={ addItemHandle }
                                         type={ listtype }
+                                        selectFunction={ selectHandle }
                                         removeItemHandle={ removeItemHandle }
                                         updateFunction={ updateFunction }
                                         toggleFunction={ toggleFunction }
@@ -354,7 +367,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                 ) : (
                     <Grid container spacing={ 4 } >
                         { groups.map((item, index) => (
-                            <Grid key={index} item xs={ 12 }>
+                            <Grid key={ index } item xs={ 12 }>
 
                                 <MyCard>
                                     <ListQ
@@ -362,10 +375,11 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                                         editList={ edit }
                                         header={ item.value }
                                         group={ item.value }
-                                        items={ sortArrayBy( item.listitems, "name",  ) }
+                                        items={ sortArrayBy(item.listitems, "name",) }
                                         groups={ groups }
                                         addItemHandle={ addItemHandle }
                                         type={ listtype }
+                                        selectFunction={ selectHandle }
                                         removeItemHandle={ removeItemHandle }
                                         updateFunction={ updateFunction }
                                         toggleFunction={ toggleFunction }
@@ -472,9 +486,22 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                             </Grid>
                         </CardContent>) }
                 </MyCard>
-
-                { todos.length > 0 && <><br /> { createLists(filteredTodos) } </> }
             </Grid>
+
+            <Grid item lg={ 6 } xs={ 12 } >
+                { todos.length > 0 && <> { createLists(filteredTodos) } </> }
+            </Grid>
+            <Grid item lg={ 6 } xs={ 12} >
+
+
+                { ( !horizontally & ( selectedItem != undefined ) ) &&
+                    <Details selectedItem={ selectedItem } updateFunction={updateFunction} />
+                }
+
+            </Grid>
+
+
+
         </Grid>
 
 
