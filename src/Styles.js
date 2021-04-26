@@ -25,7 +25,18 @@ export const useStyles = makeStyles((theme) =>
       },
       navigation: {
         position:"fixed",
-      },      
+      },
+      navigationOuter:{
+        position:"relative",
+        maxWidth: "100%",
+      },
+      navigationInner: {
+        position:"relative",
+        width: "700px",
+        minHeight: "700px",
+        maxHeight: "900px",
+        overflowY:"auto",
+      },
       menuButton: {
         flexGrow: 1,
         // #marginRight: theme.spacing(3),

@@ -2,13 +2,19 @@ import React, { useState, useEffect } from "react";
 
 import { ListItem, List, CardContent, IconButton } from '@material-ui/core';
 
+import ReactMarkdown from "react-markdown";
+
 import { Grid, Card, Button, TextField, Divider } from '@material-ui/core';
 import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
-import { MyIcon } from "./MyIcon"; 
+import { MyIcon } from "./MyIcon";
+
+import { useStyles } from "../Styles"
 
 
 
 export const Details = ({ selectedItem, updateFunction }) => {
+
+    const classes = useStyles();
 
     // (updateFunction(todoid, name, link, group, description=undefined ) )
     // const uiUpdateTodo = (items, todo) => {
@@ -36,35 +42,38 @@ export const Details = ({ selectedItem, updateFunction }) => {
                     </ListItem>
                 </List>
             </MyCardHeader>
-            <CardContent>
+            <CardContent  >
+                <div className={ classes.navigationInner }>
+                    <List>
+                        { edit ? (
+                            <ListItem>
+                                <MyTextareaAutosize
+                                    value={ selectedItemValue ? selectedItemValue : "" }
+                                    rowsMin={ 10 }
+                                    // error={ hasError(linkName) }
+                                    label="Name"
+                                    size="small"
+                                    fullWidth
+                                    variant="outlined"
+                                    // onKeyPress={ e => checkEnter(e) }
+                                    onChange={ e => setSelectedValue(e.target.value) } />
+                            </ListItem>
+                        ) :
+                            (
+
+
+                                <div button onClick={ () => setEdit(true) }>
+                                    <ReactMarkdown >
+                                        { selectedItemValue ? selectedItemValue : "-" }
+                                    </ReactMarkdown>
+
+                                </div>
+
+                            )
+                        }
+                    </List>
+                </div>
                 <List>
-
-                    { edit ? (
-                        <ListItem>
-                        <MyTextareaAutosize
-                            value={ selectedItemValue ? selectedItemValue : "" }
-                            rowsMin={ 10 }
-                            // error={ hasError(linkName) }
-                            label="Name"
-                            size="small"
-                            fullWidth
-                            variant="outlined"
-                            // onKeyPress={ e => checkEnter(e) }
-                            onChange={ e => setSelectedValue(e.target.value) } />
-                            </ListItem>
-
-                    ) :
-                        (
-
-                            <ListItem button onClick={ () => setEdit(true) }>
-                                <MyTextareaRead>
-                                { selectedItemValue ? selectedItemValue : "-" }
-                                </MyTextareaRead>
-                            </ListItem>
-                        )
-                    }
-
-
                     <ListItem>
                         <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
                     </ListItem>
@@ -76,3 +85,10 @@ export const Details = ({ selectedItem, updateFunction }) => {
 
     )
 }
+
+
+{/* <ListItem button onClick={ () => setEdit(true) }>
+<MyTextareaRead>
+{ selectedItemValue ? selectedItemValue : "-" }
+</MyTextareaRead>
+</ListItem> */}

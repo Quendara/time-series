@@ -68,6 +68,7 @@ export const MyTextareaAutosize = styled(TextareaAutosize)({
 });
 
 export  const MyTextareaRead = styled(Typography)({
+  fontFamily:"monospace",
   whiteSpace:"pre-line"
 });
 

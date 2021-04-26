@@ -294,10 +294,10 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
     }
 
-    async function updateFunction(todoid, name, link, group, description=undefined ) {
+    async function updateFunction(todoid, name, link, group, description = undefined) {
         // const items2 = items.filter(item => item.id !== id);
 
-        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description:description } }));
+        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description: description } }));
     };
 
     // handles
@@ -491,12 +491,16 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
             <Grid item lg={ 6 } xs={ 12 } >
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
             </Grid>
-            <Grid item lg={ 6 } xs={ 12} >
+            <Grid item lg={ 6 } xs={ 12 } >
 
+                <div className={ classes.navigationOuter } >
 
-                { ( !horizontally & ( selectedItem != undefined ) ) &&
-                    <Details selectedItem={ selectedItem } updateFunction={updateFunction} />
-                }
+                    <div className={ classes.navigation } >
+                        { (!horizontally & (selectedItem != undefined)) &&
+                            <Details selectedItem={ selectedItem } updateFunction={ updateFunction } />
+                        }
+                    </div>
+                </div>
 
             </Grid>
 

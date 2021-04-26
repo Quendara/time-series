@@ -72,6 +72,7 @@ const App = () => {
         { component: "list", id: 0, icon: "share", render: "links" },
         { component: "time", id: "x", icon: "timeline", render: "x" },
         { component: "list", id: 1, icon: "shoppingCart", render: "todo" },
+        { component: "list", id: 6, icon: "work", render: "todo" },
         { component: "list", id: 2, icon: "assignmentTurnedIn", render: "todo" }
       ]
       setUserConfiguration(config)
