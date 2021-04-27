@@ -3,13 +3,48 @@ import React, { Component, useState, useEffect } from "react";
 import Settings from "../Settings";
 import SingleTimeSerie from "../SingleTimeSerie";
 
-import { Grid, List, ListItem, ListItemIcon,ListItemText,Paper, Box  } from '@material-ui/core';
+import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box } from '@material-ui/core';
+import {
+    NavLink,
+} from "react-router-dom";
 
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
+import { MyIcon } from "../components/MyIcon";
 import StarIcon from '@material-ui/icons/Star';
 
-import {useStyles } from "../Styles"
+import { useStyles } from "../Styles"
 
+// { component: "list", id: 0, icon: "share", render: "links" },
+
+export const MainNavigation = ({ userConfig }) => {
+    
+    const classes = useStyles();
+
+    const [curAnchor, setAnchor] = useState("");
+
+    return (
+        <Paper elevation={ 3 } >
+            <MyCard>
+                <MyCardHeader >
+                    <List>
+                        { userConfig.map((item, index) => (
+                            <ListItem button   >
+                                <ListItemIcon >
+                                    <MyIcon icon={ item.icon } />
+                                </ListItemIcon>
+                                <ListItemText                                
+                                    
+                                    primary={ <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >{ item.name }  </NavLink>  }
+                                />
+                            </ListItem>
+                        )) }
+
+                    </List>
+                </MyCardHeader>
+            </MyCard>
+        </Paper>
+    )
+}
 
 export const Navigation = ({ list, anchor, name }) => {
 
@@ -23,26 +58,24 @@ export const Navigation = ({ list, anchor, name }) => {
     const [curAnchor, setAnchor] = useState("");
 
     return (
-        <Paper elevation={3} >
-        <MyCard>
-            <MyCardHeader >
-                <List>
-                    { list.map((item, index) => (
-                        <ListItem button onClick={ () => jumpTo(item[anchor]) } key={ item[anchor] } >
+        <Paper elevation={ 3 } >
+            <MyCard>
+                <MyCardHeader >
+                    <List>
+                        { list.map((item, index) => (
+                            <ListItem button onClick={ () => jumpTo(item[anchor]) } key={ item[anchor] } >
 
-                            <Box color={ item[anchor] === curAnchor ? "text.primary" : "text.secondary" } >
-                            { item[name] } 
-                            </Box>                           
-                           
+                                <Box color={ item[anchor] === curAnchor ? "text.primary" : "text.secondary" } >
+                                    { item[name] }
+                                </Box>
 
-                        </ListItem>
-                    )) }
 
-                </List>
-            </MyCardHeader>
-        </MyCard>
+                            </ListItem>
+                        )) }
+
+                    </List>
+                </MyCardHeader>
+            </MyCard>
         </Paper>
     )
-
 }
-

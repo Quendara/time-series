@@ -62,9 +62,9 @@ export const Details = ({ selectedItem, updateFunction }) => {
                             (
 
 
-                                <div button onClick={ () => setEdit(true) }>
+                                <div className="markdown" button onClick={ () => setEdit(true) }>
                                     <ReactMarkdown >
-                                        { selectedItemValue ? selectedItemValue : "-" }
+                                        { selectedItemValue ? selectedItemValue : "No Description" }
                                     </ReactMarkdown>
 
                                 </div>

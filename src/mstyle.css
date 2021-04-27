@@ -18,3 +18,57 @@
   	color: #222;
   	text-rendering: optimizeLegibility;        
 }
+
+.markdown{
+	font-size: 1rem;
+	/* color: #444; */
+	font-family: 'Open Sans Condensed', sans-serif;
+	font-weight: 300;
+	margin: 0 auto;
+	max-width: 48rem;
+	line-height: 1.45;
+	padding: .25rem;		
+}
+
+.markdown li p {
+	margin: 0px;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  font-family: Arimo, Helvetica, sans-serif;
+}
+
+.markdown h1 {
+  font-size: 1.6em;
+  border-bottom: 1px solid #666;  
+  margin-bottom: 1.15rem;
+  padding-bottom: .5rem;  
+}
+
+.markdown h2 {
+	font-size: 1.2em;
+  }
+
+.markdown h3, 
+.markdown h4, 
+.markdown h5, 
+.markdown h6 {
+	font-size: 1.1em;	
+  }  
+
+.markdown a, 
+.markdown a:visited {
+	color: #3498db;
+  }
+  
+.markdown a:hover, 
+.markdown a:focus,
+.markdown a:active {
+	color: #2980b9;
+  }
+  
