@@ -45,6 +45,8 @@ import { MainNavigation } from './organisms/navigation';
 import { ListGraphQL } from './pages/listGraphQL';
 import TimeSeries from "./pages/TimeSeries";
 import { Sandbox } from "./pages/sandbox";
+import { TimeTree } from "./pages/TimeTree";
+
 import { Clock } from "./components/Clock";
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
@@ -72,12 +74,12 @@ const App = () => {
 
     if (username === "andre") {
       const config = [
-        { component: "list", id: 0, icon: "share", name:"Links", render: "links" },
-        { component: "time", id: "x", icon: "timeline", name:"Timeline", render: "x" },
-        { component: "list", id: 1, icon: "shoppingCart", name:"Einkauf", render: "todo" },
-        { component: "list", id: 6, icon: "work", name:"DHL", render: "todo" },
-        { component: "list", id: 7, icon: "work", name:"Media Broadcast", render: "todo" },
-        { component: "list", id: 2, icon: "assignmentTurnedIn", name:"Meine Todos", render: "todo" }
+        { component: "list", id: 0, icon: "share", name: "Links", render: "links" },
+        { component: "time", id: "x", icon: "timeline", name: "Timeline", render: "x" },
+        { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo" },
+        { component: "list", id: 6, icon: "work", name: "DHL", render: "todo" },
+        { component: "list", id: 7, icon: "work", name: "Media Broadcast", render: "todo" },
+        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo" }
       ]
       setUserConfiguration(config)
     }
@@ -85,7 +87,7 @@ const App = () => {
       const config = [
         //         { component: "list", id: 10, icon: "share", render: "todo" },
         { component: "list", id: 11, icon: "shoppingCart", render: "todo" },
-//         { component: "list", id: 12, icon: "assignmentTurnedIn", render: "todo" },
+        //         { component: "list", id: 12, icon: "assignmentTurnedIn", render: "todo" },
         { component: "list", id: 13, icon: "assignmentTurnedIn", render: "todo" }
       ]
       setUserConfiguration(config)
@@ -137,7 +139,7 @@ const App = () => {
             onClose={ handleClose }
           >
             <MenuItem>
-              <ListItemIcon><Avatar>{username[0]}</Avatar></ListItemIcon>{username}
+              <ListItemIcon><Avatar>{ username[0] }</Avatar></ListItemIcon>{ username }
             </MenuItem>
 
 
@@ -165,10 +167,13 @@ const App = () => {
                 <Switch>
                   <Route path="/list/:listid/:listtype" children={ <ListGraphQL token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } /> } />
                   <Route path="/time" >
-                  <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
-                </Route>
-
+                    <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
+                  </Route>
                 </Switch>
+                <Route exact path="/timetree" >
+                  <TimeTree username={ username } token={ jwtTocken } />
+                </Route>
+                
                 <Route exact path="/" >
                   <Grid container justify="center" >
                     <MainNavigation userConfig={ userConfiguration } />
