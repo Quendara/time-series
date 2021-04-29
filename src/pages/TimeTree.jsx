@@ -22,6 +22,8 @@ import { useStyles } from "../Styles"
 
 
 const baseRestApi = "https://timetreeapp.com"
+
+const client_secret = "DzlijpyQRFUzIYh0u1SJhDY45_N01KwqAcVethRY934" // retrieve from JWT
 // const timeTreeCode = "rGIXyB8QkOjxZdhn27trv0vyooBiAxmHTt9ef7VNrvs"
 
 
@@ -41,7 +43,7 @@ const getAccessToken = (code) => {
 
     const itemToSend = {
         client_id: "H0EfvvLbY7ybac8tksh_GWHP97EiWigrsu-Mj64Qlh0",
-        client_secret: "DzlijpyQRFUzIYh0u1SJhDY45_N01KwqAcVethRY934",
+        client_secret: client_secret, // change later
         redirect_uri: "https://master.d1skuzk79uqu7w.amplifyapp.com",
         code: code,
         grant_type: "authorization_code"
@@ -49,10 +51,11 @@ const getAccessToken = (code) => {
 
     const options = {
         method: "POST",
-        // headers: {
+        headers: {
+            "Access-Control-Allow-Origin":"*"
         //     "Content-Type": "application/json",
         //     Authorization: token
-        // },
+        },
         body: JSON.stringify(itemToSend)
     };
 
