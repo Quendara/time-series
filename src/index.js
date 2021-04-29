@@ -51,13 +51,12 @@ import { Clock } from "./components/Clock";
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
 
+import './mstyle.css';
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
 
 
-
-import './mstyle.css';
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -68,6 +67,9 @@ const App = () => {
   const [apikey, setApi] = useState(undefined);
 
   const classes = useStyles();
+
+
+
 
   const authSuccessCallback = (username, token, apikey) => {
     setUsername(username);
@@ -169,9 +171,10 @@ const App = () => {
                   <Route path="/time" >
                     <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
                   </Route>
+
                 </Switch>
-                <Route exact path="/timetree" >
-                  <TimeTree username={ username } token={ jwtTocken } />
+                  <Route path="/timetree" >
+                  <TimeTree username={ username } token={ jwtTocken }   />
                 </Route>
                 
                 <Route exact path="/" >
