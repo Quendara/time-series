@@ -45,7 +45,7 @@ import { MainNavigation } from './organisms/navigation';
 import { ListGraphQL } from './pages/listGraphQL';
 import TimeSeries from "./pages/TimeSeries";
 import { Sandbox } from "./pages/sandbox";
-import { TimeTree } from "./pages/TimeTree";
+import { TimeTree } from "./pages/TimeTree2";
 
 import { Clock } from "./components/Clock";
 import { StyleDemo } from "./StyleDemo";
@@ -65,13 +65,14 @@ const App = () => {
   const [userConfiguration, setUserConfiguration] = useState([]);
 
   const [apikey, setApi] = useState(undefined);
+  const [apikeyTimetree, setApikeyTimetree] = useState(undefined);
 
   const classes = useStyles();
 
 
 
 
-  const authSuccessCallback = (username, token, apikey) => {
+  const authSuccessCallback = (username, token, apikey, apikeyTimetree ) => {
     setUsername(username);
 
     if (username === "andre") {
@@ -97,10 +98,12 @@ const App = () => {
 
     setJwtToken(token);
     setApi(apikey);
+    setApikeyTimetree( apikeyTimetree ) 
 
-    console.log("username : ", username);
-    console.log("authSuccess : ", token);
-    console.log("apikey : ", apikey);
+    console.log("username        : ", username);
+    console.log("authSuccess     : ", token);
+    console.log("apikey          : ", apikey);
+    console.log("apikey timetree : ", apikeyTimetree);
   };
 
   const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
@@ -174,7 +177,7 @@ const App = () => {
 
                 </Switch>
                   <Route path="/timetree" >
-                  <TimeTree username={ username } token={ jwtTocken }   />
+                  <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree }   />
                 </Route>
                 
                 <Route exact path="/" >

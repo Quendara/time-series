@@ -58,15 +58,21 @@ const Auth = ({ authSuccessCallback, children }) => {
 
           const username = cognitoUser["username"];
           const jwtToken = session.getIdToken().getJwtToken();
+
+          const decoded = jwt_decode(jwtToken);
+
+          console.log("decoded jwtToken" );
+          console.log( decoded);
+
+          const apikey = decoded["custom:APIKEY"];  
+          const apikey_timetree = decoded["custom:TIMETREETOKEN"];  
           
-          let decoded = jwt_decode(jwtToken);
-          let apikey = decoded["custom:APIKEY"];  
-          
+          console.log("apikey_timetree : ", apikey_timetree );
   
           setCognitoUser(cognitoUser);
           setUsername(username);
           // callback to parent
-          authSuccessCallback(username, jwtToken, apikey);
+          authSuccessCallback(username, jwtToken, apikey, apikey_timetree);
         });
       }
     }
