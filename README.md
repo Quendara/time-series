@@ -49,3 +49,5 @@ aws cognito-idp admin-set-user-password --user-pool-id eu-central-1_8LkzpXcOV --
 
 ## Update Schema
 amplify codegen
+
+aws cognito-idp admin-update-user-attributes --user-pool-id eu-central-1_8LkzpXcOV --username andre --user-attributes Name="custom:TIMETREETOKEN",Value="X7GU8Hj0ij-yKv1MsAp7bugaULMCAGbk02TyWK5bmXqMzkk5"
