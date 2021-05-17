@@ -18,14 +18,7 @@ import { MyIcon } from "../components/MyIcon";
 
 import { useStyles } from "../Styles"
 
-
-
-
 const baseRestApi = "https://timetreeapp.com"
-
-const client_secret = "DzlijpyQRFUzIYh0u1SJhDY45_N01KwqAcVethRY934" // retrieve from JWT
-// const timeTreeCode = "rGIXyB8QkOjxZdhn27trv0vyooBiAxmHTt9ef7VNrvs"
-
 
 // A custom hook that builds on useLocation to parse
 // the query string for you.
@@ -87,11 +80,6 @@ export const TimeTree = ({ username, token }) => {
     let query = useQuery();
     const code = query.get("code")
 
-    // let { code } = useParams(); // code is 
-
-    // https://timetreeapp.com/oauth/token
-    // const timeTreeToken = "rGIXyB8QkOjxZdhn27trv0vyooBiAxmHTt9ef7VNrvs"
-
 
     const getUpcommingEvents = () => {
 
@@ -122,21 +110,6 @@ export const TimeTree = ({ username, token }) => {
 
     const accessTimeTree = () => {
 
-
-        // https://timetreeapp.com/oauth/authorize?
-
-
-
-
-
-        // const start_url = [baseRestApi, "oauth", "authorize?"].join("/")
-        // const url = [
-        //                 start_url, 
-        //                 "client_id=H0EfvvLbY7ybac8tksh_GWHP97EiWigrsu-Mj64Qlh0", 
-        //                 "redirect_uri=https://master.d1skuzk79uqu7w.amplifyapp.com/TimeTree",
-        //                 "response_type=code",
-        //                 "state=CSRF"
-        //             ].join("&")
         const url = "https://timetreeapp.com/oauth/authorize?client_id=H0EfvvLbY7ybac8tksh_GWHP97EiWigrsu-Mj64Qlh0&redirect_uri=https://master.d1skuzk79uqu7w.amplifyapp.com/timetree&response_type=code&state=CSRF"
 
 
@@ -212,7 +185,7 @@ export const TimeTree = ({ username, token }) => {
             <Grid item xs={ 6 } >
 
             </Grid>
-            <Grid item xs={ 6 } >
+            <Grid item md={6} xs={ 12 } >
 
 
                 <MyCard>

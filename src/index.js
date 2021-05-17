@@ -72,33 +72,34 @@ const App = () => {
 
 
 
-  const authSuccessCallback = (username, token, apikey, apikeyTimetree ) => {
+  const authSuccessCallback = (username, token, apikey, apikeyTimetree) => {
     setUsername(username);
 
     if (username === "andre") {
       const config = [
-        { component: "list", id: 0, icon: "share", name: "Links", render: "links" },
-        { component: "time", id: "x", icon: "timeline", name: "Timeline", render: "x" },
-        { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo" },
-        { component: "list", id: 6, icon: "work", name: "DHL", render: "todo" },
-        { component: "list", id: 7, icon: "work", name: "Media Broadcast", render: "todo" },
-        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo" }
+        { component: "list", id: 0, icon: "share", name: "Links", render: "links", navbar: true },
+        { component: "time", id: "x", icon: "timeline", name: "Timeline", render: "x", navbar: true },
+        { component: "timetree", id: "x", icon: "calendar", name: "Timetree", render: "x", navbar: true },
+        { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo", navbar: true },
+        { component: "list", id: 6, icon: "work", name: "DHL", render: "todo", navbar: false },
+        { component: "list", id: 7, icon: "chat", name: "Media Broadcast", render: "todo", navbar: false },
+        { component: "list", id: 9, icon: "flower", name: "Pflanzen", render: "todo", navbar: false },
+        { component: "list", id: 3, icon: "work", name: "Nachrichten", render: "message", navbar: false },
+        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true }
       ]
       setUserConfiguration(config)
     }
     if (username === "jonna") {
       const config = [
-        //         { component: "list", id: 10, icon: "share", render: "todo" },
-        { component: "list", id: 11, icon: "shoppingCart", render: "todo" },
-        //         { component: "list", id: 12, icon: "assignmentTurnedIn", render: "todo" },
-        { component: "list", id: 13, icon: "assignmentTurnedIn", render: "todo" }
+        { component: "list", id: 11, icon: "shoppingCart", render: "todo", navbar: true },
+        { component: "list", id: 13, icon: "assignmentTurnedIn", render: "todo", navbar: true }
       ]
       setUserConfiguration(config)
     }
 
     setJwtToken(token);
     setApi(apikey);
-    setApikeyTimetree( apikeyTimetree ) 
+    setApikeyTimetree(apikeyTimetree)
 
     console.log("username        : ", username);
     console.log("authSuccess     : ", token);
@@ -128,10 +129,12 @@ const App = () => {
 
         <Auth authSuccessCallback={ authSuccessCallback } >
 
-          { userConfiguration.map((item, index) => (
-            // /list/0/links
-            <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
-          )) }
+          { userConfiguration.map((item, index) => {
+            if (item.navbar) return (
+              <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
+            )
+          }
+          ) }
 
           <IconButton variant="inherit" className={ classes.menuButton } onClick={ menuHandleClick } ><MyIcon icon="more" /> </IconButton>
 
@@ -146,11 +149,27 @@ const App = () => {
             <MenuItem>
               <ListItemIcon><Avatar>{ username[0] }</Avatar></ListItemIcon>{ username }
             </MenuItem>
+            <MenuItem><Divider /> </MenuItem>
 
+            { userConfiguration.map((item, index) => {
+              // <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
+              return (
+                <MenuItem>
+                  
+                    <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   >
+                    <ListItemIcon>
+                      <MyIcon icon={ item.icon } />
+                    </ListItemIcon>                    <Typography variant="inherit" color="inherit" >{ item.name }</Typography>
+                    </NavLink>
+                </MenuItem>
 
-            { username == "andre" && (
+              )
+            }
+            ) }
+
+            {/* { username == "andre" && (
               <>
-                <MenuItem><Divider /> </MenuItem>
+                
                 <MenuItem>
                   <NavLink to="/list/3/message" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon><Typography variant="inherit" color="inherit" >   Messages</Typography></NavLink>
                 </MenuItem>
@@ -158,7 +177,7 @@ const App = () => {
                   <NavLink to="/sandbox" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon>  <Typography variant="inherit" color="inherit" >Sandbox</Typography></NavLink>
                 </MenuItem>
               </>
-            ) }
+            ) } */}
           </Menu>
         </Auth>
 
@@ -176,10 +195,10 @@ const App = () => {
                   </Route>
 
                 </Switch>
-                  <Route path="/timetree" >
-                  <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree }   />
+                <Route path="/timetree" >
+                  <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
                 </Route>
-                
+
                 <Route exact path="/" >
                   <Grid container justify="center" >
                     <MainNavigation userConfig={ userConfiguration } />

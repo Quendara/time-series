@@ -39,6 +39,7 @@ export const useStyles = makeStyles((theme) =>
       },
       menuButton: {
         flexGrow: 1,
+        verticalAlign: "middle",
         // #marginRight: theme.spacing(3),
         color: "#FFFFFF",
         textDecoration: "none"
@@ -59,6 +60,11 @@ export const useStyles = makeStyles((theme) =>
         color: '#fff',
         backgroundColor: green[500],
       },            
+      today: {
+        color: green[500],
+        // backgroundColor: green[500],
+      },            
+
     }),
   );
   

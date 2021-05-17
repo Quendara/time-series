@@ -9,6 +9,8 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import UpdateIcon from '@material-ui/icons/Update';
 import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
+import LocalFloristIcon from '@material-ui/icons/LocalFlorist';
+import EventIcon from '@material-ui/icons/Event';
 
 const textToIcon = {
     timeline: ( <TimelineIcon /> ),
@@ -19,6 +21,9 @@ const textToIcon = {
     exitToApp: ( <ExitToAppIcon /> ),
     update: ( <UpdateIcon /> ),
     work: ( <WorkOutlineIcon /> ),
+    flower: ( <LocalFloristIcon /> ),
+    calendar: ( <EventIcon /> ),
+    
 
 }
 
