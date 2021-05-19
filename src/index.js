@@ -33,7 +33,7 @@ import { useStyles, theme } from "./Styles"
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar } from "@material-ui/core";
+import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, ListItemText } from "@material-ui/core";
 
 // import { ListTodo } from './listTodo';
 import { Error } from "./components/Error"
@@ -80,12 +80,13 @@ const App = () => {
         { component: "list", id: 0, icon: "share", name: "Links", render: "links", navbar: true },
         { component: "time", id: "x", icon: "timeline", name: "Timeline", render: "x", navbar: true },
         { component: "timetree", id: "x", icon: "calendar", name: "Timetree", render: "x", navbar: true },
+        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true },
         { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo", navbar: true },
         { component: "list", id: 6, icon: "work", name: "DHL", render: "todo", navbar: false },
         { component: "list", id: 7, icon: "chat", name: "Media Broadcast", render: "todo", navbar: false },
         { component: "list", id: 9, icon: "flower", name: "Pflanzen", render: "todo", navbar: false },
         { component: "list", id: 3, icon: "work", name: "Nachrichten", render: "message", navbar: false },
-        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true }
+        
       ]
       setUserConfiguration(config)
     }
@@ -149,19 +150,23 @@ const App = () => {
             <MenuItem>
               <ListItemIcon><Avatar>{ username[0] }</Avatar></ListItemIcon>{ username }
             </MenuItem>
-            <MenuItem><Divider /> </MenuItem>
+            <Divider /> 
 
             { userConfiguration.map((item, index) => {
               // <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
               return (
+                <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >
                 <MenuItem>
                   
-                    <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   >
+                  
                     <ListItemIcon>
                       <MyIcon icon={ item.icon } />
-                    </ListItemIcon>                    <Typography variant="inherit" color="inherit" >{ item.name }</Typography>
-                    </NavLink>
+                    </ListItemIcon>                    
+                    <ListItemText
+                      primary={  item.name   }
+                      ></ListItemText> 
                 </MenuItem>
+                </NavLink> 
 
               )
             }

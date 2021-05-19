@@ -28,15 +28,17 @@ export const MainNavigation = ({ userConfig }) => {
                 <MyCardHeader >
                     <List>
                         { userConfig.map((item, index) => (
+                            <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >
                             <ListItem button   >
                                 <ListItemIcon >
                                     <MyIcon icon={ item.icon } />
                                 </ListItemIcon>
                                 <ListItemText                                
                                     
-                                    primary={ <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >{ item.name }  </NavLink>  }
+                                    primary={ item.name  }
                                 />
                             </ListItem>
+                            </NavLink>
                         )) }
 
                     </List>
