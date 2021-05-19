@@ -28,7 +28,7 @@ const dateToYear = (date) => {
     const daynames = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
     // Sunday - Saturday : 0 - 6
 
-    return daynames[date.getDay()] + ", " + date.getDate() + ". " + (date.getMonth() + 1) + ". " + date.getFullYear()
+    return daynames[date.getDay()] + ", " + date.getDate() + ". " + (date.getMonth() + 1) // + ". " + date.getFullYear()
 }
 
 const dateToTime = (date) => {
@@ -36,29 +36,41 @@ const dateToTime = (date) => {
     return "" + date.getHours() + ":" + date.getMinutes()
 }
 
-const Event = ({ item }) => {
+const Event = ({ event, lables }) => {
 
     // { (item.allDay === true) ? (  
 
-    const itemStartDate = new Date(item.startAt)
-    const itemEndDate = new Date(item.endAt)
+    const itemStartDate = new Date(event.startAt)
+    const itemEndDate = new Date(event.endAt)
 
-    if (item.allDay === true) {
-        return <Chip label={ item.title }> </Chip>
+    const getColor = (event, lables) => {
+
+        const filteredLables = lables.filter(label => label.id === event.label.id)
+
+        if (filteredLables.length > 0) {
+            return filteredLables[0].color
+        }
+        return ""
+    }
+
+    const color = getColor(event, lables)
+
+    if (event.allDay === true) {
+        return <Chip size="small" style={ { backgroundColor: color } } label={ event.title } />
     }
     else {
-        return <Chip variant="outlined" label={ item.title + " - " + dateToTime(itemStartDate) }> </Chip>
+        return <Chip size="small" style={ { color: color, borderColor: color } } variant="outlined" label={ event.title + " - " + dateToTime(itemStartDate) } />
     }
 
 }
 
-const OneDay = ({ today, offset, events }) => {
+const OneDay = ({ today, offset, events, lables }) => {
 
     const classes = useStyles();
 
     //const today = new Date();
     const day = new Date();
-    day.setDate( today.getDate()+offset )
+    day.setDate(today.getDate() + offset)
 
     const isToday = (today.getDate() === day.getDate())
     const isWeekend = (day.getDay() === 0 || day.getDay() === 6)
@@ -69,22 +81,18 @@ const OneDay = ({ today, offset, events }) => {
         return ""
     }
 
-    const filteredEvents = events.filter( item => {
+    const filteredEvents = events.filter(item => {
         const itemStartDate = new Date(item.startAt)
-        if( itemStartDate.getDate() === day.getDate() ){ // works because timetree, returns only the events of the next 7 days
+        if (itemStartDate.getDate() === day.getDate()) { // works because timetree, returns only the events of the next 7 days
             return true
         }
 
         const itemEndDate = new Date(item.endAt)
         if (item.allDay === true) {
-            itemEndDate.setDate( itemEndDate.getDate()+1 ) // set end of next day, because typically it's 0am
+            itemEndDate.setDate(itemEndDate.getDate() + 1) // set end of next day, because typically it's 0am
         }
-        // console.log( "---" ) 
-        // console.log( "Start : ", itemStartDate.getTime() ) 
-        // console.log( "Day   : ", day.getTime()) 
-        // console.log( "End   : ", itemEndDate.getTime()) 
 
-        if( day.getTime() > itemStartDate.getTime() && day.getTime() < itemEndDate.getTime() ){
+        if (day.getTime() > itemStartDate.getTime() && day.getTime() < itemEndDate.getTime()) {
             return true
         }
 
@@ -99,10 +107,10 @@ const OneDay = ({ today, offset, events }) => {
                 <Typography className={ getClass(isToday, isWeekend) } >{ dateToYear(day) } </Typography>
             </Grid>
             <Grid item xs={ 8 }  >
-                <div className={classes.chiplist}>
-                { filteredEvents.map((item, index) => (
-                    <Event item={ item } />
-                ))}
+                <div className={ classes.chiplist }>
+                    { filteredEvents.map((item, index) => (
+                        <Event key={ "event_" + index } event={ item } lables={ lables } />
+                    )) }
                 </div>
             </Grid>
             <Grid item xs={ 12 } >
@@ -117,9 +125,11 @@ const OneDay = ({ today, offset, events }) => {
 
 export const TimeTree = ({ username, token, timetreeToken }) => {
 
+    const classes = useStyles();
+
     const [time, setItem] = useState("");
-    // const [timetreeToken, setTimetreeToken] = useState("");
     const [events, setEvents] = useState([]);
+    const [lables, setLables] = useState([]);
 
     let client = new OAuthClient(timetreeToken);
 
@@ -131,26 +141,30 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
 
     async function getUpcommingEvents() {
         const data = await client.getUpcomingEvents({ days: 7, calendarId: "GsOa8rj4s_Sh" });
-        console.log("calendars", data);
+        console.log("getUpcomingEvents : ", data);
         setEvents(data)
+    }
+
+    async function getLabels() {
+        const data = await client.getLabels("GsOa8rj4s_Sh");
+
+        const filtered = data.filter( item => item.name !== "Midnight black" )
+
+        console.log("getLabels : ", data, filtered);
+        setLables(filtered)
     }
 
     useEffect(() => {
 
-        getUpcommingEvents()
+        getUpcommingEvents();
+        getLabels();
 
     }, []
     )
 
-
-
     return (
-
         <Grid item container spacing={ 2 } >
-
             <Grid item md={ 6 } xs={ 12 } >
-
-
                 <MyCard>
                     <MyCardHeader >
                         <Grid container justify="center" spacing={ 2 } >
@@ -160,22 +174,36 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
 
                             { caldays.map((item, index) => (
 
-                                <OneDay key={index} today={today} offset={index} events={events}  />
+                                <OneDay key={ index } today={ today } offset={ index } events={ events } lables={ lables } />
 
                             )) }
+
+                            <Grid item xs={ 10 } >
+                            <div className={ classes.chiplist }>
+
+                            { lables.map((item, index) => {
+
+                                const event = {
+                                    id:"",
+                                    startAt:"",
+                                    title: item.name,
+                                    label:{id:item.id },
+                                    allDay:true
+                                }
+                                
+                                return ( <Event event={ event } lables={ lables } /> )
+
+                            }) }
+                            </div>
+                            </Grid >
+
+
+
 
                         </Grid>
                     </MyCardHeader>
                 </MyCard>
             </Grid>
-
-
-
         </Grid>
-
-
-
-
     )
-
 }
