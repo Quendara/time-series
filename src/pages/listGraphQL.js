@@ -458,11 +458,6 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                                                 <VisibilityIcon />
                                             </IconButton>
                                         </Grid>
-
-                                        {/* <ButtonGroup variant="outlined" >
-                                        <Button size="large" color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } ><EditIcon /> </Button>
-                                        <Button size="large" color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } > <VisibilityIcon /></Button>
-                                    </ButtonGroup> */}
                                     </Grid>
                                 </Grid>
                             </ListItem>
@@ -487,28 +482,19 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                         </CardContent>) }
                 </MyCard>
             </Grid>
-
-            <Grid item lg={ 6 } xs={ 12 } >
+            <Grid item md={ 6 } xs={ 12 } >
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
             </Grid>
-            <Grid item lg={ 6 } xs={ 12 } >
-
+            <Grid item md={ 6 } xs={ 12 } >
                 <div className={ classes.navigationOuter } >
-
                     <div className={ classes.navigation } >
                         { (!horizontally & (selectedItem != undefined)) &&
                             <Details selectedItem={ selectedItem } updateFunction={ updateFunction } />
                         }
                     </div>
                 </div>
-
             </Grid>
-
-
-
         </Grid>
-
-
     );
 }
 
