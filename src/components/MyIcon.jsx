@@ -11,6 +11,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 import LocalFloristIcon from '@material-ui/icons/LocalFlorist';
 import EventIcon from '@material-ui/icons/Event';
+import DeveloperModeIcon from '@material-ui/icons/DeveloperMode';
 
 const textToIcon = {
     timeline: ( <TimelineIcon /> ),
@@ -23,6 +24,7 @@ const textToIcon = {
     work: ( <WorkOutlineIcon /> ),
     flower: ( <LocalFloristIcon /> ),
     calendar: ( <EventIcon /> ),
+    developer: ( <DeveloperModeIcon /> ),
     
 
 }

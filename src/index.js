@@ -79,14 +79,15 @@ const App = () => {
       const config = [
         { component: "list", id: 0, icon: "share", name: "Links", render: "links", navbar: true },
         { component: "time", id: "x", icon: "timeline", name: "Timeline", render: "x", navbar: true },
-        { component: "timetree", id: "x", icon: "calendar", name: "Timetree", render: "x", navbar: true },
-        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true },
-        { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo", navbar: true },
-        { component: "list", id: 6, icon: "work", name: "DHL", render: "todo", navbar: false },
-        { component: "list", id: 7, icon: "chat", name: "Media Broadcast", render: "todo", navbar: false },
+        { component: "timetree", id: "x", icon: "calendar", name: "Calendar", render: "x", navbar: true },
         { component: "list", id: 9, icon: "flower", name: "Pflanzen", render: "todo", navbar: false },
-        { component: "list", id: 3, icon: "work", name: "Nachrichten", render: "message", navbar: false },
-        
+        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true },
+        { component: "list", id: 21, icon: "developer", name: "Meine Apps", render: "message", navbar: false },
+        { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo", navbar: true },
+        { component: "list", id: 7, icon: "chat", name: "Arbeit", render: "todo", navbar: false },
+        { component: "list", id: 6, icon: "work", name: "DHL", render: "todo", navbar: false },
+        // { component: "list", id: 3, icon: "work", name: "Nachrichten", render: "message", navbar: false },
+
       ]
       setUserConfiguration(config)
     }
@@ -150,23 +151,23 @@ const App = () => {
             <MenuItem>
               <ListItemIcon><Avatar>{ username[0] }</Avatar></ListItemIcon>{ username }
             </MenuItem>
-            <Divider /> 
+            <Divider />
 
             { userConfiguration.map((item, index) => {
               // <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
               return (
                 <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >
-                <MenuItem>
-                  
-                  
+                  <MenuItem>
+
+
                     <ListItemIcon>
                       <MyIcon icon={ item.icon } />
-                    </ListItemIcon>                    
+                    </ListItemIcon>
                     <ListItemText
-                      primary={  item.name   }
-                      ></ListItemText> 
-                </MenuItem>
-                </NavLink> 
+                      primary={ item.name }
+                    ></ListItemText>
+                  </MenuItem>
+                </NavLink>
 
               )
             }
@@ -205,8 +206,13 @@ const App = () => {
                 </Route>
 
                 <Route exact path="/" >
-                  <Grid container justify="center" >
-                    <MainNavigation userConfig={ userConfiguration } />
+                  <Grid container justify="center" spacing={ 5 } >
+                    <Grid item xs={ 12 } md={ 6 }>
+                      <MainNavigation userConfig={ userConfiguration } />
+                    </Grid>
+                    <Grid item xs={ 12 } md={ 6 }>
+                      <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
+                    </Grid>
                   </Grid>
                 </Route>
                 <Route exact path="/sandbox" >
