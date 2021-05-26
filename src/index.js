@@ -83,6 +83,7 @@ const App = () => {
         { component: "list", id: 9, icon: "flower", name: "Pflanzen", render: "todo", navbar: false },
         { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true },
         { component: "list", id: 21, icon: "developer", name: "Meine Apps", render: "message", navbar: false },
+        { component: "list", id: 22, icon: "child", name: "Jucki", render: "todo", navbar: false },
         { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo", navbar: true },
         { component: "list", id: 7, icon: "chat", name: "Arbeit", render: "todo", navbar: false },
         { component: "list", id: 6, icon: "work", name: "DHL", render: "todo", navbar: false },
