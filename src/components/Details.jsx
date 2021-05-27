@@ -6,13 +6,14 @@ import ReactMarkdown from "react-markdown";
 
 import { Grid, Card, Button, TextField, Divider } from '@material-ui/core';
 import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
 
 import { useStyles } from "../Styles"
 
 
 
-export const Details = ({ selectedItem, updateFunction }) => {
+export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }) => {
 
     const classes = useStyles();
 
@@ -25,11 +26,38 @@ export const Details = ({ selectedItem, updateFunction }) => {
     }, [selectedItem]);
 
     const [edit, setEdit] = useState(false);
+    const [listvalue, setListValue] = React.useState("");
+
+    // getGlobalList( lists, selectedItem.listid).name
+
     const [selectedItemValue, setSelectedValue] = useState(selectedItem.description);
 
     const updateHandle = () => {
-        updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
+        // updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
+
+        updateFunction2(selectedItem.id, { description: selectedItemValue })
+
         setEdit(false)
+    }
+
+    const getGlobalList = (lists, id) => {
+        const fl = lists.filter(item => +item.id === +id)
+        console.log("getGlobalList", id, fl, lists)
+        if (fl.length > 0) { return fl[0] }
+        return {
+            name: "Undefined"
+        }
+    }
+
+    const handleListChange = (selecedList) => {
+
+        if (selecedList !== null) {
+            console.log("handleListIdChange : ", selecedList.id, selecedList.name)
+
+            updateFunction2(selectedItem.id, { listid: selecedList.id, })
+
+            setListValue(selecedList.name)
+        }
 
     }
 
@@ -43,8 +71,40 @@ export const Details = ({ selectedItem, updateFunction }) => {
                 </List>
             </MyCardHeader>
             <CardContent  >
-                <div className={ classes.navigationInner }>
-                    <List>
+                <List>
+                    <ListItem>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="center" >
+                                <Grid item>
+                                    
+                            <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
+                            
+
+                            </Grid><Grid item>
+
+                            <Autocomplete
+                                id="combo-box-demo"
+                                inputValue={ "" }
+                                value={ listvalue }
+                                onChange={ (event, newValue) => {
+                                    handleListChange(newValue);
+                                } }
+                                options={ lists }
+                                getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
+                                style={ { width: 300 } }
+                                renderInput={ (params) => <TextField { ...params } label={ listvalue } variant="outlined" /> }
+                            />
+                            </Grid>
+
+                        </Grid>
+                    </ListItem>
+                    <Divider></Divider>
+                    <div className={ classes.navigationInner }>
+
+
                         { edit ? (
                             <ListItem>
                                 <MyTextareaAutosize
@@ -71,13 +131,9 @@ export const Details = ({ selectedItem, updateFunction }) => {
 
                             )
                         }
-                    </List>
-                </div>
-                <List>
-                    <ListItem>
-                        <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
-                    </ListItem>
 
+
+                    </div>
                 </List>
 
             </CardContent>

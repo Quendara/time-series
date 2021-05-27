@@ -105,7 +105,7 @@ const FilterComponent = ({ callback }) => {
 
 
 
-export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
+export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => {
 
     // let match = useRouteMatch();
     let { listid, listtype } = useParams();
@@ -146,6 +146,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                 };
                 Amplify.configure(awsmobile);
                 fetchTodos()
+                setSelectedItem( undefined )
             }
         }, [apikey, listid])
 
@@ -167,6 +168,13 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                         console.log("create Items : ", item);
                         // console.log("items : ", items);
                         // setItems([...items, { id, name, link, group, checked }]); // push to the end
+
+                        if( item.listid != listid ){
+                            console.log( "subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid )
+                            return;
+                        }                         
+
+
                         setTodos([...todos, item]); // push to the end
                         console.log("Submitting... ");
 
@@ -186,6 +194,8 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                         // console.log( x )          
                         const item = x.value.data.onUpdateTodos
                         console.log("updated Item : ", item);
+
+
 
                         // const fullitem = getTodosFcn( item.id, item.owner )                       
                         const updatedList = uiUpdateTodo(todos, item)
@@ -299,6 +309,22 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
 
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description: description } }));
     };
+
+    async function updateFunction2(todoid, { name, listid, link, group, description } ) {
+
+        let inputObject = { id: "" + todoid, owner: username, listid:listid, description: description } // , link: link, group: group, owner: username, name: name, description: description } }
+
+        // if( listid !== undefined ){
+        //     inputObject["listid"] = listid
+        // }
+        // if( description !== description ){
+        //     inputObject["description"] = description
+        // }        
+
+        console.log( "updateFunction2 update", todoid, "with", inputObject );       
+
+        await API.graphql(graphqlOperation(updateTodos, { input: inputObject } ));
+    };    
 
     // handles
     async function addItemHandle(name, link, group = "") {
@@ -489,7 +515,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle }) => {
                 <div className={ classes.navigationOuter } >
                     <div className={ classes.navigation } >
                         { (!horizontally & (selectedItem != undefined)) &&
-                            <Details selectedItem={ selectedItem } updateFunction={ updateFunction } />
+                            <Details selectedItem={ selectedItem } updateFunction={ updateFunction }  updateFunction2={ updateFunction2 }  lists={lists} />
                         }
                     </div>
                 </div>

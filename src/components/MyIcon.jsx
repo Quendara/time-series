@@ -21,6 +21,7 @@ const textToIcon = {
     shoppingCart: ( <ShoppingCartIcon /> ),
     assignmentTurnedIn: ( <AssignmentTurnedInIcon /> ),
     exitToApp: ( <ExitToAppIcon /> ),
+    developer: ( <DeveloperModeIcon /> ),
     update: ( <UpdateIcon /> ),
     work: ( <WorkOutlineIcon /> ),
     flower: ( <LocalFloristIcon /> ),

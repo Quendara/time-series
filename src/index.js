@@ -82,8 +82,8 @@ const App = () => {
         { component: "timetree", id: "x", icon: "calendar", name: "Calendar", render: "x", navbar: true },
         { component: "list", id: 9, icon: "flower", name: "Pflanzen", render: "todo", navbar: false },
         { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true },
-        { component: "list", id: 21, icon: "developer", name: "Meine Apps", render: "message", navbar: false },
-        { component: "list", id: 22, icon: "child", name: "Jucki", render: "todo", navbar: false },
+        { component: "list", id: 21, icon: "developer", name: "Meine Apps", render: "todo", navbar: false },
+        { component: "list", id: 22, icon: "child", name: "YUKI", render: "todo", navbar: false },
         { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo", navbar: true },
         { component: "list", id: 7, icon: "chat", name: "Arbeit", render: "todo", navbar: false },
         { component: "list", id: 6, icon: "work", name: "DHL", render: "todo", navbar: false },
@@ -196,7 +196,10 @@ const App = () => {
             { username.length > 0 &&
               <>
                 <Switch>
-                  <Route path="/list/:listid/:listtype" children={ <ListGraphQL token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } /> } />
+                  <Route path="/list/:listid/:listtype" children={ 
+                    <ListGraphQL 
+                      token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } /> 
+                    } />
                   <Route path="/time" >
                     <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
                   </Route>
