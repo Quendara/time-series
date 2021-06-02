@@ -494,7 +494,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                     { filteredTodos.length === 0 && (
                         <CardContent>
                             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-                                <Grid xs={ 12 } >
+                                <Grid item xs={ 12 } >
                                     { todos.length === 0 &&
                                         <h1>Diese Liste ist leer !</h1>
                                     }

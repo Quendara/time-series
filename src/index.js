@@ -39,6 +39,7 @@ import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListIte
 import { Error } from "./components/Error"
 import { MyIcon } from "./components/MyIcon";
 
+import { MyCard, MyCardHeader } from "./components/StyledComponents"
 
 import { MainNavigation } from './organisms/navigation';
 
@@ -62,6 +63,9 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [jwtTocken, setJwtToken] = useState("");
   const [errors, setErrors] = useState([]);
+
+  const [hackyNavId, sethackyNavId] = useState("");
+
   const [userConfiguration, setUserConfiguration] = useState([]);
 
   const [apikey, setApi] = useState(undefined);
@@ -69,35 +73,20 @@ const App = () => {
 
   const classes = useStyles();
 
-
-
+  const handleSetConfig = (config) => {
+    setUserConfiguration(config)
+  }
 
   const authSuccessCallback = (username, token, apikey, apikeyTimetree) => {
     setUsername(username);
 
-    if (username === "andre") {
-      const config = [
-        { component: "list", id: 0, icon: "share", name: "Links", render: "links", navbar: true },
-        { component: "time", id: "x", icon: "timeline", name: "Timeline", render: "x", navbar: true },
-        { component: "timetree", id: "x", icon: "calendar", name: "Calendar", render: "x", navbar: true },
-        { component: "list", id: 9, icon: "flower", name: "Pflanzen", render: "todo", navbar: false },
-        { component: "list", id: 2, icon: "assignmentTurnedIn", name: "Meine Todos", render: "todo", navbar: true },
-        { component: "list", id: 21, icon: "developer", name: "Meine Apps", render: "todo", navbar: false },
-        { component: "list", id: 22, icon: "child", name: "YUKI", render: "todo", navbar: false },
-        { component: "list", id: 1, icon: "shoppingCart", name: "Einkauf", render: "todo", navbar: true },
-        { component: "list", id: 7, icon: "chat", name: "Arbeit", render: "todo", navbar: false },
-        { component: "list", id: 6, icon: "work", name: "DHL", render: "todo", navbar: false },
-        // { component: "list", id: 3, icon: "work", name: "Nachrichten", render: "message", navbar: false },
 
-      ]
-      setUserConfiguration(config)
+
+    if (username === "andre") {
+      sethackyNavId("1622632885409")
     }
     if (username === "jonna") {
-      const config = [
-        { component: "list", id: 11, icon: "shoppingCart", render: "todo", navbar: true },
-        { component: "list", id: 13, icon: "assignmentTurnedIn", render: "todo", navbar: true }
-      ]
-      setUserConfiguration(config)
+      sethackyNavId("1622635443893")
     }
 
     setJwtToken(token);
@@ -154,37 +143,13 @@ const App = () => {
             </MenuItem>
             <Divider />
 
-            { userConfiguration.map((item, index) => {
-              // <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
-              return (
-                <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >
-                  <MenuItem>
-
-
-                    <ListItemIcon>
-                      <MyIcon icon={ item.icon } />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={ item.name }
-                    ></ListItemText>
-                  </MenuItem>
-                </NavLink>
-
-              )
-            }
-            ) }
-
-            {/* { username == "andre" && (
-              <>
-                
-                <MenuItem>
-                  <NavLink to="/list/3/message" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon><Typography variant="inherit" color="inherit" >   Messages</Typography></NavLink>
-                </MenuItem>
-                <MenuItem>
-                  <NavLink to="/sandbox" className={ classes.menuButton }   ><ListItemIcon><ChatIcon fontSize="small" /></ListItemIcon>  <Typography variant="inherit" color="inherit" >Sandbox</Typography></NavLink>
-                </MenuItem>
-              </>
-            ) } */}
+            <MainNavigation
+              render="simple"
+              apikey={ apikey }
+              userConfig={ userConfiguration }
+              navId={ hackyNavId }
+              username={ username }
+              handleSetConfig={ handleSetConfig } />
           </Menu>
         </Auth>
 
@@ -196,10 +161,10 @@ const App = () => {
             { username.length > 0 &&
               <>
                 <Switch>
-                  <Route path="/list/:listid/:listtype" children={ 
-                    <ListGraphQL 
-                      token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } /> 
-                    } />
+                  <Route path="/list/:listid/:listtype" children={
+                    <ListGraphQL
+                      token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
+                  } />
                   <Route path="/time" >
                     <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
                   </Route>
@@ -212,10 +177,21 @@ const App = () => {
                 <Route exact path="/" >
                   <Grid container justify="center" spacing={ 5 } >
                     <Grid item xs={ 12 } md={ 6 }>
-                      <MainNavigation userConfig={ userConfiguration } />
+                      <Paper elevation={ 3 } >
+                        <MyCard>
+                          <MyCardHeader >
+                            <MainNavigation 
+                                apikey={ apikey } 
+                                userConfig={ userConfiguration } 
+                                navId="1622632885409" 
+                                username={ username } 
+                                handleSetConfig={ handleSetConfig } />
+                          </MyCardHeader>
+                        </MyCard>
+                      </Paper>
                     </Grid>
                     <Grid item xs={ 12 } md={ 6 }>
-                      <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
+                      {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */ }
                     </Grid>
                   </Grid>
                 </Route>

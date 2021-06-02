@@ -78,25 +78,23 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
                             direction="row"
                             justify="space-between"
                             alignItems="center" >
-                                <Grid item>
-                                    
-                            <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
-                            
+                            <Grid item>
+                                <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
 
                             </Grid><Grid item>
 
-                            <Autocomplete
-                                id="combo-box-demo"
-                                inputValue={ "" }
-                                value={ listvalue }
-                                onChange={ (event, newValue) => {
-                                    handleListChange(newValue);
-                                } }
-                                options={ lists }
-                                getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
-                                style={ { width: 300 } }
-                                renderInput={ (params) => <TextField { ...params } label={ listvalue } variant="outlined" /> }
-                            />
+                                <Autocomplete
+                                    id="combo-box-demo"
+                                    inputValue={ "" }
+                                    value={ listvalue }
+                                    onChange={ (event, newValue) => {
+                                        handleListChange(newValue);
+                                    } }
+                                    options={ lists }
+                                    getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
+                                    style={ { width: 300 } }
+                                    renderInput={ (params) => <TextField { ...params } label={ listvalue } variant="outlined" /> }
+                                />
                             </Grid>
 
                         </Grid>
