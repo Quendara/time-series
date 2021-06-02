@@ -83,11 +83,15 @@ const App = () => {
 
 
     if (username === "andre") {
-      sethackyNavId("1622632885409")
+      sethackyNavId("1622632885409") 
     }
     if (username === "jonna") {
       sethackyNavId("1622635443893")
     }
+    if (username === "irena") {
+      sethackyNavId("1622638959598")
+    }
+    
 
     setJwtToken(token);
     setApi(apikey);
