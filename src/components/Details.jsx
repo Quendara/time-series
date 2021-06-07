@@ -100,7 +100,8 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
                         </Grid>
                     </ListItem>
                     <Divider></Divider>
-                    <div className={ classes.navigationInner }>
+                    <div >
+                    {/* className={ classes.navigationInner } */}
 
 
                         { edit ? (

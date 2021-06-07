@@ -393,7 +393,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                 ) : (
                     <Grid container spacing={ 4 } >
                         { groups.map((item, index) => (
-                            <Grid key={ index } item xs={ 12 }>
+                            <Grid key={ index } item xs={ 11 }>
 
                                 <MyCard>
                                     <ListQ
@@ -508,12 +508,16 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                         </CardContent>) }
                 </MyCard>
             </Grid>
-            <Grid item md={ 6 } xs={ 12 } >
+            <Grid item md={ 6 } xs={ 12 } className={ classes.navigationInner }  >
+            <div  >
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
+                </div>
             </Grid>
             <Grid item md={ 6 } xs={ 12 } >
-                <div className={ classes.navigationOuter } >
-                    <div className={ classes.navigation } >
+                <div >
+                {/* className={ classes.navigationOuter }  */}
+                    <div > 
+                        {/* className={ classes.navigation }  */}
                         { (!horizontally & (selectedItem != undefined)) &&
                             <Details selectedItem={ selectedItem } updateFunction={ updateFunction }  updateFunction2={ updateFunction2 }  lists={lists} />
                         }
