@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 
+
+import { NavLink } from "react-router-dom";
+
 import { ListItem, List, CardContent, IconButton } from '@material-ui/core';
 
 import ReactMarkdown from "react-markdown";
@@ -19,18 +22,46 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
 
     // (updateFunction(todoid, name, link, group, description=undefined ) )
     // const uiUpdateTodo = (items, todo) => {
+    const [edit, setEdit] = useState(false);
+    const [listvalue, setListValue] = React.useState("");
+
+    const [selectedItemValue, setSelectedValue] = useState(selectedItem.description);
 
     useEffect(() => {
         console.log("useEffect", selectedItem.description)
         setSelectedValue(selectedItem.description)
+
+        const listname = getGlobalList( lists, selectedItem.listid).name
+        setListValue( listname )
+
+        setEdit( false )
     }, [selectedItem]);
 
-    const [edit, setEdit] = useState(false);
-    const [listvalue, setListValue] = React.useState("");
+    useEffect(() => {
+        document.addEventListener("keydown", handleKeyPress, false);
 
-    // getGlobalList( lists, selectedItem.listid).name
+        return () => {
+            document.removeEventListener("keydown", handleKeyPress, false);
+        };
+    });
 
-    const [selectedItemValue, setSelectedValue] = useState(selectedItem.description);
+    // const isList
+    
+
+    const handleKeyPress = (event) => {
+
+        if (edit) {
+            switch (event.key) {
+                case "Enter":
+                    let value = selectedItemValue + " *"
+                    selectedItemValue.split( "\n" )
+                    // setSelectedValue( value  )
+            }
+            // console.log("handleKeyPress events blocked, to avoid actions!", event )
+            // return;
+        }
+    }    
+
 
     const updateHandle = () => {
         // updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
@@ -43,7 +74,10 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
     const getGlobalList = (lists, id) => {
         const fl = lists.filter(item => +item.id === +id)
         console.log("getGlobalList", id, fl, lists)
-        if (fl.length > 0) { return fl[0] }
+         
+        if (fl.length > 0) { 
+            return fl[0] 
+        }
         return {
             name: "Undefined"
         }
@@ -80,8 +114,14 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
                             alignItems="center" >
                             <Grid item>
                                 <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
-
-                            </Grid><Grid item>
+                            </Grid>
+                            {/* <Grid item>
+                            
+                            <NavLink to={ "/" + [ "list", selectedItem.listid, "todo", selectedItem.id ].join('/') } className={ classes.menuButton }   >
+                                <Button variant="contained" ><MyIcon icon="update" /> </Button>
+                                </NavLink>
+                            </Grid>                             */}
+                            <Grid item>
 
                                 <Autocomplete
                                     id="combo-box-demo"

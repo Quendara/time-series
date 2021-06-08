@@ -96,7 +96,7 @@ const Auth = ({ authSuccessCallback, children }) => {
 
   const signOut = () => {
     console.log("signOut");
-    if (cognitoUser != null) {
+    if (cognitoUser !== null) {
       console.log("cognitoUser", cognitoUser);
 
       setUsername("");

@@ -108,11 +108,11 @@ const FilterComponent = ({ callback }) => {
 export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => {
 
     // let match = useRouteMatch();
-    let { listid, listtype } = useParams();
+    let { listid, listtype, itemid } = useParams();
 
     // // const token = 'big long jwt here';
     // const domainOrProviderName = 'cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXXXXXXX';
-    // const expiresIn = 2700;
+    // const expiresIn = 2700;itemid
 
     // // // tslint:disable-next-line: max-line-length
 

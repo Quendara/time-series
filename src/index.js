@@ -168,7 +168,7 @@ const App = () => {
                   <Route path="/list/:listid/:listtype" children={
                     <ListGraphQL
                       token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
-                  } />
+                  } />                
                   <Route path="/time" >
                     <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
                   </Route>
