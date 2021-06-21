@@ -48,6 +48,7 @@ import TimeSeries from "./pages/TimeSeries";
 import { Sandbox } from "./pages/sandbox";
 import { TimeTree } from "./pages/TimeTree2";
 import { CompareLists } from "./pages/CompareLists";
+import { ReplaceLists } from "./pages/ReplaceLists";
 
 
 import { Clock } from "./components/Clock";
@@ -182,7 +183,10 @@ const App = () => {
 
                 <Route path="/diff" >
                   <CompareLists />
-                </Route>                
+                </Route>      
+                <Route path="/replace" >
+                  <ReplaceLists />
+                </Route>                             
 
                 <Route exact path="/" >
                   <Grid container justify="center" spacing={ 5 } >

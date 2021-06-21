@@ -17,122 +17,122 @@ import ReactMarkdown from "react-markdown";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
-const l1 = `
-1000
-1001
-1002
-1003
+// const l1 = `
+// 1000
+// 1001
+// 1002
+// 1003
 
-1010a
-1011a
-1020
-1020
-1030
-1031
-`
-
-const l2 = `
-1000
-1001
-1002
-1003
-1010
-1011
-1020b
-1020b
-xx 1030
-1031 cc
-
-2000
-`
+// 1010a
+// 1011a
+// 1020
+// 1020
+// 1030
+// 1031
+// `
 
 // const l2 = `
-// 2000 - England Silke Tobi
-// 2001 - Skiurlaub Sylvester
-// 2002 - Surfcamp Frankreich
-// 2004 - Portugal
-// 2005 - Klettern Isenberg
-// 2005 - Lanzarote Surfen
-// 2008 - Irena
-// 2009 - Andre
-// 2009 - Irena
-// 2009 - San Francisco
-// 2010 - Andre
-// 2010 - Klettern Freyr
-// 2011 - Klettern Schweiz
-// 2011 - Tannheimer Tal
-// 2012 - Andre
-// 2012 - Irena
-// 2013 - Juri
-// 2014 - Andre
-// 2014 - Klettern Provence
-// 2015 - Andre
-// 2016 - Andre
-// 2017 - Andre
-// 2018 - California
-// 2018 - Den Haag
-// 2018 - Familie
-// 2018 - Madeira
-// 2018 - Nord pas de Calais
-// 2018 - Serbien
-// 2018 - Skiurlaub
-// 2018 - Tokio
-// 2019 - Berlin
-// 2019 - Familie
-// 2019 - Hamburg
-// 2019 - Italien
-// 2019 - Kroatien
-// 2019 - Prag
-// 2019 - Sizilien
-// 2020 - Familie
-// 2020 - Griechenland
-// 2020 - Porto
-// 2020 - Schule
-// 2020 - Test
-// 2020 - Upload
-// 2020 - Wien
-// 2021 - Baby
-// 2021 - Belgrad
-// 2021 - Familie
-// 2021 - Renovierung
-// 2021 - Test
+// 1000
+// 1001
+// 1002
+// 1003
+// 1010
+// 1011
+// 1020b
+// 1020b
+// xx 1030
+// 1031 cc
+
+// 2000
 // `
 
-// const l1 = `
-// ./2010 - Klettern Freyr
-// ./2009 - Irena
-// ./2020 - Familie
-// ./2020 - Familie/iPhone von Irena
-// ./2020 - Familie/iPhone von Irena/Zuletzt
-// ./2020 - Wien
-// ./Bis1978
-// ./Bis1978/19xx_CCC
-// ./Bis1978/19xx Musikertreff ElDorado
-// ./Bis1978/1977 - Oktoberfest-Köln
-// ./Bis1978/1977 Chiemsee
-// ./Bis1978/1971 Party Gerd
-// ./Bis1978/1961 Wattenscheid
-// ./Bis1978/1972 - Richard Gaby
-// ./Bis1978/1966
-// ./Bis1978/1977 Wendelstein
-// ./Bis1978/19XX_CC
-// ./Bis1978/1966 Zell Am Ziller
-// ./Bis1978/1967 Opa
-// ./Bis1978/1977 München
-// ./Bis1978/1977-1982 Haddorf
-// ./Bis1978/19xx
-// ./Bis1978/1968 Schwarzwald
-// ./Bis1978/1969 Lockner
-// ./Bis1978/1968 Kirstin
-// ./Bis1978/1964 Opa Andre
-// ./Bis1978/1975 Fete MPI
-// ./Bis1978/1969 Kirstin
-// ./Bis1978/1967 Einschulung Frank
-// 2009 - Andre
-// ./2020 - Griechenland
-// ./2005 - Klettern Isenberg
-// ./Eigene Aufnahmen
-// `
+const l2 = `
+2000 - England Silke Tobi
+2001 - Skiurlaub Sylvester
+2002 - Surfcamp Frankreich
+2004 - Portugal
+2005 - Klettern Isenberg
+2005 - Lanzarote Surfen
+2008 - Irena
+2009 - Andre
+2009 - Irena
+2009 - San Francisco
+2010 - Andre
+2010 - Klettern Freyr
+2011 - Klettern Schweiz
+2011 - Tannheimer Tal
+2012 - Andre
+2012 - Irena
+2013 - Juri
+2014 - Andre
+2014 - Klettern Provence
+2015 - Andre
+2016 - Andre
+2017 - Andre
+2018 - California
+2018 - Den Haag
+2018 - Familie
+2018 - Madeira
+2018 - Nord pas de Calais
+2018 - Serbien
+2018 - Skiurlaub
+2018 - Tokio
+2019 - Berlin
+2019 - Familie
+2019 - Hamburg
+2019 - Italien
+2019 - Kroatien
+2019 - Prag
+2019 - Sizilien
+2020 - Familie
+2020 - Griechenland
+2020 - Porto
+2020 - Schule
+2020 - Test
+2020 - Upload
+2020 - Wien
+2021 - Baby
+2021 - Belgrad
+2021 - Familie
+2021 - Renovierung
+2021 - Test
+`
+
+const l1 = `
+./2010 - Klettern Freyr
+./2009 - Irena
+./2020 - Familie
+./2020 - Familie/iPhone von Irena
+./2020 - Familie/iPhone von Irena/Zuletzt
+./2020 - Wien
+./Bis1978
+./Bis1978/19xx_CCC
+./Bis1978/19xx Musikertreff ElDorado
+./Bis1978/1977 - Oktoberfest-Köln
+./Bis1978/1977 Chiemsee
+./Bis1978/1971 Party Gerd
+./Bis1978/1961 Wattenscheid
+./Bis1978/1972 - Richard Gaby
+./Bis1978/1966
+./Bis1978/1977 Wendelstein
+./Bis1978/19XX_CC
+./Bis1978/1966 Zell Am Ziller
+./Bis1978/1967 Opa
+./Bis1978/1977 München
+./Bis1978/1977-1982 Haddorf
+./Bis1978/19xx
+./Bis1978/1968 Schwarzwald
+./Bis1978/1969 Lockner
+./Bis1978/1968 Kirstin
+./Bis1978/1964 Opa Andre
+./Bis1978/1975 Fete MPI
+./Bis1978/1969 Kirstin
+./Bis1978/1967 Einschulung Frank
+2009 - Andre
+./2020 - Griechenland
+./2005 - Klettern Isenberg
+./Eigene Aufnahmen
+`
 
 const fullMatch = "#00a152"
 const orange = "#ff9100"
