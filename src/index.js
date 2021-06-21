@@ -47,6 +47,8 @@ import { ListGraphQL } from './pages/listGraphQL';
 import TimeSeries from "./pages/TimeSeries";
 import { Sandbox } from "./pages/sandbox";
 import { TimeTree } from "./pages/TimeTree2";
+import { CompareLists } from "./pages/CompareLists";
+
 
 import { Clock } from "./components/Clock";
 import { StyleDemo } from "./StyleDemo";
@@ -177,6 +179,10 @@ const App = () => {
                 <Route path="/timetree" >
                   <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
                 </Route>
+
+                <Route path="/diff" >
+                  <CompareLists />
+                </Route>                
 
                 <Route exact path="/" >
                   <Grid container justify="center" spacing={ 5 } >
