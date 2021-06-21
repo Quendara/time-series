@@ -42,6 +42,8 @@ const l2 = `
 1020b
 xx 1030
 1031 cc
+
+2000
 `
 
 // const l2 = `
@@ -136,101 +138,95 @@ const fullMatch = "#00a152"
 const orange = "#ff9100"
 const blue = "#2979ff"
 
+const performDiff = (probe, gallery) => {
 
-export const CompareRow = ({ index, probe, watchlist }) => {
+    const diffResponse = {
+        markerIndexStart: 0,
+        markerIndexEnd: 0,
+        markerColor:  "",
+        message: "",
+        score: 0
+    }        
 
-
-    // const [markerIndexStart, setMarkerIndexStart] = useState(0);
-    // const [markerIndexEnd, setMarkerIndexEnd] = useState(0);
-
-
-
-
-    const performDiff = (probe, gallery) => {
-
-        const diffResponse = {
-            markerIndexStart: 0,
-            markerIndexEnd: 0,
-            markerColor:  "",
-            message: "",
-            score: 0
-        }        
-
-        if (probe.length === 0) {
-            return diffResponse
-        }
-
-        // search probe in gallery
-        let filteredItems = gallery.filter(item => {
-            if (item.name.trim().length === 0) return false
-            if (probe === item.name.trim()) {
-                item.found = true
-                // setMarkerIndexEnd(probe.length)
-                diffResponse.markerIndexEnd = probe.length
-                diffResponse.markerColor = fullMatch
-                return true
-            }
-
-            return false
-        })
-
-        // search if probe sting in part if the string if  the gallery items
-        if (filteredItems !== undefined && filteredItems.length > 0) 
-        { 
-            diffResponse.score = 100
-            diffResponse.message = "Found item from list 1 in list 2"
-            return diffResponse
-        } 
-        filteredItems = gallery.filter(item => {
-
-            if (item.name.trim().length === 0) return false
-
-            const indexOf = item.name.trim().indexOf( probe )
-
-            // if (item.name.trim().includes(probe)) {
-            if ( indexOf >= 0) { 
-                
-                diffResponse.markerIndexStart = 0
-                diffResponse.markerIndexEnd = probe.length      
-                diffResponse.markerColor =   blue
-
-                item.found = true
-                return true
-            }
-            return false
-        })
-
-        if (filteredItems !== undefined && filteredItems.length > 0) { 
-            diffResponse.score = 91
-            diffResponse.message = "Found item from list 1 in list 2"
-            return diffResponse                    
-        } 
-
-        // ----
-
-        filteredItems = gallery.filter(item => {
-            if (item.name.trim().length === 0) return false
-
-            const indexOf = probe.indexOf( item.name.trim() )
-            if ( indexOf >= 0) {
-
-                diffResponse.markerIndexStart = indexOf
-                diffResponse.markerIndexEnd = indexOf+ ( item.name.trim().length   )
-                diffResponse.markerColor =  orange
-
-                item.found = true
-                return true
-            }
-            return false
-        })
-
-        if (filteredItems !== undefined && filteredItems.length > 0) { 
-            diffResponse.score = 90
-            diffResponse.message = "Found item from list 2 in list 1" 
-            return diffResponse                
-        }
+    if (probe.length === 0) {
         return diffResponse
     }
+
+    // search probe in gallery
+    let filteredItems = gallery.filter(item => {
+        if (item.name.trim().length === 0) return false
+        if (probe === item.name.trim()) {
+            item.found = true
+            // setMarkerIndexEnd(probe.length)
+            diffResponse.markerIndexEnd = probe.length
+            diffResponse.markerColor = fullMatch
+            return true
+        }
+
+        return false
+    })
+
+    // search if probe sting in part if the string if  the gallery items
+    if (filteredItems !== undefined && filteredItems.length > 0) 
+    { 
+        diffResponse.score = 100
+        diffResponse.message = "Found item from list 1 in list 2"
+        return diffResponse
+    } 
+    filteredItems = gallery.filter(item => {
+
+        if (item.name.trim().length === 0) return false
+
+        const indexOf = item.name.trim().indexOf( probe )
+
+        // if (item.name.trim().includes(probe)) {
+        if ( indexOf >= 0) { 
+            
+            diffResponse.markerIndexStart = 0
+            diffResponse.markerIndexEnd = probe.length      
+            diffResponse.markerColor =   blue
+
+            item.found = true
+            return true
+        }
+        return false
+    })
+
+    if (filteredItems !== undefined && filteredItems.length > 0) { 
+        diffResponse.score = 91
+        diffResponse.message = "Found item from list 1 in list 2"
+        return diffResponse                    
+    } 
+
+    // ----
+
+    filteredItems = gallery.filter(item => {
+        if (item.name.trim().length === 0) return false
+
+        const indexOf = probe.indexOf( item.name.trim() )
+        if ( indexOf >= 0) {
+
+            diffResponse.markerIndexStart = indexOf
+            diffResponse.markerIndexEnd = indexOf+ ( item.name.trim().length   )
+            diffResponse.markerColor =  orange
+
+            item.found = true
+            return true
+        }
+        return false
+    })
+
+    if (filteredItems !== undefined && filteredItems.length > 0) { 
+        diffResponse.score = 90
+        diffResponse.message = "Found item from list 2 in list 1" 
+        return diffResponse                
+    }
+    return diffResponse
+}
+
+
+export const CompareRow = ({ index, probe, diffResponse }) => {
+   
 
     const marker = (probe, markerIndexStart, markerIndexEnd, markerColor) => {
 
@@ -245,25 +241,19 @@ export const CompareRow = ({ index, probe, watchlist }) => {
                 <Box component="span" >
                     { probe.slice(markerIndexEnd, probe.length) }
                 </Box>
-
-
-
             </>)
     }
 
-    const diffResponse = performDiff(probe.trim(), watchlist) 
+    // const diffResponse = performDiff(probe.trim(), watchlist) 
+    // console.log( watchlist )
 
     return (
         <TableRow>
-            <TableCell align="right"  > { index }</TableCell>
-            
-            <TableCell  > { marker( probe, diffResponse.markerIndexStart, diffResponse.markerIndexEnd, diffResponse.markerColor) }</TableCell>
-            {/* <TableCell  > { diffResponse.markerIndexStart } </TableCell>
-            <TableCell  > { diffResponse.markerIndexEnd } </TableCell> */}
+            <TableCell align="right"  > { index }</TableCell>            
+            <TableCell  > { marker( probe.trim(), diffResponse.markerIndexStart, diffResponse.markerIndexEnd, diffResponse.markerColor) }</TableCell>
+            <TableCell  > { diffResponse.score } </TableCell>            
         </TableRow>
     )
-
-
 }
 
 export const CompareLists = ({ }) => {
@@ -276,19 +266,12 @@ export const CompareLists = ({ }) => {
 
 
     useEffect(() => {
-        performDiff()
+        performDiffHandle()
     }, []); // second parameter avoid frequent loading
 
-    const performDiff = () => {
-
-
-
-        list2.split("\n")
-
-        // let diffTxt = ""
+    const performDiffHandle = () => {
 
         const watchlist = list2.split("\n").map((name, index) => {
-
             return {
                 name,
                 index,
@@ -298,23 +281,29 @@ export const CompareLists = ({ }) => {
 
         const firstListArr = list1.split("\n")
 
+
         const diffTxt = firstListArr.map((name, index) => {
 
-            return (
-                <CompareRow index={ index } probe={ name } watchlist={ watchlist } />
+            const x = performDiff(name.trim(), watchlist)
+            if( name.trim().length == 0 ) return (<></>)
+
+            return (                
+                <CompareRow key={index} index={ index } probe={ name } diffResponse={ x }  />
             )
         })
 
 
         const onlyList2 = watchlist.map((item, index) => {
 
-            return (
+
+            if( item.name.trim().length === 0 ) return (<></>)
+            return ( 
                 <>
                     { item.found === false &&
-                        <TableRow>
+                        <TableRow key={index}   >
                             <TableCell align="right" > { index }</TableCell>
                             <TableCell  > { item.name }</TableCell>
-                            <TableCell  > </TableCell>
+                            <TableCell  > {  }</TableCell>
                         </TableRow>
                     }
                 </>)
@@ -343,7 +332,7 @@ export const CompareLists = ({ }) => {
                     onChange={ e => setList1(e.target.value) } />
             </Grid>
             <Grid item xs={ 3 } >
-                <Box style={ { background: orange } } >List 1</Box>
+                <Box style={ { background: orange } } >List 2</Box>
                 <MyTextareaAutosize
                     value={ list2 ? list2 : "" }
                     rowsMin={ 10 }
@@ -361,7 +350,7 @@ export const CompareLists = ({ }) => {
                         <Grid container justify="center" spacing={ 1 } >
 
                             <Grid item xs={ 12 } >
-                                <Button variant="outlined" onClick={ performDiff } >run Diff</Button>
+                                <Button variant="outlined" onClick={ performDiffHandle } >run Diff</Button>
                             </Grid>
                             <Grid item xs={ 12 } >
 
@@ -371,7 +360,7 @@ export const CompareLists = ({ }) => {
                                             <TableRow>
                                                 <TableCell align="right">Line</TableCell>
                                                 <TableCell>Content</TableCell>
-                                                <TableCell>Comment</TableCell>
+                                                <TableCell>Score</TableCell>
 
                                             </TableRow>
                                         </TableHead>
