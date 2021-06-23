@@ -146,7 +146,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                 };
                 Amplify.configure(awsmobile);
                 fetchTodos()
-                setSelectedItem( undefined )
+                setSelectedItem(undefined)
             }
         }, [apikey, listid])
 
@@ -169,10 +169,10 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                         // console.log("items : ", items);
                         // setItems([...items, { id, name, link, group, checked }]); // push to the end
 
-                        if( item.listid != listid ){
-                            console.log( "subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid )
+                        if (item.listid != listid) {
+                            console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
                             return;
-                        }                         
+                        }
 
 
                         setTodos([...todos, item]); // push to the end
@@ -310,9 +310,9 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description: description } }));
     };
 
-    async function updateFunction2(todoid, { name, listid, link, group, description } ) {
+    async function updateFunction2(todoid, { name, listid, link, group, description }) {
 
-        let inputObject = { id: "" + todoid, owner: username, listid:listid, description: description } // , link: link, group: group, owner: username, name: name, description: description } }
+        let inputObject = { id: "" + todoid, owner: username, listid: listid, description: description } // , link: link, group: group, owner: username, name: name, description: description } }
 
         // if( listid !== undefined ){
         //     inputObject["listid"] = listid
@@ -321,10 +321,10 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
         //     inputObject["description"] = description
         // }        
 
-        console.log( "updateFunction2 update", todoid, "with", inputObject );       
+        console.log("updateFunction2 update", todoid, "with", inputObject);
 
-        await API.graphql(graphqlOperation(updateTodos, { input: inputObject } ));
-    };    
+        await API.graphql(graphqlOperation(updateTodos, { input: inputObject }));
+    };
 
     // handles
     async function addItemHandle(name, link, group = "") {
@@ -391,10 +391,9 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                     </div>
 
                 ) : (
-                    <Grid container spacing={ 4 } >
+                    <Grid container spacing={ 2 } >
                         { groups.map((item, index) => (
-                            <Grid key={ index } item xs={ 11 }>
-
+                            <Grid key={ index } item xs={ 12 }>
                                 <MyCard>
                                     <ListQ
                                         key={ index }
@@ -508,23 +507,42 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                         </CardContent>) }
                 </MyCard>
             </Grid>
-            <Grid item md={ 6 } xs={ 12 } className={ classes.navigationInner }  >
-            <div  >
+            <Grid item md={ 6 } xs={ 12 }  >
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
-                </div>
             </Grid>
             <Grid item md={ 6 } xs={ 12 } >
-                <div >
-                {/* className={ classes.navigationOuter }  */}
-                    <div > 
-                        {/* className={ classes.navigation }  */}
-                        { (!horizontally & (selectedItem != undefined)) &&
-                            <Details selectedItem={ selectedItem } updateFunction={ updateFunction }  updateFunction2={ updateFunction2 }  lists={lists} />
-                        }
-                    </div>
-                </div>
+                { (!horizontally & (selectedItem !== undefined)) &&
+                    <Details 
+                        selectedItem={ selectedItem } 
+                        updateFunction={ updateFunction } 
+                        updateFunction2={ updateFunction2 } 
+                        lists={ lists } 
+                        />
+                }
             </Grid>
-        </Grid>
+
+            {/*
+            <Hidden xlUp>
+                { (selectedItem !== undefined) ? (
+                    <>
+                        <Grid item xs={ 12 }  >
+                            <Button color="primary" variant="contained" onClick={ () => setSelectedItem(undefined) }  >
+                                Back
+                            </Button>
+                        </Grid>
+                        <Grid item xs={ 12 }  >
+                            <Details selectedItem={ selectedItem } updateFunction={ updateFunction } updateFunction2={ updateFunction2 } lists={ lists } />
+                        </Grid>
+                    </>
+                ) : (
+                    <Grid item xs={ 12 } >
+                        { todos.length > 0 && <> { createLists(filteredTodos) } </> }
+                    </Grid>
+                ) }
+            </Hidden>
+            */ }
+
+        </Grid >
     );
 }
 

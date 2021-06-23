@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { EditIcon, ArrowDropDown, ArrowRight } from '@material-ui/icons';
 import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
-import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader  } from "./StyledComponents"
+import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader } from "./StyledComponents"
 
 import { AddForm } from "./AddForm"
 
@@ -52,9 +52,9 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     }
 
     const handleSelect = () => {
-        console.log( "handleSelect : ", id)
+        console.log("handleSelect : ", id)
         selectFunction(id)
-    }    
+    }
 
     const onClickFunction = (linkName, linkUrl, groupname) => {
         updateFunction(id, linkName, linkUrl, groupname)
@@ -84,7 +84,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
 
     const defaultOptions = {
         shouldPreventDefault: true,
-        delay: 500,
+        delay: 1000,
     };
 
     // const longPressEvent = useLongPress(handleEditClick, handleToggleFunction, defaultOptions);
@@ -120,8 +120,10 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                 </ListItemIcon>
 
                                 <ListItemText
-                                    { ...longPressEvent }
-                                    primary={ isChecked(checked) ? <TypographyDisabled>{ name }</TypographyDisabled> : <TypographyEnabled >{ name }</TypographyEnabled> }
+                                    
+                                    primary={ isChecked(checked) ? 
+                                            <TypographyDisabled { ...longPressEvent }>{ name }</TypographyDisabled> 
+                                        :   <TypographyEnabled  { ...longPressEvent }>{ name }</TypographyEnabled> }
                                 />
                             </ListItem> }
 
@@ -133,7 +135,6 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     justify="flex-end"
                                     alignItems="center"
                                 >
-
                                     <Grid item xs={ 9 } md={ 6 } >
                                         <Card { ...longPressEvent }>
                                             <Typography className={ classes.card_main } component="p">
@@ -144,12 +145,9 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                             </Typography>
                                         </Card>
                                     </Grid>
-
                                 </Grid>
                             </ListItem>
-
                         }
-
                         { type === "links" &&
                             <ListItem button>
                                 <ListItemText
@@ -198,59 +196,59 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
         <>
 
-            <MyCardHeader  button onClick={ () => setEdit(!edit) }>
-            <List>
-            <ListItem>
-                <ListItemIcon>
-                    { edit ? <ArrowDropDown /> : <ArrowRight /> }
+            <MyCardHeader button onClick={ () => setEdit(!edit) }>
+                <List>
+                    <ListItem>
+                        <ListItemIcon>
+                            { edit ? <ArrowDropDown /> : <ArrowRight /> }
 
-                </ListItemIcon>
+                        </ListItemIcon>
 
 
-                { header }
-                { type === "todo" &&
-                    <ListItemSecondaryAction>
-                        { printRemaining(filterCompleted(items).length, items.length) }
-                    </ListItemSecondaryAction>
-                }
-            </ListItem>
-            </List>
+                        { header }
+                        { type === "todo" &&
+                            <ListItemSecondaryAction>
+                                { printRemaining(filterCompleted(items).length, items.length) }
+                            </ListItemSecondaryAction>
+                        }
+                    </ListItem>
+                </List>
             </MyCardHeader >
 
-<List
-dense={ false }
-id={ header }
->            
+            <List
+                dense={ false }
+                id={ header }
+            >
 
-            { edit &&
-                <ListItem>
-                    <AddForm name={ name } group={ group } onClickFunction={ onClickFunction } type={ type } buttonName="Add" showGroupsSelector={ false } />
-                    <Divider />
-                </ListItem> }
+                { edit &&
+                    <ListItem>
+                        <AddForm name={ name } group={ group } onClickFunction={ onClickFunction } type={ type } buttonName="Add" showGroupsSelector={ false } />
+                        <Divider />
+                    </ListItem> }
 
 
-            { items.map((item, index) => (
-                <ListEl
-                    editList={ editList }
-                    key={ index }
-                    id={ item.id }
-                    name={ item.name }
-                    group={ group }
-                    groups={ groups }
-                    checked={ item.checked }
-                    link={ item.link }
-                    selectFunction={ selectFunction }
-                    updateFunction={ updateFunction }
-                    removeClickFunction={ removeItemHandle }
-                    toggleFunction={ toggleFunction }
-                    type={ type }
-                />
-            )) }
+                { items.map((item, index) => (
+                    <ListEl
+                        editList={ editList }
+                        key={ index }
+                        id={ item.id }
+                        name={ item.name }
+                        group={ group }
+                        groups={ groups }
+                        checked={ item.checked }
+                        link={ item.link }
+                        selectFunction={ selectFunction }
+                        updateFunction={ updateFunction }
+                        removeClickFunction={ removeItemHandle }
+                        toggleFunction={ toggleFunction }
+                        type={ type }
+                    />
+                )) }
 
-            {/* { ((addItemHandle !== undefined) && editList) &&
+                {/* { ((addItemHandle !== undefined) && editList) &&
                 <AddForm onClickFunction={ addItemHandle } group={ group } label={ "Add" } type={ type } />
             } */}
-        </List>
+            </List>
 
         </>
 
