@@ -130,7 +130,7 @@ const App = () => {
 
           { userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <NavLink to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
+              <NavLink key={"nl_"+index} to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
             )
           }
           ) }

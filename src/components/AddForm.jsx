@@ -1,12 +1,10 @@
-import React, { Component, useState, useEffect } from "react";
-import { ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, Divider, MenuItem, Avatar } from '@material-ui/core';
+import React, { useState, useEffect } from "react";
+import { Button, TextField, Grid } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
 
 // hideGroups: When this is in context of a group, the group can be hidden
-import { useStyles, theme } from "../Styles"
+import { useStyles } from "../Styles"
 
 export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName = "Add", showGroupsSelector = true }) => {
 

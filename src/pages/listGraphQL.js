@@ -514,8 +514,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                 { (!horizontally & (selectedItem !== undefined)) &&
                     <Details 
                         selectedItem={ selectedItem } 
-                        updateFunction={ updateFunction } 
-                        updateFunction2={ updateFunction2 } 
+                        updateFunction={ updateFunction2 }                         
                         lists={ lists } 
                         />
                 }

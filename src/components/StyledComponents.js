@@ -1,9 +1,8 @@
-import React from "react";
 
-import { makeStyles, styled } from '@material-ui/core/styles';
-import { Card, CardHeader, Grid, Typography, ListItem, TextareaAutosize } from '@material-ui/core';
+import { styled } from '@material-ui/core/styles';
+import { Card, Typography, ListItem, TextareaAutosize } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import { purple, lightGreen, pink, lightBlue, red } from '@material-ui/core/colors/';
+import { lightBlue } from '@material-ui/core/colors/';
 
 export const MyCard = styled(Card)({
   // background: 'linear-gradient(45deg, #102027 30%, #263238 90%)',

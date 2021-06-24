@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 
 
 import { NavLink } from "react-router-dom";
 
-import { ListItem, List, CardContent, IconButton, Snackbar } from '@material-ui/core';
+import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import ReactMarkdown from "react-markdown";
 
-import { Grid, Card, Button, TextField, Divider } from '@material-ui/core';
+import { Grid, Button, TextField, Divider, Typography } from '@material-ui/core';
 import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
@@ -16,26 +16,30 @@ import { useStyles } from "../Styles"
 
 
 
-export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }) => {
+export const Details = ({ selectedItem, updateFunction, lists }) => {
 
     const classes = useStyles();
+    const textFieldRef = useRef( null );
 
     // (updateFunction(todoid, name, link, group, description=undefined ) )
     // const uiUpdateTodo = (items, todo) => {
+
+    const [selectionStart, setSelectionStart] = useState("");
+
     const [edit, setEdit] = useState(false);
-    const [listvalue, setListValue] = React.useState("");
+    const [listvalue, setListValue] = useState("");
 
     const [selectedItemValue, setSelectedValue] = useState(selectedItem.description);
     const [selectedItemId, setSelectedItemId] = useState(selectedItem.id);
 
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
-    
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
-        }    
+            return;
+        }
         setSuccessSnackbarMessage("");
-      };    
+    };
 
     // const handleClick = () => {
     //     setOpen(true);
@@ -43,11 +47,11 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
 
     useEffect(() => {
 
-        if ( edit ) // ( selectedItem.id !== selectedItemId ) 
+        if (edit) // ( selectedItem.id !== selectedItemId ) 
         {
             // alert( "save ... "+ selectedItemValue + "<< xxx")       
-            
-            updateFunction2(selectedItemId, { description: selectedItemValue })            
+
+            updateFunction(selectedItemId, { description: selectedItemValue })
         }
 
         console.log("useEffect", selectedItem.description)
@@ -79,11 +83,40 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
     const handleKeyPress = (event) => {
 
         if (edit) {
+
+            const initialCursor = event.target.selectionStart
+            let cursorPos = event.target.selectionStart
+            const content = event.target.textContent
+
+            console.log( textFieldRef )
+
             switch (event.key) {
-                case "Enter":
+                case "Enter--INVALID":
                     let value = selectedItemValue + " *"
-                    selectedItemValue.split("\n")
-                // setSelectedValue( value  )
+                    
+                    const splittetLines = selectedItemValue.split("\n")
+                    let charCount = 0
+
+                    splittetLines.forEach( (line, index) => {
+
+                        charCount += line.length
+
+                        if( cursorPos < charCount ){
+                            // Add to index, 0 means delete = 0
+                            splittetLines.splice(index, 0, "* ");
+                            cursorPos = 9999999999999999999999999                            
+                        }
+
+                    });
+                // setSelectedValue( splittetLines.join("\n")  )
+                event.preventDefault()
+                textFieldRef.current.value =splittetLines.join("\n")                
+                textFieldRef.current.selectionStart = initialCursor+2
+                textFieldRef.current.selectionEnd = initialCursor+2
+                
+
+                // event.target.textContent = splittetLines.join("\n")
+                // setSelectionStart( event.target.selectionStart )
             }
             // console.log("handleKeyPress events blocked, to avoid actions!", event )
             // return;
@@ -94,19 +127,22 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
     const updateHandle = () => {
         // updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
 
-        updateFunction2(selectedItem.id, { description: selectedItemValue })
-        setSuccessSnackbarMessage( "Saved !!! " )
+        updateFunction(selectedItem.id, { description: selectedItemValue })
+        setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
     }
 
     const getGlobalList = (lists, id) => {
-        const fl = lists.filter(item => +item.id === +id)
-        console.log("getGlobalList", id, fl, lists)
+        if (lists !== undefined) {
+            const fl = lists.filter(item => +item.id === +id)
+            console.log("getGlobalList", id, fl, lists)
 
-        if (fl.length > 0) {
-            return fl[0]
+            if (fl.length > 0) {
+                return fl[0]
+            }
         }
         return {
+            id:"666",
             name: "Undefined"
         }
     }
@@ -116,7 +152,7 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
         if (selecedList !== null) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
 
-            updateFunction2(selectedItem.id, { listid: selecedList.id, })
+            updateFunction(selectedItem.id, { listid: selecedList.id, })
 
             setListValue(selecedList.name)
         }
@@ -125,98 +161,102 @@ export const Details = ({ selectedItem, updateFunction, updateFunction2, lists }
 
     return (
         <>
-            <Snackbar 
-                open={ successSnackbarMessage.length>0 } 
-                autoHideDuration={ 2000 } 
-                onClose={handleClose}
+            <Snackbar
+                open={ successSnackbarMessage.length > 0 }
+                autoHideDuration={ 2000 }
+                onClose={ handleClose }
                 message="Saved" >
-                    <Alert onClose={handleClose} severity="success">
-                        {successSnackbarMessage}
-                    </Alert>                
-              </Snackbar>
-        <MyCard>
+                <Alert onClose={ handleClose } severity="success">
+                    { successSnackbarMessage }
+                </Alert>
+            </Snackbar>
+            <MyCard>
 
 
-            <MyCardHeader>
-                <List>
-                    <ListItem>
-                        { selectedItem.name }
-                    </ListItem>
-                </List>
-            </MyCardHeader>
-            <CardContent  >
-                <List>
-                    <ListItem>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="center" >
-                            <Grid item>
-                                <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
-                            </Grid>
-                            {/* <Grid item>
+                <MyCardHeader>
+                    <List>
+                        <ListItem>
+                            { selectedItem.name }
+                        </ListItem>
+                    </List>
+                </MyCardHeader>
+                <CardContent  >
+                    <List>
+                        <ListItem>
+                            <Grid
+                                container
+                                direction="row"
+                                justify="space-between"
+                                alignItems="center" >
+                                <Grid item>
+                                    <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
+                                </Grid>
+                                {/* <Grid item>
                             
                             <NavLink to={ "/" + [ "list", selectedItem.listid, "todo", selectedItem.id ].join('/') } className={ classes.menuButton }   >
                                 <Button variant="contained" ><MyIcon icon="update" /> </Button>
                                 </NavLink>
                             </Grid>                             */}
-                            <Grid item>
+                                <Grid item>
 
-                                <Autocomplete
-                                    id="combo-box-demo"
-                                    inputValue={ "" }
-                                    value={ listvalue }
-                                    onChange={ (event, newValue) => {
-                                        handleListChange(newValue);
-                                    } }
-                                    options={ lists }
-                                    getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
-                                    style={ { width: 300 } }
-                                    renderInput={ (params) => <TextField { ...params } label={ listvalue } variant="outlined" /> }
-                                />
+                                    {/* <Autocomplete
+                                        id="combo-box-demo"
+                                        inputValue={ "" }
+                                        value={ listvalue }
+                                        onChange={ (event, newValue) => {
+                                            handleListChange(newValue);
+                                        } }
+                                        options={ lists }
+                                        getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
+                                        style={ { width: 300 } }
+                                        renderInput={ (params) => <TextField { ...params } label={ listvalue } variant="outlined" /> }
+                                    /> */}
+                                </Grid> 
+
                             </Grid>
+                        </ListItem>
+                        <Divider></Divider>
+                        <div >
+                            {/* className={ classes.navigationInner } */ }
 
-                        </Grid>
-                    </ListItem>
+
+                            { edit ? (
+                                <ListItem>
+                                    <MyTextareaAutosize
+                                        value={ selectedItemValue ? selectedItemValue : "" }
+                                        rowsMin={ 10 }
+                                        // error={ hasError(linkName) }
+                                        label="Name"
+                                        size="small"
+                                        autoFocus="true"                                        
+                                        fullWidth
+                                        variant="outlined"
+                                        ref={ textFieldRef }
+                                        onKeyPress={ e => handleKeyPress(e) }
+                                        onChange={ e => setSelectedValue(e.target.value) } />
+                                </ListItem>
+                            ) :
+                                (
+
+
+                                    <div className="markdown" button onClick={ () => setEdit(true) }>
+                                        <ReactMarkdown >
+                                            { selectedItemValue ? selectedItemValue : "No Description" }
+                                        </ReactMarkdown>
+                                    </div>
+
+                                )
+                            }
+
+
+                        </div>
+                    </List>
                     <Divider></Divider>
-                    <div >
-                        {/* className={ classes.navigationInner } */ }
+                    <Typography variant="h4" color="initial"> {selectionStart} </Typography>
+                    
 
-
-                        { edit ? (
-                            <ListItem>
-                                <MyTextareaAutosize
-                                    value={ selectedItemValue ? selectedItemValue : "" }
-                                    rowsMin={ 10 }
-                                    // error={ hasError(linkName) }
-                                    label="Name"
-                                    size="small"
-                                    fullWidth
-                                    variant="outlined"
-                                    // onKeyPress={ e => checkEnter(e) }
-                                    onChange={ e => setSelectedValue(e.target.value) } />
-                            </ListItem>
-                        ) :
-                            (
-
-
-                                <div className="markdown" button onClick={ () => setEdit(true) }>
-                                    <ReactMarkdown >
-                                        { selectedItemValue ? selectedItemValue : "No Description" }
-                                    </ReactMarkdown>
-
-                                </div>
-
-                            )
-                        }
-
-
-                    </div>
-                </List>
-
-            </CardContent>
-        </MyCard>
+                </CardContent>
+            </MyCard>
         </>
 
     )
