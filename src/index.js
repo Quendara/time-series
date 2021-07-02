@@ -211,7 +211,7 @@ const App = () => {
                 </Route>
                 <Route exact path="/sandbox" >
                   <Grid container justify="center" >
-                    <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } listtype="todo" />
+                    <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
                   </Grid>
                 </Route>
                 <Route exact path="/demo" component={ StyleDemo }></Route>

@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
 
-export const Sandbox = ({ username, token, listid, listtype }) => {
+export const Sandbox = ({ username, token, lists, listtype }) => {
 
  const fakeItem = {
      id:1,
@@ -27,7 +27,7 @@ export const Sandbox = ({ username, token, listid, listtype }) => {
 
     <Grid container spacing={1}>
         
-        <Details selectedItem={ fakeItem } updateFunction={ updateFunction }  ></Details>  
+        <Details selectedItem={ fakeItem } updateFunction={ updateFunction } lists={lists}  ></Details>  
     
     </Grid>  
 

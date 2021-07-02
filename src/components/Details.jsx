@@ -1,7 +1,4 @@
-import React, { useState, useEffect, useRef  } from "react";
-
-
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 
 import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
@@ -19,7 +16,7 @@ import { useStyles } from "../Styles"
 export const Details = ({ selectedItem, updateFunction, lists }) => {
 
     const classes = useStyles();
-    const textFieldRef = useRef( null );
+    const textFieldRef = useRef(null);
 
     // (updateFunction(todoid, name, link, group, description=undefined ) )
     // const uiUpdateTodo = (items, todo) => {
@@ -88,32 +85,32 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
             let cursorPos = event.target.selectionStart
             const content = event.target.textContent
 
-            console.log( textFieldRef )
+            console.log(textFieldRef)
 
             switch (event.key) {
                 case "Enter--INVALID":
                     let value = selectedItemValue + " *"
-                    
+
                     const splittetLines = selectedItemValue.split("\n")
                     let charCount = 0
 
-                    splittetLines.forEach( (line, index) => {
+                    splittetLines.forEach((line, index) => {
 
                         charCount += line.length
 
-                        if( cursorPos < charCount ){
+                        if (cursorPos < charCount) {
                             // Add to index, 0 means delete = 0
                             splittetLines.splice(index, 0, "* ");
-                            cursorPos = 9999999999999999999999999                            
+                            cursorPos = 9999999999999999999999999
                         }
 
                     });
-                // setSelectedValue( splittetLines.join("\n")  )
-                event.preventDefault()
-                textFieldRef.current.value =splittetLines.join("\n")                
-                textFieldRef.current.selectionStart = initialCursor+2
-                textFieldRef.current.selectionEnd = initialCursor+2
-                
+                    // setSelectedValue( splittetLines.join("\n")  )
+                    event.preventDefault()
+                    textFieldRef.current.value = splittetLines.join("\n")
+                    textFieldRef.current.selectionStart = initialCursor + 2
+                    textFieldRef.current.selectionEnd = initialCursor + 2
+
 
                 // event.target.textContent = splittetLines.join("\n")
                 // setSelectionStart( event.target.selectionStart )
@@ -142,7 +139,7 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
             }
         }
         return {
-            id:"666",
+            id: "666",
             name: "Undefined"
         }
     }
@@ -180,46 +177,36 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
                         </ListItem>
                     </List>
                 </MyCardHeader>
-                <CardContent  >
+                <CardContent>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center" >
+                        <Grid item xs={ 4 }>
+                            <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
+                        </Grid>
+
+                        <Grid item xs={ 8 } >
+                            <Autocomplete
+                                id="combo-box-demo"
+                                inputValue={ "" }
+                                value={ listvalue }
+                                onChange={ (event, newValue) => {
+                                    handleListChange(newValue);
+                                } }
+                                options={ lists }
+                                getOptionLabel={ (option) => "(" + option.id + ") " + option.name }                                
+                                renderInput={ (params) => <TextField { ...params } label={ listvalue } variant="outlined" /> }
+                            />
+                        </Grid>
+
+                    </Grid>
+
                     <List>
-                        <ListItem>
-                            <Grid
-                                container
-                                direction="row"
-                                justify="space-between"
-                                alignItems="center" >
-                                <Grid item>
-                                    <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
-                                </Grid>
-                                {/* <Grid item>
-                            
-                            <NavLink to={ "/" + [ "list", selectedItem.listid, "todo", selectedItem.id ].join('/') } className={ classes.menuButton }   >
-                                <Button variant="contained" ><MyIcon icon="update" /> </Button>
-                                </NavLink>
-                            </Grid>                             */}
-                                <Grid item>
-
-                                    {/* <Autocomplete
-                                        id="combo-box-demo"
-                                        inputValue={ "" }
-                                        value={ listvalue }
-                                        onChange={ (event, newValue) => {
-                                            handleListChange(newValue);
-                                        } }
-                                        options={ lists }
-                                        getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
-                                        style={ { width: 300 } }
-                                        renderInput={ (params) => <TextField { ...params } label={ listvalue } variant="outlined" /> }
-                                    /> */}
-                                </Grid> 
-
-                            </Grid>
-                        </ListItem>
                         <Divider></Divider>
                         <div >
                             {/* className={ classes.navigationInner } */ }
-
-
                             { edit ? (
                                 <ListItem>
                                     <MyTextareaAutosize
@@ -228,7 +215,7 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
                                         // error={ hasError(linkName) }
                                         label="Name"
                                         size="small"
-                                        autoFocus="true"                                        
+                                        autoFocus="true"
                                         fullWidth
                                         variant="outlined"
                                         ref={ textFieldRef }
@@ -237,8 +224,6 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
                                 </ListItem>
                             ) :
                                 (
-
-
                                     <div className="markdown" button onClick={ () => setEdit(true) }>
                                         <ReactMarkdown >
                                             { selectedItemValue ? selectedItemValue : "No Description" }
@@ -252,8 +237,8 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
                         </div>
                     </List>
                     <Divider></Divider>
-                    <Typography variant="h4" color="initial"> {selectionStart} </Typography>
-                    
+                    <Typography variant="h4" color="initial"> { selectionStart } </Typography>
+
 
                 </CardContent>
             </MyCard>
