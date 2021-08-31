@@ -183,6 +183,7 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
                         direction="row"
                         justify="space-between"
                         alignItems="center" >
+                            
                         <Grid item xs={ 4 }>
                             <Button variant="contained" disabled={ !edit } onClick={ updateHandle }><MyIcon icon="update" /> </Button>
                         </Grid>

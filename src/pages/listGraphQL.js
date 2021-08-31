@@ -366,10 +366,11 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
         return (
             <>
                 { horizontally ? (
-                    <div style={ { "width": groups.length * 310 + "px" } }>
+                    // 
+                    <div style={ { "width": "100%", "overflowX": "scroll" } }>
                         { groups.map((item, index) => (
+                            <div style={ { "width": groups.length * 310 + "px" } }>
                             <div key={ index } style={ { "width": "300px", "float": "left", "marginRight": "10px" } } >
-
                                 <MyCard>
                                     <ListQ
                                         key={ index }
@@ -386,6 +387,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                                         toggleFunction={ toggleFunction }
                                     />
                                 </MyCard>
+                            </div>
                             </div>
                         )) }
                     </div>
@@ -507,18 +509,22 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                         </CardContent>) }
                 </MyCard>
             </Grid>
-            <Grid item md={ 6 } xs={ 12 }  >
+            <Grid item md={ horizontally?12:6 } xs={ 12 }  >
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
             </Grid>
-            <Grid item md={ 6 } xs={ 12 } >
-                { (!horizontally & (selectedItem !== undefined)) &&
-                    <Details 
-                        selectedItem={ selectedItem } 
-                        updateFunction={ updateFunction2 }                         
-                        lists={ lists } 
-                        />
-                }
-            </Grid>
+
+            { (selectedItem !== undefined) &&
+                <>
+                        <Grid item md={ horizontally?12:6 } xs={ 12 } >
+                            <Details
+                                selectedItem={ selectedItem }
+                                updateFunction={ updateFunction2 }
+                                lists={ lists }
+                            />
+                        </Grid>
+                </>
+            }
+
 
             {/*
             <Hidden xlUp>
