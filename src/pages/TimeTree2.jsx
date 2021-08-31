@@ -19,8 +19,6 @@ import { MyIcon } from "../components/MyIcon";
 import { useStyles } from "../Styles"
 import { OAuthClient } from "@timetreeapp/web-api";
 
-
-
 const baseRestApi = "https://timetreeapp.com"
 
 
@@ -31,9 +29,14 @@ const dateToYear = (date) => {
     return daynames[date.getDay()] + ", " + date.getDate() + ". " + (date.getMonth() + 1) // + ". " + date.getFullYear()
 }
 
-const dateToTime = (date) => {
+export const leadingZeros = (num, size = 2) => {
+    var s = num + "";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
 
-    return "" + date.getHours() + ":" + date.getMinutes()
+const dateToTime = (date) => {
+    return "" + leadingZeros(date.getHours()) + ":" + leadingZeros(date.getMinutes())
 }
 
 const Event = ({ event, lables }) => {
@@ -105,6 +108,7 @@ const OneDay = ({ today, offset, events, lables }) => {
             <Grid item xs={ 3 } >
                 {/* <ListItemText primary={ <Event item={item} /> } secondary={ dateToYear(itemStartDate) } /> */ }
                 <Typography className={ getClass(isToday, isWeekend) } >{ dateToYear(day) } </Typography>
+                { isToday && <Typography className={ classes.today } >Heute</Typography> }
             </Grid>
             <Grid item xs={ 8 }  >
                 <div className={ classes.chiplist }>
@@ -148,7 +152,7 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
     async function getLabels() {
         const data = await client.getLabels("GsOa8rj4s_Sh");
 
-        const filtered = data.filter( item => item.name !== "Midnight black" )
+        const filtered = data.filter(item => item.name !== "Midnight black")
 
         console.log("getLabels : ", data, filtered);
         setLables(filtered)
@@ -163,43 +167,39 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
     )
 
     return (
-                <MyCard>
-                    <MyCardHeader >
-                        <Grid container justify="center" spacing={ 2 } >
-                            <Grid item xs={ 12 } >
-                                <Divider></Divider>
-                            </Grid>
+        <MyCard>
+            <MyCardHeader >
+                <Grid container justify="center" spacing={ 2 } >
+                    <Grid item xs={ 12 } >
+                        <Divider></Divider>
+                    </Grid>
 
-                            { caldays.map((item, index) => (
+                    { caldays.map((item, index) => (
 
-                                <OneDay key={ index } today={ today } offset={ index } events={ events } lables={ lables } />
+                        <OneDay key={ index } today={ today } offset={ index } events={ events } lables={ lables } />
 
-                            )) }
+                    )) }
 
-                            <Grid item xs={ 10 } >
-                            <div className={ classes.chiplist }>
+                    <Grid item xs={ 10 } >
+                        <div className={ classes.chiplist }>
 
                             { lables.map((item, index) => {
 
                                 const event = {
-                                    id:"",
-                                    startAt:"",
+                                    id: "",
+                                    startAt: "",
                                     title: item.name,
-                                    label:{id:item.id },
-                                    allDay:true
+                                    label: { id: item.id },
+                                    allDay: true
                                 }
-                                
-                                return ( <Event event={ event } lables={ lables } /> )
+
+                                return (<Event event={ event } lables={ lables } />)
 
                             }) }
-                            </div>
-                            </Grid >
-
-
-
-
-                        </Grid>
-                    </MyCardHeader>
-                </MyCard>
+                        </div>
+                    </Grid >
+                </Grid>
+            </MyCardHeader>
+        </MyCard>
     )
 }
