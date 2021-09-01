@@ -43,6 +43,6 @@ const getIcon = (name) => {
   return ret
 }
 
-export const MyIcon = ({ icon, className }) => {
+export const MyIcon = ({ icon, className="" }) => {
   return getIcon(icon, className)
 }

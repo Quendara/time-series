@@ -103,15 +103,6 @@ export const Sandbox = ({ username, token, listid, listtype }) => {
   // });
 
   return (
-
-    // <ApolloProvider client={ client }>
-    //   <SandboxQl listid={ listid } listtype={ listtype } />
-    //   <SandboxQlSub listid={ listid } listtype={ listtype } />
-
-
-    // </ApolloProvider>
-
-
+      <></>
   )
-
 }

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,SyntheticEvent, KeyboardEvent  } from "react";
 
 import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import ReactMarkdown from "react-markdown";
+import remarkGfm from 'remark-gfm'
 
 import { Grid, Button, TextField, Divider, Typography } from '@material-ui/core';
 import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
@@ -11,9 +12,22 @@ import { MyIcon } from "./MyIcon";
 
 import { useStyles } from "../Styles"
 
+interface Item {
+    id: string;
+    listid: number;
+    name: string;
+    description: string;
+  }
+
+  interface Props {
+    selectedItem: any;
+    updateFunction: any;
+    lists: Item[];
+  }  
 
 
-export const Details = ({ selectedItem, updateFunction, lists }) => {
+
+export const Details = ({ selectedItem, updateFunction, lists } : Props) => {
 
     const classes = useStyles();
     const textFieldRef = useRef(null);
@@ -31,7 +45,7 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
 
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
 
-    const handleClose = (event, reason) => {
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -77,47 +91,47 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
     // const isList
 
 
-    const handleKeyPress = (event) => {
+    const handleKeyPress = (event : KeyboardEvent ) => {
 
-        if (edit) {
+        // if (edit) {
 
-            const initialCursor = event.target.selectionStart
-            let cursorPos = event.target.selectionStart
-            const content = event.target.textContent
+        //     const initialCursor = event.target.selectionStart
+        //     let cursorPos = event.target.selectionStart
+        //     const content = event.target.textContent
 
-            console.log(textFieldRef)
+        //     console.log(textFieldRef)
 
-            switch (event.key) {
-                case "Enter--INVALID":
-                    let value = selectedItemValue + " *"
+        //     switch (event.key) {
+        //         case "Enter--INVALID":
+        //             let value = selectedItemValue + " *"
 
-                    const splittetLines = selectedItemValue.split("\n")
-                    let charCount = 0
+        //             const splittetLines = selectedItemValue.split("\n")
+        //             let charCount = 0
 
-                    splittetLines.forEach((line, index) => {
+        //             splittetLines.forEach((line, index) => {
 
-                        charCount += line.length
+        //                 charCount += line.length
 
-                        if (cursorPos < charCount) {
-                            // Add to index, 0 means delete = 0
-                            splittetLines.splice(index, 0, "* ");
-                            cursorPos = 9999999999999999999999999
-                        }
+        //                 if (cursorPos < charCount) {
+        //                     // Add to index, 0 means delete = 0
+        //                     splittetLines.splice(index, 0, "* ");
+        //                     cursorPos = 9999999999999999999999999
+        //                 }
 
-                    });
-                    // setSelectedValue( splittetLines.join("\n")  )
-                    event.preventDefault()
-                    textFieldRef.current.value = splittetLines.join("\n")
-                    textFieldRef.current.selectionStart = initialCursor + 2
-                    textFieldRef.current.selectionEnd = initialCursor + 2
+        //             });
+        //             // setSelectedValue( splittetLines.join("\n")  )
+        //             event.preventDefault()
+        //             textFieldRef.current.value = splittetLines.join("\n")
+        //             textFieldRef.current.selectionStart = initialCursor + 2
+        //             textFieldRef.current.selectionEnd = initialCursor + 2
 
 
-                // event.target.textContent = splittetLines.join("\n")
-                // setSelectionStart( event.target.selectionStart )
-            }
-            // console.log("handleKeyPress events blocked, to avoid actions!", event )
-            // return;
-        }
+        //         // event.target.textContent = splittetLines.join("\n")
+        //         // setSelectionStart( event.target.selectionStart )
+        //     }
+        //     // console.log("handleKeyPress events blocked, to avoid actions!", event )
+        //     // return;
+        // }
     }
 
 
@@ -129,7 +143,7 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
         setEdit(false)
     }
 
-    const getGlobalList = (lists, id) => {
+    const getGlobalList = (lists : Item[] , id: number ) => {
         if (lists !== undefined) {
             const fl = lists.filter(item => +item.id === +id)
             console.log("getGlobalList", id, fl, lists)
@@ -144,7 +158,7 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
         }
     }
 
-    const handleListChange = (selecedList) => {
+    const handleListChange = (selecedList : Item ) => {
 
         if (selecedList !== null) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
@@ -192,9 +206,12 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
                             <Autocomplete
                                 id="combo-box-demo"
                                 inputValue={ "" }
-                                value={ listvalue }
+                                //value={ listvalue }
                                 onChange={ (event, newValue) => {
-                                    handleListChange(newValue);
+                                    if( newValue !== null ){
+                                        handleListChange(newValue);
+                                    }
+                                    
                                 } }
                                 options={ lists }
                                 getOptionLabel={ (option) => "(" + option.id + ") " + option.name }                                
@@ -214,20 +231,24 @@ export const Details = ({ selectedItem, updateFunction, lists }) => {
                                         value={ selectedItemValue ? selectedItemValue : "" }
                                         rowsMin={ 10 }
                                         // error={ hasError(linkName) }
-                                        label="Name"
-                                        size="small"
-                                        autoFocus="true"
-                                        fullWidth
-                                        variant="outlined"
+                                        // label="Name"
+                                        // size="small"
+                                        autoFocus={ true }
+                                        // fullWidth
+                                        // variant="outlined"
                                         ref={ textFieldRef }
                                         onKeyPress={ e => handleKeyPress(e) }
                                         onChange={ e => setSelectedValue(e.target.value) } />
                                 </ListItem>
                             ) :
                                 (
-                                    <div className="markdown" button onClick={ () => setEdit(true) }>
-                                        <ReactMarkdown >
-                                            { selectedItemValue ? selectedItemValue : "No Description" }
+                                    // remarkPlugins={[remarkGfm]}
+                                    // <ReactMarkdown children={ selectedItemValue ? selectedItemValue : "No Description" } remarkPlugins={ [remarkGfm] }></ReactMarkdown>
+                                    <div className="markdown" onClick={ () => setEdit(true) }>
+                                        
+                                        <ReactMarkdown>
+                                        { selectedItemValue ? selectedItemValue : "No Description" }
+                                            
                                         </ReactMarkdown>
                                     </div>
 
