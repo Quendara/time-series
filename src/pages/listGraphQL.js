@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useRouteMatch,
+    // BrowserRouter as Router,
+    // Switch,
+    // Route,
+    // Link,
+    // useRouteMatch,
     useParams
 } from "react-router-dom";
 
@@ -169,7 +169,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                         // console.log("items : ", items);
                         // setItems([...items, { id, name, link, group, checked }]); // push to the end
 
-                        if (item.listid != listid) {
+                        if (item.listid !== listid) {
                             console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
                             return;
                         }
@@ -437,7 +437,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
         if (filterText.length !== 0) {
             filteredItems = filteredItems.filter(item => {
                 const currentItem = item.name.toUpperCase()
-                return (currentItem.indexOf(FILTER) != -1)
+                return (currentItem.indexOf(FILTER) !== -1)
             })
         }
 

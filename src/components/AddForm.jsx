@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 // hideGroups: When this is in context of a group, the group can be hidden
 import { useStyles } from "../Styles"
 
-export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups, buttonName = "Add", showGroupsSelector = true }) => {
+export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups = undefined , buttonName = "Add", showGroupsSelector = true }) => {
 
     // props replaced by
     const classes = useStyles();
@@ -120,7 +120,7 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
     const getGroup = () => {
         return (
             <>
-                { groups == undefined ?
+                { groups === undefined ?
                     (
                         <TextField
                             value={ groupName }

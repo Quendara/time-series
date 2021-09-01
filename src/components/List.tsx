@@ -10,11 +10,12 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-import { EditIcon, ArrowDropDown, ArrowRight } from '@material-ui/icons';
+import { ArrowDropDown, ArrowRight } from '@material-ui/icons';
 import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader } from "./StyledComponents"
 
+import { TodoItem } from "./TodoItems"
 import { AddForm } from "./AddForm"
 
 const useStyles = makeStyles({
@@ -29,9 +30,41 @@ const useStyles = makeStyles({
     },
 });
 
+interface PropsEl {
+    name: string;
+    link: string;
+    checked: boolean;
+    id: number;
+    removeClickFunction: any;
+    updateFunction: any;
+    selectFunction: any;
+    toggleFunction: any;
+    type: string;       // @todo: later enum
+    groups: any;
+    group: string; 
+    editList: boolean  
+}  
+
+// { percentge(filterCompleted(items).length / items.length) }
+const percentge = (float_value: number) => {
+    return "" + (float_value * 100).toFixed(1) + "%"
+}
+
+const printRemaining = (filtered: number, total: number) => {
+    if (filtered === total) return total;
+    return percentge(filtered / total)
+}
+
+const filterCompleted = (items: TodoItem[]) => {
+    return items.filter(item => {
+        return item.checked === false
+    })
+}
 
 
-const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, selectFunction, toggleFunction, type, groups, group, editList }) => {
+
+
+const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, selectFunction, toggleFunction, type, groups, group, editList } : PropsEl) => {
 
     const classes = useStyles();
 
@@ -56,27 +89,27 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         selectFunction(id)
     }
 
-    const onClickFunction = (linkName, linkUrl, groupname) => {
+    const onClickFunction = (linkName: string, linkUrl: string, groupname: string) => {
         updateFunction(id, linkName, linkUrl, groupname)
         setEdit(false)
     }
 
-    const onCheckToggle = (linkName, linkUrl) => {
+    const onCheckToggle = (linkName: string, linkUrl: string) => {
         // updateFunction(id, linkName, linkUrl)
         // setChecked(!checked)
         toggleFunction(id)
     }
 
-    const onMainClick = (type) => {
+    const onMainClick = (type: string) => {
         if (type === "todo") {
-            toggleFunction(id)
+            toggleFunction(id) 
         }
         else {
             window.open(link, "_blank")
         }
     }
 
-    const isChecked = (checked) => {
+    const isChecked = (checked: boolean) => {
         if (typeof checked === "boolean") { return checked }
         if (typeof checked === "string") { return checked === "true" }
         return false
@@ -163,28 +196,27 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     );
 };
 
-const filterCompleted = (items) => {
-    return items.filter(item => {
-        return item.checked === false
-    })
-}
+interface PropsQ { 
+    items: TodoItem[];
+    removeItemHandle: any;
+    header: string;
+    addItemHandle: any;
+    updateFunction: any;
+    selectFunction: any;
+    toggleFunction: any;
+    type: string;
+    group: string;
+    groups: string;
+    editList: boolean
+ };
 
-// { percentge(filterCompleted(items).length / items.length) }
-const percentge = (float_value) => {
-    return "" + (float_value * 100).toFixed(1) + "%"
-}
 
-const printRemaining = (filtered, total) => {
-    if (filtered === total) return total;
-    return percentge(filtered / total)
-}
-
-export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, selectFunction, toggleFunction, type, group, groups, editList }) => {
+export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, selectFunction, toggleFunction, type, group, groups, editList } : PropsQ) => {
 
     const [edit, setEdit] = useState(false);
     const [name, setName] = useState("");
 
-    const onClickFunction = (name, link, groupname) => {
+    const onClickFunction = (name: string, link: string, groupname: string ) => {
         addItemHandle(name, link, groupname)
         setName("")
 
@@ -196,7 +228,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
         <>
 
-            <MyCardHeader button onClick={ () => setEdit(!edit) }>
+            <MyCardHeader onClick={ () => setEdit(!edit) }>
                 <List>
                     <ListItem>
                         <ListItemIcon>
@@ -231,7 +263,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                     <ListEl
                         editList={ editList }
                         key={ index }
-                        id={ item.id }
+                        id={ +item.id }
                         name={ item.name }
                         group={ group }
                         groups={ groups }

@@ -13,25 +13,8 @@ import {
   useLocation
 } from "react-router-dom";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-
-import Icon from '@material-ui/core/Icon';
-
-import TimelineIcon from '@material-ui/icons/Timeline';
-import ShareIcon from '@material-ui/icons/Share';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import ChatIcon from '@material-ui/icons/Chat';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import MoreIcon from '@material-ui/icons/MoreVert';
-
-
-// import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import { useStyles, theme } from "./Styles"
-
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 
 import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, ListItemText } from "@material-ui/core";
 

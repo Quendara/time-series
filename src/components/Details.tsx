@@ -10,19 +10,16 @@ import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./Styl
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
 
+import { TodoItem } from "./TodoItems"
+
 import { useStyles } from "../Styles"
 
-interface Item {
-    id: string;
-    listid: number;
-    name: string;
-    description: string;
-  }
+
 
   interface Props {
     selectedItem: any;
     updateFunction: any;
-    lists: Item[];
+    lists: TodoItem[];
   }  
 
 
@@ -143,7 +140,7 @@ export const Details = ({ selectedItem, updateFunction, lists } : Props) => {
         setEdit(false)
     }
 
-    const getGlobalList = (lists : Item[] , id: number ) => {
+    const getGlobalList = (lists : TodoItem[] , id: number ) => {
         if (lists !== undefined) {
             const fl = lists.filter(item => +item.id === +id)
             console.log("getGlobalList", id, fl, lists)
@@ -158,7 +155,7 @@ export const Details = ({ selectedItem, updateFunction, lists } : Props) => {
         }
     }
 
-    const handleListChange = (selecedList : Item ) => {
+    const handleListChange = (selecedList : TodoItem ) => {
 
         if (selecedList !== null) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)

@@ -1,21 +1,13 @@
 import React, { Component, useState, useEffect } from "react";
-import { useQuery } from '@apollo/react-hooks'
 
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import Settings from "../Settings";
-import SingleTimeSerie from "../SingleTimeSerie";
 
-import { AppBar, Toolbar, Box, Button, TextField, Grid, Card, CardContent, Typography, Divider, IconButton } from '@material-ui/core/';
+import { Toolbar, Box, Button, TextField, Grid, Card, CardContent, Typography, Divider, IconButton } from '@material-ui/core/';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { MyCard, MyCardHeader, MyTextareaAutosize } from "../components/StyledComponents"
-import { useStyles } from "../Styles"
 
-import ReactMarkdown from "react-markdown";
-
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
+import { TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
 
 const doku = `---
