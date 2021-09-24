@@ -34,7 +34,7 @@ interface PropsEl {
     name: string;
     link: string;
     checked: boolean;
-    id: number;
+    id: string;
     removeClickFunction: any;
     updateFunction: any;
     selectFunction: any;
@@ -152,8 +152,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
                                 </ListItemIcon>
 
-                                <ListItemText
-                                    
+                                <ListItemText                                    
                                     primary={ isChecked(checked) ? 
                                             <TypographyDisabled { ...longPressEvent }>{ name }</TypographyDisabled> 
                                         :   <TypographyEnabled  { ...longPressEvent }>{ name }</TypographyEnabled> }
@@ -161,8 +160,21 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                             </ListItem> }
 
                         { type === "message" &&
-                            <ListItem>
-                                <Grid
+                            <ListItem button onClick={ handleSelect } >
+
+                                <ListItemIcon > 
+                                </ListItemIcon>
+
+                                <ListItemText
+                                    
+                                    primary={ isChecked(checked) ? 
+                                            <TypographyDisabled { ...longPressEvent }>{ name }</TypographyDisabled> 
+                                        :   <TypographyEnabled  { ...longPressEvent }>{ name }</TypographyEnabled> }
+                                    secondary={ <Divider component="li" /> }
+                                />
+                                
+                                    {/* 
+                                                                    <Grid
                                     container
                                     direction="row"
                                     justify="flex-end"
@@ -178,7 +190,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                             </Typography>
                                         </Card>
                                     </Grid>
-                                </Grid>
+                                </Grid> */}
                             </ListItem>
                         }
                         { type === "links" &&
@@ -263,7 +275,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                     <ListEl
                         editList={ editList }
                         key={ index }
-                        id={ +item.id }
+                        id={ item.id }
                         name={ item.name }
                         group={ group }
                         groups={ groups }
