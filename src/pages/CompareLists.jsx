@@ -50,7 +50,6 @@ const l2 = `
 2000 - England Silke Tobi
 2001 - Skiurlaub Sylvester
 2002 - Surfcamp Frankreich
-2004 - Portugal
 2005 - Klettern Isenberg
 2005 - Lanzarote Surfen
 2008 - Irena
@@ -58,37 +57,9 @@ const l2 = `
 2009 - Irena
 2009 - San Francisco
 2010 - Andre
-2010 - Klettern Freyr
-2011 - Klettern Schweiz
-2011 - Tannheimer Tal
-2012 - Andre
-2012 - Irena
-2013 - Juri
-2014 - Andre
 2014 - Klettern Provence
 2015 - Andre
 2016 - Andre
-2017 - Andre
-2018 - California
-2018 - Den Haag
-2018 - Familie
-2018 - Madeira
-2018 - Nord pas de Calais
-2018 - Serbien
-2018 - Skiurlaub
-2018 - Tokio
-2019 - Berlin
-2019 - Familie
-2019 - Hamburg
-2019 - Italien
-2019 - Kroatien
-2019 - Prag
-2019 - Sizilien
-2020 - Familie
-2020 - Griechenland
-2020 - Porto
-2020 - Schule
-2020 - Test
 2020 - Upload
 2020 - Wien
 2021 - Baby
@@ -99,54 +70,43 @@ const l2 = `
 `
 
 const l1 = `
-./2010 - Klettern Freyr
-./2009 - Irena
-./2020 - Familie
-./2020 - Familie/iPhone von Irena
-./2020 - Familie/iPhone von Irena/Zuletzt
-./2020 - Wien
-./Bis1978
-./Bis1978/19xx_CCC
-./Bis1978/19xx Musikertreff ElDorado
-./Bis1978/1977 - Oktoberfest-Köln
-./Bis1978/1977 Chiemsee
-./Bis1978/1971 Party Gerd
-./Bis1978/1961 Wattenscheid
-./Bis1978/1972 - Richard Gaby
-./Bis1978/1966
-./Bis1978/1977 Wendelstein
-./Bis1978/19XX_CC
-./Bis1978/1966 Zell Am Ziller
-./Bis1978/1967 Opa
-./Bis1978/1977 München
-./Bis1978/1977-1982 Haddorf
-./Bis1978/19xx
-./Bis1978/1968 Schwarzwald
-./Bis1978/1969 Lockner
-./Bis1978/1968 Kirstin
-./Bis1978/1964 Opa Andre
-./Bis1978/1975 Fete MPI
-./Bis1978/1969 Kirstin
-./Bis1978/1967 Einschulung Frank
-2009 - Andre
-./2020 - Griechenland
+./2001 - Skiurlaub Sylvester
+./2004 - Portugal
+./2000 - England Silke Tobi
+./2002 - Surfcamp Frankreich
 ./2005 - Klettern Isenberg
-./Eigene Aufnahmen
+./2005 - Lanzarote Surfen
+./200x/2009 - Andre
+./2015 - Andre
+./2008 - Irena
+./2010 - Andre
+./2016 - Andre
+./2009 - Irena
+./2020 - Upload
+./2014 - Klettern Provence
+./2021 - Renovierung/Test
+./2020 - Wien
+./2021 - Baby
+./2021 - Test
+./2021 - Belgrad
+
 `
 
-const fullMatch = "#00a152"
-const orange = "#ff9100"
-const blue = "#2979ff"
+const color = {
+    fullMatch: "#00a152",
+    orange: "#3f51b5",
+    blue: "#3f51b5"
+}
 
 const performDiff = (probe, gallery) => {
 
     const diffResponse = {
         markerIndexStart: 0,
         markerIndexEnd: 0,
-        markerColor:  "",
+        markerColor: "",
         message: "",
         score: 0
-    }        
+    }
 
     if (probe.length === 0) {
         return diffResponse
@@ -159,7 +119,7 @@ const performDiff = (probe, gallery) => {
             item.found = true
             // setMarkerIndexEnd(probe.length)
             diffResponse.markerIndexEnd = probe.length
-            diffResponse.markerColor = fullMatch
+            diffResponse.markerColor = color.fullMatch
             return true
         }
 
@@ -167,24 +127,23 @@ const performDiff = (probe, gallery) => {
     })
 
     // search if probe sting in part if the string if  the gallery items
-    if (filteredItems !== undefined && filteredItems.length > 0) 
-    { 
+    if (filteredItems !== undefined && filteredItems.length > 0) {
         diffResponse.score = 100
         diffResponse.message = "Found item from list 1 in list 2"
         return diffResponse
-    } 
+    }
     filteredItems = gallery.filter(item => {
 
         if (item.name.trim().length === 0) return false
 
-        const indexOf = item.name.trim().indexOf( probe )
+        const indexOf = item.name.trim().indexOf(probe)
 
         // if (item.name.trim().includes(probe)) {
-        if ( indexOf >= 0) { 
-            
+        if (indexOf >= 0) {
+
             diffResponse.markerIndexStart = 0
-            diffResponse.markerIndexEnd = probe.length      
-            diffResponse.markerColor =   blue
+            diffResponse.markerIndexEnd = probe.length
+            diffResponse.markerColor = color.blue
 
             item.found = true
             return true
@@ -192,23 +151,23 @@ const performDiff = (probe, gallery) => {
         return false
     })
 
-    if (filteredItems !== undefined && filteredItems.length > 0) { 
+    if (filteredItems !== undefined && filteredItems.length > 0) {
         diffResponse.score = 91
         diffResponse.message = "Found item from list 1 in list 2"
-        return diffResponse                    
-    } 
+        return diffResponse
+    }
 
     // ----
 
     filteredItems = gallery.filter(item => {
         if (item.name.trim().length === 0) return false
 
-        const indexOf = probe.indexOf( item.name.trim() )
-        if ( indexOf >= 0) {
+        const indexOf = probe.indexOf(item.name.trim())
+        if (indexOf >= 0) {
 
             diffResponse.markerIndexStart = indexOf
-            diffResponse.markerIndexEnd = indexOf+ ( item.name.trim().length   )
-            diffResponse.markerColor =  orange
+            diffResponse.markerIndexEnd = indexOf + (item.name.trim().length)
+            diffResponse.markerColor = color.orange
 
             item.found = true
             return true
@@ -216,17 +175,17 @@ const performDiff = (probe, gallery) => {
         return false
     })
 
-    if (filteredItems !== undefined && filteredItems.length > 0) { 
+    if (filteredItems !== undefined && filteredItems.length > 0) {
         diffResponse.score = 90
-        diffResponse.message = "Found item from list 2 in list 1" 
-        return diffResponse                
+        diffResponse.message = "Found item from list 2 in list 1"
+        return diffResponse
     }
     return diffResponse
 }
 
 
 export const CompareRow = ({ index, probe, diffResponse }) => {
-   
+
 
     const marker = (probe, markerIndexStart, markerIndexEnd, markerColor) => {
 
@@ -249,9 +208,9 @@ export const CompareRow = ({ index, probe, diffResponse }) => {
 
     return (
         <TableRow>
-            <TableCell align="right"  > { index }</TableCell>            
-            <TableCell  > { marker( probe.trim(), diffResponse.markerIndexStart, diffResponse.markerIndexEnd, diffResponse.markerColor) }</TableCell>
-            <TableCell  > { diffResponse.score } </TableCell>            
+            <TableCell align="right"  > { index }</TableCell>
+            <TableCell  > { marker(probe.trim(), diffResponse.markerIndexStart, diffResponse.markerIndexEnd, diffResponse.markerColor) }</TableCell>
+            <TableCell  > { diffResponse.score } </TableCell>
         </TableRow>
     )
 }
@@ -270,8 +229,14 @@ export const CompareLists = ({ }) => {
     }, []); // second parameter avoid frequent loading
 
     const performDiffHandle = () => {
+        setDiff( performDiffHandleInt( list1, list2 ) )
+        setOnlyList2( performDiffHandleInt( list2, list1 ) )
 
-        const watchlist = list2.split("\n").map((name, index) => {
+    }
+
+    const performDiffHandleInt = ( probelist_str, watchlist_str ) => {
+
+        const watchlist = watchlist_str.split("\n").map((name, index) => {
             return {
                 name,
                 index,
@@ -279,16 +244,16 @@ export const CompareLists = ({ }) => {
             }
         })
 
-        const firstListArr = list1.split("\n")
+        const firstListArr = probelist_str.split("\n")
 
 
         const diffTxt = firstListArr.map((name, index) => {
 
             const x = performDiff(name.trim(), watchlist)
-            if( name.trim().length == 0 ) return (<></>)
+            if (name.trim().length == 0) return (<></>)
 
-            return (                
-                <CompareRow key={index} index={ index } probe={ name } diffResponse={ x }  />
+            return (
+                <CompareRow key={ index } index={ index } probe={ name } diffResponse={ x } />
             )
         })
 
@@ -296,30 +261,29 @@ export const CompareLists = ({ }) => {
         const onlyList2 = watchlist.map((item, index) => {
 
 
-            if( item.name.trim().length === 0 ) return (<></>)
-            return ( 
+            if (item.name.trim().length === 0) return (<></>)
+            return (
                 <>
                     { item.found === false &&
-                        <TableRow key={index}   >
+                        <TableRow key={ index }   >
                             <TableCell align="right" > { index }</TableCell>
                             <TableCell  > { item.name }</TableCell>
-                            <TableCell  > {  }</TableCell>
+                            <TableCell  > { }</TableCell>
                         </TableRow>
                     }
                 </>)
         })
 
-
-        setDiff(diffTxt)
-
-        setOnlyList2(onlyList2)
+        // setDiff(diffTxt)
+        // setOnlyList2(onlyList2)
+        return diffTxt
     }
 
     return (
 
         <Grid container justify="center" spacing={ 1 } >
             <Grid item xs={ 3 }   >
-            <Box style={ { background: blue } } >List 1</Box>
+                <Box style={ { background: color.blue } } >List 1</Box>
                 <MyTextareaAutosize
                     value={ list1 ? list1 : "" }
                     rowsMin={ 10 }
@@ -332,7 +296,7 @@ export const CompareLists = ({ }) => {
                     onChange={ e => setList1(e.target.value) } />
             </Grid>
             <Grid item xs={ 3 } >
-                <Box style={ { background: orange } } >List 2</Box>
+                <Box style={ { background: color.orange } } >List 2</Box>
                 <MyTextareaAutosize
                     value={ list2 ? list2 : "" }
                     rowsMin={ 10 }
@@ -344,15 +308,26 @@ export const CompareLists = ({ }) => {
                     // onKeyPress={ e => checkEnter(e) }
                     onChange={ e => setList2(e.target.value) } />
             </Grid>
-            <Grid item xs={ 6 } >
+            <Grid item xs={ 3 } >
+            <MyCard>
+                    <CardContent>
+            <Box component="span" style={ { background: color.fullMatch } } >
+                    Full 
+                </Box>
+
+</CardContent>
+</MyCard>
+            </Grid>
+            <Grid item xs={ 12 } >
                 <MyCard>
                     <CardContent>
-                        <Grid container justify="center" spacing={ 1 } >
+                        <Grid container justify="space-between" spacing={ 1 } >
 
                             <Grid item xs={ 12 } >
                                 <Button variant="outlined" onClick={ performDiffHandle } >run Diff</Button>
                             </Grid>
-                            <Grid item xs={ 12 } >
+                            <Grid item xs={ 5 } >
+                                <h2>List</h2>
 
                                 <TableContainer  >
                                     <Table size="small">
@@ -365,14 +340,19 @@ export const CompareLists = ({ }) => {
                                             </TableRow>
                                         </TableHead>
                                         { diff }
-
+                                    </Table>
+                                </TableContainer>
+                            </Grid>
+                            <Grid item xs={ 5 } >
+                                <TableContainer  >
+                                    <h2>Items only found in List 2</h2>
+                                    <Table size="small">
 
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell></TableCell>
-                                                <TableCell><h2>Items only found in List 2</h2></TableCell>
-                                                <TableCell></TableCell>
-
+                                                <TableCell align="right">Line</TableCell>
+                                                <TableCell>Content</TableCell>
+                                                <TableCell>Score</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         { onlyList2 }
