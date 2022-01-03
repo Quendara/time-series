@@ -16,7 +16,7 @@ import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 
 import SearchIcon from '@material-ui/icons/Search';
 
-import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, TextField, List, ListItem, Divider, Hidden } from '@material-ui/core';
+import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, Typography, TextField, List, ListItem, Divider, Hidden } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
@@ -54,9 +54,13 @@ import { Navigation } from "../organisms/navigation"
 
 // import { error } from "../components/erros"
 
-const FilterComponent = ({ callback }) => {
+const FilterComponent = ({ filterText, callback, callbackEnter }) => {
 
-    const [item, setItem] = useState("");
+    const [item, setItem] = useState(filterText);
+
+    useEffect(() => {
+        setItem( filterText )
+      }, [ filterText ]);
 
     const setFilter = (text) => {
         setItem(text)
@@ -65,8 +69,8 @@ const FilterComponent = ({ callback }) => {
 
     const checkEnter = (e) => {
         if (e.key === "Enter") {
-            // alert("Enter")
-            // handleClick(e)
+            // alert("Enter")            
+            callbackEnter()
         }
     }
 
@@ -130,6 +134,14 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
     const callbackFilter = (text) => {
         setFilterText(text)
     }
+
+    const callbackEnter = () => {
+        
+        if( filteredTodos.length === 1 )  {
+            uncheckFunction( filteredTodos[0].id )
+            setFilterText("")
+        }
+    }    
 
     useEffect(
         () => {
@@ -304,6 +316,27 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
     }
 
+    async function uncheckFunction(todoid) {
+
+        // get Check Status
+        let newStatus = false
+        const items2 = todos.map((e, index) => {
+
+            if (e.id === todoid) {
+                let newObject = Object.assign({}, e)
+                newObject['checked'] = false
+                newStatus = newObject['checked']                
+                return newObject
+            }
+            return e
+        })
+
+        setTodos(items2)
+
+        /* update a todo */
+        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
+    }    
+
     async function updateFunction(todoid, name, link, group, description = undefined) {
         // const items2 = items.filter(item => item.id !== id);
 
@@ -468,7 +501,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                                         { edit ? (
                                             <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
                                         ) : (
-                                            <FilterComponent callback={ callbackFilter } />
+                                            <FilterComponent filterText={filterText} callback={ callbackFilter } callbackEnter={ callbackEnter } />
                                         ) }
                                     </Grid>
                                     <Grid item xs={ 2 } lg={ 4 } >
@@ -491,12 +524,26 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists }) => 
                         </List>
                     </MyCardHeader>
 
+                    { filteredTodos.length === 1 && (
+                        <CardContent>
+                            <Typography variant="h2" component="h2">
+                            {filteredTodos[0].name}
+                            </Typography>
+                            <Typography variant="subtitle1" component="subtitle1">
+                            Press Enter to add to the List
+                            </Typography>
+                            
+                            
+                            
+                        </CardContent>
+                    ) }
+
 
                     { filteredTodos.length === 0 && (
                         <CardContent>
                             <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
                                 <Grid item xs={ 12 } >
-                                    { todos.length === 0 &&
+                                    { todos.length === 0 && // also the unfiltered list is empty
                                         <h1>Diese Liste ist leer !</h1>
                                     }
                                     <Divider />
