@@ -282,7 +282,7 @@ export const CompareLists = ({ }) => {
     return (
 
         <Grid container justify="center" spacing={ 1 } >
-            <Grid item xs={ 3 }   >
+            <Grid item xs={ 5 }   >
                 <Box style={ { background: color.blue } } >List 1</Box>
                 <MyTextareaAutosize
                     value={ list1 ? list1 : "" }
@@ -295,7 +295,7 @@ export const CompareLists = ({ }) => {
                     // onKeyPress={ e => checkEnter(e) }
                     onChange={ e => setList1(e.target.value) } />
             </Grid>
-            <Grid item xs={ 3 } >
+            <Grid item xs={ 5 } >
                 <Box style={ { background: color.orange } } >List 2</Box>
                 <MyTextareaAutosize
                     value={ list2 ? list2 : "" }
@@ -308,16 +308,7 @@ export const CompareLists = ({ }) => {
                     // onKeyPress={ e => checkEnter(e) }
                     onChange={ e => setList2(e.target.value) } />
             </Grid>
-            <Grid item xs={ 3 } >
-            <MyCard>
-                    <CardContent>
-            <Box component="span" style={ { background: color.fullMatch } } >
-                    Full 
-                </Box>
-
-</CardContent>
-</MyCard>
-            </Grid>
+            
             <Grid item xs={ 12 } >
                 <MyCard>
                     <CardContent>
