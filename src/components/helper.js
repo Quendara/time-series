@@ -1,6 +1,8 @@
 import { sortBy, groupBy, shuffle, reduce } from "underscore";
 import Settings from "../Settings"
 
+// 
+
 export const shuffleItems = ( list ) => {
     return shuffle(list)
 }

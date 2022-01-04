@@ -30,20 +30,6 @@ const useStyles = makeStyles({
     },
 });
 
-interface PropsEl {
-    name: string;
-    link: string;
-    checked: boolean;
-    id: string;
-    removeClickFunction: any;
-    updateFunction: any;
-    selectFunction: any;
-    toggleFunction: any;
-    type: string;       // @todo: later enum
-    groups: any;
-    group: string; 
-    editList: boolean  
-}  
 
 // { percentge(filterCompleted(items).length / items.length) }
 const percentge = (float_value: number) => {
@@ -61,6 +47,20 @@ const filterCompleted = (items: TodoItem[]) => {
     })
 }
 
+interface PropsEl {
+    name: string;
+    link: string;
+    checked: boolean;
+    id: string;
+    removeClickFunction: (id:string) => number;
+    updateFunction: any;
+    selectFunction: (id:string) => number;
+    toggleFunction: (id:string) => number;
+    type: string;       // @todo: later enum
+    groups: any;
+    group: string; 
+    editList: boolean  
+}  
 
 
 
@@ -151,8 +151,8 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                 <ListItemIcon onClick={ handleToggleFunction } >
                                     { isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked /> }
                                 </ListItemIcon>
-
-                                <ListItemText                                    
+                                <ListItemText    
+                                    onClick={ handleSelect }                                                     
                                     primary={ isChecked(checked) ? 
                                             <TypographyDisabled { ...longPressEvent }>{ name }</TypographyDisabled> 
                                         :   <TypographyEnabled  { ...longPressEvent }>{ name }</TypographyEnabled> }
@@ -215,7 +215,7 @@ interface PropsQ {
     addItemHandle: any;
     updateFunction: any;
     selectFunction: any;
-    toggleFunction: any;
+    toggleFunction: (id:string) => number;
     type: string;
     group: string;
     groups: string;
@@ -245,7 +245,6 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                     <ListItem>
                         <ListItemIcon>
                             { edit ? <ArrowDropDown /> : <ArrowRight /> }
-
                         </ListItemIcon>
 
 

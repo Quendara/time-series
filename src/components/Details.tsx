@@ -139,10 +139,6 @@ interface Props {
 }
 
 
-
-
-
-
 export const Details = ({ selectedItem, updateFunction, lists }: Props) => {
 
     const classes = useStyles();
