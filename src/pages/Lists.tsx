@@ -254,13 +254,14 @@ export const Lists = ({
                         </CardContent>) }
                 </MyCard>
             </Grid>
-            <Grid item md={ horizontally?12:6 } xs={ 12 }  >
+
+            <Grid item md={ horizontally?12:4 }  sm={ horizontally?12:6 } xs={ 12 }  >
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
             </Grid>
 
             { (selectedItem !== undefined) &&
                 <>
-                        <Grid item md={ horizontally?12:6 } xs={ 12 } >
+                        <Grid item  md={ horizontally?12:8 }  sm={ horizontally?12:6 } xs={ 12 } >
                             <Details
                                 selectedItem={ selectedItem }
                                 updateFunction={ updateFunction2 }
