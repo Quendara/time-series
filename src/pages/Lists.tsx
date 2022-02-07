@@ -203,7 +203,12 @@ export const Lists = ({
 
                                     <Grid item xs={ 10 } lg={ 8 } >
                                         { edit ? (
-                                            <AddForm onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                                            <AddForm 
+                                            renderModal={false} 
+                                            onClickFunction={ addItemHandle } 
+                                            handleDeleteClick={undefined}
+                                            type={ listtype } 
+                                            groups={ findUnique(todos, "group", false) } ></AddForm>
                                         ) : (
                                             <FilterComponent filterText={filterText} callback={ callbackFilter } callbackEnter={ callbackEnter } />
                                         ) }
@@ -230,11 +235,11 @@ export const Lists = ({
 
                     { filteredTodos.length === 1 && (
                         <CardContent>
-                            <Typography variant="h2" component="h2">
+                            <Typography variant="h6" component="h6">
                             {filteredTodos[0].name}
                             </Typography>
                             <Typography variant="inherit" component="b" >
-                            Press Enter to add to the List
+                            Press Enter to check item 
                             </Typography>
                         </CardContent>
                     ) }
@@ -247,7 +252,7 @@ export const Lists = ({
                                     }
                                     <Divider />
                                     <ListItem>
-                                        <AddForm name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
+                                        <AddForm renderModal={false} handleDeleteClick={undefined}  name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
                                     </ListItem>
                                 </Grid>
                             </Grid>

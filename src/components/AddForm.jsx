@@ -2,11 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Button, TextField, Grid } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 // hideGroups: When this is in context of a group, the group can be hidden
 import { useStyles } from "../Styles"
 
-export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group = "", groups = undefined , buttonName = "Add", showGroupsSelector = true }) => {
+export const AddForm = ({
+    onClickFunction,
+    name = "", 
+    url = "", 
+    type = "", 
+    group = "", 
+    groups = undefined, 
+    buttonName = "Add", showGroupsSelector = true, 
+    handleDeleteClick, 
+    renderModal=false }) => {
 
     // props replaced by
     const classes = useStyles();
@@ -190,6 +201,8 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
 
     const getWidthMd = () => {
 
+        if( renderModal ) return 12;
+
         let elementsToShow = 1
         if (showGroupsSelector) {
             elementsToShow += 1
@@ -214,36 +227,45 @@ export const AddForm = ({ onClickFunction, name = "", url = "", type = "", group
 
 
     return (
-        <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-            <Grid item xs={ 8 } md={ getWidthMd() } >
-                { getName() }
-            </Grid>
-            { showGroupsSelector &&
-                <Grid item xs={ 8 } md={ getWidthMd() } >
-                    { getGroup() }
+        <>
+            <Grid container alignItems="center" justify="flex-start" spacing={ 4 } >
+                <Grid item xs={ renderModal?12:8  } md={ getWidthMd() } >
+                    { getName() }
                 </Grid>
-            }
-            { type === "links" &&
-                <Grid item xs={ 8 } md={ getWidthMd() } >
-                    { getLink() }
-                </Grid> }
-
-            <Grid item xs={ 2 } md={ 2 } >
-                <Button variant="contained" color={ isValid() ? "primary" : "default" } onClick={ handleClick } className={ classes.green } >
-                    <AddIcon />
-                </Button >
-
-                {/* <Button
-                    onClick={ handleClick }
-                    variant="contained"
-                    color="primary"
-                    size="medium"
-                    startIcon={ <AddIcon /> }
-                > { buttonName } </Button> */}
-
+                { showGroupsSelector &&
+                    <Grid item xs={ renderModal?12:8  } md={ getWidthMd() } >
+                        { getGroup() }
+                    </Grid>
+                }
+                { type === "links" &&
+                    <Grid item xs={ renderModal?12:8 } md={ getWidthMd() } >
+                        { getLink() }
+                    </Grid> }
+                    <Grid item xs={12}><br/></Grid>
             </Grid>
-
-        </Grid>
-
+            <Grid container alignItems="center" justify="space-between" spacing={ 2 } >
+                <Grid item  >
+                    { handleDeleteClick !== undefined &&
+                        <Button 
+                            onClick={ handleDeleteClick }
+                            color="secondary"
+                            startIcon={<DeleteIcon />}
+                            variant="contained" >
+                            Delete
+                        </Button>
+                    }
+                </Grid>
+                <Grid item >
+                    <Button 
+                        variant="contained" 
+                        color={ isValid() ? "primary" : "default" } 
+                        onClick={ handleClick } 
+                        startIcon={<AddIcon />}
+                        className={ classes.green } >
+                        { buttonName }
+                    </Button >
+                </Grid>
+            </Grid>
+        </>
     );
 };
