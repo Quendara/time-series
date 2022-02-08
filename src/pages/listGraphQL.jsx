@@ -6,7 +6,7 @@ import { listTodos, getTodos } from '../graphql/queries';
 import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscriptions';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 
-import { Lists } from './Lists';
+import { ListPage } from './ListPage';
 
 // interface ListGraphProps {
 //     token: string;
@@ -254,7 +254,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
     };
  
     return (
-        <Lists 
+        <ListPage 
             todos               = {todos}
             listtype            = {listtype}
             listid              = {listid}

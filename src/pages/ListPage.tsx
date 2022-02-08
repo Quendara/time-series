@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 import SearchIcon from '@material-ui/icons/Search';
 
-import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, Typography, TextField, List, ListItem, Divider, Hidden } from '@material-ui/core';
+import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, Typography, TextField, List, ListItem, Divider, Hidden, Snackbar } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
  
 
@@ -48,7 +50,7 @@ interface  ListProps{
     
 }
 
-export const Lists = ({
+export const ListPage = ({
     todos,
     listtype,
     listid,
@@ -68,6 +70,15 @@ export const Lists = ({
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
     const [horizontally, setHorizontally] = useState(false);    
+
+    const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
+
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSuccessSnackbarMessage("");
+    };    
 
     useEffect(
         () => {
@@ -89,6 +100,9 @@ export const Lists = ({
     const callbackEnter = () => {
         
         if( filteredTodos.length === 1 )  {
+
+            setSuccessSnackbarMessage("Uncheck item " + filteredTodos[0].name );
+
             uncheckFunction( filteredTodos[0].id )
             setFilterText("")
         }
@@ -186,6 +200,16 @@ export const Lists = ({
 
 
     return (
+        <>
+            <Snackbar
+                open={successSnackbarMessage.length > 0}
+                autoHideDuration={2000}
+                onClose={handleClose}
+                message="Saved" >
+                <Alert onClose={handleClose} severity="success">
+                    {successSnackbarMessage}
+                </Alert>
+            </Snackbar>        
         <Grid container spacing={ 4 } >
             {/* <Hidden mdDown>
                 <Grid item lg={ 2 }  >
@@ -275,7 +299,8 @@ export const Lists = ({
                         </Grid>
                 </>
             }
-        </Grid >        
+        </Grid >   
+        </>     
     )
 
 } 
