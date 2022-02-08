@@ -52,7 +52,13 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
         return pre
             + insertItem
             + post
+    }
 
+    const lastLineBeforeCursor = (value: String, caret_start: number ) => {    
+        const pre = value.substring(0, caret_start)
+        const index = pre.lastIndexOf( "\n" )
+        const line = pre.substring( index+1, pre.length )
+        return line
     }
 
     const handleSelect = (e: any) => {
@@ -71,10 +77,27 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
 
             const previous_value = textFieldRef.current.value
 
-            const insertion_str = "\n* ";
-
             switch (event.key) {
                 case "Enter":
+
+                    let insertion_str = "\n";
+
+
+
+                    const lineBeforeCursor = lastLineBeforeCursor( previous_value, cursorPos )
+
+                    console.log( "lineBeforeCursor : " , lineBeforeCursor )
+
+                    if ( lineBeforeCursor.startsWith('*') ) {
+                        insertion_str = "\n* ";
+                    } else if( lineBeforeCursor.startsWith('  *') ) {
+                        insertion_str = "\n  * ";
+                    } else if( lineBeforeCursor.startsWith('    *') ) {
+                        insertion_str = "\n    * ";
+                    } else {
+                        insertion_str = "\n";
+                    }
+
 
                     const insertedText = insertText(previous_value, cursorPos, selectionEnd, insertion_str)
                     event.preventDefault()
@@ -102,8 +125,8 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
                     
                     if (textFieldRef && textFieldRef.current) {
                         textFieldRef.current.value = insertedText;
-                        textFieldRef.current.selectionStart = initialCursor + 3
-                        textFieldRef.current.selectionEnd = initialCursor + 3
+                        textFieldRef.current.selectionStart = initialCursor + insertion_str.length
+                        textFieldRef.current.selectionEnd = initialCursor + insertion_str.length
 
                         updateFunction( insertedText )
                     }

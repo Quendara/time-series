@@ -10,14 +10,14 @@ import { useStyles } from "../Styles"
 
 export const AddForm = ({
     onClickFunction,
-    name = "", 
-    url = "", 
-    type = "", 
-    group = "", 
-    groups = undefined, 
-    buttonName = "Add", showGroupsSelector = true, 
-    handleDeleteClick, 
-    renderModal=false }) => {
+    name = "",
+    url = "",
+    type = "",
+    group = "",
+    groups = undefined,
+    buttonName = "Add", showGroupsSelector = true,
+    handleDeleteClick,
+    renderModal = false }) => {
 
     // props replaced by
     const classes = useStyles();
@@ -201,7 +201,7 @@ export const AddForm = ({
 
     const getWidthMd = () => {
 
-        if( renderModal ) return 12;
+        if (renderModal) return 12;
 
         let elementsToShow = 1
         if (showGroupsSelector) {
@@ -228,44 +228,83 @@ export const AddForm = ({
 
     return (
         <>
-            <Grid container alignItems="center" justify="flex-start" spacing={ 4 } >
-                <Grid item xs={ renderModal?12:8  } md={ getWidthMd() } >
-                    { getName() }
-                </Grid>
-                { showGroupsSelector &&
-                    <Grid item xs={ renderModal?12:8  } md={ getWidthMd() } >
-                        { getGroup() }
+            { renderModal ? (
+                <Grid container alignItems="center" justify="space-between" spacing={ 4 } >
+                    <Grid item xs={ 12 } >
+                        { getName() }
                     </Grid>
-                }
-                { type === "links" &&
-                    <Grid item xs={ renderModal?12:8 } md={ getWidthMd() } >
-                        { getLink() }
-                    </Grid> }
-                    <Grid item xs={12}><br/></Grid>
-            </Grid>
-            <Grid container alignItems="center" justify="space-between" spacing={ 2 } >
-                <Grid item  >
-                    { handleDeleteClick !== undefined &&
-                        <Button 
-                            onClick={ handleDeleteClick }
-                            color="secondary"
-                            startIcon={<DeleteIcon />}
-                            variant="contained" >
-                            Delete
-                        </Button>
+                    { showGroupsSelector &&
+                        <Grid item xs={ 12 } >
+                            { getGroup() }
+                        </Grid>
                     }
+                    { type === "links" &&
+                        <Grid item xs={ 12 } >
+                            { getLink() }
+                        </Grid> }
+                    
+                    <Grid item  >
+                        { handleDeleteClick !== undefined &&
+                            <Button
+                                onClick={ handleDeleteClick }
+                                color="secondary"
+                                startIcon={ <DeleteIcon /> }
+                                variant="contained" >
+                                Delete
+                            </Button>
+                        }
+                    </Grid>
+                    <Grid item >
+                        <Button
+                            variant="contained"
+                            color={ isValid() ? "primary" : "default" }
+                            onClick={ handleClick }
+                            startIcon={ <AddIcon /> }
+                            className={ classes.green } >
+                            { buttonName }
+                        </Button >
+                    </Grid>
                 </Grid>
-                <Grid item >
-                    <Button 
-                        variant="contained" 
-                        color={ isValid() ? "primary" : "default" } 
-                        onClick={ handleClick } 
-                        startIcon={<AddIcon />}
-                        className={ classes.green } >
-                        { buttonName }
-                    </Button >
+            ) : (
+                <Grid container alignItems="center" justify="space-between" spacing={ 2 } >
+                    <Grid item xs={ renderModal ? 12 : 8 } md={ getWidthMd() } >
+                        { getName() }
+                    </Grid>
+                    { showGroupsSelector &&
+                        <Grid item xs={ renderModal ? 12 : 8 } md={ getWidthMd() } >
+                            { getGroup() }
+                        </Grid>
+                    }
+                    { type === "links" &&
+                        <Grid item xs={ renderModal ? 12 : 8 } md={ getWidthMd() } >
+                            { getLink() }
+                        </Grid> }
+
+                    { handleDeleteClick !== undefined &&
+                        <Grid item  >
+                            <Button
+                                onClick={ handleDeleteClick }
+                                color="secondary"
+                                startIcon={ <DeleteIcon /> }
+                                variant="contained" >
+                                Delete
+                            </Button>
+                        </Grid>
+                    }
+                    <Grid item >
+                        <Button
+                            variant="contained"
+                            color={ isValid() ? "primary" : "default" }
+                            onClick={ handleClick }
+                            startIcon={ <AddIcon /> }
+                            className={ classes.green } >
+                            { buttonName }
+                        </Button >
+                    </Grid>
                 </Grid>
-            </Grid>
+            )
+            }
         </>
+
     );
 };
