@@ -118,7 +118,7 @@ const App = () => {
           }
           ) }
 
-          <IconButton variant="inherit" className={ classes.menuButton } onClick={ menuHandleClick } ><MyIcon icon="more" /> </IconButton>
+          <IconButton variant="inherit" className={ classes.menuButton } onClick={ menuHandleClick } ><MyIcon icon="more_horiz" /> </IconButton>
 
 
           <Menu

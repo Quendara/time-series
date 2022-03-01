@@ -11,6 +11,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { ArrowDropDown, ArrowRight } from '@material-ui/icons';
+
+import Icon from '@material-ui/core/Icon';
+
 import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader } from "./StyledComponents"
@@ -148,40 +151,40 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                     <div className={classes.modal}>
                         <Card>
                             <CardHeader
-                            title={"Update Item"} 
-                            action={
-                                <IconButton onClick={ () => setEdit(false) } >
-                                  <CloseIcon />
-                                </IconButton>
-                              }                            
-                            
+                                title={"Update Item"}
+                                action={
+                                    <IconButton onClick={() => setEdit(false)} >
+                                        <CloseIcon />
+                                    </IconButton>
+                                }
+
                             >
-                                
-                            </CardHeader> 
+
+                            </CardHeader>
 
                             <CardContent>
-                            <Grid
+                                <Grid
                                     container
                                     direction="row"
                                     justify="flex-start"
                                     alignItems="flex-start"
                                     spacing={4}
-                                >           
-                                <Grid item xs={ 12 } >
-                                <AddForm
-                                    name={name}
-                                    url={link}
-                                    group={group}
-                                    groups={groups}
-                                    renderModal={true}
-                                    onClickFunction={onClickFunction}
-                                    handleDeleteClick={handleDeleteClick}
-                                    type={type}
-                                    buttonName="Update" />
-                                    </Grid>                        
-                                 
+                                >
+                                    <Grid item xs={12} >
+                                        <AddForm
+                                            name={name}
+                                            url={link}
+                                            group={group}
+                                            groups={groups}
+                                            renderModal={true}
+                                            onClickFunction={onClickFunction}
+                                            handleDeleteClick={handleDeleteClick}
+                                            type={type}
+                                            buttonName="Update" />
+                                    </Grid>
+
                                 </Grid>
-                                
+
                             </CardContent>
                         </Card>
                     </div>
@@ -192,15 +195,15 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                     <ListItemIcon onClick={handleToggleFunction} >
                         {isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked />}
                     </ListItemIcon>
-                    <AddForm 
-                    renderModal={false} 
-                        name={name} 
-                        url={link} 
-                        group={group} groups={groups} 
-                        onClickFunction={onClickFunction} 
-                        type={type} 
-                        buttonName="Update" 
-                        handleDeleteClick={undefined} /> 
+                    <AddForm
+                        renderModal={false}
+                        name={name}
+                        url={link}
+                        group={group} groups={groups}
+                        onClickFunction={onClickFunction}
+                        type={type}
+                        buttonName="Update"
+                        handleDeleteClick={undefined} />
                     <ListItemSecondaryAction >
                         <IconButton edge="end" onClick={handleDeleteClick} color="secondary" aria-label="delete">
                             <DeleteIcon />
@@ -228,6 +231,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                             <ListItem button onClick={handleSelect} >
 
                                 <ListItemIcon >
+                                    <Icon>chevron_right</Icon>
                                 </ListItemIcon>
 
                                 <ListItemText
@@ -235,7 +239,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     primary={isChecked(checked) ?
                                         <TypographyDisabled {...longPressEvent}>{name}</TypographyDisabled>
                                         : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
-                                    secondary={<Divider component="li" />}
+                                    
                                 />
 
                                 {/* 
@@ -257,6 +261,8 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     </Grid>
                                 </Grid> */}
                             </ListItem>
+                            
+
                         }
                         {type === "links" &&
                             <ListItem button>
@@ -267,6 +273,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                 />
                             </ListItem>
                         }
+                        <Divider component="li" />
                     </>
                 )}
         </>
@@ -329,14 +336,14 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
             >
 
                 {edit &&
-                    <ListItem>                        
-                        <AddForm renderModal={false} 
-                        name={name}
-                        group={group}
-                        onClickFunction={onClickFunction} 
-                        type={type} buttonName="Add"
-                        showGroupsSelector={false} 
-                        handleDeleteClick={undefined} />
+                    <ListItem>
+                        <AddForm renderModal={false}
+                            name={name}
+                            group={group}
+                            onClickFunction={onClickFunction}
+                            type={type} buttonName="Add"
+                            showGroupsSelector={false}
+                            handleDeleteClick={undefined} />
                         <Divider />
                     </ListItem>}
 
@@ -348,7 +355,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         id={item.id}
                         name={item.name}
                         group={group}
-                        groups={groups}                        
+                        groups={groups}
                         checked={item.checked}
                         link={item.link}
                         selectFunction={selectFunction}

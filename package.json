@@ -27,6 +27,7 @@
     "react": "^16.12.0",
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.12.0",
+    "react-hooks-visible": "^1.1.1",
     "react-markdown": "^6.0.1",
     "react-router-dom": "^5.1.2",
     "remark-gfm": "^2.0.0",
