@@ -273,7 +273,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                 />
                             </ListItem>
                         }
-                        <Divider component="li" />
+                        
                     </>
                 )}
         </>
@@ -349,6 +349,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
 
                 {items.map((item, index) => (
+                    <>
                     <ListEl
                         editList={editList}
                         key={index}
@@ -364,6 +365,9 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         toggleFunction={toggleFunction}
                         type={type}
                     />
+
+                    { index !== items.length-1 &&  <Divider component="li" /> }
+                    </>
                 ))}
 
                 {/* { ((addItemHandle !== undefined) && editList) &&

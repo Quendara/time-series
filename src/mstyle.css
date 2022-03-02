@@ -39,13 +39,14 @@
 .markdown h4,
 .markdown h5,
 .markdown h6 {
-  font-family: Arimo, Helvetica, sans-serif;
+  font-family: Helvetica, sans-serif;
 }
 
 .markdown pre {
 	
 	background-color: #102027;
-	padding: 5px;
+	border-radius: 5px;
+	padding: 8px;
 }
 
 .markdown h1 {
