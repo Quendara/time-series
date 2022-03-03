@@ -2,16 +2,15 @@ import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } fro
 
 import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm'
+
 
 import { Grid, Button, TextField, Divider, Typography } from '@material-ui/core';
 import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
 
+import { DetailsMarkdown } from "./DetailsMarkdown"
 import { TodoItem } from "./TodoItems"
-
 import { useStyles } from "../Styles"
 
 
@@ -175,7 +174,7 @@ export const Details = ({ selectedItem, updateFunction, lists }: Props) => {
     const [edit, setEdit] = useState(false);
     const [listvalue, setListValue] = useState("");
 
-    const [selectedItemValue, setSelectedValue] = useState(selectedItem.description);
+    const [selectedItemValue, setSelectedValue] = useState<any>(selectedItem.description);
     const [selectedItemId, setSelectedItemId] = useState(selectedItem.id);
 
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
@@ -265,6 +264,9 @@ export const Details = ({ selectedItem, updateFunction, lists }: Props) => {
 
     }
 
+    const markdownData = `Just a link: https://reactjs.com.`;
+    /// const remarkGfmLL = <any>remarkGfm
+
     return (
         <>
             <Snackbar
@@ -327,20 +329,12 @@ export const Details = ({ selectedItem, updateFunction, lists }: Props) => {
                                         initValue={selectedItemValue}
                                         updateFunction={(val: String) => setSelectedValue(val)}
                                     />
-
-
-                                    
                                 </ListItem>
                             ) :
                                 (
-                                    // remarkPlugins={[remarkGfm]}
-                                    // <ReactMarkdown children={ selectedItemValue ? selectedItemValue : "No Description" } remarkPlugins={ [remarkGfm] }></ReactMarkdown>
+
                                     <div className="markdown" onClick={() => setEdit(true)}>
-
-                                        <ReactMarkdown>
-                                            {selectedItemValue ? selectedItemValue : "No Description"}
-
-                                        </ReactMarkdown>
+                                        <DetailsMarkdown value={ selectedItemValue } />                                       
                                     </div>
 
                                 )

@@ -7,6 +7,8 @@ import Amplify, { API, input, Auth, graphqlOperation } from 'aws-amplify';
 import { listTodos, getTodos } from '../graphql/queries';
 
 import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box, Switch, MenuItem, Divider } from '@material-ui/core';
+import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction } from '@material-ui/core';
+
 import {
     NavLink,
 } from "react-router-dom";
@@ -21,32 +23,26 @@ import { useStyles } from "../Styles"
 
 const NavHeader = ({ item, render }) => {
     if (render === "simple") {
-            return( <></> )
+        return (<></>)
     }
     else {
         return (
 
             <Grid container
                 direction="row"
-                justify="flex-start"
+                justify="space-between"
                 alignItems="center"
-                spacing={ 5 } >
+                spacing={ 5 }
+                style={{"padding":"15px" }} >
 
-                <Grid item xs={ 12 } > <Divider /> </Grid>
-                <Grid item xs={ 1 } ></Grid>
-                <Grid item xs={ 2 } >
-                    Show in NavBar
-                </Grid>
-                <Grid item xs={ 1 } > Icon </Grid>
-                <Grid item xs={ 3 } > Name</Grid>
-                <Grid item xs={ 2 } > Component</Grid>
-                <Grid item xs={ 1 } > Render</Grid>
-                <Grid item xs={ 1 } > Id </Grid>
-                <Grid item xs={ 12 } > <Divider /> </Grid>
                 
+                <Grid item xs={ 2 } > Element </Grid>
+                <Grid item xs={ 2 } > Show in Navbar </Grid>
+                <Grid item xs={ 12 } > <Divider /> </Grid>
+
             </Grid>
-            )
-    }    
+        )
+    }
 }
 
 const NavItem = ({ item, render }) => {
@@ -54,48 +50,69 @@ const NavItem = ({ item, render }) => {
     const classes = useStyles();
 
     if (render === "simple") {
-        return(
-        <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >
-            <MenuItem>
-                <ListItemIcon>
-                    <MyIcon icon={ item.icon } />
-                </ListItemIcon>
-                <ListItemText
-                    primary={ item.name }
-                ></ListItemText>
-            </MenuItem>
-        </NavLink> )
+        return (
+            <NavLink className={ classes.title } to={ "/" + [item.component, item.id, item.render].join('/') }   >
+                <MenuItem>
+                    <ListItemIcon>
+                        <MyIcon icon={ item.icon } />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={ item.name }
+                    ></ListItemText>
+                </MenuItem>
+            </NavLink>)
 
     }
     else {
         return (
 
-            <Grid container
-                direction="row"
-                justify="flex-start"
-                alignItems="center"
-                spacing={ 5 } >
-                <Grid item xs={ 1 } ></Grid>
-                <Grid item xs={ 2 } >
-                    <Switch
-                        checked={ item.navbar }
-                        name="checkedA"
-                    />
-                </Grid>
-                <Grid item xs={ 1 } >
+            <ListItem>
+                <ListItemAvatar color="primary">
                     <NavLink
                         className={ classes.title }
                         to={ "/" + [item.component, item.id, item.render].join('/') }   >
-                        <ListItemIcon >
-                            <MyIcon icon={ item.icon } />
-                        </ListItemIcon>
+                        
+                            <Avatar >
+                                <MyIcon icon={ item.icon } />
+                            </Avatar>
                     </NavLink>
-                </Grid>
-                <Grid item xs={ 3 } >{ item.name }</Grid>
-                <Grid item xs={ 2 } >{ item.component }</Grid>
-                <Grid item xs={ 1 } >{ item.render }</Grid>
-                <Grid item xs={ 1 } >{ item.id }</Grid>
-            </Grid>)
+                </ListItemAvatar>
+                <ListItemText primary={ item.name } secondary={ [item.id, item.render].join(" - ") } />
+                <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="delete">
+                        <MyIcon icon={ item.navbar ? "check" : "remove" } />
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
+
+
+            // <Grid container
+            //     direction="row"
+            //     justify="flex-start"
+            //     alignItems="center"
+            //     spacing={ 5 } >
+            //     <Grid item xs={ 1 } ></Grid>
+            //     <Grid item xs={ 2 } >
+            //         <Switch
+            //             checked={ item.navbar }
+            //             name="checkedA"
+            //         />
+            //     </Grid>
+            //     <Grid item xs={ 1 } >
+            //         <NavLink
+            //             className={ classes.title }
+            //             to={ "/" + [item.component, item.id, item.render].join('/') }   >
+            //             <ListItemIcon >
+            //             <MyIcon icon={ item.icon } />
+            //             </ListItemIcon>
+            //         </NavLink>
+            //     </Grid>
+            //     <Grid item xs={ 3 } ></Grid>
+            //     <Grid item xs={ 2 } >{ item.component }</Grid>
+            //     <Grid item xs={ 1 } >{ item.render }</Grid>
+            //     <Grid item xs={ 1 } >{ item.id }</Grid>
+            // </Grid>
+        )
     }
 
 }
@@ -125,13 +142,13 @@ export const MainNavigation = ({ render, userConfig, apikey, navId, username, ha
         }, [apikey, navId]
     )
 
-      //   const config = [
-      //     { "component": "list", "id": 0, "icon": "share", "name": "Links", "render": "links", "navbar": true },
-      //     { "component": "time", "id": "x", "icon": "timeline", "name": "Timeline", "render": "x", "navbar": true },
-      //     { "component": "timetree", "id": "x", "icon": "calendar", "name": "Calendar", "render": "x", "navbar": true },
-      //     { "component": "list", "id": 6, "icon": "work", "name": "DHL", "render": "todo", "navbar": false },
-      //   ]
-      //   setUserConfiguration(config)
+    //   const config = [
+    //     { "component": "list", "id": 0, "icon": "share", "name": "Links", "render": "links", "navbar": true },
+    //     { "component": "time", "id": "x", "icon": "timeline", "name": "Timeline", "render": "x", "navbar": true },
+    //     { "component": "timetree", "id": "x", "icon": "calendar", "name": "Calendar", "render": "x", "navbar": true },
+    //     { "component": "list", "id": 6, "icon": "work", "name": "DHL", "render": "todo", "navbar": false },
+    //   ]
+    //   setUserConfiguration(config)
 
     async function fetchNav(id, owner) {
         const _todos = await API.graphql(graphqlOperation(getTodos, { id: id, owner: owner }));
@@ -139,7 +156,7 @@ export const MainNavigation = ({ render, userConfig, apikey, navId, username, ha
 
         // console.log("getTodos : ", item);
         // console.log("getNav : ", item.description);
-        
+
         const itemArr = JSON.parse(item.description)
         //console.log("getNav (JSON) : ", itemArr);
         setItems(itemArr);
@@ -148,18 +165,16 @@ export const MainNavigation = ({ render, userConfig, apikey, navId, username, ha
         return item
     }
 
-
     return (
         <>
             <NavHeader render={ render } />
-            { items.map((item, index) => (
-                <NavItem key={ index } item={ item } render={ render } />
-            )) }
+            <List >
+                { items.map((item, index) => (
+                    <NavItem key={ index } item={ item } render={ render } />
+                )) }
+            </List>
         </>
     )
-
-
-
 }
 
 
