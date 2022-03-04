@@ -85,7 +85,7 @@ export const DetailsMarkdown = ({ value }) => {
     /* <ReactMarkdown children={ value } remarkPlugins={ [] } /> */
     return (
         <>
-            <ReactMarkdown children={ value } remarkPlugins={ [] } />
+            <ReactMarkdown children={ value ? value : "No Description" } remarkPlugins={ [] } />
         </>
     )
 

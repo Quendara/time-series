@@ -17,8 +17,12 @@ export const MyCardHeader = styled(Paper)({
 
 
 export const TypographyDisabled = styled(Typography)({
-  color: "#AAA",
+  color: "#AAA",});
+
+export const TypographyEnabled = styled(Typography)({
+  color: "#FFF",  
 });
+
 
 export const DashboardValue = styled(Typography)({
   fontSize:"1.9em",
@@ -34,14 +38,6 @@ export const DashboardInfo = styled(Typography)({
   fontWeight: "100"
 });
 
-export const TypographyEnabled = styled(Typography)({
-
-  color: "#FFF",
-  fontWeight: "100"
-
-});
-
-
 export const MyListItemHeader = styled(ListItem)({
   background: '#102027',
   color: lightBlue[200],  
@@ -49,10 +45,7 @@ export const MyListItemHeader = styled(ListItem)({
   fontWeight:"100",
   letterSpacing:"0.2em",
   //#paddingTop:"0px"
-
 });
-
-
 
 export const MyTextareaAutosize = styled(TextareaAutosize)({
   background: '#102027',
