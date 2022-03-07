@@ -19,14 +19,26 @@
   	text-rendering: optimizeLegibility;        
 }
 
+.details {
+	position:fixed;
+	width:55%;	
+	transition: transform 0.5s;
+}
+
+.details.down {
+	transform: translate(0px, -160px);
+}
+
 .markdown{
 	font-size: 1rem;
 	/* color: #444; */
 	font-family: 'Open Sans Condensed', sans-serif;
 	font-weight: 300;
 	margin: 0 auto;	
+	overflow-y: auto;
 	line-height: 1.45;
 	padding: .25rem;		
+	height: 65vh;
 }
 
 .markdown li p {

@@ -28,6 +28,7 @@ import { Details } from '../components/Details';
 import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/helper";
 
 import { TodoItem } from '../components/TodoItems';
+import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 
 export interface GroupItem {
     value: string;
@@ -70,6 +71,8 @@ export const ListPage = ({
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
     const [horizontally, setHorizontally] = useState(false);    
+
+    const { scrollX, scrollY } = useWindowScrollPositions()
 
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
 
@@ -291,11 +294,18 @@ export const ListPage = ({
             { (selectedItem !== undefined) &&
                 <>
                         <Grid item  md={ horizontally?12:8 }  sm={ horizontally?12:6 } xs={ 12 } >
+                            <div style={{ position:"relative"}}>
+                            <div className={ ( scrollY>190) ? "details down":"details" } >
+                                
+                            
                             <Details
                                 selectedItem={ selectedItem }
                                 updateFunction={ updateFunction2 }
                                 lists={ lists }
                             />
+                            <div>Scroll position is ({scrollX}, {scrollY})</div>
+                            </div>
+                            </div>
                         </Grid>
                 </>
             }
