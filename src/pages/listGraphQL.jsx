@@ -8,6 +8,7 @@ import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 
 import { ListPage } from './ListPage';
 
+
 // interface ListGraphProps {
 //     token: string;
 //     apikey: string;
@@ -208,13 +209,13 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
     }    
 
-    async function updateFunction(todoid, name, link, group, description = undefined) {
-        await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description: description } }));
-    };
+    // async function updateFunction(todoid, name, link, group, description = undefined) {
+    //     await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description: description } }));
+    // };
 
     async function updateFunction2(todoid, { name, listid, link, group, description } ) {
 
-        let inputObject = { id: "" + todoid, owner: username, listid: listid, description: description } // , link: link, group: group, owner: username, name: name, description: description } }
+        let inputObject = { id: "" + todoid, name:name, group:group, owner: username, listid: listid, description: description } // , link: link, group: group, owner: username, name: name, description: description } }
         console.log("updateFunction2 update", todoid, "with", inputObject);
 
         await API.graphql(graphqlOperation(updateTodos, { input: inputObject }));
@@ -261,8 +262,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
             addItemHandle       = {addItemHandle}
             getItem             = {getItem}
             removeItemHandle    = {removeItemHandle}
-            updateFunction      = {updateFunction}
-            updateFunction2     = {updateFunction2}
+            updateFunction      = {updateFunction2}            
             toggleFunction      = {toggleFunction}
             uncheckFunction     = {uncheckFunction}
             lists               = {lists}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } from "react";
 
+
 import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
@@ -12,6 +13,10 @@ import { MyIcon } from "./MyIcon";
 import { DetailsMarkdown } from "./DetailsMarkdown"
 import { TodoItem } from "./TodoItems"
 import { useStyles } from "../Styles"
+
+
+import { UpdateFunc } from "./Definitions"
+import { getTodosFcn } from "./GraphQlFunctions"
 
 
 interface PropMTA {
@@ -149,19 +154,50 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
     )
 
     // <Grid item xs={12} >{caret.start} - {caret.end}</Grid>
-
 }
 
 
-
 interface Props {
+    id: string;
+    updateFunction: UpdateFunc;
+    lists: TodoItem[];
+}
+
+export const DetailsById = ({ id, updateFunction, lists }: Props) => {
+
+    const [item, setItem] = useState(undefined);
+
+    async function retrieveAndSetItem(id) {
+        const item = await getTodosFcn(id, "andre")
+        setItem( item )
+
+         
+    }    
+
+    useEffect(() => {
+
+        retrieveAndSetItem( id );
+        
+
+    }, [id]);    
+
+
+
+
+    return (
+        <Details selectedItem={ item === undefined ? {} : item } updateFunction={updateFunction} lists={lists} />
+
+    )
+}
+
+interface PropsDetails {
     selectedItem: any;
-    updateFunction: any;
+    updateFunction: UpdateFunc;
     lists: TodoItem[];
 }
 
 
-export const Details = ({ selectedItem, updateFunction, lists }: Props) => {
+export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) => {
 
     const classes = useStyles();
 
@@ -206,13 +242,8 @@ export const Details = ({ selectedItem, updateFunction, lists }: Props) => {
         const listname = getGlobalList(lists, selectedItem.listid).name
         setListValue(listname)
 
-        setEdit(false)
-
-
-
-        return () => {
-
-        };
+        setEdit(false);
+        return () => { };
 
     }, [selectedItem]);
 
@@ -257,7 +288,7 @@ export const Details = ({ selectedItem, updateFunction, lists }: Props) => {
         if (selecedList !== null) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
 
-            updateFunction(selectedItem.id, { listid: selecedList.id, })
+            updateFunction(selectedItem.id, { listid: selecedList.id })
 
             setListValue(selecedList.name)
         }

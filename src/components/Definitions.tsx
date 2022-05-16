@@ -1,5 +1,12 @@
 
 
+
+export interface UpdateFunc {
+    (id: string, itemJson: any): any;
+  }
+
+
+
 export enum Mediatype {
     Image = "Image",
     Movie = "Movie",

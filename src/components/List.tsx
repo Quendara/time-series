@@ -22,6 +22,8 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import { TodoItem } from "./TodoItems"
 import { AddForm } from "./AddForm"
+import { DetailsById } from "./Details"
+import { UpdateFunc } from "./Definitions"
 
 const useStyles = makeStyles({
     card_main: {
@@ -65,7 +67,7 @@ interface PropsEl {
     checked: boolean;
     id: string;
     removeClickFunction: (id: string) => number;
-    updateFunction: any;
+    updateFunction: UpdateFunc;
     selectFunction: (id: string) => number;
     toggleFunction: (id: string) => number;
     type: string;       // @todo: later enum
@@ -102,7 +104,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
     }
 
     const onClickFunction = (linkName: string, linkUrl: string, groupname: string) => {
-        updateFunction(id, linkName, linkUrl, groupname)
+        updateFunction(id, { link: linkUrl, name: linkName, group: groupname } )
         setEdit(false)
     }
 
@@ -181,6 +183,9 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                             handleDeleteClick={handleDeleteClick}
                                             type={type}
                                             buttonName="Update" />
+                                    </Grid>
+                                    <Grid item xs={12} >
+                                        <DetailsById id={ id } updateFunction={updateFunction} lists={[]} />
                                     </Grid>
 
                                 </Grid>
@@ -285,7 +290,7 @@ interface PropsQ {
     removeItemHandle: any;
     header: string;
     addItemHandle: any;
-    updateFunction: any;
+    updateFunction: UpdateFunc;
     selectFunction: any;
     toggleFunction: (id: string) => number;
     type: string;

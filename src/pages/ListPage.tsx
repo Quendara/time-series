@@ -29,6 +29,7 @@ import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/h
 
 import { TodoItem } from '../components/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
+import { UpdateFunc } from "./Definitions"
 
 export interface GroupItem {
     value: string;
@@ -43,8 +44,7 @@ interface  ListProps{
     addItemHandle: any;
     getItem: (id:string) => any;
     removeItemHandle: (id:string) => number;
-    updateFunction: any;
-    updateFunction2: any;
+    updateFunction: UpdateFunc;    
     toggleFunction: (id:string) => number;
     uncheckFunction: (id:string) => number;
     lists: any;
@@ -58,8 +58,7 @@ export const ListPage = ({
     addItemHandle,    
     removeItemHandle,
     getItem,
-    updateFunction,
-    updateFunction2,
+    updateFunction,    
     toggleFunction,
     uncheckFunction,
     lists
@@ -300,7 +299,7 @@ export const ListPage = ({
                             
                             <Details
                                 selectedItem={ selectedItem }
-                                updateFunction={ updateFunction2 }
+                                updateFunction={ updateFunction }
                                 lists={ lists }
                             />
                             <div>Scroll position is ({scrollX}, {scrollY})</div>
