@@ -15,7 +15,9 @@ export const AddForm = ({
     type = "",
     group = "",
     groups = undefined,
-    buttonName = "Add", showGroupsSelector = true,
+    buttonName = "Add", 
+    clearAfterClick = true,
+    showGroupsSelector = true,
     handleDeleteClick,
     renderModal = false }) => {
 
@@ -36,6 +38,11 @@ export const AddForm = ({
     useEffect(() => {
         setLinkName(name)
     }, [name]);
+
+
+    useEffect(() => {
+        setLinkUrl(url)
+    }, [url]);    
 
     useEffect(() => {
         setGroupName(group)

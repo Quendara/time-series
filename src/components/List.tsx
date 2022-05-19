@@ -1,4 +1,5 @@
 import React, { Component, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import { Modal, ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, CardContent, Divider, MenuItem, CardHeader } from '@material-ui/core';
 
@@ -36,10 +37,11 @@ const useStyles = makeStyles({
         margin: 6,
     },
     modal: {
-        display: 'flex',
+        display: 'absolute',
+        top:"10px",
         alignItems: 'center',
         justifyContent: 'center',
-        height: "100%",
+        height: "50%",
         padding: '20px'
     },
 });
@@ -80,6 +82,8 @@ interface PropsEl {
 
 const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, selectFunction, toggleFunction, type, groups, group, editList }: PropsEl) => {
 
+    const history = useHistory();
+
     const classes = useStyles();
 
     const [edit, setEdit] = useState(false);
@@ -103,7 +107,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
         selectFunction(id)
     }
 
-    const onClickFunction = (linkName: string, linkUrl: string, groupname: string) => {
+    const onUpdateFunction = (linkName: string, linkUrl: string, groupname: string) => {
         updateFunction(id, { link: linkUrl, name: linkName, group: groupname } )
         setEdit(false)
     }
@@ -119,7 +123,15 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
             toggleFunction(id)
         }
         else {
-            window.open(link, "_blank")
+
+            if( link.startsWith( "/" ) ){                
+                history.push( link );
+            } else {
+                // Open in new window
+                window.open( link, "_blank" )
+            }
+
+            
         }
     }
 
@@ -172,20 +184,26 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     alignItems="flex-start"
                                     spacing={4}
                                 >
+                                    {/*
                                     <Grid item xs={12} >
-                                        <AddForm
+                                         <AddForm
                                             name={name}
                                             url={link}
                                             group={group}
                                             groups={groups}
                                             renderModal={true}
-                                            onClickFunction={onClickFunction}
+                                            onClickFunction={onUpdateFunction}
                                             handleDeleteClick={handleDeleteClick}
                                             type={type}
                                             buttonName="Update" />
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid item xs={12} >
-                                        <DetailsById id={ id } updateFunction={updateFunction} lists={[]} />
+                                        <DetailsById 
+                                                itemid={ id } 
+                                                updateFunction={updateFunction} 
+                                                listid={"23"}
+                                                listtype={type}
+                                                lists={[]} />
                                     </Grid>
 
                                 </Grid>

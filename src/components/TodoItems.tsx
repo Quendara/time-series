@@ -4,6 +4,7 @@ export interface TodoItem {
     listid: number;
     name: string;
     checked: boolean;
+    group: string;
     description: string;
     link: string; 
   }

@@ -15,11 +15,11 @@ export enum Mediatype {
 
 export interface Image {
     
-    date: Date;
-    year:string;
-    month:string;
-    day: string;
-    hour: string;
+    date:   Date;
+    year:   string;
+    month:  string;
+    day:    string;
+    hour:   string;
     minute: string; 
 
     sameday: string;

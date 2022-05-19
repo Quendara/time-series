@@ -1,7 +1,7 @@
 "use strict";
 
-import React, { Component, useState } from "react";
-
+import React, { Component, useState, useEffect } from "react";
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 
 import { render } from "react-dom";
 import {
@@ -28,7 +28,9 @@ import { MainNavigation } from './organisms/navigation';
 
 import { ListGraphQL } from './pages/listGraphQL';
 import TimeSeries from "./pages/TimeSeries";
+import { DetailsPage } from "./pages/DetailsPage";
 import { Sandbox } from "./pages/sandbox";
+import { SandboxQl } from "./pages/SandboxQl";
 import { TimeTree } from "./pages/TimeTree2";
 import { CompareLists } from "./pages/CompareLists";
 import { ReplaceLists } from "./pages/ReplaceLists";
@@ -55,6 +57,7 @@ const App = () => {
   const [userConfiguration, setUserConfiguration] = useState([]);
 
   const [apikey, setApi] = useState(undefined);
+  const [amplifyInitilaized, setAmplifyInitilaized] = useState(false);
   const [apikeyTimetree, setApikeyTimetree] = useState(undefined);
 
   const classes = useStyles();
@@ -65,8 +68,6 @@ const App = () => {
 
   const authSuccessCallback = (username, token, apikey, apikeyTimetree) => {
     setUsername(username);
-
-
 
     if (username === "andre") {
       sethackyNavId("1622632885409") 
@@ -102,6 +103,25 @@ const App = () => {
     let newArray = [...errors, message];
     setErrors(newArray)
   }
+
+  useEffect(
+    () => {
+        if (apikey) {
+            // works
+            const awsmobile = {
+                "aws_project_region": "eu-central-1",
+                "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
+                "aws_appsync_region": "eu-central-1",
+                "aws_appsync_authenticationType": "API_KEY",
+                "aws_appsync_apiKey": apikey
+            };
+            Amplify.configure(awsmobile);   
+            setAmplifyInitilaized(true);
+            
+            // fetchTodos( listid )
+            // setSelectedItem(undefined)
+        }
+    }, [apikey])      
 
   return (
     <ThemeProvider theme={ theme }>
@@ -151,10 +171,15 @@ const App = () => {
             { username.length > 0 &&
               <>
                 <Switch>
+                  <Route path="/list/:listid/:listtype/:itemid" children={
+                    <ListGraphQL
+                      token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
+                  } />                
                   <Route path="/list/:listid/:listtype" children={
                     <ListGraphQL
                       token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
                   } />                
+
                   <Route path="/time" >
                     <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
                   </Route>
@@ -191,6 +216,11 @@ const App = () => {
                       {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */ }
                     </Grid>
                   </Grid>
+                </Route>
+                <Route exact path="/sandboxQl" >
+                    { amplifyInitilaized === false ? ( <h1> Loading </h1> ) : (
+                        <SandboxQl token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
+                    ) }                    
                 </Route>
                 <Route exact path="/sandbox" >
                   <Grid container justify="center" >

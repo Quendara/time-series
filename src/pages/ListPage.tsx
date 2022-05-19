@@ -23,7 +23,7 @@ import { MyCard, MyCardHeader } from "../components/StyledComponents"
 
 import { ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
-import { Details } from '../components/Details';
+import { Details, DetailsById } from '../components/Details';
 
 import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/helper";
 
@@ -42,7 +42,7 @@ interface  ListProps{
     listtype: string;
     listid: string;
     addItemHandle: any;
-    getItem: (id:string) => any;
+    // getItem: (id:string) => any;
     removeItemHandle: (id:string) => number;
     updateFunction: UpdateFunc;    
     toggleFunction: (id:string) => number;
@@ -57,14 +57,15 @@ export const ListPage = ({
     listid,
     addItemHandle,    
     removeItemHandle,
-    getItem,
+    // getItem,
     updateFunction,    
     toggleFunction,
     uncheckFunction,
     lists
  } : ListProps ) => {
 
-    const [selectedItem, setSelectedItem] = useState(undefined);
+    // const [selectedItem, setSelectedItem] = useState(undefined);
+    const [selectedItemId, setSelectedItemId] = useState("");
 
     const [edit, setEdit] = useState(false);
     const [filterText, setFilterText] = useState("");
@@ -84,7 +85,7 @@ export const ListPage = ({
 
     useEffect(
         () => {
-            setSelectedItem(undefined);
+            setSelectedItemId(undefined);
         }, [listid])    
 
     const callbackFilter = (text : string ) => {
@@ -92,10 +93,10 @@ export const ListPage = ({
     }
 
     async function selectHandle( id: string ) {
-         const currentItem = await getItem(id)
+         // const currentItem = await getItem(id)
     //     // console.log( "selectHandle : ", id  )
-        console.log( "selectHandle : ", currentItem)
-        setSelectedItem(currentItem)
+        // console.log( "selectHandle : ", currentItem)
+        setSelectedItemId(id)
     }
 
 
@@ -138,7 +139,16 @@ export const ListPage = ({
 
     const createLists = (items : TodoItem[]) => {
 
-        const groups = findUnique(items, "group", false)
+        let groups = undefined;
+        
+        if( listid === "current" ){
+            groups = findUnique(items, "listid", false)
+        }
+        else{
+            groups = findUnique(items, "group", false)
+        }
+
+        
 
         return (
             <>
@@ -172,10 +182,10 @@ export const ListPage = ({
                 ) : (
                     <Grid container spacing={ 2 } >
                         { groups.map((item: GroupItem, index: number ) => (
-                            <Grid key={ index } item xs={ 12 }>
-                                <MyCard>
+                            <Grid key={ "xxxyy"+ index } item xs={ 12 }>
+                                <MyCard key={ "agjhl"+index }>
                                     <ListQ
-                                        key={ index }
+                                        key={ "agjhg"+index }
                                         editList={ edit }
                                         header={ item.value }
                                         group={ item.value }
@@ -290,17 +300,18 @@ export const ListPage = ({
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
             </Grid>
 
-            { (selectedItem !== undefined) &&
+            { (selectedItemId !== 0 ) &&
                 <>
                         <Grid item  md={ horizontally?12:8 }  sm={ horizontally?12:6 } xs={ 12 } >
                             <div style={{ position:"relative"}}>
                             <div className={ ( scrollY>190) ? "details down":"details" } >
                                 
                             
-                            <Details
-                                selectedItem={ selectedItem }
+                            <DetailsById                                
+                                itemid={ selectedItemId }
                                 updateFunction={ updateFunction }
                                 lists={ lists }
+                                listtype={ listtype }
                             />
                             <div>Scroll position is ({scrollX}, {scrollY})</div>
                             </div>

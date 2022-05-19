@@ -12,19 +12,24 @@ import { MyIcon } from "./MyIcon";
 
 import { DetailsMarkdown } from "./DetailsMarkdown"
 import { TodoItem } from "./TodoItems"
+import { findUnique, restCallToBackendAsync } from "../components/helper";
 import { useStyles } from "../Styles"
 
 
 import { UpdateFunc } from "./Definitions"
-import { getTodosFcn } from "./GraphQlFunctions"
+import { AddForm } from "./AddForm";
 
+import { removeItemByIdFcn } from "../components/GraphQlFunctions"
+
+import { useGetTodos } from "../hooks/useGetTodos"
+import { useGetTodo } from "../hooks/useGetTodo"
 
 interface PropMTA {
     initValue: String;
-    updateFunction: any;
+    updateFunction: (s: string) => void;
 }
 
-const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
+const MarkdownTextareaAutosize = ({ initValue, updateFunction }: PropMTA) => {
     const textFieldRef = useRef<any>(); // textFieldRef.current.
 
     const [caret, setCaret] = useState({
@@ -40,7 +45,7 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
 
         };
 
-    }, [initValue]);    
+    }, [initValue]);
 
     const insertText = (value: String, caret_start: number, caret_end: number, text: String) => {
 
@@ -58,10 +63,10 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
             + post
     }
 
-    const lastLineBeforeCursor = (value: String, caret_start: number ) => {    
+    const lastLineBeforeCursor = (value: String, caret_start: number) => {
         const pre = value.substring(0, caret_start)
-        const index = pre.lastIndexOf( "\n" )
-        const line = pre.substring( index+1, pre.length )
+        const index = pre.lastIndexOf("\n")
+        const line = pre.substring(index + 1, pre.length)
         return line
     }
 
@@ -75,66 +80,66 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
 
     const handleKeyPress = (event: any) => {
 
-            const initialCursor = event.target.selectionStart
-            let cursorPos = event.target.selectionStart
-            let selectionEnd = event.target.selectionEnd
+        const initialCursor = event.target.selectionStart
+        let cursorPos = event.target.selectionStart
+        let selectionEnd = event.target.selectionEnd
 
-            const previous_value = textFieldRef.current.value
+        const previous_value = textFieldRef.current.value
 
-            switch (event.key) {
-                case "Enter":
+        switch (event.key) {
+            case "Enter":
 
-                    let insertion_str = "\n";
-
-
-
-                    const lineBeforeCursor = lastLineBeforeCursor( previous_value, cursorPos )
-
-                    console.log( "lineBeforeCursor : " , lineBeforeCursor )
-
-                    if ( lineBeforeCursor.startsWith('*') ) {
-                        insertion_str = "\n* ";
-                    } else if( lineBeforeCursor.startsWith('  *') ) {
-                        insertion_str = "\n  * ";
-                    } else if( lineBeforeCursor.startsWith('    *') ) {
-                        insertion_str = "\n    * ";
-                    } else {
-                        insertion_str = "\n";
-                    }
+                let insertion_str = "\n";
 
 
-                    const insertedText = insertText(previous_value, cursorPos, selectionEnd, insertion_str)
-                    event.preventDefault()
-                    setCaret({ start: cursorPos, end: selectionEnd })
 
-                    //     let value = selectedItemValue + " *"
+                const lineBeforeCursor = lastLineBeforeCursor(previous_value, cursorPos)
 
-                    //     const splittetLines = selectedItemValue.split("\n")
-                    //     let charCount = 0
+                console.log("lineBeforeCursor : ", lineBeforeCursor)
 
-                    //     splittetLines.forEach((line: String, index: Number ) => {
+                if (lineBeforeCursor.startsWith('*')) {
+                    insertion_str = "\n* ";
+                } else if (lineBeforeCursor.startsWith('  *')) {
+                    insertion_str = "\n  * ";
+                } else if (lineBeforeCursor.startsWith('    *')) {
+                    insertion_str = "\n    * ";
+                } else {
+                    insertion_str = "\n";
+                }
 
-                    //         charCount += line.length + 1
 
-                    //         if (cursorPos < charCount) {
-                    //             // Add to index, 0 means delete = 0
-                    //             splittetLines.splice(index, 0, "* ");
-                    //             cursorPos = 9999999999999999999999999
-                    //         }
+                const insertedText = insertText(previous_value, cursorPos, selectionEnd, insertion_str)
+                event.preventDefault()
+                setCaret({ start: cursorPos, end: selectionEnd })
 
-                    //     });
+                //     let value = selectedItemValue + " *"
 
-                    //     setSelectedValue( splittetLines.join("\n")  )
-                    //     event.preventDefault()
-                    
-                    if (textFieldRef && textFieldRef.current) {
-                        textFieldRef.current.value = insertedText;
-                        textFieldRef.current.selectionStart = initialCursor + insertion_str.length
-                        textFieldRef.current.selectionEnd = initialCursor + insertion_str.length
+                //     const splittetLines = selectedItemValue.split("\n")
+                //     let charCount = 0
 
-                        updateFunction( insertedText )
-                    }
-            }        
+                //     splittetLines.forEach((line: String, index: Number ) => {
+
+                //         charCount += line.length + 1
+
+                //         if (cursorPos < charCount) {
+                //             // Add to index, 0 means delete = 0
+                //             splittetLines.splice(index, 0, "* ");
+                //             cursorPos = 9999999999999999999999999
+                //         }
+
+                //     });
+
+                //     setSelectedValue( splittetLines.join("\n")  )
+                //     event.preventDefault()
+
+                if (textFieldRef && textFieldRef.current) {
+                    textFieldRef.current.value = insertedText;
+                    textFieldRef.current.selectionStart = initialCursor + insertion_str.length
+                    textFieldRef.current.selectionEnd = initialCursor + insertion_str.length
+
+                    updateFunction(insertedText)
+                }
+        }
     }
 
     return (
@@ -158,46 +163,35 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction } : PropMTA) => {
 
 
 interface Props {
-    id: string;
+    itemid: string;
+    listid: string;
+    listtype: string;
     updateFunction: UpdateFunc;
     lists: TodoItem[];
 }
 
-export const DetailsById = ({ id, updateFunction, lists }: Props) => {
+export const DetailsById = ({ itemid, listid, listtype, updateFunction, lists }: Props) => {
 
-    const [item, setItem] = useState(undefined);
+    const todos = useGetTodos(listid);
+    const item = useGetTodo(itemid);
 
-    async function retrieveAndSetItem(id) {
-        const item = await getTodosFcn(id, "andre")
-        setItem( item )
-
-         
-    }    
-
-    useEffect(() => {
-
-        retrieveAndSetItem( id );
-        
-
-    }, [id]);    
-
-
-
+    
 
     return (
-        <Details selectedItem={ item === undefined ? {} : item } updateFunction={updateFunction} lists={lists} />
-
+        <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype} />
     )
 }
 
 interface PropsDetails {
-    selectedItem: any;
+    selectedItem: TodoItem | undefined;
     updateFunction: UpdateFunc;
+    listtype: string;
+    todos: TodoItem[] | undefined;
     lists: TodoItem[];
 }
 
 
-export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) => {
+export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }: PropsDetails) => {
 
     const classes = useStyles();
 
@@ -206,12 +200,15 @@ export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) =
 
     // const [selectionStart, setSelectionStart] = useState("");
 
-
     const [edit, setEdit] = useState(false);
     const [listvalue, setListValue] = useState("");
 
-    const [selectedItemValue, setSelectedValue] = useState<any>(selectedItem.description);
-    const [selectedItemId, setSelectedItemId] = useState(selectedItem.id);
+    // currentItem can be set to undefined, when deleted
+    const [currentItem, setCurrentItem] = useState<TodoItem | undefined >( selectedItem );
+
+    const [selectedItemName, setSelectedName] = useState<string>("");
+    const [selectedItemValue, setSelectedValue] = useState<string>("" );
+    const [selectedItemId, setSelectedItemId] = useState<string>("");
 
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
 
@@ -230,41 +227,39 @@ export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) =
 
         if (edit) // ( selectedItem.id !== selectedItemId ) 
         {
-            // alert( "save ... "+ selectedItemValue + "<< xxx")       
-
             updateFunction(selectedItemId, { description: selectedItemValue })
         }
 
-        console.log("useEffect", selectedItem.description)
-        setSelectedValue(selectedItem.description)
-        setSelectedItemId(selectedItem.id)
-
-        const listname = getGlobalList(lists, selectedItem.listid).name
-        setListValue(listname)
+        if( selectedItem ){
+            console.log("useEffect", selectedItem.description)
+            setCurrentItem( selectedItem )
+            setSelectedValue(selectedItem.description)
+            setSelectedItemId(selectedItem.id)
+            setSelectedName(selectedItem.name)
+            const listname = getGlobalList(lists, selectedItem.listid).name
+            setListValue(listname)    
+        }
 
         setEdit(false);
         return () => { };
 
     }, [selectedItem]);
 
-    // useEffect(() => {
-    //     document.addEventListener("keydown", handleKeyPress, false);
-
-    //     return () => {
-    //         document.removeEventListener("keydown", handleKeyPress, false);
-    //     };
-    // });
-
-    // const isList
-
-
-
-
     const updateHandle = () => {
         // updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
 
-        updateFunction(selectedItem.id, { description: selectedItemValue })
+        if( currentItem === undefined ) return;
+
+        updateFunction(currentItem.id, { description: selectedItemValue })
         setSuccessSnackbarMessage("Saved !!! ")
+        setEdit(false)
+    }
+
+    const updateNameLinkHandle = (linkName: string, linkUrl: string, groupname: string) => {
+
+        if( currentItem === undefined ) return;
+
+        updateFunction(currentItem.id, { link: linkUrl, name: linkName, group: groupname })
         setEdit(false)
     }
 
@@ -285,18 +280,25 @@ export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) =
 
     const handleListChange = (selecedList: TodoItem) => {
 
-        if (selecedList !== null) {
+        if (selecedList !== null && selectedItem) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
 
             updateFunction(selectedItem.id, { listid: selecedList.id })
 
             setListValue(selecedList.name)
         }
-
     }
 
     const markdownData = `Just a link: https://reactjs.com.`;
     /// const remarkGfmLL = <any>remarkGfm
+
+    const removeItemHandle = () => {
+        if (selectedItem) {
+            setCurrentItem( undefined ) 
+            removeItemByIdFcn(selectedItem.id)
+        }
+    }
+
 
     return (
         <>
@@ -309,13 +311,27 @@ export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) =
                     {successSnackbarMessage}
                 </Alert>
             </Snackbar>
-            <MyCard>
+                {currentItem === undefined ? (
+                    <h1> ... </h1>
+                ) : (
+                    <MyCard>
 
 
                 <MyCardHeader>
+                    
                     <List>
                         <ListItem>
-                            {selectedItem.name}
+                            <AddForm renderModal={true} 
+                                handleDeleteClick={removeItemHandle} 
+                                name={ currentItem.name }
+                                url={ currentItem.link }
+                                buttonName="Update"                                
+                                type={ listtype }
+                                onClickFunction={updateNameLinkHandle}
+                                group={ currentItem.group }
+                                groups={ findUnique(todos, "group", false) } >
+                            </AddForm> 
+                                                  
                         </ListItem>
                     </List>
                 </MyCardHeader>
@@ -336,6 +352,7 @@ export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) =
                             <Autocomplete
                                 id="combo-box-demo"
                                 inputValue={""}
+                                // label="Lists"
                                 //value={ listvalue }
                                 onChange={(event, newValue) => {
                                     if (newValue !== null) {
@@ -344,7 +361,7 @@ export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) =
                                 }}
                                 options={lists}
                                 getOptionLabel={(option) => "(" + option.id + ") " + option.name}
-                                renderInput={(params) => <TextField {...params} label={listvalue} variant="outlined" />}
+                                renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
                             />
                         </Grid>
 
@@ -378,6 +395,7 @@ export const Details = ({ selectedItem, updateFunction, lists }: PropsDetails) =
 
                 </CardContent>
             </MyCard>
+                )}
         </>
 
     )

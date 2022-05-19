@@ -6,7 +6,11 @@ import { listTodos, getTodos } from '../graphql/queries';
 import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscriptions';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 
+import { DetailsById } from "../components/Details"
 import { ListPage } from './ListPage';
+
+import { useGetTodos } from "../hooks/useGetTodos"
+import { useGetTodo } from "../hooks/useGetTodo"
 
 
 // interface ListGraphProps {
@@ -23,6 +27,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
     let { listid, listtype, itemid } = useParams();
 
     const [todos, setTodos] = useState([]);
+    const [initilaized, setInitilaized] = useState(false);
 
     useEffect(
         () => {
@@ -38,6 +43,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
                     "aws_appsync_apiKey": apikey
                 };
                 Amplify.configure(awsmobile);
+                setInitilaized( true );
                 fetchTodos()
                 // setSelectedItem(undefined)
             }
@@ -144,20 +150,38 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
     }
 
     async function fetchTodos() {
-        const _todos = await API.graphql(graphqlOperation(listTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
+
+        const listCurrentTodos = /* GraphQL */ `
+        query MyQuery {
+            listTodos(filter: {group: {beginsWith: "Aktuell"}}, limit: 1000) {
+              nextToken
+              items {
+                id
+                name
+                owner
+                checked
+                group
+                listid
+              }
+            }
+          }
+        `
+
+        let _todos = undefined
+        if( listid === "current" ){
+            _todos = await API.graphql(graphqlOperation( listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
+        }
+        else
+        {
+            _todos = await API.graphql(graphqlOperation( listTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
+        }
+        
+        
 
         const items = _todos.data.listTodos.items
         console.log("fetchTodos : ", items);
         setTodos(items)
         return items
-    }
-
-    async function getTodosFcn(id, owner) {
-        const _todos = await API.graphql(graphqlOperation(getTodos, { id: id, owner: owner }));
-        const item = _todos.data.getTodos
-
-        console.log("getTodos : ", item);
-        return item
     }
 
     const isChecked = (checked) => {
@@ -213,10 +237,10 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
     //     await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description: description } }));
     // };
 
-    async function updateFunction2(todoid, { name, listid, link, group, description } ) {
+    async function updateFunction(todoid, { name, listid, link, group, description } ) {
 
         let inputObject = { id: "" + todoid, name:name, group:group, owner: username, listid: listid, description: description } // , link: link, group: group, owner: username, name: name, description: description } }
-        console.log("updateFunction2 update", todoid, "with", inputObject);
+        console.log("updateFunction update", todoid, "with", inputObject);
 
         await API.graphql(graphqlOperation(updateTodos, { input: inputObject }));
     };
@@ -239,13 +263,15 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
             }));
     }
 
-    async function getItem(id) {
-        const currentItem = await getTodosFcn(id, username)
-        return currentItem
-    //     // console.log( "selectHandle : ", id  )
-    //     // console.log( currentItem)
-         setSelectedItem(currentItem)
-    }
+//     async function getItem(id) {
+//         // const currentItem = await getTodosFcn(id, username)
+//         const currentItem = useGetTodo( id )
+        
+//         return currentItem
+//     //     // console.log( "selectHandle : ", id  )
+//     //     // console.log( currentItem)
+// //          setSelectedItem(currentItem)
+//     }
 
     async function removeItemHandle(todoid) {
 
@@ -254,19 +280,36 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
         await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid, owner: username } }));
     };
  
-    return (
-        <ListPage 
-            todos               = {todos}
-            listtype            = {listtype}
-            listid              = {listid}
-            addItemHandle       = {addItemHandle}
-            getItem             = {getItem}
-            removeItemHandle    = {removeItemHandle}
-            updateFunction      = {updateFunction2}            
-            toggleFunction      = {toggleFunction}
-            uncheckFunction     = {uncheckFunction}
-            lists               = {lists}
-        />
-    );
-}
+    if( initilaized ){
+        if( itemid === undefined  ){
+            return ( 
+            <ListPage 
+                todos               = {todos}
+                listtype            = {listtype}
+                listid              = {listid}
+                addItemHandle       = {addItemHandle}
+                // getItem             = {getItem}
+                removeItemHandle    = {removeItemHandle}
+                updateFunction      = {updateFunction}            
+                toggleFunction      = {toggleFunction}
+                uncheckFunction     = {uncheckFunction}
+                lists               = {lists}
+        /> )
+
+        }
+        else{
+            console.log( "itemid : ", itemid)
+            return ( <DetailsById 
+                        itemid              = {itemid} 
+                        updateFunction      = {updateFunction} 
+                        listid              = {listid}
+                        listtype            = {listtype}
+                        lists               = {lists}  /> )
+        } 
+    }
+    else{
+        return(<>Loading</>)
+    }
+    }
+
 
