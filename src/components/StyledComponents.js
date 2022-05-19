@@ -53,7 +53,8 @@ export const MyTextareaAutosize = styled(TextareaAutosize)({
   fontSize:"1em",
   fontWeight:"100",
   width: "100%",
-  borderRadius: "5px"
+  borderRadius: "5px",
+  height:"52vh"
   // letterSpacing:"0.2em",
   //#paddingTop:"0px"
 
