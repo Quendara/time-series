@@ -12,177 +12,170 @@ import { ListPage } from './ListPage';
 import { useGetTodos } from "../hooks/useGetTodos"
 import { useGetTodo } from "../hooks/useGetTodo"
 
-
-// interface ListGraphProps {
-//     token: string;
-//     apikey: string;
-//     username: string;
-//     errorHandle: any;
-//     lists: any;
-// }
-
 export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) => {
 
     // let { listid, listtype, itemid } = useParams<any>();
     let { listid, listtype, itemid } = useParams();
 
-    const [todos, setTodos] = useState([]);
-    const [initilaized, setInitilaized] = useState(false);
+    // const [todos, setTodos] = useState([]);
+    // const [initilaized, setInitilaized] = useState(false);
 
-    useEffect(
-        () => {
-            setTodos([]);
+    const todos = useGetTodos( listid  );
 
-            if (apikey) {
-                // works
-                const awsmobile = {
-                    "aws_project_region": "eu-central-1",
-                    "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
-                    "aws_appsync_region": "eu-central-1",
-                    "aws_appsync_authenticationType": "API_KEY",
-                    "aws_appsync_apiKey": apikey
-                };
-                Amplify.configure(awsmobile);
-                setInitilaized( true );
-                fetchTodos()
-                // setSelectedItem(undefined)
-            }
-        }, [apikey, listid])
+    // useEffect(
+    //     () => { 
+    //         setTodos([]);
 
-    useEffect(
-        () => {
+    //         if (apikey) {
+    //             // works
+    //             const awsmobile = {
+    //                 "aws_project_region": "eu-central-1",
+    //                 "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
+    //                 "aws_appsync_region": "eu-central-1",
+    //                 "aws_appsync_authenticationType": "API_KEY",
+    //                 "aws_appsync_apiKey": apikey
+    //             };
+    //             Amplify.configure(awsmobile);
+    //             setInitilaized( true );
+    //             fetchTodos()
+    //             // setSelectedItem(undefined)
+    //         }
+    //     }, [apikey, listid])
 
-            if (apikey) {
+    // useEffect(
+    //     () => {
 
-                // console.log("useEffect - todos : ", todos);
-                // const subscription = props.source.subscribe();
+    //         if (apikey) {
 
-                const subscriptionCreateTodos = API.graphql(
-                    graphqlOperation(onCreateTodos)
-                ).subscribe({
-                    next: (x) => {
-                        // Do something with the data
-                        // console.log( x )          
-                        const item = x.value.data.onCreateTodos
-                        console.log("create Items : ", item);
-                        // console.log("items : ", items);
-                        // setItems([...items, { id, name, link, group, checked }]); // push to the end
+    //             // console.log("useEffect - todos : ", todos);
+    //             // const subscription = props.source.subscribe();
 
-                        if (item.listid !== listid) {
-                            console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
-                            return;
-                        }
+    //             const subscriptionCreateTodos = API.graphql(
+    //                 graphqlOperation(onCreateTodos)
+    //             ).subscribe({
+    //                 next: (x) => {
+    //                     // Do something with the data
+    //                     // console.log( x )          
+    //                     const item = x.value.data.onCreateTodos
+    //                     console.log("create Items : ", item);
+    //                     // console.log("items : ", items);
+    //                     // setItems([...items, { id, name, link, group, checked }]); // push to the end
 
-                        setTodos([...todos, item]); // push to the end
-                        console.log("Submitting... ");
-                    },
-                    error: error => {
-                        console.log("error : ", error);
-                    }
-                })
+    //                     if (item.listid !== listid) {
+    //                         console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
+    //                         return;
+    //                     }
 
-                const subscriptionUpdateTodos = API.graphql(
-                    graphqlOperation(onUpdateTodos)
-                ).subscribe({
-                    next: (x) => {
-                        // Do something with the data
-                        // console.log( x )          
-                        const item = x.value.data.onUpdateTodos
-                        console.log("updated Item : ", item);
-                        const updatedList = uiUpdateTodo(todos, item)
-                        setTodos(updatedList)
-                    },
-                    error: error => {
-                        console.log("error : ", error);
-                    }
-                })
+    //                     setTodos([...todos, item]); // push to the end
+    //                     console.log("Submitting... ");
+    //                 },
+    //                 error: error => {
+    //                     console.log("error : ", error);
+    //                 }
+    //             })
 
-                const subscriptionDeleteTodos = API.graphql(
-                    graphqlOperation(onDeleteTodos)
-                ).subscribe({
-                    next: (x) => {
-                        // Do something with the data          
-                        const item = x.value.data.onDeleteTodos
-                        // console.log("deleted Item x    : ", x);
-                        console.log("deleted Item item : ", item);
-                        const updatedList = uiDeleteTodo(todos, item.id)
-                        setTodos(updatedList)
-                    },
-                    error: error => {
-                        console.log("error : ", error);
-                    }
-                })
+    //             const subscriptionUpdateTodos = API.graphql(
+    //                 graphqlOperation(onUpdateTodos)
+    //             ).subscribe({
+    //                 next: (x) => {
+    //                     // Do something with the data
+    //                     // console.log( x )          
+    //                     const item = x.value.data.onUpdateTodos
+    //                     console.log("updated Item : ", item);
+    //                     const updatedList = uiUpdateTodo(todos, item)
+    //                     setTodos(updatedList)
+    //                 },
+    //                 error: error => {
+    //                     console.log("error : ", error);
+    //                 }
+    //             })
 
-                return () => {
-                    subscriptionUpdateTodos.unsubscribe();
-                    subscriptionDeleteTodos.unsubscribe();
-                    subscriptionCreateTodos.unsubscribe();
-                };
-            }
-        }
-    );
+    //             const subscriptionDeleteTodos = API.graphql(
+    //                 graphqlOperation(onDeleteTodos)
+    //             ).subscribe({
+    //                 next: (x) => {
+    //                     // Do something with the data          
+    //                     const item = x.value.data.onDeleteTodos
+    //                     // console.log("deleted Item x    : ", x);
+    //                     console.log("deleted Item item : ", item);
+    //                     const updatedList = uiDeleteTodo(todos, item.id)
+    //                     setTodos(updatedList)
+    //                 },
+    //                 error: error => {
+    //                     console.log("error : ", error);
+    //                 }
+    //             })
 
-
-    const uiDeleteTodo = (items, id) => {
-
-        const newitems = items.filter(item => item.id !== id);
-        return newitems;
-    }
+    //             return () => {
+    //                 subscriptionUpdateTodos.unsubscribe();
+    //                 subscriptionDeleteTodos.unsubscribe();
+    //                 subscriptionCreateTodos.unsubscribe();
+    //             };
+    //         }
+    //     }
+    // );
 
 
-    const uiUpdateTodo = (items, todo) => {
+    // const uiDeleteTodo = (items, id) => {
 
-        const newitems = items.map((e, index) => {
+    //     const newitems = items.filter(item => item.id !== id);
+    //     return newitems;
+    // }
 
-            if (e.id === todo.id) {
-                let newObject = Object.assign({}, e)
-                newObject['name'] = todo.name
-                newObject['group'] = todo.group
-                newObject['link'] = todo.link
-                newObject['checked'] = todo.checked
-                newObject['description'] = todo.description
-                return newObject
-            }
-            return e
-        })
 
-        return newitems;
-    }
+    // const uiUpdateTodo = (items, todo) => {
 
-    async function fetchTodos() {
+    //     const newitems = items.map((e, index) => {
 
-        const listCurrentTodos = /* GraphQL */ `
-        query MyQuery {
-            listTodos(filter: {group: {beginsWith: "Aktuell"}}, limit: 1000) {
-              nextToken
-              items {
-                id
-                name
-                owner
-                checked
-                group
-                listid
-              }
-            }
-          }
-        `
+    //         if (e.id === todo.id) {
+    //             let newObject = Object.assign({}, e)
+    //             newObject['name'] = todo.name
+    //             newObject['group'] = todo.group
+    //             newObject['link'] = todo.link
+    //             newObject['checked'] = todo.checked
+    //             newObject['description'] = todo.description
+    //             return newObject
+    //         }
+    //         return e
+    //     })
 
-        let _todos = undefined
-        if( listid === "current" ){
-            _todos = await API.graphql(graphqlOperation( listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
-        }
-        else
-        {
-            _todos = await API.graphql(graphqlOperation( listTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
-        }
+    //     return newitems;
+    // }
+
+    // async function fetchTodos() {
+
+    //     const listCurrentTodos = /* GraphQL */ `
+    //     query MyQuery {
+    //         listTodos(filter: {group: {beginsWith: "Aktuell"}}, limit: 1000) {
+    //           nextToken
+    //           items {
+    //             id
+    //             name
+    //             owner
+    //             checked
+    //             group
+    //             listid
+    //           }
+    //         }
+    //       }
+    //     `
+
+    //     let _todos = undefined
+    //     if( listid === "current" ){
+    //         _todos = await API.graphql(graphqlOperation( listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
+    //     }
+    //     else
+    //     {
+    //         _todos = await API.graphql(graphqlOperation( listTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
+    //     }
         
         
 
-        const items = _todos.data.listTodos.items
-        console.log("fetchTodos : ", items);
-        setTodos(items)
-        return items
-    }
+    //     const items = _todos.data.listTodos.items
+    //     console.log("fetchTodos : ", items);
+    //     setTodos(items)
+    //     return items
+    // }
 
     const isChecked = (checked) => {
         if (typeof checked === "boolean") { return checked }
@@ -207,7 +200,7 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
             return e
         })
 
-        setTodos(items2)
+        // setTodos(items2)
 
         /* update a todo */
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
@@ -228,7 +221,8 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
             return e
         })
 
-        setTodos(items2)
+        // setTodos(items2)
+
         /* update a todo */
         await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: username, checked: newStatus } }));
     }    
@@ -274,13 +268,10 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
 //     }
 
     async function removeItemHandle(todoid) {
-
-        // const items2 = uiDeleteTodo( todos, todoid )
-        // setTodos(items2); // push to the end
         await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid, owner: username } }));
     };
  
-    if( initilaized ){
+ 
         if( itemid === undefined  ){
             return ( 
             <ListPage 
@@ -301,15 +292,14 @@ export const ListGraphQL = ({ token, apikey, username, errorHandle, lists } ) =>
             console.log( "itemid : ", itemid)
             return ( <DetailsById 
                         itemid              = {itemid} 
-                        updateFunction      = {updateFunction} 
-                        listid              = {listid}
+                        updateFunction      = {updateFunction}                         
                         listtype            = {listtype}
                         lists               = {lists}  /> )
         } 
-    }
-    else{
-        return(<>Loading</>)
-    }
+    // }
+    // else{
+    //     return(<>Loading</>)
+    // }
     }
 
 

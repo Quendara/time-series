@@ -163,19 +163,16 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction }: PropMTA) => {
 
 
 interface Props {
-    itemid: string;
-    listid: string;
+    itemid: string;    
     listtype: string;
     updateFunction: UpdateFunc;
     lists: TodoItem[];
 }
 
-export const DetailsById = ({ itemid, listid, listtype, updateFunction, lists }: Props) => {
+export const DetailsById = ({ itemid, listtype, updateFunction, lists }: Props) => {
 
-    const todos = useGetTodos(listid);
-    const item = useGetTodo(itemid);
-
-    
+    const item = useGetTodo( itemid );
+    const todos = useGetTodos( item?.listid  );
 
     return (
         <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype} />
@@ -375,7 +372,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                 <ListItem>
                                     <MarkdownTextareaAutosize
                                         initValue={selectedItemValue}
-                                        updateFunction={(val: String) => setSelectedValue(val)}
+                                        updateFunction={(val: string) => setSelectedValue(val)}
                                     />
                                 </ListItem>
                             ) :

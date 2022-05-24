@@ -80,7 +80,19 @@ interface PropsEl {
 
 
 
-const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, selectFunction, toggleFunction, type, groups, group, editList }: PropsEl) => {
+const ListEl = (
+    { name, 
+        link, 
+        checked, 
+        id, 
+        removeClickFunction, 
+        updateFunction, 
+        selectFunction, 
+        toggleFunction, 
+        type, 
+        groups, 
+        group, 
+        editList }: PropsEl) => {
 
     const history = useHistory();
 
@@ -183,25 +195,11 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                                     justify="flex-start"
                                     alignItems="flex-start"
                                     spacing={4}
-                                >
-                                    {/*
-                                    <Grid item xs={12} >
-                                         <AddForm
-                                            name={name}
-                                            url={link}
-                                            group={group}
-                                            groups={groups}
-                                            renderModal={true}
-                                            onClickFunction={onUpdateFunction}
-                                            handleDeleteClick={handleDeleteClick}
-                                            type={type}
-                                            buttonName="Update" />
-                                    </Grid> */}
+                                >                               
                                     <Grid item xs={12} >
                                         <DetailsById 
                                                 itemid={ id } 
-                                                updateFunction={updateFunction} 
-                                                listid={"23"}
+                                                updateFunction={updateFunction}                                                 
                                                 listtype={type}
                                                 lists={[]} />
                                     </Grid>
@@ -223,7 +221,7 @@ const ListEl = ({ name, link, checked, id, removeClickFunction, updateFunction, 
                         name={name}
                         url={link}
                         group={group} groups={groups}
-                        onClickFunction={onClickFunction}
+                        onClickFunction={onUpdateFunction}
                         type={type}
                         buttonName="Update"
                         handleDeleteClick={undefined} />

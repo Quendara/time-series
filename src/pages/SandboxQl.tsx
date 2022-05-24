@@ -24,9 +24,9 @@ export const SandboxQl = ({
 
     return ( 
     <><h1>Hello</h1>
-    <h2>{todos1.length}</h2>
-    <h2>{todos2.length}</h2>
-    <h2>{todos23.length}</h2>
+    <h2>List 1  - #{todos1.length}</h2>
+    <h2>List 2  - #{todos2.length}</h2>
+    <h2>List 23 - #{todos23.length}</h2>
     <h2>{todo?.name}</h2>
 
     

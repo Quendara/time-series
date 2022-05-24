@@ -109,7 +109,22 @@ export const ListPage = ({
             uncheckFunction( filteredTodos[0].id )
             setFilterText("")
         }
-    }        
+    }      
+    
+    const getItemGlobalList = (lists: TodoItem[], id: number) => {
+        if (lists !== undefined) {
+            const fl = lists.filter(item => +item.id === +id)
+            console.log("getGlobalList", id, fl, lists)
+
+            if (fl.length > 0) {
+                return fl[0]
+            }
+        }
+        return {
+            id: "666",
+            name: "Undefined"
+        }
+    }    
     
 
     const filterCompleted = ( items: TodoItem[], hideCompleted: boolean, filterText: string) => {
@@ -141,11 +156,16 @@ export const ListPage = ({
 
         let groups = undefined;
         
-        if( listid === "current" ){
-            groups = findUnique(items, "listid", false)
+        if( listid === "current" ){            
+            const groups_uniq = findUnique(items, "listid", false)
+            groups = groups_uniq.map( (el)=>{
+                el.value = "(" + el.value + ") " + getItemGlobalList( lists, el.value ).name
+                return el
+            }
+            )             
         }
         else{
-            groups = findUnique(items, "group", false)
+            groups= findUnique(items, "group", false)            
         }
 
         

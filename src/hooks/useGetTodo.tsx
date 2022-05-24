@@ -13,9 +13,9 @@ export const useGetTodo = ( itemid : string ) : TodoItem|undefined  => {
             fetchTodos( itemid )        
     }, [ itemid ])
 
-    async function fetchTodos( itemid ) {
+    async function fetchTodos( itemid : string ) {
     
-        console.log("getTodosFcn (id) : ", itemid );0
+        console.log("getTodosFcn (id) : ", itemid );
         if( itemid === undefined ) return {}
 
         // todo: remove owner from key

@@ -70,7 +70,7 @@ const App = () => {
     setUsername(username);
 
     if (username === "andre") {
-      sethackyNavId("1622632885409") 
+      sethackyNavId("1622632885409")
     }
     if (username === "jonna") {
       sethackyNavId("1622635443893")
@@ -78,7 +78,7 @@ const App = () => {
     if (username === "irena") {
       sethackyNavId("1622638959598")
     }
-    
+
 
     setJwtToken(token);
     setApi(apikey);
@@ -106,22 +106,22 @@ const App = () => {
 
   useEffect(
     () => {
-        if (apikey) {
-            // works
-            const awsmobile = {
-                "aws_project_region": "eu-central-1",
-                "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
-                "aws_appsync_region": "eu-central-1",
-                "aws_appsync_authenticationType": "API_KEY",
-                "aws_appsync_apiKey": apikey
-            };
-            Amplify.configure(awsmobile);   
-            setAmplifyInitilaized(true);
-            
-            // fetchTodos( listid )
-            // setSelectedItem(undefined)
-        }
-    }, [apikey])      
+      if (apikey) {
+        // works
+        const awsmobile = {
+          "aws_project_region": "eu-central-1",
+          "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
+          "aws_appsync_region": "eu-central-1",
+          "aws_appsync_authenticationType": "API_KEY",
+          "aws_appsync_apiKey": apikey
+        };
+        Amplify.configure(awsmobile);
+        setAmplifyInitilaized(true);
+
+        // fetchTodos( listid )
+        // setSelectedItem(undefined)
+      }
+    }, [apikey])
 
   return (
     <ThemeProvider theme={ theme }>
@@ -133,7 +133,7 @@ const App = () => {
 
           { userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <NavLink key={"nl_"+index} to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
+              <NavLink key={ "nl_" + index } to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
             )
           }
           ) }
@@ -172,13 +172,22 @@ const App = () => {
               <>
                 <Switch>
                   <Route path="/list/:listid/:listtype/:itemid" children={
-                    <ListGraphQL
-                      token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
-                  } />                
+                    <>
+                    { amplifyInitilaized === false ? (<h1> Loading </h1>) : 
+                    (
+                      <ListGraphQL
+                        token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
+                    ) }
+                    </> } />
+                  
                   <Route path="/list/:listid/:listtype" children={
+                    <>
+                    { amplifyInitilaized === false ? (<h1> Loading </h1>) : (
                     <ListGraphQL
                       token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
-                  } />                
+                    )}
+                    </>
+                  } />
 
                   <Route path="/time" >
                     <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
@@ -191,10 +200,10 @@ const App = () => {
 
                 <Route path="/diff" >
                   <CompareLists />
-                </Route>      
+                </Route>
                 <Route path="/replace" >
                   <ReplaceLists />
-                </Route>                             
+                </Route>
 
                 <Route exact path="/" >
                   <Grid container justify="center" spacing={ 5 } >
@@ -202,12 +211,12 @@ const App = () => {
                       <Paper elevation={ 3 } >
                         <MyCard>
                           <MyCardHeader >
-                            <MainNavigation 
-                                apikey={ apikey } 
-                                userConfig={ userConfiguration } 
-                                navId="1622632885409" 
-                                username={ username } 
-                                handleSetConfig={ handleSetConfig } />
+                            <MainNavigation
+                              apikey={ apikey }
+                              userConfig={ userConfiguration }
+                              navId="1622632885409"
+                              username={ username }
+                              handleSetConfig={ handleSetConfig } />
                           </MyCardHeader>
                         </MyCard>
                       </Paper>
@@ -218,9 +227,9 @@ const App = () => {
                   </Grid>
                 </Route>
                 <Route exact path="/sandboxQl" >
-                    { amplifyInitilaized === false ? ( <h1> Loading </h1> ) : (
-                        <SandboxQl token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
-                    ) }                    
+                  { amplifyInitilaized === false ? (<h1> Loading </h1>) : (
+                    <SandboxQl token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
+                  ) }
                 </Route>
                 <Route exact path="/sandbox" >
                   <Grid container justify="center" >
