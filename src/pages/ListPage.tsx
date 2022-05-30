@@ -320,7 +320,7 @@ export const ListPage = ({
                 { todos.length > 0 && <> { createLists(filteredTodos) } </> }
             </Grid>
 
-            { (selectedItemId !== 0 ) &&
+            { (selectedItemId ) &&
                 <>
                         <Grid item  md={ horizontally?12:8 }  sm={ horizontally?12:6 } xs={ 12 } >
                             <div style={{ position:"relative"}}>
@@ -334,7 +334,7 @@ export const ListPage = ({
                                 listtype={ listtype }
                             />
                             <div>Scroll position is ({scrollX}, {scrollY})</div>
-                            </div>
+                            </div> 
                             </div>
                         </Grid>
                 </>

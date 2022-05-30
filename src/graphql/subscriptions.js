@@ -46,3 +46,81 @@ export const onDeleteTodos = /* GraphQL */ `
     }
   }
 `;
+export const onCreateTodoMain = /* GraphQL */ `
+  subscription OnCreateTodoMain(
+    $id: String
+    $owner: String
+    $component: String
+    $icon: String
+    $listid: Int
+  ) {
+    onCreateTodoMain(
+      id: $id
+      owner: $owner
+      component: $component
+      icon: $icon
+      listid: $listid
+    ) {
+      id
+      owner
+      component
+      icon
+      listid
+      name
+      navbar
+      render
+    }
+  }
+`;
+export const onUpdateTodoMain = /* GraphQL */ `
+  subscription OnUpdateTodoMain(
+    $id: String
+    $owner: String
+    $component: String
+    $icon: String
+    $listid: Int
+  ) {
+    onUpdateTodoMain(
+      id: $id
+      owner: $owner
+      component: $component
+      icon: $icon
+      listid: $listid
+    ) {
+      id
+      owner
+      component
+      icon
+      listid
+      name
+      navbar
+      render
+    }
+  }
+`;
+export const onDeleteTodoMain = /* GraphQL */ `
+  subscription OnDeleteTodoMain(
+    $id: String
+    $owner: String
+    $component: String
+    $icon: String
+    $listid: Int
+  ) {
+    onDeleteTodoMain(
+      id: $id
+      owner: $owner
+      component: $component
+      icon: $icon
+      listid: $listid
+    ) {
+      id
+      owner
+      component
+      icon
+      listid
+      name
+      navbar
+      render
+    }
+  }
+`;

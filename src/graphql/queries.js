@@ -56,3 +56,38 @@ export const queryTodos = /* GraphQL */ `
     }
   }
 `;
+export const getTodoMain = /* GraphQL */ `
+  query GetTodoMain($id: String!) {
+    getTodoMain(id: $id) {
+      id
+      owner
+      component
+      icon
+      listid
+      name
+      navbar
+      render
+    }
+  }
+`;
+export const listTodoMains = /* GraphQL */ `
+  query ListTodoMains(
+    $filter: TableTodoMainFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTodoMains(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        owner
+        component
+        icon
+        listid
+        name
+        navbar
+        render
+      }
+      nextToken
+    }
+  }
+`;

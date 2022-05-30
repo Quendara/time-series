@@ -169,31 +169,23 @@ const App = () => {
 
           <Grid item xs={ 11 } lg={ 10 }>
             { username.length > 0 &&
-              <>
+              ( <>
+                { amplifyInitilaized === false ? (<h1> Loading </h1>) :
+                  (
                 <Switch>
                   <Route path="/list/:listid/:listtype/:itemid" children={
-                    <>
-                    { amplifyInitilaized === false ? (<h1> Loading </h1>) : 
-                    (
                       <ListGraphQL
                         token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
-                    ) }
-                    </> } />
-                  
+                  } />                  
                   <Route path="/list/:listid/:listtype" children={
-                    <>
-                    { amplifyInitilaized === false ? (<h1> Loading </h1>) : (
                     <ListGraphQL
                       token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
-                    )}
-                    </>
                   } />
-
                   <Route path="/time" >
                     <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
                   </Route>
 
-                </Switch>
+                
                 <Route path="/timetree" >
                   <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
                 </Route>
@@ -237,8 +229,10 @@ const App = () => {
                   </Grid>
                 </Route>
                 <Route exact path="/demo" component={ StyleDemo }></Route>
-              </>
-            }
+                </Switch>
+                  ) }
+              </>) }
+            
           </Grid>
           <Grid>
             <Error errorMessages={ errors } />

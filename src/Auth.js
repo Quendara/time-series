@@ -260,7 +260,8 @@ const Auth = ({ authSuccessCallback, children }) => {
             { children }
             
             {/* <Button onClick={ signOut }><ExitToAppIcon /></Button> */}
-            <IconButton variant="inherit" className={ classes.menuButton } onClick={ signOut }><MyIcon icon="exitToApp" /> </IconButton>
+            <IconButton variant="inherit" className={ classes.menuButton } onClick={ signOut }>
+              <MyIcon icon="exit_to_app" /> </IconButton>
           </Toolbar>
         </AppBar>
       </>

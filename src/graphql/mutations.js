@@ -46,3 +46,45 @@ export const deleteTodos = /* GraphQL */ `
     }
   }
 `;
+export const createTodoMain = /* GraphQL */ `
+  mutation CreateTodoMain($input: CreateTodoMainInput!) {
+    createTodoMain(input: $input) {
+      id
+      owner
+      component
+      icon
+      listid
+      name
+      navbar
+      render
+    }
+  }
+`;
+export const updateTodoMain = /* GraphQL */ `
+  mutation UpdateTodoMain($input: UpdateTodoMainInput!) {
+    updateTodoMain(input: $input) {
+      id
+      owner
+      component
+      icon
+      listid
+      name
+      navbar
+      render
+    }
+  }
+`;
+export const deleteTodoMain = /* GraphQL */ `
+  mutation DeleteTodoMain($input: DeleteTodoMainInput!) {
+    deleteTodoMain(input: $input) {
+      id
+      owner
+      component
+      icon
+      listid
+      name
+      navbar
+      render
+    }
+  }
+`;
