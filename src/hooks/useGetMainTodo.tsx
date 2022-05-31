@@ -3,9 +3,9 @@ import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { listTodoMains } from '../graphql/queries';
 import { TodoItem } from "../components/TodoItems"
 
-export const useGetMainTodos = ( owner : string ) : TodoItem|undefined  => {
+export const useGetMainTodos = ( owner : string ) : [TodoItem]|undefined  => {
 
-    const [todos, setTodos] = useState<TodoItem | undefined >( undefined );
+    const [todos, setTodos] = useState<[TodoItem] | undefined >( undefined );
     // const [initilaized, setInitilaized] = useState(false);
 
 

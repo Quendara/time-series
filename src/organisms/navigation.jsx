@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, useReducer } from "react";
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 import Settings from "../Settings";
 import SingleTimeSerie from "../SingleTimeSerie";
@@ -17,7 +17,13 @@ import {
 
 
 import { MyIcon } from "../components/MyIcon";
+
+import { TextEdit } from "../components/TextEdit";
 import StarIcon from '@material-ui/icons/Star';
+
+import { reducerTodoMain } from  "../reducer/reducerTodoMain"
+import { ToggleItem, UpdateItem } from  "../reducer/dispatchFunctionsMainTodos"
+
 
 import { useStyles } from "../Styles"
 
@@ -46,9 +52,19 @@ const NavHeader = ({ item, render }) => {
     }
 }
 
-const NavItem = ({ item, render }) => {
+const NavItem = ({ item, dispatch, render }) => {
 
     const classes = useStyles();
+
+    const handleComplete = () => {
+        // dispatch({ type: "COMPLETE", id: item.id });
+        dispatch( ToggleItem( item.id ) )
+    };
+
+    const handleEditName = ( name : string ) => {
+        // dispatch({ type: "COMPLETE", id: item.id });
+        dispatch( UpdateItem( item.id, name ) )
+    };    
 
     if (render === "simple") {
         return (
@@ -78,9 +94,12 @@ const NavItem = ({ item, render }) => {
                         </Avatar>
                     </NavLink>
                 </ListItemAvatar>
-                <ListItemText primary={ item.name } secondary={ [item.listid, item.render].join(" - ") } />
+                <ListItemText primary={ 
+                    <TextEdit value={ item.name } callback={ handleEditName } />
+                } 
+                    secondary={ [item.listid, item.render].join(" - ") } />
                 <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton onClick={ handleComplete } edge="end" aria-label="delete">
                         <MyIcon icon={ item.navbar ? "check" : "remove" } />
                     </IconButton>
                 </ListItemSecondaryAction>
@@ -88,78 +107,48 @@ const NavItem = ({ item, render }) => {
 
         )
     }
+}
+
+
+
+
+const NavItems = ({ items, render }) => {
+    const [todos, dispatch] = useReducer(reducerTodoMain, items);
+
+    return (<>
+        <NavHeader render={ render } />
+        { todos !== undefined &&
+            <List>
+                { todos.map((item, index) => (
+                    <NavItem key={ index } item={ item } render={ render } dispatch={ dispatch } />
+                )) }
+            </List> }
+    </>
+    )
 
 }
+
+
 
 export const MainNavigation = ({ render, userConfig, apikey, navId, username, handleSetConfig }) => {
 
     // const [items, setItems] = useState(userConfig);
     const items = useGetMainTodos(username)
 
+
+
     useEffect(
-         () => {
-             if( items !== undefined ){
-                handleSetConfig( items ) 
-             }
-    
-         },[items] )
+        () => {
+            if (items !== undefined) {
+                handleSetConfig(items)
+            }
 
+        }, [items])
 
-
-    // useEffect(
-    //     () => {
-    //         setItems([]);
-
-    //         if (apikey) {
-    //             // works
-    //             const awsmobile = {
-    //                 "aws_project_region": "eu-central-1",
-    //                 "aws_appsync_graphqlEndpoint": "https://dfmsa6fzibhrrm3byqhancekju.appsync-api.eu-central-1.amazonaws.com/graphql",
-    //                 "aws_appsync_region": "eu-central-1",
-    //                 "aws_appsync_authenticationType": "API_KEY",
-    //                 "aws_appsync_apiKey": apikey
-    //             };
-    //             Amplify.configure(awsmobile);
-
-    //             const navTodo = fetchNav(navId, "andre")
-    //         }
-    //     }, [apikey, navId]
-    // )
-
-    // //   const config = [
-    // //     { "component": "list", "id": 0, "icon": "share", "name": "Links", "render": "links", "navbar": true },
-    // //     { "component": "time", "id": "x", "icon": "timeline", "name": "Timeline", "render": "x", "navbar": true },
-    // //     { "component": "timetree", "id": "x", "icon": "calendar", "name": "Calendar", "render": "x", "navbar": true },
-    // //     { "component": "list", "id": 6, "icon": "work", "name": "DHL", "render": "todo", "navbar": false },
-    // //   ]
-    // //   setUserConfiguration(config)
-
-    // async function fetchNav(id, owner) {
-    //     const _todos = await API.graphql(graphqlOperation(getTodos, { id: id, owner: owner }));
-    //     const item = _todos.data.getTodos
-
-    //     // console.log("getTodos : ", item);
-    //     // console.log("getNav : ", item.description);
-
-    //     const itemArr = JSON.parse(item.description)
-    //     //console.log("getNav (JSON) : ", itemArr);
-    //     setItems(itemArr);
-    //     handleSetConfig(itemArr)
-
-    //     return item
-    // }
 
     return (
         <>
-            { items !== undefined && <>
-                <NavHeader render={ render } />
-                <List >
-                    { items.map((item, index) => (
-                        <NavItem key={ index } item={ item } render={ render } />
-                    )) }
-                </List>
-            </>
-            }
+            { items !== undefined && <NavItems items={ items } render={ render } /> }
         </>
     )
 }

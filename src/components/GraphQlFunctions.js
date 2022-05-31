@@ -1,6 +1,7 @@
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { getTodos, listTodos } from '../graphql/queries';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
+import { updateTodoMain, deleteTodoMain, createTodoMain } from '../graphql/mutations';
 
 export async function getTodosFcn( itemid : string , owner : string ) {
     
@@ -31,3 +32,20 @@ export async function removeItemByIdFcn(todoid) {
     const username = "andre"
     await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid, owner: username } }));
 };
+
+export async function updateFunction({ id, name, listid, link, render, navbar } ) {
+
+    let inputObject = { id: "" + id, name:name, render, navbar } // , link: link, group: group, owner: username, name: name, description: description } }
+    console.log("updateFunction update", todoid, "with", inputObject);
+
+    await API.graphql(graphqlOperation(updateTodos, { input: inputObject }));
+};
+
+export async function updateFunctionTodoMain({ id, name, listid, link, render, navbar } ) {
+
+    let inputObject = { id: "" + id, name:name, render, navbar } // , link: link, group: group, owner: username, name: name, description: description } }
+    console.log("updateFunctionTodoMain", id, "with", inputObject);
+
+    await API.graphql(graphqlOperation(updateTodoMain, { input: inputObject }));
+};
+
