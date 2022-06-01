@@ -57,6 +57,7 @@ export const createTodoMain = /* GraphQL */ `
       name
       navbar
       render
+      group
     }
   }
 `;
@@ -71,6 +72,7 @@ export const updateTodoMain = /* GraphQL */ `
       name
       navbar
       render
+      group
     }
   }
 `;
@@ -85,6 +87,7 @@ export const deleteTodoMain = /* GraphQL */ `
       name
       navbar
       render
+      group
     }
   }
 `;

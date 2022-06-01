@@ -1,3 +1,4 @@
+import { stringType } from "aws-sdk/clients/iam";
 
 export interface TodoItem {
     id: string;
@@ -17,4 +18,46 @@ export interface TodoItem {
     owner: string;
     name: string;
     navbar: boolean;
+    group: string;
+    render: string;
   }
+
+  export class TodoMainItemUpdate implements TodoMainItem  {
+    id: string;
+    listid: number;
+    component: string;
+    icon: string;
+    owner: string;
+    name: string;
+    navbar: boolean;
+    group: string;
+    render: string;
+    
+    constructor(id: string ) {
+        this.id = id;
+        // this.listid = null;
+        // this.component = null;
+        // this.icon = null;
+        // this.owner = null;
+        // this.name = null;
+        // this.navbar = null;
+        // this.group = null;
+        // this.render = null;
+    }
+
+    setShowInNavbar( v: boolean ) : void {
+      this.navbar = v
+    }
+    setName( name: string ) : void {
+      this.name = name
+    }
+    setGroup( group: string ) : void {
+      this.group = group
+    }
+
+
+ 
+    // getSalary(): number {
+    //     return this.salary;
+    // }
+}

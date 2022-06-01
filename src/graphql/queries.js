@@ -67,6 +67,7 @@ export const getTodoMain = /* GraphQL */ `
       name
       navbar
       render
+      group
     }
   }
 `;
@@ -86,6 +87,7 @@ export const listTodoMains = /* GraphQL */ `
         name
         navbar
         render
+        group
       }
       nextToken
     }

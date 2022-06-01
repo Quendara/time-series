@@ -331,9 +331,11 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                             
                             <TextEdit 
                                 value={ currentItem.group } 
+                                groups={ findUnique(todos, "group", false) } 
                                 label="Group"
                                 callback={ ( group ) => updateFunction( currentItem.id, { group: group }) } >
-                                    { currentItem.group } </TextEdit>
+                                    { currentItem.group } 
+                            </TextEdit>
 
 
                             {/* <AddForm renderModal={true} 

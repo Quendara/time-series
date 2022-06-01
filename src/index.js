@@ -28,7 +28,6 @@ import { MainNavigation } from './organisms/navigation';
 
 import { ListGraphQL } from './pages/listGraphQL';
 import TimeSeries from "./pages/TimeSeries";
-import { DetailsPage } from "./pages/DetailsPage";
 import { Sandbox } from "./pages/sandbox";
 import { SandboxQl } from "./pages/SandboxQl";
 import { TimeTree } from "./pages/TimeTree2";

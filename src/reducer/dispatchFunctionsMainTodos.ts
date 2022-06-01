@@ -1,4 +1,5 @@
-import { TodoMainItem } from "../components/TodoItems"
+import { group } from 'console';
+import { TodoMainItem, TodoMainItemUpdate } from "../components/TodoItems"
 
 export enum TodoMainActionType {
     TOGGLE  = 'TOGGLE',
@@ -31,9 +32,10 @@ export interface TodoMainActionDELETE extends TodoMainAction {
 export interface TodoMainActionUPDATE extends TodoMainAction {
     type: TodoMainActionType;
     payload: {
-        id: number,
+        id: string,
         name?: string,
-        icon?: string
+        icon?: string,
+        group?: string
     }
 }
 
@@ -44,17 +46,17 @@ export interface TodoMainActionUPDATE extends TodoMainAction {
 //     dispatch( ToggleItem( item.id ));
 // };
 
-export const ToggleItem = (id: number): TodoMainActionUPDATE => (
+export const ToggleItem = (id: number) : TodoMainActionUPDATE => (
     {
         type: TodoMainActionType.TOGGLE,
         payload: { id: id }
     }
 )
 
-export const UpdateItem = (id: number, name?: string, icon?: string ): TodoMainActionUPDATE => (
+export const UpdateItem = ( { id, name, icon, group } : TodoMainItem ): TodoMainActionUPDATE => (
     {
         type: TodoMainActionType.UPDATE,
-        payload: { id: id, name, icon }
+        payload: { id: id, name: name, icon: icon, group }
     }
 )
 

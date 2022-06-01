@@ -41,9 +41,9 @@ export async function updateFunction({ id, name, listid, link, render, navbar } 
     await API.graphql(graphqlOperation(updateTodos, { input: inputObject }));
 };
 
-export async function updateFunctionTodoMain({ id, name, listid, link, render, navbar } ) {
+export async function updateFunctionTodoMain({ id, name, icon, render, navbar, group } ) {
 
-    let inputObject = { id: "" + id, name:name, render, navbar } // , link: link, group: group, owner: username, name: name, description: description } }
+    let inputObject = { id: "" + id, name:name, icon, render, navbar, group } // , link: link, group: group, owner: username, name: name, description: description } }
     console.log("updateFunctionTodoMain", id, "with", inputObject);
 
     await API.graphql(graphqlOperation(updateTodoMain, { input: inputObject }));

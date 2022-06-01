@@ -30,12 +30,9 @@ import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/h
 import { TodoItem } from '../components/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 import { UpdateFunc } from "./Definitions"
+import { GroupItem } from "./Definitions"
 
-export interface GroupItem {
-    value: string;
-    listid: number;
-    listitems: any[];
-}
+
 
 interface  ListProps{
     todos: TodoItem[];

@@ -22,13 +22,23 @@ const ReducerUpdateItem = ( state: TodoMainItem[], action: TodoMainActionUPDATE 
     console.log("TOGGLE action : ", action)
     return state.map((todo) => {
         if ( todo.id === action.payload.id ) {
-            updateFunctionTodoMain({ id: action.payload.id, name: action.payload.name   })
-            return { ...todo, name: action.payload.name };
+            updateFunctionTodoMain(
+                {   id: action.payload.id,
+                    name: action.payload.name,
+                    icon: action.payload.icon,                    
+                    group: action.payload.group
+                   }) 
+            let newItem = { ...todo } // clone
+
+            if( action.payload.name) newItem.name = action.payload.name;
+            if( action.payload.group) newItem.group = action.payload.group;
+            
+            return newItem
         } else {
             return todo;
         }
     });
-}
+} 
 
 // reducer Mapping
 export const reducerTodoMain = (state: TodoMainItem[], action: TodoMainAction) => {
