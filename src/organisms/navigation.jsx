@@ -77,12 +77,10 @@ const NavItem = ({ item, dispatch, render }) => {
                         primary={ item.name }
                     ></ListItemText>
                 </MenuItem>
-            </NavLink>)
-
+            </NavLink> )
     }
     else {
         return (
-
             <ListItem>
                 <ListItemAvatar color="primary">
                     <NavLink
@@ -130,12 +128,10 @@ const NavItems = ({ items, render }) => {
 
 
 
-export const MainNavigation = ({ render, userConfig, apikey, navId, username, handleSetConfig }) => {
+export const MainNavigation = ({ render, username, handleSetConfig }) => {
 
     // const [items, setItems] = useState(userConfig);
     const items = useGetMainTodos(username)
-
-
 
     useEffect(
         () => {

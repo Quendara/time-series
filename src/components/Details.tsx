@@ -22,6 +22,8 @@ import { removeItemByIdFcn } from "../components/GraphQlFunctions"
 
 import { useGetTodos } from "../hooks/useGetTodos"
 import { useGetTodo } from "../hooks/useGetTodo"
+// import { group } from "console";
+import { TextEdit } from "../components/TextEdit";
 
 interface PropMTA {
     initValue: String;
@@ -145,6 +147,7 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction }: PropMTA) => {
         <MyTextareaAutosize
             // value={ selectedItemValue ? selectedItemValue : "" }
             rowsMin={10}
+            rowsMax={30}
             // error={ hasError(linkName) }
             // label="Name"
             // size="small"
@@ -317,7 +320,23 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                     
                     <List>
                         <ListItem>
-                            <AddForm renderModal={true} 
+
+                            <TextEdit 
+                                value={ currentItem.name } 
+                                label="Name"
+                                callback= { ( newName ) => updateFunction( currentItem.id, { name: newName }) } >
+                                <h1>{ currentItem.name } </h1>
+                                </TextEdit>
+                                <hr />
+                            
+                            <TextEdit 
+                                value={ currentItem.group } 
+                                label="Group"
+                                callback={ ( group ) => updateFunction( currentItem.id, { group: group }) } >
+                                    { currentItem.group } </TextEdit>
+
+
+                            {/* <AddForm renderModal={true} 
                                 handleDeleteClick={removeItemHandle} 
                                 name={ currentItem.name }
                                 url={ currentItem.link }
@@ -326,7 +345,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                 onClickFunction={updateNameLinkHandle}
                                 group={ currentItem.group }
                                 groups={ findUnique(todos, "group", false) } >
-                            </AddForm> 
+                            </AddForm>  */}
                                                   
                         </ListItem>
                     </List>

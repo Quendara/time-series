@@ -4,12 +4,14 @@ import React, { useState, useEffect, KeyboardEvent } from "react";
 import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, Typography, TextField, List, ListItem, Divider, Hidden } from '@material-ui/core';
 
 interface Props {
-    key: string;
+    
     value: string;
+    label: string;    
     callback: (s: string) => void;
+    children: React.ReactNode
 }
  
-export const TextEdit = ({ value, callback } : Props ) => {
+export const TextEdit = ({ value, label, callback, children } : Props ) => {
 
     const [internalName, setInternalName] = useState<string>(value);
     const [edit, setEdit] = useState<boolean>(false);
@@ -21,7 +23,7 @@ export const TextEdit = ({ value, callback } : Props ) => {
 
 
     const checkEnter = (event : React.KeyboardEvent<HTMLInputElement> ) => {
-        event.preventDefault();
+        
         if ( event.key === "Enter") {
             // alert("Enter")
             callback( internalName )
@@ -32,17 +34,17 @@ export const TextEdit = ({ value, callback } : Props ) => {
     return (
         <>{ edit ? (
             <TextField
-            value= { internalName }
-            // error = { hasError(internalName) }
-            label = "" 
-            size = "small"
-            fullWidth 
-            variant = "outlined"
-            onKeyPress = { e => checkEnter(e) }
-            onChange = { e  => setInternalName(e.target.value) }
-            />
+                value= { internalName }
+                // error = { hasError(internalName) }
+                label = {label}
+                size = "small"
+                fullWidth 
+                variant = "outlined"
+                onKeyPress = { e => checkEnter(e) }
+                onChange = { e  => setInternalName(e.target.value) }
+                />
         ) : (
-            <span onClick={ () => setEdit( true ) }>{ value } </span>
+            <a onClick={ () => setEdit( true ) }>{ children ? children : internalName  } </a>
         )
         }
         </>

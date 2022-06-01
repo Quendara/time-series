@@ -52,7 +52,7 @@ const App = () => {
   const [jwtTocken, setJwtToken] = useState("");
   const [errors, setErrors] = useState([]);
 
-  const [hackyNavId, sethackyNavId] = useState("");
+  // const [hackyNavId, sethackyNavId] = useState("");
 
   const [userConfiguration, setUserConfiguration] = useState([]);
 
@@ -69,15 +69,15 @@ const App = () => {
   const authSuccessCallback = (username, token, apikey, apikeyTimetree) => {
     setUsername(username);
 
-    if (username === "andre") {
-      sethackyNavId("1622632885409")
-    }
-    if (username === "jonna") {
-      sethackyNavId("1622635443893")
-    }
-    if (username === "irena") {
-      sethackyNavId("1622638959598")
-    }
+    // if (username === "andre") {
+    //   sethackyNavId("1622632885409")
+    // }
+    // if (username === "jonna") {
+    //   sethackyNavId("1622635443893")
+    // }
+    // if (username === "irena") {
+    //   sethackyNavId("1622638959598")
+    // }
 
 
     setJwtToken(token);
@@ -131,6 +131,8 @@ const App = () => {
 
         <Auth authSuccessCallback={ authSuccessCallback } >
 
+        <NavLink key={ "nl_" + 1332 } to={ "/" } className={ classes.menuButton }   ><MyIcon icon={ "home" } /> </NavLink>
+
           { userConfiguration.map((item, index) => {
             if (item.navbar) return (
               <NavLink key={ "nl_" + index } to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
@@ -156,8 +158,7 @@ const App = () => {
             <MainNavigation
               render="simple"
               apikey={ apikey }
-              userConfig={ userConfiguration }
-              navId={ hackyNavId }
+              userConfig={ userConfiguration }              
               username={ username }
               handleSetConfig={ handleSetConfig } />
           </Menu>
