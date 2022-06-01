@@ -18,7 +18,7 @@ export const useGetMainTodos = ( owner : string ) : [TodoItem]|undefined  => {
         console.log("useGetMainTodos (id) : ", owner );
         if( owner === undefined ) return {}
     
-        const _todos = await API.graphql(graphqlOperation(listTodoMains, { owner: owner }));
+        const _todos = await API.graphql(graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} } } ));
         const items = _todos.data.listTodoMains.items
     
         console.log("useGetMainTodos : ", items);

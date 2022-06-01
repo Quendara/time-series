@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     },
     modal: {
         display: 'absolute',
-        top:"10px",
+        top: "10px",
         alignItems: 'center',
         justifyContent: 'center',
         height: "50%",
@@ -81,17 +81,17 @@ interface PropsEl {
 
 
 const ListEl = (
-    { name, 
-        link, 
-        checked, 
-        id, 
-        removeClickFunction, 
-        updateFunction, 
-        selectFunction, 
-        toggleFunction, 
-        type, 
-        groups, 
-        group, 
+    { name,
+        link,
+        checked,
+        id,
+        removeClickFunction,
+        updateFunction,
+        selectFunction,
+        toggleFunction,
+        type,
+        groups,
+        group,
         editList }: PropsEl) => {
 
     const history = useHistory();
@@ -120,7 +120,7 @@ const ListEl = (
     }
 
     const onUpdateFunction = (linkName: string, linkUrl: string, groupname: string) => {
-        updateFunction(id, { link: linkUrl, name: linkName, group: groupname } )
+        updateFunction(id, { link: linkUrl, name: linkName, group: groupname })
         setEdit(false)
     }
 
@@ -136,14 +136,14 @@ const ListEl = (
         }
         else {
 
-            if( link.startsWith( "/" ) ){                
-                history.push( link );
+            if (link.startsWith("/")) {
+                history.push(link);
             } else {
                 // Open in new window
-                window.open( link, "_blank" )
+                window.open(link, "_blank")
             }
 
-            
+
         }
     }
 
@@ -195,17 +195,24 @@ const ListEl = (
                                     justify="flex-start"
                                     alignItems="flex-start"
                                     spacing={4}
-                                >                               
+                                >
                                     <Grid item xs={12} >
-                                        <DetailsById 
-                                                itemid={ id } 
-                                                updateFunction={updateFunction}                                                 
-                                                listtype={type}
-                                                lists={[]} />
+                                        <DetailsById
+                                            itemid={id}
+                                            updateFunction={updateFunction}
+                                            listtype={type}
+                                            lists={[]} />
                                     </Grid>
-
+                                    <Grid item xs={12} >
+                                        <Button
+                                            onClick={handleDeleteClick}
+                                            color="secondary"
+                                            startIcon={<DeleteIcon />}
+                                            variant="contained" >
+                                            Delete
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-
                             </CardContent>
                         </Card>
                     </div>
@@ -260,7 +267,7 @@ const ListEl = (
                                     primary={isChecked(checked) ?
                                         <TypographyDisabled {...longPressEvent}>{name}</TypographyDisabled>
                                         : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
-                                    
+
                                 />
 
                                 {/* 
@@ -282,7 +289,7 @@ const ListEl = (
                                     </Grid>
                                 </Grid> */}
                             </ListItem>
-                            
+
 
                         }
                         {type === "links" &&
@@ -294,7 +301,7 @@ const ListEl = (
                                 />
                             </ListItem>
                         }
-                        
+
                     </>
                 )}
         </>
@@ -371,23 +378,23 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
                 {items.map((item, index) => (
                     <>
-                    <ListEl
-                        editList={editList}
-                        key={index}
-                        id={item.id}
-                        name={item.name}
-                        group={group}
-                        groups={groups}
-                        checked={item.checked}
-                        link={item.link}
-                        selectFunction={selectFunction}
-                        updateFunction={updateFunction}
-                        removeClickFunction={removeItemHandle}
-                        toggleFunction={toggleFunction}
-                        type={type}
-                    />
+                        <ListEl
+                            editList={editList}
+                            key={index}
+                            id={item.id}
+                            name={item.name}
+                            group={group}
+                            groups={groups}
+                            checked={item.checked}
+                            link={item.link}
+                            selectFunction={selectFunction}
+                            updateFunction={updateFunction}
+                            removeClickFunction={removeItemHandle}
+                            toggleFunction={toggleFunction}
+                            type={type}
+                        />
 
-                    { index !== items.length-1 &&  <Divider component="li" /> }
+                        {index !== items.length - 1 && <Divider component="li" />}
                     </>
                 ))}
 

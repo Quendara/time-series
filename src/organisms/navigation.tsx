@@ -171,7 +171,7 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
             { items !== undefined &&
                 <>
                     
-                    { groups.map((item, index ) => (
+                    { groups.map((item : TodoMainItem, index : number ) => (
                         <NavItemList key={ "sfdfsd"+index } groupname = {item.value} items={ item.listitems } render={ render } />
 
                     ) )}

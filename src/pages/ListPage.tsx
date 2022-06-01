@@ -29,8 +29,8 @@ import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/h
 
 import { TodoItem } from '../components/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
-import { UpdateFunc } from "./Definitions"
-import { GroupItem } from "./Definitions"
+import { UpdateFunc } from "../components/Definitions"
+import { GroupItem } from "../components/Definitions"
 
 
 
