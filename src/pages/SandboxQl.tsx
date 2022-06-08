@@ -20,7 +20,7 @@ export const SandboxQl = ({
     const todos2 = useGetTodos( 2 );
     const todos23 = useGetTodos( 23 );
 
-    const todo = useGetTodo( 1645803055693 );
+    const todo = useGetTodo( "1645803055693" );
 
     return ( 
     <><h1>Hello</h1>

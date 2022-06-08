@@ -54,7 +54,7 @@ export const TimeSeries = ({ username, token }) => {
       <Hidden mdDown>
         <Grid item lg="2" elevation={ 3 } >
           <Grid item className={ classes.navigation } >
-            <Navigation list={ timeseries } anchor="group_id" name="group_name" />
+            {/* <Navigation list={ timeseries } anchor="group_id" name="group_name" /> */}
           </Grid>
         </Grid>
       </Hidden>

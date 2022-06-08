@@ -1,5 +1,5 @@
 import { group } from 'console';
-import { TodoMainItem, TodoMainItemUpdate } from "../components/TodoItems"
+import { TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
 
 export enum TodoMainActionType {
     TOGGLE  = 'TOGGLE',
@@ -9,8 +9,7 @@ export enum TodoMainActionType {
 }
 
 // INTERFACES
-
-interface TodoMainAction {
+export interface TodoMainAction {
     type: TodoMainActionType;
     payload: any;
 }
@@ -18,14 +17,14 @@ interface TodoMainAction {
 export interface TodoMainActionTOGGLE extends TodoMainAction {
     type: TodoMainActionType;
     payload: {
-        id: number
+        id: string
     }
 }
 
 export interface TodoMainActionDELETE extends TodoMainAction {
     type: TodoMainActionType;
     payload: {
-        id: number
+        id: string
     }
 }
 
@@ -46,21 +45,21 @@ export interface TodoMainActionUPDATE extends TodoMainAction {
 //     dispatch( ToggleItem( item.id ));
 // };
 
-export const ToggleItem = (id: number) : TodoMainActionUPDATE => (
+export const ToggleItem = (id: string ) : TodoMainActionUPDATE => (
     {
         type: TodoMainActionType.TOGGLE,
         payload: { id: id }
     }
 )
 
-export const UpdateItem = ( { id, name, icon, group } : TodoMainItem ): TodoMainActionUPDATE => (
+export const UpdateItem = ( item : TodoMainUpdateItem ) => (
     {
         type: TodoMainActionType.UPDATE,
-        payload: { id: id, name: name, icon: icon, group }
+        payload: item
     }
 )
 
-export const DeleteItem = (id: number): TodoMainActionTOGGLE => (
+export const DeleteItem = (id: string ): TodoMainActionTOGGLE => (
     {
         type: TodoMainActionType.DELETE,
         payload: { id: id }

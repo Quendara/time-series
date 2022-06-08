@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { listTodoMains } from '../graphql/queries';
-import { TodoItem } from "../components/TodoItems"
+import { TodoItem } from "../models/TodoItems"
+
+
+// export type ListTodosQuery = {
+//     listTodoMains:  {
+//       __typename: "ModelTodoConnection",
+//       items:  Array< {
+//         TodoItem        
+//       } | null > | null,
+//       nextToken: string | null,
+//     } | null,
+//   };
 
 export const useGetMainTodos = ( owner : string ) : [TodoItem]|undefined  => {
 
     const [todos, setTodos] = useState<[TodoItem] | undefined >( undefined );
-    // const [initilaized, setInitilaized] = useState(false);
-
 
     useEffect( () => {             
             fetchTodos( owner )        
@@ -17,15 +26,29 @@ export const useGetMainTodos = ( owner : string ) : [TodoItem]|undefined  => {
     
         console.log("useGetMainTodos (id) : ", owner );
         if( owner === undefined ) return {}
-    
-        const _todos = await API.graphql(graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} } } ));
-        const items = _todos.data.listTodoMains.items
-    
+
+
+        const response : any = await API.graphql(
+            graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} } } ) ) 
+       
+
+        const items = response.data?.listTodoMains?.items
         console.log("useGetMainTodos : ", items);
-        setTodos( items )
-         
+        setTodos( items )    
+    
+        // const response = (await API.graphql(
+        //         graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} } } ) ) 
+        //     ) as { data: ListTodosQuery };
+
+        // if( response !== null ){
+        //     const items = response.data?.listTodoMains?.items
+        //     console.log("useGetMainTodos : ", items);
+        //     if( items ){
+        //         setTodos( items )    
+        //     }
+            
+        // }
     }    
 
     return todos;
-
 }

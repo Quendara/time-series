@@ -27,10 +27,10 @@ import { Details, DetailsById } from '../components/Details';
 
 import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/helper";
 
-import { TodoItem } from '../components/TodoItems';
+import { TodoItem, TodoUpdateItem } from '../models/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
-import { UpdateFunc } from "../components/Definitions"
-import { GroupItem } from "../components/Definitions"
+import { UpdateFunc } from "../models/Definitions"
+import { GroupItem } from "../models/Definitions"
 
 
 
@@ -82,7 +82,7 @@ export const ListPage = ({
 
     useEffect(
         () => {
-            setSelectedItemId(undefined);
+            setSelectedItemId("");
         }, [listid])    
 
     const callbackFilter = (text : string ) => {
@@ -108,10 +108,10 @@ export const ListPage = ({
         }
     }      
     
-    const getItemGlobalList = (lists: TodoItem[], id: number) => {
+    const getItemGlobalList = (lists: TodoItem[], id: string) : TodoUpdateItem => {
         if (lists !== undefined) {
-            const fl = lists.filter(item => +item.id === +id)
-            console.log("getGlobalList", id, fl, lists)
+            const fl = lists.filter(item => +item.listid === +id )
+            // console.log("getGlobalList ", id, fl, lists)
 
             if (fl.length > 0) {
                 return fl[0]
@@ -151,11 +151,11 @@ export const ListPage = ({
 
     const createLists = (items : TodoItem[]) => {
 
-        let groups = undefined;
+        let groups : GroupItem[] = [];
         
         if( listid === "current" ){            
             const groups_uniq = findUnique(items, "listid", false)
-            groups = groups_uniq.map( (el)=>{
+            groups = groups_uniq.map( ( el : GroupItem )=>{
                 el.value = "(" + el.value + ") " + getItemGlobalList( lists, el.value ).name
                 return el
             }
@@ -169,7 +169,7 @@ export const ListPage = ({
 
         return (
             <>
-                { horizontally ? (
+                { ( horizontally && groups ) ? (
                     // 
                     <div style={ { "width": "100%", "overflowX": "scroll" } }>
                         { groups.map((item: GroupItem, index: number ) => (
@@ -198,11 +198,11 @@ export const ListPage = ({
 
                 ) : (
                     <Grid container spacing={ 2 } >
-                        { groups.map((item: GroupItem, index: number ) => (
+                        { groups && groups.map((item: GroupItem, index: number ) => (
                             <Grid key={ "xxxyy"+ index } item xs={ 12 }>
                                 <MyCard key={ "agjhl"+index }>
                                     <ListQ
-                                        key={ "agjhg"+index }
+                                        key={ "agjhxg"+index }
                                         editList={ edit }
                                         header={ item.value }
                                         group={ item.value }
@@ -239,14 +239,7 @@ export const ListPage = ({
                     {successSnackbarMessage}
                 </Alert>
             </Snackbar>        
-        <Grid container spacing={ 4 } >
-            {/* <Hidden mdDown>
-                <Grid item lg={ 2 }  >
-                    <Grid item className={ classes.navigation } >
-                        <Navigation list={ findUnique(todos, "group", false) } name="value" anchor="value" />
-                    </Grid>
-                </Grid>
-            </Hidden> */}
+        <Grid container spacing={ 4 } >        
             <Grid item lg={ 12 } xs={ 12 } >
                 <MyCard>
                     <MyCardHeader >

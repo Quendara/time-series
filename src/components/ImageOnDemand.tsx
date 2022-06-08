@@ -4,7 +4,7 @@ import { ImageOnSigned } from "./ImageOnSigned";
 
 // className={isVisible ? 'excited' : ''}
 
-import { Image, Mediatype } from "./Definitions"
+import { Image, Mediatype } from "../models/Image"
 
 
 interface Props {

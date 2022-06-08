@@ -2,13 +2,13 @@ projects:
   Todos AppSync App:
     schemaPath: src/graphql/schema.json
     includes:
-      - src/graphql/**/*.js
+      - src/graphql/**/*.ts
     excludes:
       - ./amplify/**
     extensions:
       amplify:
-        codeGenTarget: javascript
-        generatedFileName: ''
+        codeGenTarget: typescript
+        generatedFileName: src/API.ts
         docsFilePath: src/graphql
         region: eu-central-1
         apiId: 5lxum6sspnehrc7p24vjq6ckri

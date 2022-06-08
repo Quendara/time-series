@@ -10,12 +10,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
 
 import { DetailsMarkdown } from "./DetailsMarkdown"
-import { TodoItem } from "./TodoItems"
+import { TodoItem, TodoUpdateItem } from "../models/TodoItems"
 import { findUnique, restCallToBackendAsync } from "../components/helper";
 import { useStyles } from "../Styles"
 
 
-import { UpdateFunc } from "./Definitions"
+import { UpdateFunc } from "../models/Definitions"
 import { AddForm } from "./AddForm";
 
 import { removeItemByIdFcn } from "../components/GraphQlFunctions"
@@ -200,15 +200,12 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
     // const [selectionStart, setSelectionStart] = useState("");
 
     const [edit, setEdit] = useState(false);
-    const [listvalue, setListValue] = useState("");
+    // const [listvalue, setListValue] = useState <TodoUpdateItem | undefined > ( undefined);
 
     // currentItem can be set to undefined, when deleted
     const [currentItem, setCurrentItem] = useState<TodoItem | undefined >( selectedItem );
 
-    const [selectedItemName, setSelectedName] = useState<string>("");
-    const [selectedItemValue, setSelectedValue] = useState<string>("" );
-    const [selectedItemId, setSelectedItemId] = useState<string>("");
-
+    const [selectedItemValue, setSelectedValue] = useState( "" );
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -224,19 +221,19 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
     useEffect(() => {
 
-        if (edit) // ( selectedItem.id !== selectedItemId ) 
+        if (edit && selectedItem) // ( selectedItem.id !== selectedItemId ) 
         {
-            updateFunction(selectedItemId, { description: selectedItemValue })
+            updateFunction( selectedItem.id , { description: selectedItemValue })
         }
 
         if( selectedItem ){
             console.log("useEffect", selectedItem.description)
             setCurrentItem( selectedItem )
             setSelectedValue(selectedItem.description)
-            setSelectedItemId(selectedItem.id)
-            setSelectedName(selectedItem.name)
-            const listname = getGlobalList(lists, selectedItem.listid).name
-            setListValue(listname)    
+            // setSelectedItemId(selectedItem.id)
+            // setSelectedName(selectedItem.name)
+            // const listname = getGlobalList(lists, selectedItem.listid).name
+            // setListValue(listname)    
         }
 
         setEdit(false);
@@ -262,10 +259,10 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
         setEdit(false)
     }
 
-    const getGlobalList = (lists: TodoItem[], id: number) => {
+    const getGlobalList = (lists: TodoItem[], id: number ) : TodoUpdateItem => {
         if (lists !== undefined) {
-            const fl = lists.filter(item => +item.id === +id)
-            console.log("getGlobalList", id, fl, lists)
+            const fl = lists.filter(item => +item.listid === +id)
+            // console.log("getGlobalList", id, fl, lists)
 
             if (fl.length > 0) {
                 return fl[0]
@@ -284,7 +281,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
             updateFunction(selectedItem.id, { listid: selecedList.id })
 
-            setListValue(selecedList.name)
+            // setListValue(selecedList.name)
         }
     }
 
@@ -324,7 +321,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                             <TextEdit 
                                 value={ currentItem.name } 
                                 label="Name"
-                                callback= { ( newName ) => updateFunction( currentItem.id, { name: newName }) } >
+                                callback= { ( newName : string ) => updateFunction( currentItem.id, { name: newName }) } >
                                 <h1>{ currentItem.name } </h1>
                                 </TextEdit>
                                 <hr />
@@ -365,19 +362,27 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
                         <Grid item xs={8} >
 
+                        {/* <TextEdit 
+                                value={ listvalue} 
+                                groups={ lists } 
+                                label="Lists"
+                                callback={ ( group ) => updateFunction( currentItem.id, { group: group }) } >
+                                    { listvalue } 
+                            </TextEdit> */}
+
 
                             <Autocomplete
                                 id="combo-box-demo"
                                 inputValue={""}
                                 // label="Lists"
-                                //value={ listvalue }
+                                // value={ { name: listvalue } }
                                 onChange={(event, newValue) => {
                                     if (newValue !== null) {
                                         handleListChange(newValue);
                                     }
                                 }}
                                 options={lists}
-                                getOptionLabel={(option) => "(" + option.id + ") " + option.name}
+                                getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
                                 renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
                             />
                         </Grid>

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, KeyboardEvent } from "react";
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -7,9 +5,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 interface Props {
 
     value: string;
-    label: string;
-    groups?: any;
     callback: (s: string) => void;
+    label?: string;
+    groups?: any;
     children?: React.ReactNode
 }
 
@@ -24,13 +22,22 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
     }, [value]);
 
 
-    const checkEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const checkEnter = (event: React.KeyboardEvent<HTMLInputElement> ) => {
+
+        console.log( "KEy : ", event.key ) 
 
         if (event.key === "Enter") {
             // alert("Enter")
             callback(internalName)
             setEdit(false)
         }
+        if (event.key === "Escape") {
+            // alert("Enter")
+            // callback(internalName)
+            setEdit(false)
+        }
+
+        
     }
 
     return (
@@ -44,8 +51,8 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                         size="small"
                         fullWidth
                         variant="outlined"
-                        onKeyPress={e => checkEnter(e)}
-                        onChange={e => setInternalName(e.target.value)}
+                        onKeyPress={ (e:React.KeyboardEvent<HTMLInputElement> ) => checkEnter(e)}
+                        onChange={ (e:any) => setInternalName(e.target.value)}
                     />
                 ) : (
                     <Autocomplete
@@ -57,7 +64,7 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                         value={{ value: internalName }}
                         // error={ groupName === undefined || groupName.length == 0 }
                         getOptionLabel={(option) => option.value}
-                        onKeyPress={e => checkEnter(e)}
+                        onKeyPress={ ( e:React.KeyboardEvent<HTMLInputElement> ) => checkEnter(e)}
                         onInputChange={(event, newValue) => {
                             if (typeof newValue === 'string') {
                                 setInternalName(
@@ -76,7 +83,8 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                                     newValue.value,
                                 );
                             } else {
-                                setInternalName(newValue);
+                                console.error( "UNEXPECTED TYPE", newValue )
+                                // setInternalName( newValue as string );
                             }
                         }}
                         renderInput={(params) => <TextField {...params} label="Groups" fullWidth variant="outlined" />}

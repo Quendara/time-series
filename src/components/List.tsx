@@ -21,10 +21,10 @@ import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader }
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import { TodoItem } from "./TodoItems"
+import { TodoItem } from "../models/TodoItems"
 import { AddForm } from "./AddForm"
 import { DetailsById } from "./Details"
-import { UpdateFunc } from "./Definitions"
+import { UpdateFunc, GroupItem } from "../models/Definitions"
 
 const useStyles = makeStyles({
     card_main: {
@@ -318,7 +318,7 @@ interface PropsQ {
     toggleFunction: (id: string) => number;
     type: string;
     group: string;
-    groups: string;
+    groups: GroupItem[];
     editList: boolean
 };
 
@@ -339,7 +339,6 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
     return (
 
         <>
-
             <MyCardHeader onClick={() => setEdit(!edit)}>
                 <List>
                     <ListItem>
@@ -377,7 +376,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
 
                 {items.map((item, index) => (
-                    <>
+                    <React.Fragment key={ "hjk"+ index} >
                         <ListEl
                             editList={editList}
                             key={index}
@@ -395,7 +394,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         />
 
                         {index !== items.length - 1 && <Divider component="li" />}
-                    </>
+                    </React.Fragment>
                 ))}
 
                 {/* { ((addItemHandle !== undefined) && editList) &&

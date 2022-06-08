@@ -130,11 +130,11 @@ const App = () => {
 
         <Auth authSuccessCallback={ authSuccessCallback } >
 
-        <NavLink key={ "nl_" + 1332 } to={ "/" } className={ classes.menuButton }   ><MyIcon icon={ "home" } /> </NavLink>
+          <NavLink key={ "nl_" + 1332 } to={ "/" } className={ classes.menuButton }   ><MyIcon icon={ "home" } /> </NavLink>
 
           { userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <NavLink key={ "nl_" + index } to={ "/" + [item.component, item.id, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
+              <NavLink key={ "nl_" + index } to={ "/" + [item.component, item.listid, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
             )
           }
           ) }
@@ -154,12 +154,14 @@ const App = () => {
             </MenuItem>
             <Divider />
 
-            <MainNavigation
-              render="simple"
-              apikey={ apikey }
-              userConfig={ userConfiguration }              
-              username={ username }
-              handleSetConfig={ handleSetConfig } />
+            { amplifyInitilaized &&
+
+              <MainNavigation
+                render="simple"
+                apikey={ apikey }
+                userConfig={ userConfiguration }
+                username={ username }
+                handleSetConfig={ handleSetConfig } /> }
           </Menu>
         </Auth>
 
@@ -169,70 +171,70 @@ const App = () => {
 
           <Grid item xs={ 11 } lg={ 10 }>
             { username.length > 0 &&
-              ( <>
+              (<>
                 { amplifyInitilaized === false ? (<h1> Loading </h1>) :
                   (
-                <Switch>
-                  <Route path="/list/:listid/:listtype/:itemid" children={
-                      <ListGraphQL
-                        token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
-                  } />                  
-                  <Route path="/list/:listid/:listtype" children={
-                    <ListGraphQL
-                      token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
-                  } />
-                  <Route path="/time" >
-                    <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
-                  </Route>
+                    <Switch>
+                      <Route path="/list/:listid/:listtype/:itemid" children={
+                        <ListGraphQL
+                          token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
+                      } />
+                      <Route path="/list/:listid/:listtype" children={
+                        <ListGraphQL
+                          token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
+                      } />
+                      <Route path="/time" >
+                        <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
+                      </Route>
 
-                
-                <Route path="/timetree" >
-                  <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
-                </Route>
 
-                <Route path="/diff" >
-                  <CompareLists />
-                </Route>
-                <Route path="/replace" >
-                  <ReplaceLists />
-                </Route>
+                      <Route path="/timetree" >
+                        <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
+                      </Route>
 
-                <Route exact path="/" >
-                  <Grid container justify="center" spacing={ 5 } >
-                    <Grid item xs={ 12 } md={ 6 }>
-                      <Paper elevation={ 3 } >
-                        <MyCard>
-                          <MyCardHeader >
-                            <MainNavigation
-                              apikey={ apikey }
-                              userConfig={ userConfiguration }
-                              navId="1622632885409"
-                              username={ username }
-                              handleSetConfig={ handleSetConfig } />
-                          </MyCardHeader>
-                        </MyCard>
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={ 12 } md={ 6 }>
-                      {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */ }
-                    </Grid>
-                  </Grid>
-                </Route>
-                <Route exact path="/sandboxQl" >
-                  { amplifyInitilaized === false ? (<h1> Loading </h1>) : (
-                    <SandboxQl token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
-                  ) }
-                </Route>
-                <Route exact path="/sandbox" >
-                  <Grid container justify="center" >
-                    <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
-                  </Grid>
-                </Route>
-                <Route exact path="/demo" component={ StyleDemo }></Route>
-                </Switch>
+                      <Route path="/diff" >
+                        <CompareLists />
+                      </Route>
+                      <Route path="/replace" >
+                        <ReplaceLists />
+                      </Route>
+
+                      <Route exact path="/" >
+                        <Grid container justify="center" spacing={ 5 } >
+                          <Grid item xs={ 12 } md={ 6 }>
+                            <Paper elevation={ 3 } >
+                              <MyCard>
+                                <MyCardHeader >
+                                  <MainNavigation
+                                    apikey={ apikey }
+                                    userConfig={ userConfiguration }
+                                    navId="1622632885409"
+                                    username={ username }
+                                    handleSetConfig={ handleSetConfig } />
+                                </MyCardHeader>
+                              </MyCard>
+                            </Paper>
+                          </Grid>
+                          <Grid item xs={ 12 } md={ 6 }>
+                            {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */ }
+                          </Grid>
+                        </Grid>
+                      </Route>
+                      <Route exact path="/sandboxQl" >
+                        { amplifyInitilaized === false ? (<h1> Loading </h1>) : (
+                          <SandboxQl token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
+                        ) }
+                      </Route>
+                      <Route exact path="/sandbox" >
+                        <Grid container justify="center" >
+                          <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
+                        </Grid>
+                      </Route>
+                      <Route exact path="/demo" component={ StyleDemo }></Route>
+                    </Switch>
                   ) }
               </>) }
-            
+
           </Grid>
           <Grid>
             <Error errorMessages={ errors } />

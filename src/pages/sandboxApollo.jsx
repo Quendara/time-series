@@ -18,7 +18,7 @@ import SingleTimeSerie from "../SingleTimeSerie";
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
-import { Navigation } from "../organisms/navigation"
+
 import AWSAppSyncClient from 'aws-appsync'
 
 import { SandboxQl } from "./sandboxQl-List"

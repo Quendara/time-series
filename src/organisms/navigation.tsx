@@ -19,21 +19,21 @@ import {
 
 
 import { MyIcon } from "../components/MyIcon";
-import { GroupItem } from "../components/Definitions"
-
 import { TextEdit } from "../components/TextEdit";
 import StarIcon from '@material-ui/icons/Star';
 
 import { reducerTodoMain } from "../reducer/reducerTodoMain"
 import { ToggleItem, UpdateItem } from "../reducer/dispatchFunctionsMainTodos"
 
-import { TodoMainItem, TodoMainItemUpdate } from "../components/TodoItems"
+import { TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
+import { GroupItem } from "../models/Definitions"
 
 import { useStyles } from "../Styles"
 
+
 interface NavItemProps {
     item : TodoMainItem;
-    dispatch : string;
+    dispatch : any; // @todo
     render : string;
 }
 
@@ -49,10 +49,11 @@ const NavItem = ({ item, dispatch, render } : NavItemProps) => {
     const handleEditName = (name: string) => {
         // dispatch({ type: "COMPLETE", id: item.id });
         // dispatch(UpdateItem(item.id, name)) 
-        let element : TodoMainItem
+        let element : TodoMainUpdateItem
         element = {
             id: item.id,
             name: name
+            // component: 
         }        
 
         dispatch(UpdateItem( element )) 
@@ -61,7 +62,7 @@ const NavItem = ({ item, dispatch, render } : NavItemProps) => {
 
     const handleEditGroup = (group: string) => {
         // dispatch({ type: "COMPLETE", id: item.id });
-        let element : TodoMainItem
+        let element : TodoMainUpdateItem
         element = {
             id: item.id,
             group: group
@@ -86,7 +87,7 @@ const NavItem = ({ item, dispatch, render } : NavItemProps) => {
     else {
         return (
             <ListItem>
-                <ListItemAvatar color="primary">
+                <ListItemAvatar >
                     <NavLink
                         className={ classes.title }
                         to={ "/" + [item.component, item.listid, item.render].join('/') }   >
@@ -171,7 +172,7 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
             { items !== undefined &&
                 <>
                     
-                    { groups.map((item : TodoMainItem, index : number ) => (
+                    { groups.map((item : GroupItem, index : number ) => (
                         <NavItemList key={ "sfdfsd"+index } groupname = {item.value} items={ item.listitems } render={ render } />
 
                     ) )}
@@ -180,27 +181,32 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
     )
 }
 
+interface NavigationProps {
+    list : TodoMainItem[];
+    anchor : string;
+    name : string;
+} 
 
-export const Navigation = ({ list, anchor, name }) => {
+// export const Navigation = ({ list, anchor, name } : NavigationProps ) => {
 
-    const classes = useStyles();
+//     const classes = useStyles();
 
-    const jumpTo = (anchor) => {
-        window.location.href = "#" + anchor;
-        setAnchor(anchor)
-    }
+//     const jumpTo = (anchor : string ) => {
+//         window.location.href = "#" + anchor;
+//         setAnchor(anchor)
+//     }
 
-    const [curAnchor, setAnchor] = useState("");
+//     const [curAnchor, setAnchor] = useState("");
 
-    return (
-        <List>
-            { list.map((item, index) => (
-                <ListItem button onClick={ () => jumpTo(item[anchor]) } key={ item[anchor] } >
-                    <Box color={ item[anchor] === curAnchor ? "text.primary" : "text.secondary" } >
-                        { item[name] }
-                    </Box>
-                </ListItem>
-            )) }
-        </List>
-    )
-}
+//     return (
+//         <List>
+//             { list.map((item : TodoMainItem, index) => (
+//                 <ListItem button onClick={ () => jumpTo(item[anchor]) } key={ item[anchor] } >
+//                     <Box color={ item[anchor] === curAnchor ? "text.primary" : "text.secondary" } >
+//                         { item[name] }
+//                     </Box>
+//                 </ListItem>
+//             )) }
+//         </List>
+//     )
+// }

@@ -35,11 +35,9 @@ export const FilterComponent = ({ filterText, callback, callbackEnter } : Filter
     }
 
     return (
-
         <TextField
             value={ item }
             label="Filter"
-
             fullWidth
             variant="outlined"
             InputProps={ {
