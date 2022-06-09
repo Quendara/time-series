@@ -1,7 +1,4 @@
 import { sortBy, groupBy, shuffle, reduce } from "underscore";
-import Settings from "../Settings"
-
-// 
 
 export const shuffleItems = ( list ) => {
     return shuffle(list)
@@ -15,7 +12,7 @@ export const sumArray = ( list, key ) => {
 
 }
 
-export const sortArrayBy = (items, sortByKey = 'rating', ascending=true) => {
+export const sortArrayByJs = (items, sortByKey = 'rating', ascending=true) => {
     items = sortBy(items, sortByKey);
     if( !ascending ){
         items = items.reverse()
@@ -25,7 +22,7 @@ export const sortArrayBy = (items, sortByKey = 'rating', ascending=true) => {
 
 
 
-export const findUnique = ( list, group, sortByCount = true, limit=50 ) => {
+export const findUniqueJs = ( list, group, sortByCount = true, limit=50 ) => {
     let groups = groupBy(list, group);
     let uniqueItems = []
     for (var key in groups) {

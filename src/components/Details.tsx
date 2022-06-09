@@ -11,7 +11,8 @@ import { MyIcon } from "./MyIcon";
 
 import { DetailsMarkdown } from "./DetailsMarkdown"
 import { TodoItem, TodoUpdateItem } from "../models/TodoItems"
-import { findUnique, restCallToBackendAsync } from "../components/helper";
+
+import { findUnique } from "../components/helpers";
 import { useStyles } from "../Styles"
 
 
@@ -165,7 +166,7 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction }: PropMTA) => {
 
 
 interface Props {
-    itemid: string;    
+    itemid: string;
     listtype: string;
     updateFunction: UpdateFunc;
     lists: TodoItem[];
@@ -173,19 +174,21 @@ interface Props {
 
 export const DetailsById = ({ itemid, listtype, updateFunction, lists }: Props) => {
 
-    const item = useGetTodo( itemid );
-    const todos = useGetTodos( item?.listid  );
+    const item = useGetTodo(itemid);
+    const todos = useGetTodos(item?.listid);
+
 
     return (
         <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype} />
     )
+
 }
 
 interface PropsDetails {
     selectedItem: TodoItem | undefined;
     updateFunction: UpdateFunc;
     listtype: string;
-    todos: TodoItem[] | undefined;
+    todos: TodoItem[];
     lists: TodoItem[];
 }
 
@@ -203,9 +206,9 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
     // const [listvalue, setListValue] = useState <TodoUpdateItem | undefined > ( undefined);
 
     // currentItem can be set to undefined, when deleted
-    const [currentItem, setCurrentItem] = useState<TodoItem | undefined >( selectedItem );
+    const [currentItem, setCurrentItem] = useState<TodoItem | undefined>(selectedItem);
 
-    const [selectedItemValue, setSelectedValue] = useState( "" );
+    const [selectedItemValue, setSelectedValue] = useState("");
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -223,12 +226,12 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
         if (edit && selectedItem) // ( selectedItem.id !== selectedItemId ) 
         {
-            updateFunction( selectedItem.id , { description: selectedItemValue })
+            updateFunction(selectedItem.id, { description: selectedItemValue })
         }
 
-        if( selectedItem ){
+        if (selectedItem) {
             console.log("useEffect", selectedItem.description)
-            setCurrentItem( selectedItem )
+            setCurrentItem(selectedItem)
             setSelectedValue(selectedItem.description)
             // setSelectedItemId(selectedItem.id)
             // setSelectedName(selectedItem.name)
@@ -244,7 +247,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
     const updateHandle = () => {
         // updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
 
-        if( currentItem === undefined ) return;
+        if (currentItem === undefined) return;
 
         updateFunction(currentItem.id, { description: selectedItemValue })
         setSuccessSnackbarMessage("Saved !!! ")
@@ -253,13 +256,13 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
     const updateNameLinkHandle = (linkName: string, linkUrl: string, groupname: string) => {
 
-        if( currentItem === undefined ) return;
+        if (currentItem === undefined) return;
 
         updateFunction(currentItem.id, { link: linkUrl, name: linkName, group: groupname })
         setEdit(false)
     }
 
-    const getGlobalList = (lists: TodoItem[], id: number ) : TodoUpdateItem => {
+    const getGlobalList = (lists: TodoItem[], id: number): TodoUpdateItem => {
         if (lists !== undefined) {
             const fl = lists.filter(item => +item.listid === +id)
             // console.log("getGlobalList", id, fl, lists)
@@ -290,7 +293,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
     const removeItemHandle = () => {
         if (selectedItem) {
-            setCurrentItem( undefined ) 
+            setCurrentItem(undefined)
             removeItemByIdFcn(selectedItem.id)
         }
     }
@@ -307,35 +310,35 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                     {successSnackbarMessage}
                 </Alert>
             </Snackbar>
-                {currentItem === undefined ? (
-                    <h1> ... </h1>
-                ) : (
-                    <MyCard>
+            {currentItem === undefined ? (
+                <h1> ... </h1>
+            ) : (
+                <MyCard>
 
 
-                <MyCardHeader>
-                    
-                    <List>
-                        <ListItem>
+                    <MyCardHeader>
 
-                            <TextEdit 
-                                value={ currentItem.name } 
-                                label="Name"
-                                callback= { ( newName : string ) => updateFunction( currentItem.id, { name: newName }) } >
-                                <h1>{ currentItem.name } </h1>
+                        <List>
+                            <ListItem>
+
+                                <TextEdit
+                                    value={currentItem.name}
+                                    label="Name"
+                                    callback={(newName: string) => updateFunction(currentItem.id, { name: newName })} >
+                                    <h1>{currentItem.name} </h1>
                                 </TextEdit>
                                 <hr />
-                            
-                            <TextEdit 
-                                value={ currentItem.group } 
-                                groups={ findUnique(todos, "group", false) } 
-                                label="Group"
-                                callback={ ( group ) => updateFunction( currentItem.id, { group: group }) } >
-                                    { currentItem.group } 
-                            </TextEdit>
+
+                                <TextEdit
+                                    value={currentItem.group}
+                                    groups={findUnique(todos, "group", false)}
+                                    label="Group"
+                                    callback={(group) => updateFunction(currentItem.id, { group: group })} >
+                                    {currentItem.group}
+                                </TextEdit>
 
 
-                            {/* <AddForm renderModal={true} 
+                                {/* <AddForm renderModal={true} 
                                 handleDeleteClick={removeItemHandle} 
                                 name={ currentItem.name }
                                 url={ currentItem.link }
@@ -345,24 +348,24 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                 group={ currentItem.group }
                                 groups={ findUnique(todos, "group", false) } >
                             </AddForm>  */}
-                                                  
-                        </ListItem>
-                    </List>
-                </MyCardHeader>
-                <CardContent>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="space-between"
-                        alignItems="center" >
 
-                        <Grid item xs={4}>
-                            <Button variant="contained" disabled={!edit} onClick={updateHandle}><MyIcon icon="update" /> </Button>
-                        </Grid>
+                            </ListItem>
+                        </List>
+                    </MyCardHeader>
+                    <CardContent>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="center" >
 
-                        <Grid item xs={8} >
+                            <Grid item xs={4}>
+                                <Button variant="contained" disabled={!edit} onClick={updateHandle}><MyIcon icon="update" /> </Button>
+                            </Grid>
 
-                        {/* <TextEdit 
+                            <Grid item xs={8} >
+
+                                {/* <TextEdit 
                                 value={ listvalue} 
                                 groups={ lists } 
                                 label="Lists"
@@ -371,53 +374,53 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                             </TextEdit> */}
 
 
-                            <Autocomplete
-                                id="combo-box-demo"
-                                inputValue={""}
-                                // label="Lists"
-                                // value={ { name: listvalue } }
-                                onChange={(event, newValue) => {
-                                    if (newValue !== null) {
-                                        handleListChange(newValue);
-                                    }
-                                }}
-                                options={lists}
-                                getOptionLabel={ (option) => "(" + option.id + ") " + option.name }
-                                renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
-                            />
+                                <Autocomplete
+                                    id="combo-box-demo"
+                                    inputValue={""}
+                                    // label="Lists"
+                                    // value={ { name: listvalue } }
+                                    onChange={(event, newValue) => {
+                                        if (newValue !== null) {
+                                            handleListChange(newValue);
+                                        }
+                                    }}
+                                    options={lists}
+                                    getOptionLabel={(option) => "(" + option.id + ") " + option.name}
+                                    renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
+                                />
+                            </Grid>
+
                         </Grid>
 
-                    </Grid>
+                        <List>
+                            <Divider></Divider>
+                            <div >
+                                {/* className={ classes.navigationInner } */}
+                                {edit ? (
+                                    <ListItem>
+                                        <MarkdownTextareaAutosize
+                                            initValue={selectedItemValue}
+                                            updateFunction={(val: string) => setSelectedValue(val)}
+                                        />
+                                    </ListItem>
+                                ) :
+                                    (
 
-                    <List>
+                                        <div className="markdown" onClick={() => setEdit(true)}>
+                                            <DetailsMarkdown value={selectedItemValue} />
+                                        </div>
+
+                                    )
+                                }
+
+
+                            </div>
+                        </List>
                         <Divider></Divider>
-                        <div >
-                            {/* className={ classes.navigationInner } */}
-                            {edit ? (
-                                <ListItem>
-                                    <MarkdownTextareaAutosize
-                                        initValue={selectedItemValue}
-                                        updateFunction={(val: string) => setSelectedValue(val)}
-                                    />
-                                </ListItem>
-                            ) :
-                                (
 
-                                    <div className="markdown" onClick={() => setEdit(true)}>
-                                        <DetailsMarkdown value={ selectedItemValue } />                                       
-                                    </div>
-
-                                )
-                            }
-
-
-                        </div>
-                    </List>
-                    <Divider></Divider>
-
-                </CardContent>
-            </MyCard>
-                )}
+                    </CardContent>
+                </MyCard>
+            )}
         </>
 
     )

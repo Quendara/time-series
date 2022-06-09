@@ -14,7 +14,7 @@ export const AddForm = ({
     url = "",
     type = "",
     group = "",
-    groups = undefined,
+    groups ,
     buttonName = "Add", 
     clearAfterClick = true,
     showGroupsSelector = true,

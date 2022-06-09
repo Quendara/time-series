@@ -15,16 +15,18 @@ import { ArrowDropDown, ArrowRight } from '@material-ui/icons';
 
 import Icon from '@material-ui/core/Icon';
 
-import { QAutocomplete } from "./QAutocomplete"
+// import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader } from "./StyledComponents"
 
 import CloseIcon from '@material-ui/icons/Close';
 
 import { TodoItem } from "../models/TodoItems"
+import { GenericGroup } from "../components/helpers"
+
 import { AddForm } from "./AddForm"
 import { DetailsById } from "./Details"
-import { UpdateFunc, GroupItem } from "../models/Definitions"
+import { UpdateFunc } from "../models/Definitions" 
 
 const useStyles = makeStyles({
     card_main: {
@@ -318,7 +320,7 @@ interface PropsQ {
     toggleFunction: (id: string) => number;
     type: string;
     group: string;
-    groups: GroupItem[];
+    groups: GenericGroup<TodoItem>[] ;
     editList: boolean
 };
 
@@ -367,6 +369,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         <AddForm renderModal={false}
                             name={name}
                             group={group}
+                            groups={groups}
                             onClickFunction={onClickFunction}
                             type={type} buttonName="Add"
                             showGroupsSelector={false}

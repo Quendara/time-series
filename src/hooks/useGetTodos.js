@@ -30,6 +30,7 @@ const uiDeleteTodo = (items, id) => {
 
 export const useGetTodos = (listid) => {
 
+  // const [todos, setTodos] = useState<TodoItem[] >( [] );
   const [todos, setTodos] = useState([]);
   // const [initilaized, setInitilaized] = useState(false);
 

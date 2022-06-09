@@ -6,9 +6,6 @@ import React, { Component, useState, useEffect, useReducer } from "react";
 // import Amplify, { API, input, Auth, graphqlOperation } from 'aws-amplify';
 // import { listTodos, getTodos } from '../graphql/queries';
 
-import { useGetMainTodos } from '../hooks/useGetMainTodo';
-
-import { findUnique, restCallToBackendAsync } from "../components/helper";
 
 import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box, Switch, MenuItem, Divider } from '@material-ui/core';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@material-ui/core';
@@ -17,6 +14,9 @@ import {
     NavLink,
 } from "react-router-dom";
 
+import { useGetMainTodos } from '../hooks/useGetMainTodo';
+
+import { findUnique, GenericGroup } from "../components/helpers";
 
 import { MyIcon } from "../components/MyIcon";
 import { TextEdit } from "../components/TextEdit";
@@ -25,8 +25,8 @@ import StarIcon from '@material-ui/icons/Star';
 import { reducerTodoMain } from "../reducer/reducerTodoMain"
 import { ToggleItem, UpdateItem } from "../reducer/dispatchFunctionsMainTodos"
 
-import { TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
-import { GroupItem } from "../models/Definitions"
+import { TodoItem, TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
+// import { GroupItem } from "../models/Definitions"
 
 import { useStyles } from "../Styles"
 
@@ -162,7 +162,12 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
 
         }, [items])
 
-    const groups = findUnique(items, "group", false)
+    
+
+    
+    const groups : GenericGroup<TodoMainItem>[]  = findUnique(items, "group", false)
+
+   
 
 
     // { groups.map((item: GroupItem, index: number) => (
@@ -172,7 +177,7 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
             { items !== undefined &&
                 <>
                     
-                    { groups.map((item : GroupItem, index : number ) => (
+                    { groups.map((item : GenericGroup<TodoMainItem> , index : number ) => (
                         <NavItemList key={ "sfdfsd"+index } groupname = {item.value} items={ item.listitems } render={ render } />
 
                     ) )}
@@ -181,11 +186,11 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
     )
 }
 
-interface NavigationProps {
-    list : TodoMainItem[];
-    anchor : string;
-    name : string;
-} 
+// interface NavigationProps {
+//     list : TodoMainItem[];
+//     anchor : string;
+//     name : string;
+// } 
 
 // export const Navigation = ({ list, anchor, name } : NavigationProps ) => {
 

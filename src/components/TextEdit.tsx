@@ -2,6 +2,8 @@ import React, { useState, useEffect, KeyboardEvent } from "react";
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import { GenericGroup } from "../components/helpers"
+
 interface Props {
 
     value: string;

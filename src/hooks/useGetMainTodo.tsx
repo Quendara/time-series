@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { listTodoMains } from '../graphql/queries';
-import { TodoItem } from "../models/TodoItems"
+import { TodoItem, TodoMainItem } from "../models/TodoItems"
 
 
 // export type ListTodosQuery = {
@@ -14,9 +14,9 @@ import { TodoItem } from "../models/TodoItems"
 //     } | null,
 //   };
 
-export const useGetMainTodos = ( owner : string ) : [TodoItem]|undefined  => {
+export const useGetMainTodos = ( owner : string ) : TodoMainItem[]  => {
 
-    const [todos, setTodos] = useState<[TodoItem] | undefined >( undefined );
+    const [todos, setTodos] = useState<TodoMainItem[] >( [] );
 
     useEffect( () => {             
             fetchTodos( owner )        
