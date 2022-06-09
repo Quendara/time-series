@@ -25,12 +25,12 @@ import { ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
 import { Details, DetailsById } from '../components/Details';
 
-import { findUnique, restCallToBackendAsync, sortArrayBy } from "../components/helper";
+import { findUnique, GenericGroup, sortArrayBy } from "../components/helpers";
 
 import { TodoItem, TodoUpdateItem } from '../models/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 import { UpdateFunc } from "../models/Definitions"
-import { GroupItem } from "../models/Definitions"
+// import { GroupItem } from "../models/Definitions"
 
 
 
@@ -151,11 +151,11 @@ export const ListPage = ({
 
     const createLists = (items : TodoItem[]) => {
 
-        let groups : GroupItem[] = [];
+        let groups : GenericGroup<TodoItem>[] = [];
         
         if( listid === "current" ){            
             const groups_uniq = findUnique(items, "listid", false)
-            groups = groups_uniq.map( ( el : GroupItem )=>{
+            groups = groups_uniq.map( ( el : GenericGroup<TodoItem> )=>{
                 el.value = "(" + el.value + ") " + getItemGlobalList( lists, el.value ).name
                 return el
             }
@@ -172,7 +172,7 @@ export const ListPage = ({
                 { ( horizontally && groups ) ? (
                     // 
                     <div style={ { "width": "100%", "overflowX": "scroll" } }>
-                        { groups.map((item: GroupItem, index: number ) => (
+                        { groups.map((item: GenericGroup<TodoItem> , index: number ) => (
                             <div style={ { "width": groups.length * 310 + "px" } }>
                             <div key={ index } style={ { "width": "300px", "float": "left", "marginRight": "10px" } } >
                                 <MyCard>
@@ -198,7 +198,7 @@ export const ListPage = ({
 
                 ) : (
                     <Grid container spacing={ 2 } >
-                        { groups && groups.map((item: GroupItem, index: number ) => (
+                        { groups && groups.map((item: GenericGroup<TodoItem>, index: number ) => (
                             <Grid key={ "xxxyy"+ index } item xs={ 12 }>
                                 <MyCard key={ "agjhl"+index }>
                                     <ListQ
@@ -250,11 +250,11 @@ export const ListPage = ({
                                     <Grid item xs={ 10 } lg={ 8 } >
                                         { edit ? (
                                             <AddForm 
-                                            renderModal={false} 
-                                            onClickFunction={ addItemHandle } 
-                                            handleDeleteClick={undefined}
-                                            type={ listtype } 
-                                            groups={ findUnique(todos, "group", false) } ></AddForm>
+                                                renderModal={false} 
+                                                onClickFunction={ addItemHandle } 
+                                                handleDeleteClick={undefined}
+                                                type={ listtype } 
+                                                groups={ findUnique(todos, "group", false) } ></AddForm>
                                         ) : (
                                             <FilterComponent filterText={filterText} callback={ callbackFilter } callbackEnter={ callbackEnter } />
                                         ) }
