@@ -1,9 +1,32 @@
-import { updateFunctionTodoMain } from "../components/GraphQlFunctions"
+import { updateFunctionTodoMain, createFunctionTodoMain } from "../components/GraphQlFunctions"
 import { TodoMainItem } from "../models/TodoItems"
 
 // import { TodoMainAction } from "./reducerMainTodos"
-import { TodoMainAction, TodoMainActionType, TodoMainActionTOGGLE, TodoMainActionUPDATE } from "./dispatchFunctionsMainTodos"
+import { TodoMainAction, TodoMainActionType, TodoMainActionTOGGLE, TodoMainActionUPDATE, TodoMainActionADD } from "./dispatchFunctionsMainTodos"
 import { UpdateTodoMainInput } from "../API"
+
+const AddItem = ( state: TodoMainItem[], action: TodoMainActionADD  ) => {
+
+    const payload = action.payload;
+
+    const newEl : TodoMainItem = {
+        component : payload.component,
+        render : payload.render,
+        icon : payload.icon,
+        listid : payload.listid,
+        id:  payload.id,
+        name: payload.name, 
+        group: payload.group,        
+        owner: payload.owner,
+        navbar: payload.navbar        
+    }
+
+    createFunctionTodoMain( newEl )
+ 
+    
+    return [ ...state,  newEl]
+}
+
 
 // functions
 const ReducerToggleItem = ( state: TodoMainItem[], action: TodoMainActionTOGGLE  ) => {
@@ -33,6 +56,7 @@ const ReducerUpdateItem = ( state: TodoMainItem[], action: TodoMainActionUPDATE 
 
             if( action.payload.name) newItem.name = action.payload.name;
             if( action.payload.group) newItem.group = action.payload.group;
+            if( action.payload.icon ) newItem.icon = action.payload.icon;
             
             return newItem
         } else {
@@ -51,6 +75,8 @@ export const reducerTodoMain = (state: TodoMainItem[], action: TodoMainAction ) 
             return ReducerToggleItem( state, action );
         case TodoMainActionType.UPDATE:
             return ReducerUpdateItem( state, action );
+        case TodoMainActionType.ADD:
+            return AddItem( state, action );
     
             
         default:

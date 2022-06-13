@@ -46,12 +46,13 @@ export type DeleteTodosInput = {
 export type CreateTodoMainInput = {
   id: string,
   owner: string,
-  component?: string | null,
-  icon?: string | null,
-  listid?: number | null,
-  name?: string | null,
-  navbar?: boolean | null,
-  render?: string | null,
+  component: string,
+  icon: string,
+  listid: string,
+  name: string,
+  group: string,
+  navbar: boolean,
+  render: string,
 };
 
 export type TodoMain = {
@@ -60,7 +61,7 @@ export type TodoMain = {
   owner: string,
   component?: string | null,
   icon?: string | null,
-  listid?: number | null,
+  listid?: string | null,
   name?: string | null,
   navbar?: boolean | null,
   render?: string | null,
@@ -72,7 +73,7 @@ export type UpdateTodoMainInput = {
   owner?: string | null,
   component?: string | null,
   icon?: string | null,
-  listid?: number | null,
+  listid?: string | null,
   name?: string | null,
   navbar?: boolean | null,
   render?: string | null,
@@ -214,7 +215,7 @@ export type CreateTodoMainMutation = {
     owner: string,
     component?: string | null,
     icon?: string | null,
-    listid?: number | null,
+    listid?: string | null,
     name?: string | null,
     navbar?: boolean | null,
     render?: string | null,
@@ -233,7 +234,7 @@ export type UpdateTodoMainMutation = {
     owner: string,
     component?: string | null,
     icon?: string | null,
-    listid?: number | null,
+    listid?: string | null,
     name?: string | null,
     navbar?: boolean | null,
     render?: string | null,
@@ -252,7 +253,7 @@ export type DeleteTodoMainMutation = {
     owner: string,
     component?: string | null,
     icon?: string | null,
-    listid?: number | null,
+    listid?: string | null,
     name?: string | null,
     navbar?: boolean | null,
     render?: string | null,
@@ -341,7 +342,7 @@ export type GetTodoMainQuery = {
     owner: string,
     component?: string | null,
     icon?: string | null,
-    listid?: number | null,
+    listid?: string | null,
     name?: string | null,
     navbar?: boolean | null,
     render?: string | null,
@@ -364,7 +365,7 @@ export type ListTodoMainsQuery = {
       owner: string,
       component?: string | null,
       icon?: string | null,
-      listid?: number | null,
+      listid?: string | null,
       name?: string | null,
       navbar?: boolean | null,
       render?: string | null,
@@ -424,7 +425,7 @@ export type OnCreateTodoMainSubscriptionVariables = {
   owner?: string | null,
   component?: string | null,
   icon?: string | null,
-  listid?: number | null,
+  listid?: string | null,
 };
 
 export type OnCreateTodoMainSubscription = {
@@ -434,7 +435,7 @@ export type OnCreateTodoMainSubscription = {
     owner: string,
     component?: string | null,
     icon?: string | null,
-    listid?: number | null,
+    listid?: string | null,
     name?: string | null,
     navbar?: boolean | null,
     render?: string | null,
@@ -447,7 +448,7 @@ export type OnUpdateTodoMainSubscriptionVariables = {
   owner?: string | null,
   component?: string | null,
   icon?: string | null,
-  listid?: number | null,
+  listid?: string | null,
 };
 
 export type OnUpdateTodoMainSubscription = {
@@ -457,7 +458,7 @@ export type OnUpdateTodoMainSubscription = {
     owner: string,
     component?: string | null,
     icon?: string | null,
-    listid?: number | null,
+    listid?: string | null,
     name?: string | null,
     navbar?: boolean | null,
     render?: string | null,
@@ -470,7 +471,7 @@ export type OnDeleteTodoMainSubscriptionVariables = {
   owner?: string | null,
   component?: string | null,
   icon?: string | null,
-  listid?: number | null,
+  listid?: string | null,
 };
 
 export type OnDeleteTodoMainSubscription = {
@@ -480,7 +481,7 @@ export type OnDeleteTodoMainSubscription = {
     owner: string,
     component?: string | null,
     icon?: string | null,
-    listid?: number | null,
+    listid?: string | null,
     name?: string | null,
     navbar?: boolean | null,
     render?: string | null,

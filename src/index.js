@@ -16,7 +16,7 @@ import {
 
 import { useStyles, theme } from "./Styles"
 
-import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, ListItemText } from "@material-ui/core";
+import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip } from "@material-ui/core";
 
 // import { ListTodo } from './listTodo';
 import { Error } from "./components/Error"
@@ -134,7 +134,13 @@ const App = () => {
 
           { userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <NavLink key={ "nl_" + index } to={ "/" + [item.component, item.listid, item.render].join('/') } className={ classes.menuButton }   ><MyIcon icon={ item.icon } /> </NavLink>
+              <div className={ classes.menuButton }   >
+              <Tooltip title={ item.name } aia-label="add">
+                <NavLink key={ "nl_" + index } to={ "/" + [item.component, item.listid, item.render].join('/') } className={ classes.menuButton }    >
+                  <MyIcon icon={ item.icon } />
+                </NavLink>
+              </Tooltip>
+              </div>
             )
           }
           ) }

@@ -53,7 +53,7 @@ export const onCreateTodoMain = /* GraphQL */ `
     $owner: String
     $component: String
     $icon: String
-    $listid: Int
+    $listid: String
   ) {
     onCreateTodoMain(
       id: $id
@@ -80,7 +80,7 @@ export const onUpdateTodoMain = /* GraphQL */ `
     $owner: String
     $component: String
     $icon: String
-    $listid: Int
+    $listid: String
   ) {
     onUpdateTodoMain(
       id: $id
@@ -107,7 +107,7 @@ export const onDeleteTodoMain = /* GraphQL */ `
     $owner: String
     $component: String
     $icon: String
-    $listid: Int
+    $listid: String
   ) {
     onDeleteTodoMain(
       id: $id

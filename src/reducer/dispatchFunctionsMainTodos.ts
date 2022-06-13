@@ -1,5 +1,6 @@
 import { group } from 'console';
-import { TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
+// import { TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
+import { UpdateTodoMainInput, TodoMain, CreateTodoMainInput } from "../API"
 
 export enum TodoMainActionType {
     TOGGLE  = 'TOGGLE',
@@ -30,20 +31,20 @@ export interface TodoMainActionDELETE extends TodoMainAction {
 
 export interface TodoMainActionUPDATE extends TodoMainAction {
     type: TodoMainActionType;
-    payload: {
-        id: string,
-        name?: string,
-        icon?: string,
-        group?: string
-    }
+    payload: UpdateTodoMainInput
 }
 
-// Dispatcher Functions
-// const handleComplete = () => {
-//     // Example / Replace
-//     // dispatch({ type: "COMPLETE", id: item.id });
-//     dispatch( ToggleItem( item.id ));
-// };
+export interface TodoMainActionADD extends TodoMainAction {
+    type: TodoMainActionType;
+    payload: CreateTodoMainInput
+}
+
+export const AddItem = ( item: CreateTodoMainInput ) : TodoMainActionADD  => (
+    {
+        type: TodoMainActionType.ADD,
+        payload: item
+    }
+)
 
 export const ToggleItem = (id: string ) : TodoMainActionUPDATE => (
     {
@@ -52,7 +53,7 @@ export const ToggleItem = (id: string ) : TodoMainActionUPDATE => (
     }
 )
 
-export const UpdateItem = ( item : TodoMainUpdateItem ) => (
+export const UpdateItem = ( item : UpdateTodoMainInput ) : TodoMainActionUPDATE => (
     {
         type: TodoMainActionType.UPDATE,
         payload: item

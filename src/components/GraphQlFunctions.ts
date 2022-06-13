@@ -5,9 +5,9 @@ import API, {GraphQLResult, graphqlOperation}  from '@aws-amplify/api';
 import { getTodos, listTodos } from '../graphql/queries';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 import { updateTodoMain, deleteTodoMain, createTodoMain } from '../graphql/mutations';
-import { TodoUpdateItem, TodoMainUpdateItem } from "../models/TodoItems"
+// import { TodoUpdateItem, TodoMainUpdateItem } from "../models/TodoItems"
 import { Todos, TodoMain, GetTodosQuery, ListTodosQuery } from "../API"
-import { UpdateTodoMainInput} from "../API"
+import { UpdateTodoMainInput, UpdateTodosInput, CreateTodoMainInput } from "../API"
 
 
 
@@ -21,7 +21,7 @@ export async function removeItemByIdFcn( todoid : string ) {
 
 
 
-export async function updateFunction( inputObject : TodoUpdateItem  ) {
+export async function updateFunction( inputObject : UpdateTodosInput  ) {
     // let inputObject = { id: "" + id, name:name, listid, link, group, description, checked } // , link: link, group: group, owner: username, name: name, description: description } }
     console.log("updateFunction update", inputObject.id, "with", inputObject);
 
@@ -35,24 +35,18 @@ export async function updateFunctionTodoMain( inputObject: UpdateTodoMainInput  
     await API.graphql(graphqlOperation(updateTodoMain, { input: inputObject }));
 };
 
-// export type GetTodoQuery = {
-//     getTodo:  {
-//       __typename: "Todo",
-//       id: string,
-//       name: string,
-//       description: string | null,
-//     } | null,
-//   };
- 
+
+export async function createFunctionTodoMain( inputObject: CreateTodoMainInput  ) {
+
+    // let inputObject = { id: "" + id, name:name, icon, render, navbar, group } // , link: link, group: group, owner: username, name: name, description: description } }
+    console.log("createFunctionTodoMain ", inputObject.id, " with ", inputObject);
+    await API.graphql(graphqlOperation(createTodoMain, { input: inputObject }));
+};
+
+
 
 export const getTodosFcn = async ( itemid : string , owner : string ) => {
     
-    // console.log("getTodosFcn (id) : ", itemid )    
-    // if( itemid === undefined ) return {}
-
-    // const response = (await API.graphql(graphqlOperation(getTodos, { id: itemid, owner: owner } ))) as { data: GetTodosQuery } 
-
-    // const response : { data: GetTodosQuery }   = (await API.graphql(graphqlOperation(getTodos, { id: itemid, owner: owner } )))
     const response : any = (await API.graphql(graphqlOperation(getTodos, { id: itemid, owner: owner } )))
 
     // const response : GraphQLResult<GetTodoQuery> = await API.graphql(graphqlOperation(getTodos, { id: itemid, owner: owner }));

@@ -39,8 +39,6 @@ export const useStyles = makeStyles((theme) =>
     },
     menuButton: {
       flexGrow: 1,
-      verticalAlign: "middle",
-      // #marginRight: theme.spacing(3),
       color: "#FFFFFF",
       textDecoration: "none"
     },

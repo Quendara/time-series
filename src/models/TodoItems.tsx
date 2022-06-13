@@ -21,7 +21,7 @@ export interface TodoItem {
 
   export interface TodoMainItem {
     id: string;
-    listid: number;
+    listid: string;
     component: string;
     icon: string;
     owner: string;
@@ -31,17 +31,17 @@ export interface TodoItem {
     render: string;
   }
 
-  export interface TodoMainUpdateItem {
-    id: string;
-    listid?: number;
-    component?: string;
-    icon?: string;
-    owner?: string;
-    name?: string;
-    navbar?: boolean;
-    group?: string;
-    render?: string;
-  }  
+  // export interface TodoMainUpdateItem {
+  //   id: string;
+  //   listid?: number;
+  //   component?: string;
+  //   icon?: string;
+  //   owner?: string;
+  //   name?: string; 
+  //   navbar?: boolean;
+  //   group?: string;
+  //   render?: string;
+  // }  
 
 //   export class TodoMainItemUpdate implements TodoMainItem  {
 //     id: string;

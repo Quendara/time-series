@@ -7,7 +7,7 @@ import React, { Component, useState, useEffect, useReducer } from "react";
 // import { listTodos, getTodos } from '../graphql/queries';
 
 
-import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box, Switch, MenuItem, Divider } from '@material-ui/core';
+import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box, Switch, MenuItem, Divider, Button } from '@material-ui/core';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@material-ui/core';
 
 import {
@@ -23,63 +23,75 @@ import { TextEdit } from "../components/TextEdit";
 import StarIcon from '@material-ui/icons/Star';
 
 import { reducerTodoMain } from "../reducer/reducerTodoMain"
-import { ToggleItem, UpdateItem } from "../reducer/dispatchFunctionsMainTodos"
+import { ToggleItem, UpdateItem, AddItem } from "../reducer/dispatchFunctionsMainTodos"
 
-import { TodoItem, TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
+import { TodoItem, TodoMainItem } from "../models/TodoItems"
+import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 // import { GroupItem } from "../models/Definitions"
 
 import { useStyles } from "../Styles"
 
 
 interface NavItemProps {
-    item : TodoMainItem;
-    dispatch : any; // @todo
-    render : string;
+    item: TodoMainItem;
+    dispatch: any; // @todo
+    render: string;
 }
 
-const NavItem = ({ item, dispatch, render } : NavItemProps) => {
+const NavItem = ({ item, dispatch, render }: NavItemProps) => {
 
     const classes = useStyles();
 
-    const handleComplete = () => { 
+    const handleComplete = () => {
         // dispatch({ type: "COMPLETE", id: item.id });
         dispatch(ToggleItem(item.id))
-    }; 
+    };
 
     const handleEditName = (name: string) => {
         // dispatch({ type: "COMPLETE", id: item.id });
         // dispatch(UpdateItem(item.id, name)) 
-        let element : TodoMainUpdateItem
+        let element: UpdateTodoMainInput
         element = {
             id: item.id,
             name: name
             // component: 
-        }        
+        }
 
-        dispatch(UpdateItem( element )) 
-        
+        dispatch(UpdateItem(element))
+
     };
 
     const handleEditGroup = (group: string) => {
         // dispatch({ type: "COMPLETE", id: item.id });
-        let element : TodoMainUpdateItem
+        let element: UpdateTodoMainInput
         element = {
             id: item.id,
             group: group
-        }        
+        }
 
-        dispatch(UpdateItem( element )) 
-    };    
+        dispatch(UpdateItem(element))
+    };
+
+    const handleEditIcon = (icon: string) => {
+        // dispatch({ type: "COMPLETE", id: item.id });
+        let element: UpdateTodoMainInput
+        element = {
+            id: item.id,
+            icon: icon
+        }
+        dispatch(UpdateItem(element))
+    };
+
 
     if (render === "simple") {
         return (
-            <NavLink className={ classes.title } to={ "/" + [item.component, item.listid, item.render].join('/') }   >
+            <NavLink className={classes.title} to={"/" + [item.component, item.listid, item.render].join('/')}   >
                 <MenuItem>
                     <ListItemIcon>
-                        <MyIcon icon={ item.icon } />
+                        <MyIcon icon={item.icon} />
                     </ListItemIcon>
                     <ListItemText
-                        primary={ item.name }
+                        primary={item.name}
                     ></ListItemText>
                 </MenuItem>
             </NavLink>)
@@ -89,25 +101,27 @@ const NavItem = ({ item, dispatch, render } : NavItemProps) => {
             <ListItem>
                 <ListItemAvatar >
                     <NavLink
-                        className={ classes.title }
-                        to={ "/" + [item.component, item.listid, item.render].join('/') }   >
+                        className={classes.title}
+                        to={"/" + [item.component, item.listid, item.render].join('/')}   >
 
                         <Avatar >
-                            <MyIcon icon={ item.icon } />
+                            <MyIcon icon={item.icon} />
                         </Avatar>
                     </NavLink>
                 </ListItemAvatar>
-                <ListItemText primary={                    
-                    <TextEdit value={ item.name } callback={ handleEditName } /> 
+                <ListItemText primary={
+                    <TextEdit value={item.name} callback={handleEditName} />
                 }
-                    secondary={ <>
-                    <TextEdit value={ item.group ? item.group : "keine" } callback={ handleEditGroup } />
-                    { [item.listid, item.render].join(" - ") }
-                    </> } />
+                    secondary={<>
+
+                        <TextEdit value={item.group ? item.group : "keine"} label="group" callback={handleEditGroup} />
+                        <TextEdit value={item.icon ? item.icon : "keine"} label="icon" callback={handleEditIcon} />
+                        {[item.listid, item.render].join(" - ")}
+                    </>} />
                 <ListItemSecondaryAction>
                     <Tooltip title="Show in navbar" aria-label="add">
-                        <IconButton onClick={ handleComplete } edge="end" aria-label="delete">
-                            <MyIcon icon={ item.navbar ? "check" : "remove" } />
+                        <IconButton onClick={handleComplete} edge="end" aria-label="delete">
+                            <MyIcon icon={item.navbar ? "check" : "remove"} />
                         </IconButton>
                     </Tooltip>
                 </ListItemSecondaryAction>
@@ -119,37 +133,58 @@ const NavItem = ({ item, dispatch, render } : NavItemProps) => {
 
 
 interface NavItemListProps {
-    items : TodoMainItem[];
-    render : string;
-    groupname : string;
+    items: TodoMainItem[];
+    render: string;
+    groupname: string;
 }
 
-const NavItemList = ({ items, render, groupname } : NavItemListProps) => {
+const NavItemList = ({ items, render, groupname }: NavItemListProps) => {
     const [todos, dispatch] = useReducer(reducerTodoMain, items);
 
+    const handleEditIcon = () => {
+        // dispatch({ type: "COMPLETE", id: item.id });
+        const id = "" + new Date().getTime();
+
+        let element: CreateTodoMainInput = {
+            id: id,
+            component: "list",
+            render: "todo",
+            icon: "chat",
+            listid: "_" + id,
+            name: "New List",
+            group: groupname,
+            owner: "andre",
+            navbar: false
+        }
+        dispatch(AddItem(element))
+    };
+
+
     return (<>
-        { todos !== undefined &&
+        {todos !== undefined &&
             <List>
-                <ListItem>{ groupname } </ListItem>
-                
-                { todos.map((item, index) => (
-                    <NavItem key={ index } item={ item } render={ render } dispatch={ dispatch } />
-                )) }
-            </List> }
+                <ListItem>{groupname}
+                    <Button onClick={handleEditIcon}  >+</Button>
+                </ListItem>
+
+                {todos.map((item: TodoMainItem, index: number) => (
+                    <NavItem key={index} item={item} render={render} dispatch={dispatch} />
+                ))}
+            </List>}
     </>
     )
 
 }
 
 interface MainNavigationProps {
-    handleSetConfig : any;
-    render : string;
-    username : string;
+    handleSetConfig: any;
+    render: string;
+    username: string;
 }
 
 
 
-export const MainNavigation = ({ render, username, handleSetConfig } : MainNavigationProps ) => {
+export const MainNavigation = ({ render, username, handleSetConfig }: MainNavigationProps) => {
 
     // const [items, setItems] = useState(userConfig);
     const items = useGetMainTodos(username)
@@ -162,26 +197,20 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
 
         }, [items])
 
-    
+    const groups: GenericGroup<TodoMainItem>[] = findUnique(items, "group", false)
 
-    
-    const groups : GenericGroup<TodoMainItem>[]  = findUnique(items, "group", false)
-
-   
-
-
-    // { groups.map((item: GroupItem, index: number) => (
     return (
         <>
 
-            { items !== undefined &&
+            {items !== undefined &&
                 <>
-                    
-                    { groups.map((item : GenericGroup<TodoMainItem> , index : number ) => (
-                        <NavItemList key={ "sfdfsd"+index } groupname = {item.value} items={ item.listitems } render={ render } />
 
-                    ) )}
-                </> }
+
+                    {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
+                        <NavItemList key={"sfdfsd" + index} groupname={item.value} items={item.listitems} render={render} />
+
+                    ))}
+                </>}
         </>
     )
 }
@@ -190,7 +219,7 @@ export const MainNavigation = ({ render, username, handleSetConfig } : MainNavig
 //     list : TodoMainItem[];
 //     anchor : string;
 //     name : string;
-// } 
+// }
 
 // export const Navigation = ({ list, anchor, name } : NavigationProps ) => {
 
