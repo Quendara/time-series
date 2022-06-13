@@ -82,6 +82,8 @@ const NavItem = ({ item, dispatch, render }: NavItemProps) => {
         dispatch(UpdateItem(element))
     };
 
+    const bull = <span style={{"margin":"5px"}}>•</span>;
+
 
     if (render === "simple") {
         return (
@@ -115,8 +117,10 @@ const NavItem = ({ item, dispatch, render }: NavItemProps) => {
                     secondary={<>
 
                         <TextEdit value={item.group ? item.group : "keine"} label="group" callback={handleEditGroup} />
+                        {bull}
                         <TextEdit value={item.icon ? item.icon : "keine"} label="icon" callback={handleEditIcon} />
-                        {[item.listid, item.render].join(" - ")}
+                        {bull}
+                        { item.render }
                     </>} />
                 <ListItemSecondaryAction>
                     <Tooltip title="Show in navbar" aria-label="add">

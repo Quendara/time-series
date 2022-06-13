@@ -51,7 +51,7 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                         // error = { hasError(internalName) }
                         label={label}
                         size="small"
-                        fullWidth
+                        
                         variant="outlined"
                         onKeyPress={ (e:React.KeyboardEvent<HTMLInputElement> ) => checkEnter(e)}
                         onChange={ (e:any) => setInternalName(e.target.value)}
