@@ -10,21 +10,22 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
 
 import { DetailsMarkdown } from "./DetailsMarkdown"
-import { TodoItem, TodoUpdateItem } from "../models/TodoItems"
+import { TodoItem, TodoMainItem, createEmptyTodoItem, TodoUpdateItem } from "../models/TodoItems"
 
 import { findUnique } from "../components/helpers";
 import { useStyles } from "../Styles"
 
 
-import { UpdateFunc } from "../models/Definitions"
+
 import { AddForm } from "./AddForm";
 
-import { removeItemByIdFcn } from "../components/GraphQlFunctions"
+import { removeItemById } from "../components/GraphQlFunctions"
 
 import { useGetTodos } from "../hooks/useGetTodos"
 import { useGetTodo } from "../hooks/useGetTodo"
 // import { group } from "console";
 import { TextEdit } from "../components/TextEdit";
+import { UpdateTodosInput } from "../API"
 
 interface PropMTA {
     initValue: String;
@@ -168,14 +169,14 @@ const MarkdownTextareaAutosize = ({ initValue, updateFunction }: PropMTA) => {
 interface Props {
     itemid: string;
     listtype: string;
-    updateFunction: UpdateFunc;
-    lists: TodoItem[];
+    updateFunction: ( input : UpdateTodosInput ) => any;    
+    lists: TodoMainItem[];
 }
 
 export const DetailsById = ({ itemid, listtype, updateFunction, lists }: Props) => {
 
     const item = useGetTodo(itemid);
-    const todos = useGetTodos(item?.listid);
+    const todos = useGetTodos( item?.listid );
 
 
     return (
@@ -186,10 +187,10 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists }: Props) 
 
 interface PropsDetails {
     selectedItem: TodoItem | undefined;
-    updateFunction: UpdateFunc;
+    updateFunction: ( input : UpdateTodosInput ) => any;  
     listtype: string;
     todos: TodoItem[];
-    lists: TodoItem[];
+    lists: TodoMainItem[];
 }
 
 
@@ -226,7 +227,13 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
         if (edit && selectedItem) // ( selectedItem.id !== selectedItemId ) 
         {
-            updateFunction(selectedItem.id, { description: selectedItemValue })
+            const value : UpdateTodosInput = {
+                id: selectedItem.id,
+                description: selectedItemValue 
+            }
+    
+            updateFunction( value )
+
         }
 
         if (selectedItem) {
@@ -249,7 +256,12 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
         if (currentItem === undefined) return;
 
-        updateFunction(currentItem.id, { description: selectedItemValue })
+        const value : UpdateTodosInput = {
+            id: currentItem.id,
+            description: selectedItemValue 
+        }
+
+        updateFunction( value )
         setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
     }
@@ -258,31 +270,41 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
         if (currentItem === undefined) return;
 
-        updateFunction(currentItem.id, { link: linkUrl, name: linkName, group: groupname })
+        const value : UpdateTodosInput = {
+            id: currentItem.id,
+            link: linkUrl,
+            name: linkName,
+            group: groupname 
+        }        
+
+        updateFunction( value )
         setEdit(false)
     }
 
-    const getGlobalList = (lists: TodoItem[], id: number): TodoUpdateItem => {
+    const getGlobalList = (lists: TodoItem[], id: string): TodoItem => {
         if (lists !== undefined) {
-            const fl = lists.filter(item => +item.listid === +id)
+            const fl = lists.filter( item => item.listid === id )
             // console.log("getGlobalList", id, fl, lists)
 
             if (fl.length > 0) {
                 return fl[0]
             }
         }
-        return {
-            id: "666",
-            name: "Undefined"
-        }
+        return createEmptyTodoItem()
     }
 
-    const handleListChange = (selecedList: TodoItem) => {
+    const handleListChange = (selecedList: TodoMainItem ) => {
 
         if (selecedList !== null && selectedItem) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
 
-            updateFunction(selectedItem.id, { listid: selecedList.id })
+            const value : UpdateTodosInput = {
+                id: selectedItem.id,
+                listid: selecedList.id 
+            }  
+            updateFunction( value )          
+
+            // updateFunction(selectedItem.id, { listid: selecedList.id })
 
             // setListValue(selecedList.name)
         }
@@ -294,7 +316,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
     const removeItemHandle = () => {
         if (selectedItem) {
             setCurrentItem(undefined)
-            removeItemByIdFcn(selectedItem.id)
+            removeItemById(selectedItem.id)
         }
     }
 
@@ -320,11 +342,10 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
                         <List>
                             <ListItem>
-
                                 <TextEdit
                                     value={currentItem.name}
                                     label="Name"
-                                    callback={(newName: string) => updateFunction(currentItem.id, { name: newName })} >
+                                    callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >
                                     <h1>{currentItem.name} </h1>
                                 </TextEdit>
                                 <hr />
@@ -333,7 +354,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                     value={currentItem.group}
                                     groups={findUnique(todos, "group", false)}
                                     label="Group"
-                                    callback={(group) => updateFunction(currentItem.id, { group: group })} >
+                                    callback={(group) => updateFunction( {id: currentItem.id, group: group })} >
                                     {currentItem.group}
                                 </TextEdit>
 

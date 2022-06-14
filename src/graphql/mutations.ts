@@ -13,7 +13,6 @@ export const createTodos = /* GraphQL */ `
       link
       checked
       group
-      datum
     }
   }
 `;
@@ -28,7 +27,6 @@ export const updateTodos = /* GraphQL */ `
       link
       checked
       group
-      datum
     }
   }
 `;
@@ -43,7 +41,6 @@ export const deleteTodos = /* GraphQL */ `
       link
       checked
       group
-      datum
     }
   }
 `;

@@ -26,7 +26,8 @@ import { GenericGroup } from "../components/helpers"
 
 import { AddForm } from "./AddForm"
 import { DetailsById } from "./Details"
-import { UpdateFunc } from "../models/Definitions" 
+// import { UpdateFunc } from "../models/Definitions" 
+import { UpdateTodosInput } from "../API"
 
 const useStyles = makeStyles({
     card_main: {
@@ -70,10 +71,10 @@ interface PropsEl {
     link: string;
     checked: boolean;
     id: string;
-    removeClickFunction: (id: string) => number;
-    updateFunction: UpdateFunc;
-    selectFunction: (id: string) => number;
-    toggleFunction: (id: string) => number;
+    removeClickFunction: (id: string) => void;
+    updateFunction:  ( item : UpdateTodosInput ) => void;
+    selectFunction: (id: string) => void;
+    toggleFunction: (id: string) => void;
     type: string;       // @todo: later enum
     groups: any;
     group: string;
@@ -122,7 +123,7 @@ const ListEl = (
     }
 
     const onUpdateFunction = (linkName: string, linkUrl: string, groupname: string) => {
-        updateFunction(id, { link: linkUrl, name: linkName, group: groupname })
+        updateFunction( { id, link: linkUrl, name: linkName, group: groupname })
         setEdit(false)
     }
 
@@ -315,9 +316,9 @@ interface PropsQ {
     removeItemHandle: any;
     header: string;
     addItemHandle: any;
-    updateFunction: UpdateFunc;
+    updateFunction: ( item : UpdateTodosInput ) => void;
+    toggleFunction: (id: string) => void;
     selectFunction: any;
-    toggleFunction: (id: string) => number;
     type: string;
     group: string;
     groups: GenericGroup<TodoItem>[] ;
@@ -355,7 +356,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                                 {printRemaining(filterCompleted(items).length, items.length)}
                             </ListItemSecondaryAction>
                         }
-                    </ListItem>
+                    </ListItem> 
                 </List>
             </MyCardHeader >
 

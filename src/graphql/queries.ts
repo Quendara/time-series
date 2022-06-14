@@ -3,8 +3,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const getTodos = /* GraphQL */ `
-  query GetTodos($id: String!, $owner: String!) {
-    getTodos(id: $id, owner: $owner) {
+  query GetTodos($id: String!) {
+    getTodos(id: $id) {
       id
       owner
       listid
@@ -13,7 +13,6 @@ export const getTodos = /* GraphQL */ `
       link
       checked
       group
-      datum
     }
   }
 `;
@@ -33,7 +32,6 @@ export const listTodos = /* GraphQL */ `
         link
         checked
         group
-        datum
       }
       nextToken
     }
@@ -51,7 +49,6 @@ export const queryTodos = /* GraphQL */ `
         link
         checked
         group
-        datum
       }
       nextToken
     }

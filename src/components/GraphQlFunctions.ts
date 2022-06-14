@@ -7,25 +7,29 @@ import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 import { updateTodoMain, deleteTodoMain, createTodoMain } from '../graphql/mutations';
 // import { TodoUpdateItem, TodoMainUpdateItem } from "../models/TodoItems"
 import { Todos, TodoMain, GetTodosQuery, ListTodosQuery } from "../API"
-import { UpdateTodoMainInput, UpdateTodosInput, CreateTodoMainInput } from "../API"
+import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
+import { UpdateTodosInput, CreateTodosInput } from "../API"
 
 
 
-export async function removeItemByIdFcn( todoid : string ) {
 
-    // todo: remove username from dynamo db key
-    const username = "andre"
-    await API.graphql(graphqlOperation(deleteTodos, { input: { id: todoid, owner: username } }));
+
+export async function createFunctionTodo( inputObject: CreateTodosInput  ) {
+
+    // let inputObject = { id: "" + id, name:name, icon, render, navbar, group } // , link: link, group: group, owner: username, name: name, description: description } }
+    console.log("createFunctionTodo ", inputObject.id, " with ", inputObject);
+    await API.graphql(graphqlOperation(createTodos, { input: inputObject }));
 };
 
-
-
-
-export async function updateFunction( inputObject : UpdateTodosInput  ) {
+export async function updateFunctionTodo( inputObject : UpdateTodosInput  ) {
     // let inputObject = { id: "" + id, name:name, listid, link, group, description, checked } // , link: link, group: group, owner: username, name: name, description: description } }
     console.log("updateFunction update", inputObject.id, "with", inputObject);
 
     await API.graphql(graphqlOperation(updateTodos, { input: inputObject }));
+};
+
+export async function removeItemById( todoid : string ) {
+    await API.graphql(graphqlOperation(deleteTodos, { input: { id: todoid } }));
 };
 
 export async function updateFunctionTodoMain( inputObject: UpdateTodoMainInput  ) {

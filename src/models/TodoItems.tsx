@@ -1,12 +1,24 @@
 
 export interface TodoItem {
     id: string;
-    listid: number;
+    listid: string;
     name: string;
     checked: boolean;
     group: string;
     description: string;
     link: string; 
+  }
+
+  export const createEmptyTodoItem = () : TodoItem => {
+    return {  
+        id: "666",
+        listid: "string",
+        name: "string",
+        checked: false,
+        group: "undefined",
+        description: "",
+        link: ""
+      } 
   }
 
   export interface TodoUpdateItem {
@@ -30,6 +42,20 @@ export interface TodoItem {
     group: string;
     render: string;
   }
+
+  // export const createEmptyTodoMainItem = () : TodoItem => {
+  //   return {  
+  //     id: "";
+  //     listid: "";
+  //     component: "";
+  //     icon: "";
+  //     owner: "";
+  //     name: "string";
+  //     navbar: "boolean";
+  //     group: string;
+  //     render: string;
+  //     } 
+  // }
 
   // export interface TodoMainUpdateItem {
   //   id: string;

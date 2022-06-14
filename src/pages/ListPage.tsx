@@ -27,23 +27,25 @@ import { Details, DetailsById } from '../components/Details';
 
 import { findUnique, GenericGroup, sortArrayBy } from "../components/helpers";
 
-import { TodoItem, TodoUpdateItem } from '../models/TodoItems';
+import { TodoItem, TodoUpdateItem, TodoMainItem } from '../models/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
-import { UpdateFunc } from "../models/Definitions"
+// import { UpdateFunc } from "../models/Definitions"
 // import { GroupItem } from "../models/Definitions"
 
+import { UpdateTodosInput } from "../API"
 
 
 interface  ListProps{
     todos: TodoItem[];
     listtype: string;
     listid: string;
+
     addItemHandle: any;
     // getItem: (id:string) => any;
-    removeItemHandle: (id:string) => number;
-    updateFunction: UpdateFunc;    
-    toggleFunction: (id:string) => number;
-    uncheckFunction: (id:string) => number;
+    removeItemHandle: (id:string) => void;
+    updateFunction: ( input : UpdateTodosInput ) => void;    
+    toggleFunction: (id:string) => void;
+    uncheckFunction: (id:string) => void;
     lists: any;
     
 }
@@ -108,7 +110,7 @@ export const ListPage = ({
         }
     }      
     
-    const getItemGlobalList = (lists: TodoItem[], id: string) : TodoUpdateItem => {
+    const getItemGlobalList = (lists: TodoMainItem[], id: string) : TodoMainItem | undefined => {
         if (lists !== undefined) {
             const fl = lists.filter(item => +item.listid === +id )
             // console.log("getGlobalList ", id, fl, lists)
@@ -117,11 +119,8 @@ export const ListPage = ({
                 return fl[0]
             }
         }
-        return {
-            id: "666",
-            name: "Undefined"
-        }
-    }    
+        return undefined;
+    }
     
 
     const filterCompleted = ( items: TodoItem[], hideCompleted: boolean, filterText: string) => {
@@ -156,7 +155,7 @@ export const ListPage = ({
         if( listid === "current" ){            
             const groups_uniq = findUnique(items, "listid", false)
             groups = groups_uniq.map( ( el : GenericGroup<TodoItem> )=>{
-                el.value = "(" + el.value + ") " + getItemGlobalList( lists, el.value ).name
+                el.value = "(" + el.value + ") " + getItemGlobalList( lists, el.value )?.name
                 return el
             }
             )             

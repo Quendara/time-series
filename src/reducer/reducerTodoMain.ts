@@ -21,9 +21,7 @@ const AddItem = ( state: TodoMainItem[], action: TodoMainActionADD  ) => {
         navbar: payload.navbar        
     }
 
-    createFunctionTodoMain( newEl )
- 
-    
+    createFunctionTodoMain( newEl )    
     return [ ...state,  newEl]
 }
 
@@ -77,8 +75,6 @@ export const reducerTodoMain = (state: TodoMainItem[], action: TodoMainAction ) 
             return ReducerUpdateItem( state, action );
         case TodoMainActionType.ADD:
             return AddItem( state, action );
-    
-            
         default:
             console.log("UNKNOWN action : ", action)
             return state;

@@ -5,31 +5,29 @@
 export type CreateTodosInput = {
   id: string,
   owner: string,
-  name?: string | null,
-  description?: string | null,
-  link?: string | null,
-  listid?: string | null,
-  checked?: boolean | null,
-  group?: string | null,
-  datum?: string | null,
+  name: string,
+  description: string,
+  link: string,
+  listid: string,
+  checked: boolean,
+  group: string,
 };
 
 export type Todos = {
   __typename: "Todos",
   id: string,
-  owner: string,
+  owner?: string | null,
   listid?: string | null,
   description?: string | null,
   name?: string | null,
   link?: string | null,
   checked?: boolean | null,
   group?: string | null,
-  datum?: string | null,
 };
 
 export type UpdateTodosInput = {
   id: string,
-  owner: string,
+  owner?: string | null,
   name?: string | null,
   link?: string | null,
   listid?: string | null,
@@ -40,7 +38,6 @@ export type UpdateTodosInput = {
 
 export type DeleteTodosInput = {
   id: string,
-  owner: string,
 };
 
 export type CreateTodoMainInput = {
@@ -155,14 +152,13 @@ export type CreateTodosMutation = {
   createTodos?:  {
     __typename: "Todos",
     id: string,
-    owner: string,
+    owner?: string | null,
     listid?: string | null,
     description?: string | null,
     name?: string | null,
     link?: string | null,
     checked?: boolean | null,
     group?: string | null,
-    datum?: string | null,
   } | null,
 };
 
@@ -174,14 +170,13 @@ export type UpdateTodosMutation = {
   updateTodos?:  {
     __typename: "Todos",
     id: string,
-    owner: string,
+    owner?: string | null,
     listid?: string | null,
     description?: string | null,
     name?: string | null,
     link?: string | null,
     checked?: boolean | null,
     group?: string | null,
-    datum?: string | null,
   } | null,
 };
 
@@ -193,14 +188,13 @@ export type DeleteTodosMutation = {
   deleteTodos?:  {
     __typename: "Todos",
     id: string,
-    owner: string,
+    owner?: string | null,
     listid?: string | null,
     description?: string | null,
     name?: string | null,
     link?: string | null,
     checked?: boolean | null,
     group?: string | null,
-    datum?: string | null,
   } | null,
 };
 
@@ -263,21 +257,19 @@ export type DeleteTodoMainMutation = {
 
 export type GetTodosQueryVariables = {
   id: string,
-  owner: string,
 };
 
 export type GetTodosQuery = {
   getTodos?:  {
     __typename: "Todos",
     id: string,
-    owner: string,
+    owner?: string | null,
     listid?: string | null,
     description?: string | null,
     name?: string | null,
     link?: string | null,
     checked?: boolean | null,
     group?: string | null,
-    datum?: string | null,
   } | null,
 };
 
@@ -293,14 +285,13 @@ export type ListTodosQuery = {
     items?:  Array< {
       __typename: "Todos",
       id: string,
-      owner: string,
+      owner?: string | null,
       listid?: string | null,
       description?: string | null,
       name?: string | null,
       link?: string | null,
       checked?: boolean | null,
       group?: string | null,
-      datum?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -318,14 +309,13 @@ export type QueryTodosQuery = {
     items?:  Array< {
       __typename: "Todos",
       id: string,
-      owner: string,
+      owner?: string | null,
       listid?: string | null,
       description?: string | null,
       name?: string | null,
       link?: string | null,
       checked?: boolean | null,
       group?: string | null,
-      datum?: string | null,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -379,14 +369,13 @@ export type OnCreateTodosSubscription = {
   onCreateTodos?:  {
     __typename: "Todos",
     id: string,
-    owner: string,
+    owner?: string | null,
     listid?: string | null,
     description?: string | null,
     name?: string | null,
     link?: string | null,
     checked?: boolean | null,
     group?: string | null,
-    datum?: string | null,
   } | null,
 };
 
@@ -394,14 +383,13 @@ export type OnUpdateTodosSubscription = {
   onUpdateTodos?:  {
     __typename: "Todos",
     id: string,
-    owner: string,
+    owner?: string | null,
     listid?: string | null,
     description?: string | null,
     name?: string | null,
     link?: string | null,
     checked?: boolean | null,
     group?: string | null,
-    datum?: string | null,
   } | null,
 };
 
@@ -409,14 +397,13 @@ export type OnDeleteTodosSubscription = {
   onDeleteTodos?:  {
     __typename: "Todos",
     id: string,
-    owner: string,
+    owner?: string | null,
     listid?: string | null,
     description?: string | null,
     name?: string | null,
     link?: string | null,
     checked?: boolean | null,
     group?: string | null,
-    datum?: string | null,
   } | null,
 };
 

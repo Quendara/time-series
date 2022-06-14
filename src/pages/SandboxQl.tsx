@@ -16,9 +16,9 @@ export const SandboxQl = ({
  } : Props ) => {
 
    
-    const todos1 = useGetTodos( 1 );
-    const todos2 = useGetTodos( 2 );
-    const todos23 = useGetTodos( 23 );
+    const todos1 = useGetTodos( "1" );
+    const todos2 = useGetTodos( "2" );
+    const todos23 = useGetTodos( "23" );
 
     const todo = useGetTodo( "1645803055693" );
 
