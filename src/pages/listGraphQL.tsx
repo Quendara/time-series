@@ -13,7 +13,7 @@ import { useGetTodos } from "../hooks/useGetTodos"
 // import { useGetTodo } from "../hooks/useGetTodo"
 
 import { reducerTodo } from "../reducer/reducerTodo"
-import { AddItem, ToggleItem, UpdateItem, DeleteItem } from "../reducer/dispatchFunctionsTodos"
+import { AddItem, ToggleItem, UncheckItem, UpdateItem, DeleteItem, UpdateState } from "../reducer/dispatchFunctionsTodos"
 import { UpdateTodosInput, CreateTodosInput } from "../API"
 
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
@@ -37,17 +37,15 @@ export const ListGraphQL = ({ lists, username }: ListProps) => {
 
     return (
         <>
-            {items.length > 0 ? (
-                <ListGraphInternal
-                    listid={listid}
-                    items={items}
-                    listtype={listtype}
-                    itemid={itemid}
-                    lists={lists}
-                    username={username} />
-            ) : (
-                <h1>EM</h1>
-            )}
+
+            <ListGraphInternal
+                listid={listid}
+                items={items}
+                listtype={listtype}
+                itemid={itemid}
+                lists={lists}
+                username={username} />
+
         </>
     )
 }
@@ -59,13 +57,19 @@ interface ListPropsInternal {
     username: string;
     listid: string;
     listtype: string;
-    itemid: string;
+    itemid?: string;
 }
 
 
-const ListGraphInternal = ({ items, lists, username, listid, listtype, itemid }: ListPropsInternal) => {
+export const ListGraphInternal = ({ items, lists, username, listid, listtype, itemid }: ListPropsInternal) => {
 
     const [todos, dispatch] = useReducer(reducerTodo, items);
+
+    useEffect(() => {
+
+        dispatch(UpdateState(items))
+
+    }, [items]);
 
     const isChecked = (checked: boolean) => {
         return checked
@@ -103,7 +107,7 @@ const ListGraphInternal = ({ items, lists, username, listid, listtype, itemid }:
     async function uncheckFunction(todoid: string) {
 
         // TODO WRONG FUNCTION
-        dispatch(ToggleItem(todoid))
+        dispatch(UncheckItem(todoid))
 
         // // get Check Status
         // let newStatus = false

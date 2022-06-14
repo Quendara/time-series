@@ -6,7 +6,7 @@ import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, Typogr
 import Alert from '@material-ui/lab/Alert';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
- 
+
 
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
 import IconButton from '@material-ui/core/IconButton';
@@ -35,33 +35,33 @@ import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 import { UpdateTodosInput } from "../API"
 
 
-interface  ListProps{
+interface ListProps {
     todos: TodoItem[];
     listtype: string;
     listid: string;
 
     addItemHandle: any;
     // getItem: (id:string) => any;
-    removeItemHandle: (id:string) => void;
-    updateFunction: ( input : UpdateTodosInput ) => void;    
-    toggleFunction: (id:string) => void;
-    uncheckFunction: (id:string) => void;
+    removeItemHandle: (id: string) => void;
+    updateFunction: (input: UpdateTodosInput) => void;
+    toggleFunction: (id: string) => void;
+    uncheckFunction: (id: string) => void;
     lists: any;
-    
+
 }
 
 export const ListPage = ({
     todos,
     listtype,
     listid,
-    addItemHandle,    
+    addItemHandle,
     removeItemHandle,
     // getItem,
-    updateFunction,    
+    updateFunction,
     toggleFunction,
     uncheckFunction,
     lists
- } : ListProps ) => {
+}: ListProps) => {
 
     // const [selectedItem, setSelectedItem] = useState(undefined);
     const [selectedItemId, setSelectedItemId] = useState("");
@@ -69,7 +69,7 @@ export const ListPage = ({
     const [edit, setEdit] = useState(false);
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
-    const [horizontally, setHorizontally] = useState(false);    
+    const [horizontally, setHorizontally] = useState(false);
 
     const { scrollX, scrollY } = useWindowScrollPositions()
 
@@ -80,39 +80,39 @@ export const ListPage = ({
             return;
         }
         setSuccessSnackbarMessage("");
-    };    
+    };
 
     useEffect(
         () => {
             setSelectedItemId("");
-        }, [listid])    
+        }, [listid])
 
-    const callbackFilter = (text : string ) => {
+    const callbackFilter = (text: string) => {
         setFilterText(text)
     }
 
-    async function selectHandle( id: string ) {
-         // const currentItem = await getItem(id)
-    //     // console.log( "selectHandle : ", id  )
+    async function selectHandle(id: string) {
+        // const currentItem = await getItem(id)
+        //     // console.log( "selectHandle : ", id  )
         // console.log( "selectHandle : ", currentItem)
         setSelectedItemId(id)
     }
 
 
     const callbackEnter = () => {
-        
-        if( filteredTodos.length === 1 )  {
 
-            setSuccessSnackbarMessage("Uncheck item " + filteredTodos[0].name );
+        if (filteredTodos.length === 1) {
 
-            uncheckFunction( filteredTodos[0].id )
+            setSuccessSnackbarMessage("Uncheck item " + filteredTodos[0].name);
+
+            uncheckFunction(filteredTodos[0].id)
             setFilterText("")
         }
-    }      
-    
-    const getItemGlobalList = (lists: TodoMainItem[], id: string) : TodoMainItem | undefined => {
+    }
+
+    const getItemGlobalList = (lists: TodoMainItem[], id: string): TodoMainItem | undefined => {
         if (lists !== undefined) {
-            const fl = lists.filter(item => +item.listid === +id )
+            const fl = lists.filter(item => +item.listid === +id)
             // console.log("getGlobalList ", id, fl, lists)
 
             if (fl.length > 0) {
@@ -121,13 +121,13 @@ export const ListPage = ({
         }
         return undefined;
     }
-    
 
-    const filterCompleted = ( items: TodoItem[], hideCompleted: boolean, filterText: string) => {
+
+    const filterCompleted = (items: TodoItem[], hideCompleted: boolean, filterText: string) => {
 
         let filteredItems = items
         if (hideCompleted) {
-            filteredItems = items.filter( ( item: TodoItem ) => {
+            filteredItems = items.filter((item: TodoItem) => {
                 return item.checked === false
             })
         }
@@ -142,81 +142,81 @@ export const ListPage = ({
         }
 
         return filteredItems
-    }    
+    }
 
 
-    const filteredTodos = filterCompleted( todos , hideCompleted, filterText)
+    const filteredTodos = filterCompleted(todos, hideCompleted, filterText)
 
 
-    const createLists = (items : TodoItem[]) => {
+    const createLists = (items: TodoItem[]) => {
 
-        let groups : GenericGroup<TodoItem>[] = [];
-        
-        if( listid === "current" ){            
+        let groups: GenericGroup<TodoItem>[] = [];
+
+        if (listid === "current") {
             const groups_uniq = findUnique(items, "listid", false)
-            groups = groups_uniq.map( ( el : GenericGroup<TodoItem> )=>{
-                el.value = "(" + el.value + ") " + getItemGlobalList( lists, el.value )?.name
+            groups = groups_uniq.map((el: GenericGroup<TodoItem>) => {
+                el.value = "(" + el.value + ") " + getItemGlobalList(lists, el.value)?.name
                 return el
             }
-            )             
+            )
         }
-        else{
-            groups= findUnique(items, "group", false)            
+        else {
+            groups = findUnique(items, "group", false)
         }
 
-        
+
 
         return (
             <>
-                { ( horizontally && groups ) ? (
+                {(horizontally && groups) ? (
                     // 
-                    <div style={ { "width": "100%", "overflowX": "scroll" } }>
-                        { groups.map((item: GenericGroup<TodoItem> , index: number ) => (
-                            <div style={ { "width": groups.length * 310 + "px" } }>
-                            <div key={ index } style={ { "width": "300px", "float": "left", "marginRight": "10px" } } >
-                                <MyCard>
-                                    <ListQ
-                                        key={ index }
-                                        editList={ edit }
-                                        header={ item.value }
-                                        group={ item.value }
-                                        items={ sortArrayBy(item.listitems, "name") }
-                                        groups={ groups }
-                                        addItemHandle={ addItemHandle }
-                                        type={ listtype }
-                                        selectFunction={ selectHandle }
-                                        removeItemHandle={ removeItemHandle }
-                                        updateFunction={ updateFunction }
-                                        toggleFunction={ toggleFunction }
-                                    />
-                                </MyCard>
+                    <div style={{ "width": "100%", "overflowX": "scroll" }}>
+                        {groups.map((item: GenericGroup<TodoItem>, index: number) => (
+                            <div key={"xxy" + index} style={{ "width": groups.length * 310 + "px" }}>
+                                <div key={index} style={{ "width": "300px", "float": "left", "marginRight": "10px" }} >
+                                    <MyCard>
+                                        <ListQ
+                                            key={index}
+                                            editList={edit}
+                                            header={item.value}
+                                            group={item.value}
+                                            items={sortArrayBy(item.listitems, "name")}
+                                            groups={groups}
+                                            addItemHandle={addItemHandle}
+                                            type={listtype}
+                                            selectFunction={selectHandle}
+                                            removeItemHandle={removeItemHandle}
+                                            updateFunction={updateFunction}
+                                            toggleFunction={toggleFunction}
+                                        />
+                                    </MyCard>
+                                </div>
                             </div>
-                            </div>
-                        )) }
+                        ))}
                     </div>
 
                 ) : (
-                    <Grid container spacing={ 2 } >
-                        { groups && groups.map((item: GenericGroup<TodoItem>, index: number ) => (
-                            <Grid key={ "xxxyy"+ index } item xs={ 12 }>
-                                <MyCard key={ "agjhl"+index }>
+                    <Grid container spacing={2} >
+                        {groups && groups.map((item: GenericGroup<TodoItem>, index: number) => (
+                            <Grid key={"xxxyy" + index} item xs={12}>
+                                <MyCard key={"agjhl" + index}>
                                     <ListQ
-                                        key={ "agjhxg"+index }
-                                        editList={ edit }
-                                        header={ item.value }
-                                        group={ item.value }
-                                        items={ sortArrayBy(item.listitems, "name",) }
-                                        groups={ groups }
-                                        addItemHandle={ addItemHandle }
-                                        type={ listtype }
-                                        selectFunction={ selectHandle }
-                                        removeItemHandle={ removeItemHandle }
-                                        updateFunction={ updateFunction }
-                                        toggleFunction={ toggleFunction }
+                                        key={"agjhxg" + index}
+                                        editList={edit}
+                                        header={item.value}
+                                        group={item.value}
+                                        items={sortArrayBy(item.listitems, "name",)}
+                                        groups={groups}
+                                        addItemHandle={addItemHandle}
+                                        type={listtype}
+                                        selectFunction={selectHandle}
+                                        removeItemHandle={removeItemHandle}
+                                        updateFunction={updateFunction}
+                                        toggleFunction={toggleFunction}
                                     />
                                 </MyCard>
                             </Grid>
-                        )) }
+                        ))}
                     </Grid>
                 )
 
@@ -224,7 +224,7 @@ export const ListPage = ({
             </>
 
         )
-    }    
+    }
 
 
     return (
@@ -237,99 +237,100 @@ export const ListPage = ({
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
                 </Alert>
-            </Snackbar>        
-        <Grid container spacing={ 4 } >        
-            <Grid item lg={ 12 } xs={ 12 } >
-                <MyCard>
-                    <MyCardHeader >
-                        <List>
-                            <ListItem>
-                                <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
+            </Snackbar>
+            <Grid container spacing={4} >
+                <Grid item lg={12} xs={12} >
+                    <MyCard>
+                        <MyCardHeader >
+                            <List>
+                                <ListItem>
+                                    <Grid container alignItems="center" justify="flex-start" spacing={2} >
 
-                                    <Grid item xs={ 10 } lg={ 8 } >
-                                        { edit ? (
-                                            <AddForm 
-                                                renderModal={false} 
-                                                onClickFunction={ addItemHandle } 
-                                                handleDeleteClick={undefined}
-                                                type={ listtype } 
-                                                groups={ findUnique(todos, "group", false) } ></AddForm>
-                                        ) : (
-                                            <FilterComponent filterText={filterText} callback={ callbackFilter } callbackEnter={ callbackEnter } />
-                                        ) }
-                                    </Grid>
-                                    <Grid item xs={ 2 } lg={ 4 } >
-                                        <Grid container justify="flex-end">
-                                            <Hidden mdDown>
-                                                <IconButton color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } >
-                                                    <EditIcon />
+                                        <Grid item xs={10} lg={8} >
+                                            {edit ? (
+                                                <AddForm
+                                                    renderModal={false}
+                                                    onClickFunction={addItemHandle}
+                                                    handleDeleteClick={undefined}
+                                                    type={listtype}
+                                                    groups={findUnique(todos, "group", false)} ></AddForm>
+                                            ) : (
+                                                <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
+                                            )}
+                                        </Grid>
+                                        <Grid item xs={2} lg={4} >
+                                            <Grid container justify="flex-end">
+                                                <Hidden mdDown>
+                                                    <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Hidden>
+                                                <IconButton color={horizontally ? "primary" : "default"} onClick={() => setHorizontally(!horizontally)} >
+                                                    <TextRotationNoneIcon />
                                                 </IconButton>
-                                            </Hidden>
-                                            <IconButton color={ horizontally ? "primary" : "default" } onClick={ () => setHorizontally(!horizontally) } >
-                                                <TextRotationNoneIcon />
-                                            </IconButton>
-                                            <IconButton color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } >
-                                                <VisibilityIcon />
-                                            </IconButton>
+                                                <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
+                                                    <VisibilityIcon />
+                                                </IconButton>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
+                                </ListItem>
+                            </List>
+                        </MyCardHeader>
+
+
+                        { ( filteredTodos.length === 1 && filterText.length > 0  ) && (
+                            <CardContent>
+                                <Typography variant="h6" component="h6">
+                                    {filteredTodos[0].name}
+                                </Typography>
+                                <Typography variant="inherit" component="b" >
+                                    Press Enter to check item
+                                </Typography>
+                            </CardContent>
+                        )}
+                        {filteredTodos.length === 0 && (
+                            <CardContent>
+                                <Grid container alignItems="center" justify="flex-start" spacing={2} >
+                                    <Grid item xs={12} >
+                                        {todos.length === 0 && // also the unfiltered list is empty
+                                            <h1>Diese Liste ist leer !</h1>
+                                        }
+                                        <Divider />
+                                        <ListItem>
+                                            <AddForm renderModal={false} handleDeleteClick={undefined} name={filterText} onClickFunction={addItemHandle} type={listtype} groups={findUnique(todos, "group", false)} ></AddForm>
+                                        </ListItem>
+                                    </Grid>
                                 </Grid>
-                            </ListItem>
-                        </List>
-                    </MyCardHeader>
+                            </CardContent>)}
+                    </MyCard>
+                </Grid>
 
-                    { filteredTodos.length === 1 && (
-                        <CardContent>
-                            <Typography variant="h6" component="h6">
-                            {filteredTodos[0].name}
-                            </Typography>
-                            <Typography variant="inherit" component="b" >
-                            Press Enter to check item 
-                            </Typography>
-                        </CardContent>
-                    ) }
-                    { filteredTodos.length === 0 && (
-                        <CardContent>
-                            <Grid container alignItems="center" justify="flex-start" spacing={ 2 } >
-                                <Grid item xs={ 12 } >
-                                    { todos.length === 0 && // also the unfiltered list is empty
-                                        <h1>Diese Liste ist leer !</h1>
-                                    }
-                                    <Divider />
-                                    <ListItem>
-                                        <AddForm renderModal={false} handleDeleteClick={undefined}  name={ filterText } onClickFunction={ addItemHandle } type={ listtype } groups={ findUnique(todos, "group", false) } ></AddForm>
-                                    </ListItem>
-                                </Grid>
-                            </Grid>
-                        </CardContent>) }
-                </MyCard>
-            </Grid>
+                <Grid item md={horizontally ? 12 : 4} sm={horizontally ? 12 : 6} xs={12}  >
+                    {todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                </Grid>
 
-            <Grid item md={ horizontally?12:4 }  sm={ horizontally?12:6 } xs={ 12 }  >
-                { todos.length > 0 && <> { createLists(filteredTodos) } </> }
-            </Grid>
+                {(selectedItemId) &&
+                    <>
+                        <Grid item md={horizontally ? 12 : 8} sm={horizontally ? 12 : 6} xs={12} >
+                            <div style={{ position: "relative" }}>
+                                <div className={(scrollY > 190) ? "details down" : "details"} >
 
-            { (selectedItemId ) &&
-                <>
-                        <Grid item  md={ horizontally?12:8 }  sm={ horizontally?12:6 } xs={ 12 } >
-                            <div style={{ position:"relative"}}>
-                            <div className={ ( scrollY>190) ? "details down":"details" } >
-                                
-                            
-                            <DetailsById                                
-                                itemid={ selectedItemId }
-                                updateFunction={ updateFunction }
-                                lists={ lists }
-                                listtype={ listtype }
-                            />
-                            <div>Scroll position is ({scrollX}, {scrollY})</div>
-                            </div> 
+
+                                    <DetailsById
+                                        itemid={selectedItemId}
+                                        updateFunction={updateFunction}
+                                        lists={lists}
+                                        listtype={listtype}
+                                    />
+                                    <div>Scroll position is ({scrollX}, {scrollY})</div>
+                                </div>
                             </div>
                         </Grid>
-                </>
-            }
-        </Grid >   
-        </>     
+                    </>
+                }
+            </Grid >
+        </>
     )
 
 } 

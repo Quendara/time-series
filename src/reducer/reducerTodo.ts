@@ -45,6 +45,18 @@ const ReducerToggleItem = (state: TodoItem[], action: TodoActionTOGGLE): TodoIte
     });
 }
 
+const ReducerUncheckItem = (state: TodoItem[], action: TodoActionTOGGLE): TodoItem[] => {
+    console.log("TOGGLE action : ", action)
+    return state.map((todo) => {
+        if (todo.id === action.payload.id) {
+            updateFunctionTodo({ id: action.payload.id, checked: false })
+            return { ...todo, checked: false };
+        } else {
+            return todo;
+        }
+    });
+}
+
 const ReducerUpdateItem = (state: TodoItem[], action: TodoActionUPDATE) => {
     console.log("TOGGLE action : ", action)
     return state.map((todo) => {
@@ -81,8 +93,13 @@ export const reducerTodo = (state: TodoItem[], action: TodoAction): TodoItem[] =
     switch (action.type) {
         case TodoActionType.TOGGLE:
             return ReducerToggleItem(state, action);
+        case TodoActionType.UNCKECK:
+            return ReducerUncheckItem(state, action);   
+
         case TodoActionType.DELETE:
             return ReducerDeleteItem(state, action);
+        case TodoActionType.UPDATE_STATE:
+            return [...action.payload]
 
         case TodoActionType.UPDATE:
             return ReducerUpdateItem(state, action);

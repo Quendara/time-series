@@ -15,168 +15,30 @@ import { TodoItem, TodoMainItem, createEmptyTodoItem, TodoUpdateItem } from "../
 import { findUnique } from "../components/helpers";
 import { useStyles } from "../Styles"
 
-
-
-import { AddForm } from "./AddForm";
-
 import { removeItemById } from "../components/GraphQlFunctions"
 
 import { useGetTodos } from "../hooks/useGetTodos"
 import { useGetTodo } from "../hooks/useGetTodo"
 // import { group } from "console";
+
+import { MarkdownTextareaAutosize } from "../components/MarkdownTextareaAutosize";
 import { TextEdit } from "../components/TextEdit";
 import { UpdateTodosInput } from "../API"
+import { ListGraphInternal } from "../pages/listGraphQL";
 
-interface PropMTA {
-    initValue: String;
-    updateFunction: (s: string) => void;
-}
-
-const MarkdownTextareaAutosize = ({ initValue, updateFunction }: PropMTA) => {
-    const textFieldRef = useRef<any>(); // textFieldRef.current.
-
-    const [caret, setCaret] = useState({
-        start: 0,
-        end: 0
-    });
-
-    useEffect(() => {
-
-        textFieldRef.current.value = initValue;
-
-        return () => {
-
-        };
-
-    }, [initValue]);
-
-    const insertText = (value: String, caret_start: number, caret_end: number, text: String) => {
-
-        const pre = value.substring(0, caret_start)
-        const post = value.substring(caret_end, value.length)
-
-        const insertItem = text
-        const newPos = caret_start + insertItem.length
-
-        console.log("insertText : ", caret_start)
-
-
-        return pre
-            + insertItem
-            + post
-    }
-
-    const lastLineBeforeCursor = (value: String, caret_start: number) => {
-        const pre = value.substring(0, caret_start)
-        const index = pre.lastIndexOf("\n")
-        const line = pre.substring(index + 1, pre.length)
-        return line
-    }
-
-    const handleSelect = (e: any) => {
-
-        console.log("handleSelect : ", e.target.selectionStart)
-
-        setCaret({ start: e.target.selectionStart, end: e.target.selectionEnd });
-    }
-
-
-    const handleKeyPress = (event: any) => {
-
-        const initialCursor = event.target.selectionStart
-        let cursorPos = event.target.selectionStart
-        let selectionEnd = event.target.selectionEnd
-
-        const previous_value = textFieldRef.current.value
-
-        switch (event.key) {
-            case "Enter":
-
-                let insertion_str = "\n";
-
-
-
-                const lineBeforeCursor = lastLineBeforeCursor(previous_value, cursorPos)
-
-                console.log("lineBeforeCursor : ", lineBeforeCursor)
-
-                if (lineBeforeCursor.startsWith('*')) {
-                    insertion_str = "\n* ";
-                } else if (lineBeforeCursor.startsWith('  *')) {
-                    insertion_str = "\n  * ";
-                } else if (lineBeforeCursor.startsWith('    *')) {
-                    insertion_str = "\n    * ";
-                } else {
-                    insertion_str = "\n";
-                }
-
-
-                const insertedText = insertText(previous_value, cursorPos, selectionEnd, insertion_str)
-                event.preventDefault()
-                setCaret({ start: cursorPos, end: selectionEnd })
-
-                //     let value = selectedItemValue + " *"
-
-                //     const splittetLines = selectedItemValue.split("\n")
-                //     let charCount = 0
-
-                //     splittetLines.forEach((line: String, index: Number ) => {
-
-                //         charCount += line.length + 1
-
-                //         if (cursorPos < charCount) {
-                //             // Add to index, 0 means delete = 0
-                //             splittetLines.splice(index, 0, "* ");
-                //             cursorPos = 9999999999999999999999999
-                //         }
-
-                //     });
-
-                //     setSelectedValue( splittetLines.join("\n")  )
-                //     event.preventDefault()
-
-                if (textFieldRef && textFieldRef.current) {
-                    textFieldRef.current.value = insertedText;
-                    textFieldRef.current.selectionStart = initialCursor + insertion_str.length
-                    textFieldRef.current.selectionEnd = initialCursor + insertion_str.length
-
-                    updateFunction(insertedText)
-                }
-        }
-    }
-
-    return (
-        <MyTextareaAutosize
-            // value={ selectedItemValue ? selectedItemValue : "" }
-            rowsMin={10}
-            rowsMax={30}
-            // error={ hasError(linkName) }
-            // label="Name"
-            // size="small"
-            autoFocus={true}
-            // fullWidth
-            // variant="outlined"
-            ref={textFieldRef}
-            onSelect={(e) => handleSelect(e)}
-            onKeyPress={e => handleKeyPress(e)}
-            onChange={e => updateFunction(e.target.value)} />
-    )
-
-    // <Grid item xs={12} >{caret.start} - {caret.end}</Grid>
-}
 
 
 interface Props {
     itemid: string;
     listtype: string;
-    updateFunction: ( input : UpdateTodosInput ) => any;    
+    updateFunction: (input: UpdateTodosInput) => any;
     lists: TodoMainItem[];
 }
 
 export const DetailsById = ({ itemid, listtype, updateFunction, lists }: Props) => {
 
     const item = useGetTodo(itemid);
-    const todos = useGetTodos( item?.listid );
+    const todos = useGetTodos(item?.listid);
 
 
     return (
@@ -187,7 +49,7 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists }: Props) 
 
 interface PropsDetails {
     selectedItem: TodoItem | undefined;
-    updateFunction: ( input : UpdateTodosInput ) => any;  
+    updateFunction: (input: UpdateTodosInput) => any;
     listtype: string;
     todos: TodoItem[];
     lists: TodoMainItem[];
@@ -197,6 +59,8 @@ interface PropsDetails {
 export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }: PropsDetails) => {
 
     const classes = useStyles();
+
+    const localitems = useGetTodos(selectedItem?.id);
 
     // (updateFunction(todoid, name, link, group, description=undefined ) )
     // const uiUpdateTodo = (items, todo) => {
@@ -227,12 +91,12 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
         if (edit && selectedItem) // ( selectedItem.id !== selectedItemId ) 
         {
-            const value : UpdateTodosInput = {
+            const value: UpdateTodosInput = {
                 id: selectedItem.id,
-                description: selectedItemValue 
+                description: selectedItemValue
             }
-    
-            updateFunction( value )
+
+            updateFunction(value)
 
         }
 
@@ -256,12 +120,12 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
         if (currentItem === undefined) return;
 
-        const value : UpdateTodosInput = {
+        const value: UpdateTodosInput = {
             id: currentItem.id,
-            description: selectedItemValue 
+            description: selectedItemValue
         }
 
-        updateFunction( value )
+        updateFunction(value)
         setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
     }
@@ -270,20 +134,20 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
         if (currentItem === undefined) return;
 
-        const value : UpdateTodosInput = {
+        const value: UpdateTodosInput = {
             id: currentItem.id,
             link: linkUrl,
             name: linkName,
-            group: groupname 
-        }        
+            group: groupname
+        }
 
-        updateFunction( value )
+        updateFunction(value)
         setEdit(false)
     }
 
     const getGlobalList = (lists: TodoItem[], id: string): TodoItem => {
         if (lists !== undefined) {
-            const fl = lists.filter( item => item.listid === id )
+            const fl = lists.filter(item => item.listid === id)
             // console.log("getGlobalList", id, fl, lists)
 
             if (fl.length > 0) {
@@ -293,16 +157,16 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
         return createEmptyTodoItem()
     }
 
-    const handleListChange = (selecedList: TodoMainItem ) => {
+    const handleListChange = (selecedList: TodoMainItem) => {
 
         if (selecedList !== null && selectedItem) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
 
-            const value : UpdateTodosInput = {
+            const value: UpdateTodosInput = {
                 id: selectedItem.id,
-                listid: selecedList.id 
-            }  
-            updateFunction( value )          
+                listid: selecedList.id
+            }
+            updateFunction(value)
 
             // updateFunction(selectedItem.id, { listid: selecedList.id })
 
@@ -335,9 +199,8 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
             {currentItem === undefined ? (
                 <h1> ... </h1>
             ) : (
+                <>
                 <MyCard>
-
-
                     <MyCardHeader>
 
                         <List>
@@ -354,10 +217,9 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                     value={currentItem.group}
                                     groups={findUnique(todos, "group", false)}
                                     label="Group"
-                                    callback={(group) => updateFunction( {id: currentItem.id, group: group })} >
+                                    callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
                                     {currentItem.group}
                                 </TextEdit>
-
 
                                 {/* <AddForm renderModal={true} 
                                 handleDeleteClick={removeItemHandle} 
@@ -385,15 +247,6 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                             </Grid>
 
                             <Grid item xs={8} >
-
-                                {/* <TextEdit 
-                                value={ listvalue} 
-                                groups={ lists } 
-                                label="Lists"
-                                callback={ ( group ) => updateFunction( currentItem.id, { group: group }) } >
-                                    { listvalue } 
-                            </TextEdit> */}
-
 
                                 <Autocomplete
                                     id="combo-box-demo"
@@ -424,23 +277,29 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                             updateFunction={(val: string) => setSelectedValue(val)}
                                         />
                                     </ListItem>
-                                ) :
-                                    (
-
-                                        <div className="markdown" onClick={() => setEdit(true)}>
-                                            <DetailsMarkdown value={selectedItemValue} />
-                                        </div>
-
-                                    )
-                                }
+                                ) : (
 
 
+                                    <div className="markdown" onClick={() => setEdit(true)}>
+                                        <DetailsMarkdown value={selectedItemValue} />
+                                    </div>
+
+
+
+                                )}
                             </div>
-                        </List>
-                        <Divider></Divider>
-
+                        </List>                        
                     </CardContent>
+
                 </MyCard>
+                <br/>
+                    <ListGraphInternal
+                    items={localitems}
+                    lists={lists}
+                    username={"andre"}
+                    listid={currentItem.id}
+                    listtype="todo" />
+                    </>                
             )}
         </>
 
