@@ -293,9 +293,9 @@ export const ListPage = ({
                             <CardContent>
                                 <Grid container alignItems="center" justify="flex-start" spacing={2} >
                                     <Grid item xs={12} >
-                                        {todos.length === 0 && // also the unfiltered list is empty
+                                        {/* {todos.length === 0 && // also the unfiltered list is empty
                                             <h1>Diese Liste ist leer !</h1>
-                                        }
+                                        } */}
                                         <Divider />
                                         <ListItem>
                                             <AddForm renderModal={false} handleDeleteClick={undefined} name={filterText} onClickFunction={addItemHandle} type={listtype} groups={findUnique(todos, "group", false)} ></AddForm>

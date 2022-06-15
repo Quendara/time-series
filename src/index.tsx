@@ -9,7 +9,7 @@ import {
   Route,
   NavLink,
   Switch,
-  IndexRoute,
+  // IndexRoute,
   useLocation
 } from "react-router-dom";
 
@@ -34,6 +34,7 @@ import { TimeTree } from "./pages/TimeTree2";
 import { CompareLists } from "./pages/CompareLists";
 import { ReplaceLists } from "./pages/ReplaceLists";
 
+import { TodoItem, TodoMainItem } from "./models/TodoItems"
 
 import { Clock } from "./components/Clock";
 import { StyleDemo } from "./StyleDemo";
@@ -47,25 +48,26 @@ import './mstyle.css';
 
 
 const App = () => {
+
   const [username, setUsername] = useState("");
   const [jwtTocken, setJwtToken] = useState("");
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<string[]>([]);
 
   // const [hackyNavId, sethackyNavId] = useState("");
 
-  const [userConfiguration, setUserConfiguration] = useState([]);
+  const [userConfiguration, setUserConfiguration] = useState<TodoMainItem[]>([]);
 
-  const [apikey, setApi] = useState(undefined);
+  const [apikey, setApi] = useState("");
   const [amplifyInitilaized, setAmplifyInitilaized] = useState(false);
-  const [apikeyTimetree, setApikeyTimetree] = useState(undefined);
+  const [apikeyTimetree, setApikeyTimetree] = useState("");
 
   const classes = useStyles();
 
-  const handleSetConfig = (config) => {
+  const handleSetConfig = (config: TodoMainItem[]) => {
     setUserConfiguration(config)
   }
 
-  const authSuccessCallback = (username, token, apikey, apikeyTimetree) => {
+  const authSuccessCallback = (username: string, token: string, apikey: string, apikeyTimetree: string) => {
     setUsername(username);
 
     // if (username === "andre") {
@@ -89,15 +91,16 @@ const App = () => {
     console.log("apikey timetree : ", apikeyTimetree);
   };
 
-  const [anchorEl, setAnchorEl] = useState(null); // <null | HTMLElement>
-  const menuHandleClick = (event) => { // : React.MouseEvent<HTMLButtonElement>
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); //
+
+  const menuHandleClick = (event: any) => { // : 
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const errorHandle = (message) => {
+  const errorHandle = (message: string) => {
 
     let newArray = [...errors, message];
     setErrors(newArray)
@@ -122,80 +125,79 @@ const App = () => {
       }
     }, [apikey])
 
+
   return (
-    <ThemeProvider theme={ theme }>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
 
       <Router>
 
-        <Auth authSuccessCallback={ authSuccessCallback } >
+        <Auth authSuccessCallback={authSuccessCallback} >
 
-          <NavLink key={ "nl_" + 1332 } to={ "/" } className={ classes.menuButton }   ><MyIcon icon={ "home" } /> </NavLink>
+          <NavLink key={"nl_" + 1332} to={"/"} className={classes.menuButton}   ><MyIcon icon={"home"} /> </NavLink>
 
-          { userConfiguration.map((item, index) => {
+          {userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <div className={ classes.menuButton }   >
-              <Tooltip title={ item.name } aia-label="add">
-                <NavLink key={ "nl_" + index } to={ "/" + [item.component, item.listid, item.render].join('/') } className={ classes.menuButton }    >
-                  <MyIcon icon={ item.icon } />
-                </NavLink>
-              </Tooltip>
+              <div className={classes.menuButton}   >
+                <Tooltip title={item.name} aia-label="add">
+                  <NavLink key={"nl_" + index} to={"/" + [item.component, item.listid, item.render].join('/')} className={classes.menuButton}    >
+                    <MyIcon icon={item.icon} />
+                  </NavLink>
+                </Tooltip>
               </div>
             )
           }
-          ) }
+          )}
 
-          <IconButton variant="inherit" className={ classes.menuButton } onClick={ menuHandleClick } ><MyIcon icon="more_horiz" /> </IconButton>
+          <IconButton className={classes.menuButton} onClick={menuHandleClick} ><MyIcon icon="more_horiz" /> </IconButton>
 
 
           <Menu
             id="simple-menu"
-            anchorEl={ anchorEl }
+            anchorEl={anchorEl}
             keepMounted
-            open={ Boolean(anchorEl) }
-            onClose={ handleClose }
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
           >
             <MenuItem>
-              <ListItemIcon><Avatar>{ username[0] }</Avatar></ListItemIcon>{ username }
+              <ListItemIcon><Avatar>{username[0]}</Avatar></ListItemIcon>{username}
             </MenuItem>
             <Divider />
 
-            { amplifyInitilaized &&
+            {amplifyInitilaized &&
 
               <MainNavigation
                 render="simple"
-                apikey={ apikey }
-                userConfig={ userConfiguration }
-                username={ username }
-                handleSetConfig={ handleSetConfig } /> }
+                username={username}
+                handleSetConfig={handleSetConfig} />}
           </Menu>
         </Auth>
 
 
-        <Grid container justify="center" spacing={ 1 } >
-          <Grid item xs={ 11 } ><br /></Grid>
+        <Grid container justify="center" spacing={1} >
+          <Grid item xs={11} ><br /></Grid>
 
-          <Grid item xs={ 11 } lg={ 10 }>
-            { username.length > 0 &&
+          <Grid item xs={11} lg={10}>
+            {username.length > 0 &&
               (<>
-                { amplifyInitilaized === false ? (<h1> Loading </h1>) :
+                {!amplifyInitilaized ? (<h1> Loading </h1>) :
                   (
                     <Switch>
                       <Route path="/list/:listid/:listtype/:itemid" children={
                         <ListGraphQL
-                          token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
+                          username={username} lists={userConfiguration} />
                       } />
                       <Route path="/list/:listid/:listtype" children={
                         <ListGraphQL
-                          token={ jwtTocken } username={ username } apikey={ apikey } errorHandle={ errorHandle } lists={ userConfiguration } />
+                          username={username} lists={userConfiguration} />
                       } />
                       <Route path="/time" >
-                        <TimeSeries username={ username } token={ jwtTocken } errorHandle={ errorHandle } />
+                        <TimeSeries username={username} token={jwtTocken} />
                       </Route>
 
 
                       <Route path="/timetree" >
-                        <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } />
+                        <TimeTree username={username} token={jwtTocken} timetreeToken={apikeyTimetree} />
                       </Route>
 
                       <Route path="/diff" >
@@ -206,52 +208,52 @@ const App = () => {
                       </Route>
 
                       <Route exact path="/" >
-                        <Grid container justify="center" spacing={ 5 } >
-                          <Grid item xs={ 12 } md={ 6 }>
-                            <Paper elevation={ 3 } >
+                        <Grid container justify="center" spacing={5} >
+                          <Grid item xs={12} md={6}>
+                            <Paper elevation={3} >
                               <MyCard>
                                 <MyCardHeader >
                                   <MainNavigation
-                                    apikey={ apikey }
-                                    userConfig={ userConfiguration }
-                                    navId="1622632885409"
-                                    username={ username }
-                                    handleSetConfig={ handleSetConfig } />
+                                    render="nnx"
+                                    username={username}
+                                    handleSetConfig={handleSetConfig} />
                                 </MyCardHeader>
                               </MyCard>
                             </Paper>
                           </Grid>
-                          <Grid item xs={ 12 } md={ 6 }>
-                            {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */ }
+                          <Grid item xs={12} md={6}>
+                            {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */}
                           </Grid>
                         </Grid>
                       </Route>
                       <Route exact path="/sandboxQl" >
-                        { amplifyInitilaized === false ? (<h1> Loading </h1>) : (
-                          <SandboxQl token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
-                        ) }
+                        {!amplifyInitilaized ? (<h1> Loading </h1>) : (
+                          <SandboxQl />
+                        )}
                       </Route>
                       <Route exact path="/sandbox" >
                         <Grid container justify="center" >
-                          <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" />
+                          {/* <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" /> */}
                         </Grid>
                       </Route>
-                      <Route exact path="/demo" component={ StyleDemo }></Route>
+                      <Route exact path="/demo" component={StyleDemo}></Route>
                     </Switch>
-                  ) }
-              </>) }
+                  )}
+              </>)}
 
           </Grid>
           <Grid>
-            <Error errorMessages={ errors } />
+            <Error errorMessages={errors} />
           </Grid>
         </Grid>
       </Router>
 
 
     </ThemeProvider>
+  )
 
-  );
+
+
 };
 
 render(<App />, document.getElementById("root"));

@@ -3,17 +3,10 @@ import { useGetTodos } from "../hooks/useGetTodos"
 import { useGetTodo } from "../hooks/useGetTodo"
 
 interface  Props {
-    token: string;
-    apikey: string;
-    listid: string;
-    lists: string;
-    listtype: string;    
+   
 }
 
-export const SandboxQl = ({
-    token, apikey, listid, lists, listtype
-   
- } : Props ) => {
+export const SandboxQl = ( props : Props ) => {
 
    
     const todos1 = useGetTodos( "1" );

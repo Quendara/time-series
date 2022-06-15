@@ -182,7 +182,7 @@ const NavItemList = ({ items, render, groupname }: NavItemListProps) => {
 }
 
 interface MainNavigationProps {
-    handleSetConfig: any;
+    handleSetConfig: ( items: TodoMainItem[] ) => void;
     render: string;
     username: string;
 }
