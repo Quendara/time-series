@@ -25,7 +25,7 @@ import { MarkdownTextareaAutosize } from "../components/MarkdownTextareaAutosize
 import { TextEdit } from "../components/TextEdit";
 import { UpdateTodosInput } from "../API"
 import { ListGraphInternal } from "../pages/listGraphQL";
-
+import { TodoListType } from "../components/List"
 
 
 interface Props {
@@ -104,11 +104,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
             console.log("useEffect", selectedItem.description)
             setCurrentItem(selectedItem)
             setSelectedValue(selectedItem.description)
-            // setSelectedItemId(selectedItem.id)
-            // setSelectedName(selectedItem.name)
-            // const listname = getGlobalList(lists, selectedItem.listid).name
-            // setListValue(listname)    
-        }
+         }
 
         setEdit(false);
         return () => { };
@@ -298,7 +294,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                     lists={lists}
                     username={"andre"}
                     listid={currentItem.id}
-                    listtype="todo" />
+                    listtype={ TodoListType.TODO_SIMPLE } />
                     </>                
             )}
         </>

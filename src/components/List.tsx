@@ -29,6 +29,13 @@ import { DetailsById } from "./Details"
 // import { UpdateFunc } from "../models/Definitions" 
 import { UpdateTodosInput } from "../API"
 
+export enum TodoListType {
+    TODO        = 'todo',
+    TODO_SIMPLE = 'todo_simple',
+    MESSAGE     = 'message',
+    LINKS       = 'links'
+}
+
 const useStyles = makeStyles({
     card_main: {
         fontSize: 16,
@@ -75,7 +82,7 @@ interface PropsEl {
     updateFunction:  ( item : UpdateTodosInput ) => void;
     selectFunction: (id: string) => void;
     toggleFunction: (id: string) => void;
-    type: string;       // @todo: later enum
+    type: TodoListType;
     groups: any;
     group: string;
     editList: boolean
@@ -98,7 +105,6 @@ const ListEl = (
         editList }: PropsEl) => {
 
     const history = useHistory();
-
     const classes = useStyles();
 
     const [edit, setEdit] = useState(false);
@@ -133,8 +139,8 @@ const ListEl = (
         toggleFunction(id)
     }
 
-    const onMainClick = (type: string) => {
-        if (type === "todo") {
+    const onMainClick = (type: TodoListType) => {
+        if (type === TodoListType.TODO ) {
             toggleFunction(id)
         }
         else {
@@ -244,7 +250,7 @@ const ListEl = (
             ) :
                 (
                     <>
-                        {type === "todo" &&
+                        { (type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE)  &&
                             <ListItem button={!(editList)} onClick={handleSelect}  >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
@@ -258,7 +264,7 @@ const ListEl = (
                                 />
                             </ListItem>}
 
-                        {type === "message" &&
+                        { type === TodoListType.MESSAGE  &&
                             <ListItem button onClick={handleSelect} >
 
                                 <ListItemIcon >
@@ -271,31 +277,10 @@ const ListEl = (
                                         <TypographyDisabled {...longPressEvent}>{name}</TypographyDisabled>
                                         : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
 
-                                />
-
-                                {/* 
-                                                                    <Grid
-                                    container
-                                    direction="row"
-                                    justify="flex-end"
-                                    alignItems="center"
-                                >
-                                    <Grid item xs={ 9 } md={ 6 } >
-                                        <Card { ...longPressEvent }>
-                                            <Typography className={ classes.card_main } component="p">
-                                                { name }
-                                            </Typography>
-                                            <Typography color="textSecondary" className={ classes.card_sec } component="p">
-                                                { "11.24" }
-                                            </Typography>
-                                        </Card>
-                                    </Grid>
-                                </Grid> */}
+                                />                              
                             </ListItem>
-
-
                         }
-                        {type === "links" &&
+                        { type === TodoListType.LINKS &&
                             <ListItem button>
                                 <ListItemText
                                     {...longPressEventLink}
@@ -319,7 +304,7 @@ interface PropsQ {
     updateFunction: ( item : UpdateTodosInput ) => void;
     toggleFunction: (id: string) => void;
     selectFunction: any;
-    type: string;
+    type: TodoListType;
     group: string;
     groups: GenericGroup<TodoItem>[] ;
     editList: boolean

@@ -17,6 +17,7 @@ import { AddItem, ToggleItem, UncheckItem, UpdateItem, DeleteItem, UpdateState }
 import { UpdateTodosInput, CreateTodosInput } from "../API"
 
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
+import { TodoListType } from "../components/List"
 
 interface ListProps {
     lists: TodoMainItem[];
@@ -25,7 +26,7 @@ interface ListProps {
 
 interface ListUseParams {
     listid: string;
-    listtype: string;
+    listtype: TodoListType;
     itemid: string;
 }
 
@@ -56,7 +57,7 @@ interface ListPropsInternal {
     items: TodoItem[];
     username: string;
     listid: string;
-    listtype: string;
+    listtype: TodoListType;
     itemid?: string;
 }
 

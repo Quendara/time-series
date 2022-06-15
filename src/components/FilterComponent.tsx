@@ -10,8 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 interface FilterProps { 
     filterText: string;
-    callback: any;
-    callbackEnter: any; 
+    callback: ( text: string ) => void ;
+    callbackEnter: () => void; 
  };
 
 export const FilterComponent = ({ filterText, callback, callbackEnter } : FilterProps ) => {

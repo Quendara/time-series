@@ -33,11 +33,13 @@ import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 // import { GroupItem } from "../models/Definitions"
 
 import { UpdateTodosInput } from "../API"
+import { TodoListType } from "../components/List"
+
 
 
 interface ListProps {
     todos: TodoItem[];
-    listtype: string;
+    listtype: TodoListType;
     listid: string;
 
     addItemHandle: any;
@@ -238,48 +240,52 @@ export const ListPage = ({
                     {successSnackbarMessage}
                 </Alert>
             </Snackbar>
+
             <Grid container spacing={4} >
                 <Grid item lg={12} xs={12} >
                     <MyCard>
-                        <MyCardHeader >
-                            <List>
-                                <ListItem>
-                                    <Grid container alignItems="center" justify="flex-start" spacing={2} >
+                        {todos.length > 5 &&
+                            <MyCardHeader >
+                                <List>
+                                    <ListItem>
+                                        <Grid container alignItems="center" justify="flex-start" spacing={2} >
 
-                                        <Grid item xs={10} lg={8} >
-                                            {edit ? (
-                                                <AddForm
-                                                    renderModal={false}
-                                                    onClickFunction={addItemHandle}
-                                                    handleDeleteClick={undefined}
-                                                    type={listtype}
-                                                    groups={findUnique(todos, "group", false)} ></AddForm>
-                                            ) : (
-                                                <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
-                                            )}
-                                        </Grid>
-                                        <Grid item xs={2} lg={4} >
-                                            <Grid container justify="flex-end">
-                                                <Hidden mdDown>
-                                                    <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
-                                                        <EditIcon />
+                                            <Grid item xs={10} lg={8} >
+                                                {edit ? (
+                                                    <AddForm
+                                                        renderModal={false}
+                                                        onClickFunction={addItemHandle}
+                                                        handleDeleteClick={undefined}
+                                                        type={listtype}
+                                                        groups={findUnique(todos, "group", false)} ></AddForm>
+                                                ) : (
+
+                                                    <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
+                                                )}
+                                            </Grid>
+                                            <Grid item xs={2} lg={4} >
+                                                <Grid container justify="flex-end">
+                                                    <Hidden mdDown>
+                                                        <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                    </Hidden>
+                                                    <IconButton color={horizontally ? "primary" : "default"} onClick={() => setHorizontally(!horizontally)} >
+                                                        <TextRotationNoneIcon />
                                                     </IconButton>
-                                                </Hidden>
-                                                <IconButton color={horizontally ? "primary" : "default"} onClick={() => setHorizontally(!horizontally)} >
-                                                    <TextRotationNoneIcon />
-                                                </IconButton>
-                                                <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
-                                                    <VisibilityIcon />
-                                                </IconButton>
+                                                    <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
+                                                        <VisibilityIcon />
+                                                    </IconButton>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
-                                    </Grid>
-                                </ListItem>
-                            </List>
-                        </MyCardHeader>
+                                    </ListItem>
+                                </List>
+                            </MyCardHeader>
+                        }
 
 
-                        { ( filteredTodos.length === 1 && filterText.length > 0  ) && (
+                        {(filteredTodos.length === 1 && filterText.length > 0) && (
                             <CardContent>
                                 <Typography variant="h6" component="h6">
                                     {filteredTodos[0].name}
@@ -306,9 +312,19 @@ export const ListPage = ({
                     </MyCard>
                 </Grid>
 
-                <Grid item md={horizontally ? 12 : 4} sm={horizontally ? 12 : 6} xs={12}  >
-                    {todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                </Grid>
+                {listtype === TodoListType.TODO_SIMPLE ? (
+                    <Grid item xs={12}  >
+                        {todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                    </Grid>
+                ) : (
+                    <Grid item md={horizontally ? 12 : 4} sm={horizontally ? 12 : 6} xs={12}  >
+                        {todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                    </Grid>
+                )
+
+                }
+
+
 
                 {(selectedItemId) &&
                     <>
