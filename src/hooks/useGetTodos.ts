@@ -41,8 +41,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
 
     if( listid !== undefined ){
       fetchTodos(listid)
-    }
-    
+    }  
 
   }, [listid])    
 
@@ -148,7 +147,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
       response = await API.graphql(graphqlOperation(listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
     }
     else {
-      response = await API.graphql(graphqlOperation(listTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
+      response = await API.graphql(graphqlOperation(listTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
     }
 
     const items = response.data.listTodos.items

@@ -141,7 +141,8 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
         setEdit(false)
     }
 
-    const getGlobalList = (lists: TodoItem[], id: string): TodoItem => {
+    const getGlobalList = (lists: TodoMainItem[], id?: string): TodoMainItem | undefined => {
+        if( id === undefined ) return undefined
         if (lists !== undefined) {
             const fl = lists.filter(item => item.listid === id)
             // console.log("getGlobalList", id, fl, lists)
@@ -150,10 +151,10 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                 return fl[0]
             }
         }
-        return createEmptyTodoItem()
+        return undefined
     }
 
-    const handleListChange = (selecedList: TodoMainItem) => {
+    const handleListChange = ( selecedList: TodoMainItem ) => {
 
         if (selecedList !== null && selectedItem) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
@@ -179,6 +180,9 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
             removeItemById(selectedItem.id)
         }
     }
+
+    const bull = <span style={{"margin":"5px"}}>•</span>;
+    const currentList = getGlobalList(  lists, selectedItem?.listid )
 
 
     return (
@@ -211,17 +215,30 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                             title={ <TextEdit
                                 value={currentItem.name}
                                 label="Name"
-                                callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >
-                                {currentItem.name} 
+                                callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >                                
                             </TextEdit> 
                             }
-                            subheader={ <TextEdit
+                            subheader={ 
+                                <>
+                            <TextEdit
                                 value={currentItem.group}
-                                groups={findUnique(todos, "group", false)}
+                                groups={ findUnique(todos, "group", false) }
                                 label="Group"
                                 callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
-                                {currentItem.group}
-                            </TextEdit>}
+                                
+                            </TextEdit>
+                            {bull}
+                            <TextEdit
+                                value={ currentList?currentList.name:"unknown" }
+                                groups={ lists.map( (x) => { return { value: x.name }} )  }
+                                label="Lists"
+                                callback={ (list) => { } } >                                
+                            </TextEdit>                            
+                            
+                            </>
+
+                            }
+
                         />
 
 
@@ -255,7 +272,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
 
                                 <Grid item xs={8} >
 
-                                    <Autocomplete
+                                    {/* <Autocomplete
                                         id="combo-box-demo"
                                         inputValue={""}
                                         // label="Lists"
@@ -268,7 +285,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                         options={lists}
                                         getOptionLabel={(option) => "(" + option.id + ") " + option.name}
                                         renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
-                                    />
+                                    /> */}
                                 </Grid>
 
                             </Grid>

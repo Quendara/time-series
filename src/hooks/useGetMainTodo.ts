@@ -29,7 +29,7 @@ export const useGetMainTodos = ( owner : string ) : TodoMainItem[]  => {
 
 
         const response : any = await API.graphql(
-            graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} } } ) ) 
+            graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} }, limit: 200  } ) ) 
        
 
         const items = response.data?.listTodoMains?.items

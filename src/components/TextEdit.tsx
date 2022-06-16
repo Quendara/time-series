@@ -30,7 +30,7 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
 
         if (event.key === "Enter") {
             // alert("Enter")
-            callback(internalName)
+            callback( internalName?internalName:"unknown")
             setEdit(false)
         }
         if (event.key === "Escape") {
@@ -65,17 +65,23 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                         fullWidth
                         value={{ value: internalName }}
                         // error={ groupName === undefined || groupName.length == 0 }
-                        getOptionLabel={(option) => option.value}
+                        getOptionLabel={ (option) => option?.value }
                         onKeyPress={ ( e:React.KeyboardEvent<HTMLInputElement> ) => checkEnter(e)}
                         onInputChange={(event, newValue) => {
                             if (typeof newValue === 'string') {
-                                setInternalName(
-                                    newValue
-                                );
+                                if( newValue.length > 0 ){
+                                    setInternalName(
+                                        newValue
+                                    );    
+                                }
                             }
+                            console.error( "onInputChange", newValue )
                         }}
                         onChange={(event, newValue) => {
-                            if (typeof newValue === 'string') {
+                            if ( newValue === null ) {
+                                setEdit(false)
+                            }
+                            else if (typeof newValue === 'string') {
                                 setInternalName(
                                     newValue
                                 );
