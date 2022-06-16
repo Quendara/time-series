@@ -30,10 +30,10 @@ import { DetailsById } from "./Details"
 import { UpdateTodosInput } from "../API"
 
 export enum TodoListType {
-    TODO        = 'todo',
+    TODO = 'todo',
     TODO_SIMPLE = 'todo_simple',
-    MESSAGE     = 'message',
-    LINKS       = 'links'
+    MESSAGE = 'message',
+    LINKS = 'links'
 }
 
 const useStyles = makeStyles({
@@ -79,7 +79,7 @@ interface PropsEl {
     checked: boolean;
     id: string;
     removeClickFunction: (id: string) => void;
-    updateFunction:  ( item : UpdateTodosInput ) => void;
+    updateFunction: (item: UpdateTodosInput) => void;
     selectFunction: (id: string) => void;
     toggleFunction: (id: string) => void;
     type: TodoListType;
@@ -129,7 +129,7 @@ const ListEl = (
     }
 
     const onUpdateFunction = (linkName: string, linkUrl: string, groupname: string) => {
-        updateFunction( { id, link: linkUrl, name: linkName, group: groupname })
+        updateFunction({ id, link: linkUrl, name: linkName, group: groupname })
         setEdit(false)
     }
 
@@ -140,7 +140,7 @@ const ListEl = (
     }
 
     const onMainClick = (type: TodoListType) => {
-        if (type === TodoListType.TODO ) {
+        if (type === TodoListType.TODO) {
             toggleFunction(id)
         }
         else {
@@ -151,8 +151,6 @@ const ListEl = (
                 // Open in new window
                 window.open(link, "_blank")
             }
-
-
         }
     }
 
@@ -192,7 +190,6 @@ const ListEl = (
                                         <CloseIcon />
                                     </IconButton>
                                 }
-
                             >
 
                             </CardHeader>
@@ -206,6 +203,18 @@ const ListEl = (
                                     spacing={4}
                                 >
                                     <Grid item xs={12} >
+                                    <AddForm
+                                        renderModal={true}
+                                        name={name}
+                                        url={link}
+                                        group={group} groups={groups}
+                                        onClickFunction={onUpdateFunction}
+                                        type={type}
+                                        buttonName="Update"
+                                        handleDeleteClick={handleDeleteClick} />
+                                        </Grid>
+
+                                    {/* <Grid item xs={12} >
                                         <DetailsById
                                             itemid={id}
                                             updateFunction={updateFunction}
@@ -221,7 +230,8 @@ const ListEl = (
                                             Delete
                                         </Button>
                                     </Grid>
-                                </Grid>
+                                    */}
+                                </Grid> 
                             </CardContent>
                         </Card>
                     </div>
@@ -250,7 +260,7 @@ const ListEl = (
             ) :
                 (
                     <>
-                        { (type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE)  &&
+                        {(type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE) &&
                             <ListItem button={!(editList)} onClick={handleSelect}  >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
@@ -264,7 +274,7 @@ const ListEl = (
                                 />
                             </ListItem>}
 
-                        { type === TodoListType.MESSAGE  &&
+                        {type === TodoListType.MESSAGE &&
                             <ListItem button onClick={handleSelect} >
 
                                 <ListItemIcon >
@@ -277,10 +287,10 @@ const ListEl = (
                                         <TypographyDisabled {...longPressEvent}>{name}</TypographyDisabled>
                                         : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
 
-                                />                              
+                                />
                             </ListItem>
                         }
-                        { type === TodoListType.LINKS &&
+                        {type === TodoListType.LINKS &&
                             <ListItem button>
                                 <ListItemText
                                     {...longPressEventLink}
@@ -301,12 +311,12 @@ interface PropsQ {
     removeItemHandle: any;
     header: string;
     addItemHandle: any;
-    updateFunction: ( item : UpdateTodosInput ) => void;
+    updateFunction: (item: UpdateTodosInput) => void;
     toggleFunction: (id: string) => void;
     selectFunction: any;
     type: TodoListType;
     group: string;
-    groups: GenericGroup<TodoItem>[] ;
+    groups: GenericGroup<TodoItem>[];
     editList: boolean
 };
 
@@ -341,7 +351,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                                 {printRemaining(filterCompleted(items).length, items.length)}
                             </ListItemSecondaryAction>
                         }
-                    </ListItem> 
+                    </ListItem>
                 </List>
             </MyCardHeader >
 
@@ -365,7 +375,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
 
                 {items.map((item, index) => (
-                    <React.Fragment key={ "hjk"+ index} >
+                    <React.Fragment key={"hjk" + index} >
                         <ListEl
                             editList={editList}
                             key={index}
