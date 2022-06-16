@@ -38,7 +38,7 @@
 	overflow-y: auto;
 	line-height: 1.45;
 	padding: .25rem;		
-	height: 22vh;
+	min-height: 22vh;
 }
 
 .markdown li p {

@@ -19,7 +19,7 @@ import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
 
 import { FilterComponent } from '../components/FilterComponent';
 
-import { MyCard, MyCardHeader } from "../components/StyledComponents"
+import { MyCard, MyPaperHeader } from "../components/StyledComponents"
 
 import { ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
@@ -245,7 +245,7 @@ export const ListPage = ({
                 <Grid item lg={12} xs={12} >
                     <MyCard>
                         {todos.length > 5 &&
-                            <MyCardHeader >
+                            <MyPaperHeader >
                                 <List>
                                     <ListItem>
                                         <Grid container alignItems="center" justify="flex-start" spacing={2} >
@@ -281,7 +281,7 @@ export const ListPage = ({
                                         </Grid>
                                     </ListItem>
                                 </List>
-                            </MyCardHeader>
+                            </MyPaperHeader>
                         }
 
 

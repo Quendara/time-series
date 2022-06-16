@@ -7,7 +7,7 @@ import SingleTimeSerie from "../SingleTimeSerie";
 import { Grid, List, ListItem, Hidden, Box } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { MyCard, MyCardHeader } from "../components/StyledComponents"
+import { MyCard, MyPaperHeader } from "../components/StyledComponents"
 import { Navigation } from "../organisms/navigation"
 import { useStyles } from "../Styles"
 
@@ -64,14 +64,14 @@ export const TimeSeries = ({ username, token }) => {
           { timeseries.length == 0 && <>
             <Grid item xs={ 12 } lg={ 4 }>
               <MyCard>
-                <MyCardHeader >
+                <MyPaperHeader >
                   <List>
                     <Grid container justify="center" alignItems="center" spacing={ 4 }>
                       <Grid item><CircularProgress /></Grid>
                       <Grid item><Box component="span" m={ 1 }> Loading ... </Box></Grid>
                     </Grid>
                   </List>
-                </MyCardHeader>
+                </MyPaperHeader>
               </MyCard>
             </Grid>
           </> }

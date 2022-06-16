@@ -22,7 +22,7 @@ import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListIte
 import { Error } from "./components/Error"
 import { MyIcon } from "./components/MyIcon";
 
-import { MyCard, MyCardHeader } from "./components/StyledComponents"
+import { MyCard, MyPaperHeader } from "./components/StyledComponents"
 
 import { MainNavigation } from './organisms/navigation';
 
@@ -212,12 +212,12 @@ const App = () => {
                           <Grid item xs={12} md={6}>
                             <Paper elevation={3} >
                               <MyCard>
-                                <MyCardHeader >
+                                <MyPaperHeader >
                                   <MainNavigation
                                     render="nnx"
                                     username={username}
                                     handleSetConfig={handleSetConfig} />
-                                </MyCardHeader>
+                                </MyPaperHeader>
                               </MyCard>
                             </Paper>
                           </Grid>

@@ -12,7 +12,7 @@ import SingleTimeSerie from "../SingleTimeSerie";
 
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { MyCard, MyCardHeader } from "../components/StyledComponents"
+import { MyCard, MyPaperHeader } from "../components/StyledComponents"
 import { MyIcon } from "../components/MyIcon";
 
 
@@ -168,7 +168,7 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
 
     return (
         <MyCard>
-            <MyCardHeader >
+            <MyPaperHeader >
                 <Grid container justify="center" spacing={ 2 } >
                     <Grid item xs={ 12 } >
                         <Divider></Divider>
@@ -199,7 +199,7 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
                         </div>
                     </Grid >
                 </Grid>
-            </MyCardHeader>
+            </MyPaperHeader>
         </MyCard>
     )
 }

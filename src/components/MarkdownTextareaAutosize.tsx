@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } from "react";
 
 
-import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
+import { MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
 
 
 interface PropMTA {

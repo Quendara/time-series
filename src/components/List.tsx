@@ -1,4 +1,11 @@
 import React, { Component, useState } from "react";
+
+import {
+    // IndexRoute,
+    useRouteMatch,
+    useLocation
+} from "react-router-dom";
+
 import { useHistory } from "react-router-dom";
 
 import { Modal, ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, CardContent, Divider, MenuItem, CardHeader } from '@material-ui/core';
@@ -17,9 +24,10 @@ import Icon from '@material-ui/core/Icon';
 
 // import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
-import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyCardHeader } from "./StyledComponents"
+import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyPaperHeader } from "./StyledComponents"
 
-import CloseIcon from '@material-ui/icons/Close';
+// import CloseIcon from '@material-ui/icons/Close';
+import {MyIcon} from "./MyIcon"
 
 import { TodoItem } from "../models/TodoItems"
 import { GenericGroup } from "../components/helpers"
@@ -104,6 +112,7 @@ const ListEl = (
         group,
         editList }: PropsEl) => {
 
+    let location = useLocation();
     const history = useHistory();
     const classes = useStyles();
 
@@ -169,6 +178,24 @@ const ListEl = (
     const longPressEvent = useLongPress(handleEditClick, () => { }, defaultOptions);
     const longPressEventLink = useLongPress(handleEditClick, onMainClick, defaultOptions);
 
+
+    // const onMainClick = (type: string) => {
+    //     if (type === TodoListType.TODO) {
+    //         toggleFunction(id)
+    //     }
+    //     else {
+
+    //         if (link.startsWith("/")) {
+    //             history.push(link);
+    //         } else {
+    //             // Open in new window
+    //             window.open(link, "_blank")
+    //         }
+    //     }
+    // }
+
+
+
     // onClick={ () => window.open(link, "_blank") }
 
     return (
@@ -184,11 +211,17 @@ const ListEl = (
                     <div className={classes.modal}>
                         <Card>
                             <CardHeader
-                                title={"Update Item"}
-                                action={
-                                    <IconButton onClick={() => setEdit(false)} >
-                                        <CloseIcon />
+                                title={"Update Item "}
+                                action={<>
+                                    <IconButton onClick={() => { history.push(location.pathname + "/" + id ) }} >
+                                        <MyIcon icon="open_in_full"></MyIcon>                                       
                                     </IconButton>
+                                    <IconButton onClick={() => setEdit(false)} >
+                                        <MyIcon icon="close"></MyIcon>
+                                    </IconButton>
+
+                                </>
+
                                 }
                             >
 
@@ -203,16 +236,17 @@ const ListEl = (
                                     spacing={4}
                                 >
                                     <Grid item xs={12} >
-                                    <AddForm
-                                        renderModal={true}
-                                        name={name}
-                                        url={link}
-                                        group={group} groups={groups}
-                                        onClickFunction={onUpdateFunction}
-                                        type={type}
-                                        buttonName="Update"
-                                        handleDeleteClick={handleDeleteClick} />
-                                        </Grid>
+                                        <AddForm
+                                            renderModal={true}
+                                            name={name}
+                                            url={link}
+                                            group={group} groups={groups}
+                                            onClickFunction={onUpdateFunction}
+                                            type={type}
+                                            buttonName="Update"
+                                            handleDeleteClick={handleDeleteClick} />
+                                    </Grid>
+
 
                                     {/* <Grid item xs={12} >
                                         <DetailsById
@@ -231,7 +265,7 @@ const ListEl = (
                                         </Button>
                                     </Grid>
                                     */}
-                                </Grid> 
+                                </Grid>
                             </CardContent>
                         </Card>
                     </div>
@@ -337,7 +371,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
     return (
 
         <>
-            <MyCardHeader onClick={() => setEdit(!edit)}>
+            <MyPaperHeader onClick={() => setEdit(!edit)}>
                 <List>
                     <ListItem>
                         <ListItemIcon>
@@ -353,7 +387,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         }
                     </ListItem>
                 </List>
-            </MyCardHeader >
+            </MyPaperHeader >
 
             <List
                 dense={false}

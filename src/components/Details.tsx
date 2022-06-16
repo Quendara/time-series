@@ -4,7 +4,7 @@ import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
 
-import { Grid, Button, TextField, Divider, Typography } from '@material-ui/core';
+import { Grid, Button, TextField, Divider, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
 import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
@@ -104,7 +104,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
             console.log("useEffect", selectedItem.description)
             setCurrentItem(selectedItem)
             setSelectedValue(selectedItem.description)
-         }
+        }
 
         setEdit(false);
         return () => { };
@@ -196,17 +196,38 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                 <h1> ... </h1>
             ) : (
                 <>
-                <MyCard>
-                    <MyCardHeader>
+                    <MyCard>
+                        <MyCardHeader
+                            avatar={
+                                <Avatar aria-label="recipe">
+                                    { currentItem.name[0]} 
+                                </Avatar>
+                            }
+                            action={
+                                <IconButton aria-label="settings">
+                                    <MyIcon icon="more_vert" />
+                                </IconButton>
+                            }
+                            title={ <TextEdit
+                                value={currentItem.name}
+                                label="Name"
+                                callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >
+                                {currentItem.name} 
+                            </TextEdit> 
+                            }
+                            subheader={ <TextEdit
+                                value={currentItem.group}
+                                groups={findUnique(todos, "group", false)}
+                                label="Group"
+                                callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
+                                {currentItem.group}
+                            </TextEdit>}
+                        />
 
-                        <List>
+
+                        {/* <List>
                             <ListItem>
-                                <TextEdit
-                                    value={currentItem.name}
-                                    label="Name"
-                                    callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >
-                                    <h1>{currentItem.name} </h1>
-                                </TextEdit>
+                                
                                 <hr />
 
                                 <TextEdit
@@ -217,85 +238,75 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                                     {currentItem.group}
                                 </TextEdit>
 
-                                {/* <AddForm renderModal={true} 
-                                handleDeleteClick={removeItemHandle} 
-                                name={ currentItem.name }
-                                url={ currentItem.link }
-                                buttonName="Update"                                
-                                type={ listtype }
-                                onClickFunction={updateNameLinkHandle}
-                                group={ currentItem.group }
-                                groups={ findUnique(todos, "group", false) } >
-                            </AddForm>  */}
-
+                       
                             </ListItem>
-                        </List>
-                    </MyCardHeader>
-                    <CardContent>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="center" >
+                        </List> */}
 
-                            <Grid item xs={4}>
-                                <Button variant="contained" disabled={!edit} onClick={updateHandle}><MyIcon icon="update" /> </Button>
+                        <CardContent>
+                            <Grid
+                                container
+                                direction="row"
+                                justify="space-between"
+                                alignItems="center" >
+
+                                <Grid item xs={4}>
+                                    <Button variant="contained" disabled={!edit} onClick={updateHandle}><MyIcon icon="update" /> </Button>
+                                </Grid>
+
+                                <Grid item xs={8} >
+
+                                    <Autocomplete
+                                        id="combo-box-demo"
+                                        inputValue={""}
+                                        // label="Lists"
+                                        // value={ { name: listvalue } }
+                                        onChange={(event, newValue) => {
+                                            if (newValue !== null) {
+                                                handleListChange(newValue);
+                                            }
+                                        }}
+                                        options={lists}
+                                        getOptionLabel={(option) => "(" + option.id + ") " + option.name}
+                                        renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
+                                    />
+                                </Grid>
+
                             </Grid>
 
-                            <Grid item xs={8} >
-
-                                <Autocomplete
-                                    id="combo-box-demo"
-                                    inputValue={""}
-                                    // label="Lists"
-                                    // value={ { name: listvalue } }
-                                    onChange={(event, newValue) => {
-                                        if (newValue !== null) {
-                                            handleListChange(newValue);
-                                        }
-                                    }}
-                                    options={lists}
-                                    getOptionLabel={(option) => "(" + option.id + ") " + option.name}
-                                    renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
-                                />
-                            </Grid>
-
-                        </Grid>
-
-                        <List>
-                            <Divider></Divider>
-                            <div >
-                                {/* className={ classes.navigationInner } */}
-                                {edit ? (
-                                    <ListItem>
-                                        <MarkdownTextareaAutosize
-                                            initValue={selectedItemValue}
-                                            updateFunction={(val: string) => setSelectedValue(val)}
-                                        />
-                                    </ListItem>
-                                ) : (
+                            <List>
+                                <Divider></Divider>
+                                <div >
+                                    {/* className={ classes.navigationInner } */}
+                                    {edit ? (
+                                        <ListItem>
+                                            <MarkdownTextareaAutosize
+                                                initValue={selectedItemValue}
+                                                updateFunction={(val: string) => setSelectedValue(val)}
+                                            />
+                                        </ListItem>
+                                    ) : (
 
 
-                                    <div className="markdown" onClick={() => setEdit(true)}>
-                                        <DetailsMarkdown value={selectedItemValue} />
-                                    </div>
+                                        <div className="markdown" onClick={() => setEdit(true)}>
+                                            <DetailsMarkdown value={selectedItemValue} />
+                                        </div>
 
 
 
-                                )}
-                            </div>
-                        </List>                        
-                    </CardContent>
+                                    )}
+                                </div>
+                            </List>
+                        </CardContent>
 
-                </MyCard>
-                <br/>
+                    </MyCard>
+                    <br />
                     <ListGraphInternal
-                    items={localitems}
-                    lists={lists}
-                    username={"andre"}
-                    listid={currentItem.id}
-                    listtype={ TodoListType.TODO_SIMPLE } />
-                    </>                
+                        items={localitems}
+                        lists={lists}
+                        username={"andre"}
+                        listid={currentItem.id}
+                        listtype={TodoListType.TODO_SIMPLE} />
+                </>
             )}
         </>
 
