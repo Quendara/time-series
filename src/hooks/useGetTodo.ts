@@ -20,7 +20,7 @@ export const useGetTodo = ( itemid : string ) : TodoItem|undefined  => {
         // todo: remove owner from key
         // const owner = "andre"
     
-        const response : any = await API.graphql(graphqlOperation(getTodos, { id: itemid }));
+        const response : any = await API.graphql(graphqlOperation(getTodos, { id: itemid } ));
         const any_resonse = response;
         const item = any_resonse.data.getTodos
     
