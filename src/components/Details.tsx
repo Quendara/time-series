@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } from "react";
 
+import {
+    // IndexRoute,
+    // useRouteMatch,
+    useLocation,
+    useHistory
+} from "react-router-dom";
+
+
+
 import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
@@ -43,7 +52,7 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists, username 
 
 
     return (
-        <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype } username={username} />
+        <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype} username={username} />
     )
 
 }
@@ -60,7 +69,10 @@ interface PropsDetails {
 
 export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, username }: PropsDetails) => {
 
-    const classes = useStyles();
+    // const classes = useStyles();
+
+    const location = useLocation();
+    const history = useHistory();
 
     const localitems = useGetTodos(selectedItem?.id);
 
@@ -144,7 +156,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
     }
 
     const getGlobalList = (lists: TodoMainItem[], id?: string): TodoMainItem | undefined => {
-        if( id === undefined ) return undefined
+        if (id === undefined) return undefined
         if (lists !== undefined) {
             const fl = lists.filter(item => item.listid === id)
             // console.log("getGlobalList", id, fl, lists)
@@ -156,7 +168,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
         return undefined
     }
 
-    const handleListChange = ( selecedList: TodoMainItem ) => {
+    const handleListChange = (selecedList: TodoMainItem) => {
 
         if (selecedList !== null && selectedItem) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
@@ -183,8 +195,8 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
         }
     }
 
-    const bull = <span style={{"margin":"5px"}}>•</span>;
-    const currentList = getGlobalList(  lists, selectedItem?.listid )
+    const bull = <span style={{ "margin": "5px" }}>•</span>;
+    const currentList = getGlobalList(lists, selectedItem?.listid)
 
 
     return (
@@ -206,43 +218,45 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                         <MyCardHeader
                             avatar={
                                 <Avatar aria-label="recipe">
-                                    { currentItem.name[0]} 
+                                    {currentItem.name[0]}
                                 </Avatar>
                             }
                             action={
-                                <IconButton aria-label="settings">
-                                    <MyIcon icon="more_vert" />
+                                <IconButton onClick={() => { history.push(location.pathname + "/" + currentItem.id) }} aria-label="open">
+                                    <MyIcon icon="launch" />
                                 </IconButton>
                             }
-                            title={ <TextEdit
+                            title={<TextEdit
                                 value={currentItem.name}
                                 label="Name"
-                                callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >                                
-                            </TextEdit> 
-                            }
-                            subheader={ 
-                                <>
-                            <TextEdit
-                                value={currentItem.group}
-                                groups={ findUnique(todos, "group", false) }
-                                label="Group"
-                                callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
-                                
+                                callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >
                             </TextEdit>
-                            {bull}
-                            <TextEdit
-                                value={ currentList?currentList.name:"unknown" }
-                                groups={ lists.map( (x) => { return { value: x.name }} )  }
-                                label="Lists"
-                                callback={ (list) => { } } >                                
-                            </TextEdit>                            
-                            
-                            </>
+                            }
+                            subheader={
+                                <>
+                                    <TextEdit
+                                        value={currentItem.group}
+                                        groups={findUnique(todos, "group", false)}
+                                        label="Group"
+                                        callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
+
+                                    </TextEdit>
+                                    {bull}
+                                    <TextEdit
+                                        value={currentList ? currentList.name : "unknown"}
+                                        groups={lists.map((x) => { return { value: x.name } })}
+                                        label="Lists"
+                                        callback={(list) => { }} >
+                                    </TextEdit>
+
+                                </>
 
                             }
-
                         />
+                    </MyCard>
+                    <br></br>
 
+                    <MyCard>
 
                         {/* <List>
                             <ListItem>
@@ -262,59 +276,45 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                         </List> */}
 
                         <CardContent>
+
+
+
+
                             <Grid
                                 container
                                 direction="row"
-                                justify="space-between"
-                                alignItems="center" >
+                                justify="flex-start"
+                                alignItems="flex-start" >
 
-                                <Grid item xs={4}>
-                                    <Button variant="contained" disabled={!edit} onClick={updateHandle}><MyIcon icon="update" /> </Button>
-                                </Grid>
+                                {edit ? (
+                                    <>
+                                        <Grid item xs={12}>
+                                            <Button variant="contained" disabled={!edit} onClick={updateHandle}><MyIcon icon="update" /> </Button>
+                                            <br/>
+                                            <Divider></Divider>
+                                            
+                                        </Grid>
+                                        
 
-                                <Grid item xs={8} >
-
-                                    {/* <Autocomplete
-                                        id="combo-box-demo"
-                                        inputValue={""}
-                                        // label="Lists"
-                                        // value={ { name: listvalue } }
-                                        onChange={(event, newValue) => {
-                                            if (newValue !== null) {
-                                                handleListChange(newValue);
-                                            }
-                                        }}
-                                        options={lists}
-                                        getOptionLabel={(option) => "(" + option.id + ") " + option.name}
-                                        renderInput={(params) => <TextField {...params} label={"Lists"} variant="outlined" />}
-                                    /> */}
-                                </Grid>
-
-                            </Grid>
-
-                            <List>
-                                <Divider></Divider>
-                                <div >
-                                    {/* className={ classes.navigationInner } */}
-                                    {edit ? (
-                                        <ListItem>
+                                        <Grid item xs={12}>
                                             <MarkdownTextareaAutosize
                                                 initValue={selectedItemValue}
                                                 updateFunction={(val: string) => setSelectedValue(val)}
                                             />
-                                        </ListItem>
-                                    ) : (
+                                        </Grid>
+                                    </>
+                                ) : (
 
-
+                                    <Grid item xs={12}>
                                         <div className="markdown" onClick={() => setEdit(true)}>
                                             <DetailsMarkdown value={selectedItemValue} />
                                         </div>
+                                    </Grid>
 
 
 
-                                    )}
-                                </div>
-                            </List>
+                                )}
+                            </Grid>
                         </CardContent>
 
                     </MyCard>
@@ -322,11 +322,12 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                     <ListGraphInternal
                         items={localitems}
                         lists={lists}
-                        username={ username }
+                        username={username}
                         listid={currentItem.id}
                         listtype={TodoListType.TODO_SIMPLE} />
                 </>
-            )}
+            )
+            }
         </>
 
     )

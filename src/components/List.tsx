@@ -395,7 +395,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
 
                         {header}
-                        {type === "todo" &&
+                        {type === TodoListType.TODO &&
                             <ListItemSecondaryAction>
                                 {printRemaining(filterCompleted(items).length, items.length)}
                             </ListItemSecondaryAction>
