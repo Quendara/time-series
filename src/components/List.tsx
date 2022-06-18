@@ -317,7 +317,7 @@ const ListEl = (
                                     }
                                 />
                                 <ListItemSecondaryAction>
-                                    <IconButton onClick={handleSelect} edge="end" aria-label="open">
+                                    <IconButton style={ isChecked(checked) ? {color:"#AAA"}:{} } onClick={handleSelect} edge="end" aria-label="open">
                                         <Icon>launch</Icon>
                                     </IconButton>
                                 </ListItemSecondaryAction>

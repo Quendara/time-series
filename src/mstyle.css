@@ -25,7 +25,8 @@
   
   .my-container-content{
 	height: 80vh;
-	overflow: scroll;
+	overflow-y: auto;
+	overflow-x: auto;
   }
 /* 
 .details {
