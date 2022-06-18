@@ -19,6 +19,15 @@
   	text-rendering: optimizeLegibility;        
 }
 
+.my-container{
+	display: flex;	
+  }
+  
+  .my-container-content{
+	height: 80vh;
+	overflow: scroll;
+  }
+/* 
 .details {
 	position:fixed;
 	width:55%;	
@@ -27,7 +36,7 @@
 
 .details.down {
 	transform: translate(0px, -160px);
-}
+} */
 
 .markdown{
 	font-size: 1rem;
@@ -38,8 +47,9 @@
 	overflow-y: auto;
 	line-height: 1.45;
 	padding: .25rem;		
-	min-height: 22vh;
 }
+
+ /* min-height: 22vh; */
 
 .markdown li p {
 	margin: 0px;

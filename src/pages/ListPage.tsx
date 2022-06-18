@@ -303,6 +303,7 @@ export const ListPage = ({
                                         {/* {todos.length === 0 && // also the unfiltered list is empty
                                             <h1>Diese Liste ist leer !</h1>
                                         } */}
+                                        Checklist
                                         <Divider />
                                         <ListItem>
                                             <AddForm renderModal={false} handleDeleteClick={undefined} name={filterText} onClickFunction={addItemHandle} type={listtype} groups={findUnique(todos, "group", false)} ></AddForm>
@@ -319,21 +320,24 @@ export const ListPage = ({
                     </Grid>
                 ) : (
                     <Grid item md={horizontally ? 12 : 4} sm={horizontally ? 12 : 6} xs={12}  >
-                        {todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                        <div className={ "my-container-content"} >
+                            {todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                        </div>
                     </Grid>
                 )
 
                 }
 
 
+                {/* 
+                <div style={{ position: "relative" }}>
+                <div className={(scrollY > 190) ? "details down" : "details"} ></div> */}
 
                 {(selectedItemId) &&
                     <>
                         <Grid item md={horizontally ? 12 : 8} sm={horizontally ? 12 : 6} xs={12} >
-                            <div style={{ position: "relative" }}>
-                                <div className={(scrollY > 190) ? "details down" : "details"} >
-
-
+                            
+                        <div className={ "my-container-content"} >
                                     <DetailsById
                                         itemid={selectedItemId}
                                         updateFunction={updateFunction}
@@ -343,8 +347,7 @@ export const ListPage = ({
                                         
                                     />
                                     <div>Scroll position is ({scrollX}, {scrollY})</div>
-                                </div>
-                            </div>
+                                </div>                            
                         </Grid>
                     </>
                 }

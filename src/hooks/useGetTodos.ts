@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
-import { listTodos, getTodos } from '../graphql/queries';
+import { listTodos, queryTodos, getTodos } from '../graphql/queries';
 import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscriptions';
 import { TodoItem } from "../models/TodoItems"
 
@@ -122,7 +122,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
 
   })
 
-  async function fetchTodos( listid : string ) {
+  async function fetchTodos( listid : string )  {
 
     console.log("useGetTodos (listid) : ", listid);
 
@@ -142,18 +142,25 @@ export const useGetTodos = ( listid : string  | undefined ) => {
           }
         `
 
-    let response : any = undefined
     if (listid === "current") {
-      response = await API.graphql(graphqlOperation(listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
+      let response : any = await API.graphql(graphqlOperation( listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
+      const items = response.data.listTodos.items
+      console.log("useGetTodos  : ", items);
+      setTodos( items )
+
     }
     else {
-      response = await API.graphql(graphqlOperation(listTodos, { filter: { listid: { eq: "" + listid } }, limit: 500 }));
+      // response = await API.graphql(graphqlOperation(queryTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
+      let response : any = await API.graphql(graphqlOperation( queryTodos, { listid: listid } ) );
+      
+      const items = response.data.queryTodos.items
+      console.log("useGetTodos  : ", items);
+      setTodos( items )
+  
     }
 
-    const items = response.data.listTodos.items
-    console.log("useGetTodos  : ", items);
-    setTodos( items )
-    return items
+    
+    // return items
 
     
   }

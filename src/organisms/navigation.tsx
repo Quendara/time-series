@@ -36,9 +36,10 @@ interface NavItemProps {
     item: TodoMainItem;
     dispatch: any; // @todo
     render: string;
+    color: string;
 }
 
-const NavItem = ({ item, dispatch, render }: NavItemProps) => {
+const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
 
     const classes = useStyles();
 
@@ -82,14 +83,14 @@ const NavItem = ({ item, dispatch, render }: NavItemProps) => {
         dispatch(UpdateItem(element))
     };
 
-    const bull = <span style={{"margin":"5px"}}>•</span>;
+    const bull = <span style={{ "margin": "5px" }}>•</span>;
 
 
     if (render === "simple") {
         return (
             <NavLink className={classes.title} to={"/" + [item.component, item.listid, item.render].join('/')}   >
                 <MenuItem>
-                    <ListItemIcon>
+                    <ListItemIcon style={{ color: color }} >
                         <MyIcon icon={item.icon} />
                     </ListItemIcon>
                     <ListItemText
@@ -106,7 +107,7 @@ const NavItem = ({ item, dispatch, render }: NavItemProps) => {
                         className={classes.title}
                         to={"/" + [item.component, item.listid, item.render].join('/')}   >
 
-                        <Avatar >
+                        <Avatar style={{ backgroundColor: color }} >
                             <MyIcon icon={item.icon} />
                         </Avatar>
                     </NavLink>
@@ -120,7 +121,7 @@ const NavItem = ({ item, dispatch, render }: NavItemProps) => {
                         {bull}
                         <TextEdit value={item.icon ? item.icon : "keine"} label="icon" callback={handleEditIcon} />
                         {bull}
-                        { item.render }
+                        {item.render}
                     </>} />
                 <ListItemSecondaryAction>
                     <Tooltip title="Show in navbar" aria-label="add">
@@ -141,10 +142,11 @@ interface NavItemListProps {
     render: string;
     groupname: string;
     username: string;
+    color: string;
 }
 
-const NavItemList = ({ items, render, groupname, username }: NavItemListProps) => {
-    
+const NavItemList = ({ items, render, groupname, username, color }: NavItemListProps) => {
+
     const [todos, dispatch] = useReducer(reducerTodoMain, items);
 
     const handleEditIcon = () => {
@@ -174,7 +176,7 @@ const NavItemList = ({ items, render, groupname, username }: NavItemListProps) =
                 </ListItem>
 
                 {todos.map((item: TodoMainItem, index: number) => (
-                    <NavItem key={index} item={item} render={render} dispatch={dispatch} />
+                    <NavItem key={index} item={item} render={render} dispatch={dispatch} color={color} />
                 ))}
             </List>}
     </>
@@ -183,7 +185,7 @@ const NavItemList = ({ items, render, groupname, username }: NavItemListProps) =
 }
 
 interface MainNavigationProps {
-    handleSetConfig: ( items: TodoMainItem[] ) => void;
+    handleSetConfig: (items: TodoMainItem[]) => void;
     render: string;
     username: string;
 }
@@ -205,16 +207,21 @@ export const MainNavigation = ({ render, username, handleSetConfig }: MainNaviga
 
     const groups: GenericGroup<TodoMainItem>[] = findUnique(items, "group", false)
 
+    const colorArr = [
+        "rgb(144, 202, 249)",
+        "rgb(206, 147, 216)",
+        "rgb(255, 167, 38)"
+    ]
+
     return (
         <>
 
             {items !== undefined &&
                 <>
-
-
                     {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
-                        <NavItemList key={"sfdfsd" + index} groupname={item.value} items={item.listitems} render={render} username={username} />
-
+                        <NavItemList key={"sfdfsd" + index} groupname={item.value} items={item.listitems} render={render} username={username}
+                            color={colorArr[index % (colorArr.length)]}
+                        />
                     ))}
                 </>}
         </>

@@ -27,7 +27,7 @@ import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyPaperHeader } from "./StyledComponents"
 
 // import CloseIcon from '@material-ui/icons/Close';
-import {MyIcon} from "./MyIcon"
+import { MyIcon } from "./MyIcon"
 
 import { TodoItem } from "../models/TodoItems"
 import { GenericGroup } from "../components/helpers"
@@ -213,8 +213,8 @@ const ListEl = (
                             <CardHeader
                                 title={"Update Item "}
                                 action={<>
-                                    <IconButton onClick={() => { history.push(location.pathname + "/" + id ) }} >
-                                        <MyIcon icon="open_in_full"></MyIcon>                                       
+                                    <IconButton onClick={() => { history.push(location.pathname + "/" + id) }} >
+                                        <MyIcon icon="open_in_full"></MyIcon>
                                     </IconButton>
                                     <IconButton onClick={() => setEdit(false)} >
                                         <MyIcon icon="close"></MyIcon>
@@ -295,17 +295,32 @@ const ListEl = (
                 (
                     <>
                         {(type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE) &&
-                            <ListItem button={!(editList)} onClick={handleSelect}  >
+                            <ListItem 
+                                button={!(editList)} 
+                                onClick={handleSelect} 
+                                selected={false} >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
                                     {isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked />}
                                 </ListItemIcon>
                                 <ListItemText
                                     onClick={handleSelect}
-                                    primary={isChecked(checked) ?
-                                        <TypographyDisabled {...longPressEvent}>{name}</TypographyDisabled>
-                                        : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
+                                    primary={
+                                        <span>
+                                            {
+                                                isChecked(checked) ?
+                                                    <TypographyDisabled onClick={handleSelect} {...longPressEvent}>{name}</TypographyDisabled>
+                                                    : <TypographyEnabled onClick={handleSelect}  {...longPressEvent}>{name}</TypographyEnabled>
+                                            }
+
+                                        </span>
+                                    }
                                 />
+                                <ListItemSecondaryAction>
+                                    <IconButton onClick={handleSelect} edge="end" aria-label="open">
+                                        <Icon>launch</Icon>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
                             </ListItem>}
 
                         {type === TodoListType.MESSAGE &&
