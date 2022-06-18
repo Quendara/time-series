@@ -91,7 +91,7 @@ interface PropsEl {
     selectFunction: (id: string) => void;
     toggleFunction: (id: string) => void;
     type: TodoListType;
-    groups: any;
+    groups: GenericGroup<TodoItem>[];
     group: string;
     editList: boolean
 }

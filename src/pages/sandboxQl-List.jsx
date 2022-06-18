@@ -66,17 +66,15 @@ export const SandboxQl = ({ username, token, listid, listtype }) => {
     //   } `
 
     const addItemHandle = (name, link, group = "")  => { 
-        // await API.graphql(graphqlOperation(createTodos, { input: { id: "" + id, group: group, link: link, listid: listid, owner: "andre", name: name, checked: false } }));
         const id = new Date().getTime();
-        addTodo({ variables: { input: { id: "" + id, group: group, link: link, listid: listid, owner: "andre", name: name, checked: false } }     })
+        addTodo({ variables: { input: { id: "" + id, group: group, link: link, listid: listid, name: name, checked: false } }     })
     }
     const removeItemHandle = () => { }
     const updateFunction = () => { }
     const toggleFunction = ( todoid ) => {
         
         let newStatus = false
-        // API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, owner: "andre", checked: newStatus } }));
-        updateTodo({ variables:  { input: { id: "" + todoid, owner: "andre", checked: newStatus } }     })
+        updateTodo({ variables:  { input: { id: "" + todoid, checked: newStatus } }     })
      }
 
 

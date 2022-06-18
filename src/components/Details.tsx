@@ -33,16 +33,17 @@ interface Props {
     listtype: string;
     updateFunction: (input: UpdateTodosInput) => any;
     lists: TodoMainItem[];
+    username: string;
 }
 
-export const DetailsById = ({ itemid, listtype, updateFunction, lists }: Props) => {
+export const DetailsById = ({ itemid, listtype, updateFunction, lists, username }: Props) => {
 
     const item = useGetTodo(itemid);
     const todos = useGetTodos(item?.listid);
 
 
     return (
-        <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype} />
+        <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype } username={username} />
     )
 
 }
@@ -53,10 +54,11 @@ interface PropsDetails {
     listtype: string;
     todos: TodoItem[];
     lists: TodoMainItem[];
+    username: string;
 }
 
 
-export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }: PropsDetails) => {
+export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, username }: PropsDetails) => {
 
     const classes = useStyles();
 
@@ -320,7 +322,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype }
                     <ListGraphInternal
                         items={localitems}
                         lists={lists}
-                        username={"andre"}
+                        username={ username }
                         listid={currentItem.id}
                         listtype={TodoListType.TODO_SIMPLE} />
                 </>

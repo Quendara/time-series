@@ -140,9 +140,10 @@ interface NavItemListProps {
     items: TodoMainItem[];
     render: string;
     groupname: string;
+    username: string;
 }
 
-const NavItemList = ({ items, render, groupname }: NavItemListProps) => {
+const NavItemList = ({ items, render, groupname, username }: NavItemListProps) => {
     
     const [todos, dispatch] = useReducer(reducerTodoMain, items);
 
@@ -158,7 +159,7 @@ const NavItemList = ({ items, render, groupname }: NavItemListProps) => {
             listid: "_" + id,
             name: "New List",
             group: groupname,
-            owner: "andre",
+            owner: username,
             navbar: false
         }
         dispatch(AddItem(element))
@@ -212,7 +213,7 @@ export const MainNavigation = ({ render, username, handleSetConfig }: MainNaviga
 
 
                     {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
-                        <NavItemList key={"sfdfsd" + index} groupname={item.value} items={item.listitems} render={render} />
+                        <NavItemList key={"sfdfsd" + index} groupname={item.value} items={item.listitems} render={render} username={username} />
 
                     ))}
                 </>}

@@ -30,22 +30,22 @@ interface ListUseParams {
     itemid: string;
 }
 
-export const ListGraphQL = ( props : ListProps ) => {
+export const ListGraphQL = (props: ListProps) => {
 
     let { listid, listtype, itemid } = useParams<ListUseParams>();
 
-    const items = useGetTodos( listid) ;
+    const items = useGetTodos(listid);
 
     return (
         <>
 
             <ListGraphInternal
-                listid={ listid}
+                listid={listid}
                 items={items}
                 listtype={listtype}
                 itemid={itemid}
-                lists={ props.lists }
-                username={ props.username} />
+                lists={props.lists}
+                username={props.username} />
 
         </>
     )
@@ -184,6 +184,7 @@ export const ListGraphInternal = ({ items, lists, username, listid, listtype, it
                 toggleFunction={toggleFunction}
                 uncheckFunction={uncheckFunction}
                 lists={lists}
+                username = { username }
             />)
 
     }
@@ -193,7 +194,10 @@ export const ListGraphInternal = ({ items, lists, username, listid, listtype, it
             itemid={itemid}
             updateFunction={updateFunction}
             listtype={listtype}
-            lists={lists} />)
+            lists={lists} 
+            username = { username }
+            />
+            )
     }
 }
 

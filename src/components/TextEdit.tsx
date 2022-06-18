@@ -74,6 +74,7 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                                         newValue
                                     );    
                                 }
+                                
                             }
                             console.error( "onInputChange", newValue )
                         }}

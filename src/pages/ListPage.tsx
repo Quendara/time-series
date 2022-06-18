@@ -41,14 +41,14 @@ interface ListProps {
     todos: TodoItem[];
     listtype: TodoListType;
     listid: string;
-
     addItemHandle: any;
     // getItem: (id:string) => any;
     removeItemHandle: (id: string) => void;
     updateFunction: (input: UpdateTodosInput) => void;
     toggleFunction: (id: string) => void;
     uncheckFunction: (id: string) => void;
-    lists: any;
+    lists: TodoMainItem[];
+    username: string;
 
 }
 
@@ -62,7 +62,8 @@ export const ListPage = ({
     updateFunction,
     toggleFunction,
     uncheckFunction,
-    lists
+    lists,
+    username
 }: ListProps) => {
 
     // const [selectedItem, setSelectedItem] = useState(undefined);
@@ -338,6 +339,8 @@ export const ListPage = ({
                                         updateFunction={updateFunction}
                                         lists={lists}
                                         listtype={listtype}
+                                        username = {username }
+                                        
                                     />
                                     <div>Scroll position is ({scrollX}, {scrollY})</div>
                                 </div>
