@@ -21,7 +21,7 @@ import { FilterComponent } from '../components/FilterComponent';
 
 import { MyCard, MyPaperHeader } from "../components/StyledComponents"
 
-import { ListQ } from '../components/List';
+import { ListHeader, ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
 import { Details, DetailsById } from '../components/Details';
 
@@ -297,20 +297,18 @@ export const ListPage = ({
                             </CardContent>
                         )}
                         {filteredTodos.length === 0 && (
-                            <CardContent>
-                                <Grid container alignItems="center" justify="flex-start" spacing={2} >
-                                    <Grid item xs={12} >
-                                        {/* {todos.length === 0 && // also the unfiltered list is empty
-                                            <h1>Diese Liste ist leer !</h1>
-                                        } */}
-                                        Checklist
-                                        <Divider />
+                         
+                                         <MyCard>
+
+
+                                        <ListHeader
+                                            header={"Checklist"}
+                                            edit={false}
+                                            setEditCallback={(e: boolean) => { }} />
                                         <ListItem>
                                             <AddForm renderModal={false} handleDeleteClick={undefined} name={filterText} onClickFunction={addItemHandle} type={listtype} groups={findUnique(todos, "group", false)} ></AddForm>
                                         </ListItem>
-                                    </Grid>
-                                </Grid>
-                            </CardContent>)}
+                            </MyCard> )}
                     </MyCard>
                 </Grid>
 
@@ -320,7 +318,7 @@ export const ListPage = ({
                     </Grid>
                 ) : (
                     <Grid item md={horizontally ? 12 : 4} sm={horizontally ? 12 : 6} xs={12}  >
-                        <div className={ "my-container-content"} >
+                        <div className={"my-container-content"} >
                             {todos.length > 0 && <> {createLists(filteredTodos)} </>}
                         </div>
                     </Grid>
@@ -336,18 +334,18 @@ export const ListPage = ({
                 {(selectedItemId) &&
                     <>
                         <Grid item md={horizontally ? 12 : 8} sm={horizontally ? 12 : 6} xs={12} >
-                            
-                        <div className={ "my-container-content"} >
-                                    <DetailsById
-                                        itemid={selectedItemId}
-                                        updateFunction={updateFunction}
-                                        lists={lists}
-                                        listtype={listtype}
-                                        username = {username }
-                                        
-                                    />
-                                    <div>Scroll position is ({scrollX}, {scrollY})</div>
-                                </div>                            
+
+                            <div className={"my-container-content"} >
+                                <DetailsById
+                                    itemid={selectedItemId}
+                                    updateFunction={updateFunction}
+                                    lists={lists}
+                                    listtype={listtype}
+                                    username={username}
+
+                                />
+                                <div>Scroll position is ({scrollX}, {scrollY})</div>
+                            </div>
                         </Grid>
                     </>
                 }

@@ -295,9 +295,9 @@ const ListEl = (
                 (
                     <>
                         {(type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE) &&
-                            <ListItem 
-                                button={!(editList)} 
-                                onClick={handleSelect} 
+                            <ListItem
+                                button={!(editList)}
+                                onClick={handleSelect}
                                 selected={false} >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
@@ -317,7 +317,7 @@ const ListEl = (
                                     }
                                 />
                                 <ListItemSecondaryAction>
-                                    <IconButton style={ isChecked(checked) ? {color:"#AAA"}:{} } onClick={handleSelect} edge="end" aria-label="open">
+                                    <IconButton style={isChecked(checked) ? { color: "#AAA" } : {}} onClick={handleSelect} edge="end" aria-label="open">
                                         <Icon>launch</Icon>
                                     </IconButton>
                                 </ListItemSecondaryAction>
@@ -369,6 +369,37 @@ interface PropsQ {
     editList: boolean
 };
 
+interface PropsHeader {
+    items?: TodoItem[];
+    header: string;
+    edit: boolean;
+    setEditCallback: (v: boolean) => void
+};
+// : React.FC<> 
+export const ListHeader = (props: PropsHeader) => {
+
+    return (
+        <MyPaperHeader onClick={() => props.setEditCallback(!props.edit)}>
+            <List>
+                <ListItem>
+                    <ListItemIcon>
+                        {props.edit ? <ArrowDropDown /> : <ArrowRight />}
+                    </ListItemIcon>
+
+                    {props.header}
+
+                    {/* {type === TodoListType.TODO &&
+                        <ListItemSecondaryAction>
+                            {printRemaining(filterCompleted(items).length, items.length)}
+                        </ListItemSecondaryAction>
+                    } */}
+                </ListItem>
+            </List>
+        </MyPaperHeader>
+    )
+
+}
+
 
 export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, selectFunction, toggleFunction, type, group, groups, editList }: PropsQ) => {
 
@@ -386,23 +417,14 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
     return (
 
         <>
-            <MyPaperHeader onClick={() => setEdit(!edit)}>
-                <List>
-                    <ListItem>
-                        <ListItemIcon>
-                            {edit ? <ArrowDropDown /> : <ArrowRight />}
-                        </ListItemIcon>
+            <ListHeader
+                header={header}
+                edit={edit}
+                setEditCallback={(e: boolean) => {
+                    return setEdit(e);
+                }}
 
-
-                        {header}
-                        {type === TodoListType.TODO &&
-                            <ListItemSecondaryAction>
-                                {printRemaining(filterCompleted(items).length, items.length)}
-                            </ListItemSecondaryAction>
-                        }
-                    </ListItem>
-                </List>
-            </MyPaperHeader >
+            />
 
             <List
                 dense={false}
