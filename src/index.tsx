@@ -33,6 +33,8 @@ import { SandboxQl } from "./pages/SandboxQl";
 import { TimeTree } from "./pages/TimeTree2";
 import { CompareLists } from "./pages/CompareLists";
 import { ReplaceLists } from "./pages/ReplaceLists";
+import { CsvTools } from "./pages/CsvTools";
+
 
 import { TodoItem, TodoMainItem } from "./models/TodoItems"
 
@@ -138,7 +140,7 @@ const App = () => {
 
           {userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <div className={classes.menuButton}   >
+              <div key={ "fdf"+index } className={classes.menuButton}   >
                 <Tooltip title={item.name} aia-label="add">
                   <NavLink key={"nl_" + index} to={"/" + [item.component, item.listid, item.render].join('/')} className={classes.menuButton}    >
                     <MyIcon icon={item.icon} />
@@ -206,6 +208,11 @@ const App = () => {
                       <Route path="/replace" >
                         <ReplaceLists />
                       </Route>
+                      <Route path="/csvtools" >
+                        <CsvTools />
+                      </Route>
+
+                      
 
                       <Route exact path="/" >
                         <Grid container justify="center" spacing={5} >
