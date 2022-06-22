@@ -8,7 +8,7 @@ import {
   BrowserRouter as Router,
   Route,
   NavLink,
-  Switch,
+  Routes,
   // IndexRoute,
   useLocation
 } from "react-router-dom";
@@ -184,37 +184,34 @@ const App = () => {
               (<>
                 {!amplifyInitilaized ? (<h1> Loading </h1>) :
                   (
-                    <Switch>
-                      <Route path="/list/:listid/:listtype/:itemid" children={
+                    <Routes>
+                      <Route path="/list/:listid/:listtype/:itemid" element={
                         <ListGraphQL
                           username={username} lists={userConfiguration} />
                       } />
-                      <Route path="/list/:listid/:listtype" children={
+                      <Route path="/list/:listid/:listtype" element={
                         <ListGraphQL
                           username={username} lists={userConfiguration} />
                       } />
-                      <Route path="/time" >
+                      <Route path="/time" element={
                         <TimeSeries username={username} token={jwtTocken} />
+                      } >                        
                       </Route>
 
 
-                      <Route path="/timetree" >
+                      {/* <Route path="/timetree" >
                         <TimeTree username={username} token={jwtTocken} timetreeToken={apikeyTimetree} />
-                      </Route>
+                      </Route> */}
 
-                      <Route path="/diff" >
-                        <CompareLists />
+                      <Route path="/diff" element={ <CompareLists /> }>                        
                       </Route>
-                      <Route path="/replace" >
-                        <ReplaceLists />
+                      <Route path="/replace" element={ <ReplaceLists /> }>                        
                       </Route>
-                      <Route path="/csvtools" >
-                        <CsvTools />
+                      <Route path="/csvtools" element={ <CsvTools /> }>                        
                       </Route>
+                     
 
-                      
-
-                      <Route exact path="/" >
+                      <Route path="/" element={
                         <Grid container justify="center" spacing={5} >
                           <Grid item xs={12} md={6}>
                             <Paper elevation={3} >
@@ -232,19 +229,20 @@ const App = () => {
                             {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */}
                           </Grid>
                         </Grid>
+                        } >
                       </Route>
-                      <Route exact path="/sandboxQl" >
+                      {/* <Route path="/sandboxQl" >
                         {!amplifyInitilaized ? (<h1> Loading </h1>) : (
                           <SandboxQl />
                         )}
-                      </Route>
-                      <Route exact path="/sandbox" >
+                      </Route> */}
+                      <Route path="/sandbox" element={ 
                         <Grid container justify="center" >
-                          {/* <Sandbox token={ jwtTocken } apikey={ apikey } listid={ 1 } lists={ userConfiguration } listtype="todo" /> */}
+                        
                         </Grid>
-                      </Route>
-                      <Route exact path="/demo" component={StyleDemo}></Route>
-                    </Switch>
+                      } />                      
+                      <Route path="/demo" element={ <StyleDemo /> }></Route>
+                    </Routes>
                   )}
               </>)}
 

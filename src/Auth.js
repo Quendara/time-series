@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton } from '@material-ui/core/';
 import { List, ListItem } from '@material-ui/core/';
 
-
-
-import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
 import { MyIcon } from "./components/MyIcon";
 import {useStyles} from "./Styles"
 

@@ -4,7 +4,7 @@ import {
     // IndexRoute,
     // useRouteMatch,
     useLocation,
-    useHistory
+    useNavigate 
 } from "react-router-dom";
 
 
@@ -72,7 +72,8 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
     // const classes = useStyles();
 
     const location = useLocation();
-    const history = useHistory();
+    // const history = useHistory();
+    const navigate = useNavigate();
 
     const localitems = useGetTodos(selectedItem?.id);
 
@@ -222,7 +223,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                 </Avatar>
                             }
                             action={
-                                <IconButton onClick={() => { history.push(location.pathname + "/" + currentItem.id) }} aria-label="open">
+                                <IconButton onClick={() => { navigate(location.pathname + "/" + currentItem.id) }} aria-label="open">
                                     <MyIcon icon="launch" />
                                 </IconButton>
                             }

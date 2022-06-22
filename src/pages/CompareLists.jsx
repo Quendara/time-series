@@ -1,5 +1,4 @@
 import React, { Component, useState, useEffect } from "react";
-import { useQuery } from '@apollo/react-hooks'
 
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";

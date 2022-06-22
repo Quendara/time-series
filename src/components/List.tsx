@@ -2,11 +2,12 @@ import React, { Component, useState } from "react";
 
 import {
     // IndexRoute,
-    useRouteMatch,
+    // useRouteMatch,
     useLocation
 } from "react-router-dom";
 
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 import { Modal, ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, CardContent, Divider, MenuItem, CardHeader } from '@material-ui/core';
 
@@ -41,7 +42,8 @@ export enum TodoListType {
     TODO = 'todo',
     TODO_SIMPLE = 'todo_simple',
     MESSAGE = 'message',
-    LINKS = 'links'
+    LINKS = 'links',
+    UNDEFINED = 'undefined',
 }
 
 const useStyles = makeStyles({
@@ -113,7 +115,8 @@ const ListEl = (
         editList }: PropsEl) => {
 
     let location = useLocation();
-    const history = useHistory();
+    // const history = useHistory();
+    const navigate = useNavigate();
     const classes = useStyles();
 
     const [edit, setEdit] = useState(false);
@@ -155,7 +158,8 @@ const ListEl = (
         else {
 
             if (link.startsWith("/")) {
-                history.push(link);
+                // history.push(link);
+                navigate( link );
             } else {
                 // Open in new window
                 window.open(link, "_blank")
@@ -213,7 +217,7 @@ const ListEl = (
                             <CardHeader
                                 title={"Update Item "}
                                 action={<>
-                                    <IconButton onClick={() => { history.push(location.pathname + "/" + id) }} >
+                                    <IconButton onClick={() => { navigate(location.pathname + "/" + id) }} >
                                         <MyIcon icon="open_in_full"></MyIcon>
                                     </IconButton>
                                     <IconButton onClick={() => setEdit(false)} >

@@ -266,11 +266,12 @@ export const ListPage = ({
                                             </Grid>
                                             <Grid item xs={2} lg={4} >
                                                 <Grid container justify="flex-end">
-                                                    <Hidden mdDown>
+                                                    
                                                         <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
                                                             <EditIcon />
                                                         </IconButton>
-                                                    </Hidden>
+                                                        {/* <Hidden mdDown>
+                                                    </Hidden> */}
                                                     <IconButton color={horizontally ? "primary" : "default"} onClick={() => setHorizontally(!horizontally)} >
                                                         <TextRotationNoneIcon />
                                                     </IconButton>

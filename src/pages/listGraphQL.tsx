@@ -27,12 +27,12 @@ interface ListProps {
 interface ListUseParams {
     listid: string;
     listtype: TodoListType;
-    itemid: string;
+    itemid?: string;
 }
 
 export const ListGraphQL = (props: ListProps) => {
 
-    let { listid, listtype, itemid } = useParams<ListUseParams>();
+    let { listid, listtype, itemid } = useParams<{listid : string , listtype  : TodoListType , itemid? : string }>();
 
     const items = useGetTodos(listid);
 
@@ -40,9 +40,9 @@ export const ListGraphQL = (props: ListProps) => {
         <>
 
             <ListGraphInternal
-                listid={listid}
+                listid={listid?listid:""}
                 items={items}
-                listtype={listtype}
+                listtype={listtype?listtype:TodoListType.UNDEFINED}
                 itemid={itemid}
                 lists={props.lists}
                 username={props.username} />
