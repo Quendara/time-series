@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, Ca
 import { List, ListItem } from '@material-ui/core/';
 
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
 import { MyIcon } from "./components/MyIcon";
 import {useStyles} from "./Styles"
@@ -238,7 +238,7 @@ const Auth = ({ authSuccessCallback, children }) => {
                   <ListItem>
                     <Button color="primary" variant="contained" onClick={ signIn } style={ { margin: 8 } } >
                       { trySend ? "Loading" : "Sign-In" }
-                      <FontAwesomeIcon icon={ faAngleDoubleRight } className="ml-2" />
+                      <MyIcon>chevron_right</MyIcon>
                     </Button>
                   </ListItem>
                 </form>
@@ -270,6 +270,6 @@ const Auth = ({ authSuccessCallback, children }) => {
     );
   }
 };
-// <Button><FontAwesomeIcon icon={ faUserAstronaut } className="mr-2" /> { username }</Button>
+
 export { Auth };
 
