@@ -8,7 +8,10 @@ import {
   CategoryScale,
   Tooltip,
   Legend,
-} from 'chart.js';
+  TimeSeriesScale
+} from 'chart.js'; 
+
+import 'chartjs-adapter-moment';
 
 import { Scatter } from "react-chartjs-2";
 // import { groupBy } from "underscore";
@@ -18,7 +21,7 @@ import { DashboardNumber } from "./DashboardNumber"
 import { groupByJs } from "./helper"
 // import { Dashboard } from "@material-ui/icons";
 
-ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, CategoryScale);
+ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, CategoryScale, TimeSeriesScale);
 
 
 export interface ValueType {
@@ -56,9 +59,10 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }: P
       }
     },
     scales: {
-      xAxes: [
+      // scaleOverride : true,
+      x: 
         {
-          type: "time",
+          type: "timeseries",
           // time: {
           //   unit: "month"
           // },
@@ -71,8 +75,8 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }: P
 
           },
         }
-      ],
-      yAxes: [
+      ,
+      y: 
         {
           gridLines: {
             display: true,
@@ -82,7 +86,7 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }: P
             fontColor: fontColor,
           }
         }
-      ]
+      
     }
   };
 

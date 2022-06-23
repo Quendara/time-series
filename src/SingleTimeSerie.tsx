@@ -5,12 +5,13 @@ import React, { useState, useEffect } from "react";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 // import { Button } from '@material-ui/core';
+import { Edit } from "@material-ui/icons";
 import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
+
 import { MyCard } from "./components/StyledComponents"
 import { LineChart, ValueType } from "./components/LineChart";
 import { DashboardNumber } from "./components/DashboardNumber"
 import { SelectionView } from "./components/SelectionView"
-import { Edit } from "@material-ui/icons";
 
 
 import AddIcon from '@material-ui/icons/Add';
@@ -18,6 +19,8 @@ import CheckIcon from '@material-ui/icons/Check';
 
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
+import {addLeadingZeros} from "./components/helpers";
+
 
 // class SingleTimeSerie extends React.Component {
 
@@ -150,8 +153,8 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
           setIsLoaded(result)
 
           if (result.length > 0) {
-            var last_element = result[result.length - 1];
-            setLastValue(result[result.length - 1])
+            const last_element : ValueType = timedata[timedata.length - 1];
+            setLastValue( last_element )
           }
         },
         // Note: it's important to handle errors here
@@ -169,8 +172,8 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
 
     try{
       let ret = "" + d.getFullYear();
-      ret += "-" + (+d.getMonth() + 1);
-      ret += "-" + d.getDate();
+      ret += "-" + addLeadingZeros( d.getMonth() + 1, 2) ;
+      ret += "-" + addLeadingZeros( d.getDate() , 2);
   
       return ret;  
     }
