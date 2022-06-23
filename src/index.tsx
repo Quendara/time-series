@@ -193,7 +193,7 @@ const App = () => {
                         <ListGraphQL
                           username={username} lists={userConfiguration} />
                       } />
-                      <Route path="/time" element={
+                      <Route path="/time/:id/:idx" element={
                         <TimeSeries username={username} token={jwtTocken} />
                       } >                        
                       </Route>
