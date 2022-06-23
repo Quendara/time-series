@@ -7,9 +7,10 @@ import React, { useState, useEffect } from "react";
 // import { Button } from '@material-ui/core';
 import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
 import { MyCard } from "./components/StyledComponents"
-import { LineChart } from "./components/LineChart";
+import { LineChart, ValueType } from "./components/LineChart";
 import { DashboardNumber } from "./components/DashboardNumber"
 import { SelectionView } from "./components/SelectionView"
+import { Edit } from "@material-ui/icons";
 
 
 import AddIcon from '@material-ui/icons/Add';
@@ -17,18 +18,29 @@ import CheckIcon from '@material-ui/icons/Check';
 
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
-import { Edit } from "@material-ui/icons";
 
 // class SingleTimeSerie extends React.Component {
-const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
 
-  const [lastValue, setLastValue] = useState({ x: 0, y: 0 })
-  const [itemToSend, setItemToSend] = useState(undefined)
+interface Props {
+  group_name: string;
+  group_id: string;
+  group_unit: string;
+}
+
+interface ValueToSendType {
+  x: number;
+  y: number;  
+}
+
+const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
+
+  const [lastValue, setLastValue] = useState<ValueType>({ x: new Date(), y: 0  })
+  const [itemToSend, setItemToSend] = useState<ValueToSendType | undefined>(undefined)
 
   const [renderMode, setRenderMode] = useState("simple")
 
-  const [fetchedItems, setFetchedItems] = useState(undefined)
-  const [localItems, setLocalItems] = useState(undefined)
+  const [fetchedItems, setFetchedItems] = useState<ValueType[]>([])
+  const [localItems, setLocalItems] = useState<any>(undefined)
 
   const [submitted, setSubmitted] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -39,7 +51,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
 
 
 
-  const mySubmitHandler = event => {
+  const mySubmitHandler = ( event : any )  => {
     console.log("mySubmitHandler");
     console.log();
 
@@ -74,20 +86,22 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
     }
   };
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = (event : any ) => {
     console.log(event.key);
   }
 
-  const handleChange = event => {
+  const handleChange = ( event : any ) => {
 
     const value = +event.target.value
 
     console.log(event.target.value);
+    
     if (value > lastValue.y) {
 
       const dateob = new Date();
-      let valObj = {
-        x: dateob, // Math.round( dateob.getTime() / 1000 ),
+      let valObj : ValueType = {
+        // x: dateob, // dateob.getTime() / 1000 , // Math.round( dateob.getTime() / 1000 ),
+        x: dateob,
         y: value
       };
 
@@ -96,7 +110,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
       local_items.push(valObj);
 
 
-      let item_2_send = {
+      let item_2_send : ValueToSendType = {
         x: Math.round(dateob.getTime() / 1000),
         y: value
       };
@@ -126,8 +140,9 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
       .then(
         result => {
 
-          const timedata = result.map(dataField => {
-            return { x: new Date(dataField.x * 1000), y: +dataField.y };
+          const timedata = result.map( ( dataField : any ) => {
+            const value : ValueType = { x: new Date( dataField.x * 1000) , y: +dataField.y }
+            return value;
           });
 
           setFetchedItems(timedata)
@@ -150,13 +165,19 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
 
 
 
-  const formatDate = (x) => {
-    const d = new Date(x * 1000);
-    let ret = "" + d.getFullYear();
-    ret += "-" + (+d.getMonth() + 1);
-    ret += "-" + d.getDate();
+  const formatDate = ( d : Date ) => {
 
-    return ret;
+    try{
+      let ret = "" + d.getFullYear();
+      ret += "-" + (+d.getMonth() + 1);
+      ret += "-" + d.getDate();
+  
+      return ret;  
+    }
+    catch( e ){
+      return e;
+    }
+    
   }
 
   const getButton = () => {
@@ -197,7 +218,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
     return button
   }
 
-  const helperText = (lastValue) => {
+  const helperText = (lastValue : ValueType) => {
     return "last value was " + lastValue.y + " from " + formatDate(lastValue.x)
   }
 
@@ -217,7 +238,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit }) => {
           render={renderMode}
           group_unit={ group_unit }
           group_id={ group_id }
-          group_name={ group_name }
+          
         />
       </CardContent>
       <CardContent>

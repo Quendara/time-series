@@ -1,24 +1,28 @@
 
 import React, { Component, useState, useEffect } from "react";
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+
+import { Grid, List, ListItem, Hidden, Box } from '@material-ui/core';
+
+import { MyCard, MyPaperHeader } from "../components/StyledComponents"
+// import { Navigation } from "../organisms/navigation"
+import { useStyles } from "../Styles"
+
 import Settings from "../Settings";
 import SingleTimeSerie from "../SingleTimeSerie";
 
-import { Grid, List, ListItem, Hidden, Box } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
+interface Props {
+  username: string;
+  token: string;
+}
 
-import { MyCard, MyPaperHeader } from "../components/StyledComponents"
-import { Navigation } from "../organisms/navigation"
-import { useStyles } from "../Styles"
-
-
-
-
-export const TimeSeries = ({ username, token }) => {
+export const TimeSeries = ({ username, token } : Props ) => {
 
   const classes = useStyles();
 
-  const [timeseries, setTimeseries] = useState([]);
+  const [timeseries, setTimeseries] = useState<any[]>([]);
   const [error, setError] = useState("");
 
   useEffect(
@@ -51,15 +55,15 @@ export const TimeSeries = ({ username, token }) => {
 
     <Grid container spacing={ 4 } >
 
-      <Hidden mdDown>
+      {/* <Hidden mdDown>
         <Grid item lg="2" elevation={ 3 } >
           <Grid item className={ classes.navigation } >
-            {/* <Navigation list={ timeseries } anchor="group_id" name="group_name" /> */}
+            
           </Grid>
         </Grid>
-      </Hidden>
+      </Hidden> */}
 
-      <Grid item lg="10" xs={ 12 } >
+      <Grid item lg={ 10 } xs={ 12 } >
         <Grid container spacing={ 4 } >
           { timeseries.length == 0 && <>
             <Grid item xs={ 12 } lg={ 4 }>
@@ -77,12 +81,12 @@ export const TimeSeries = ({ username, token }) => {
           </> }
 
 
-          { timeseries.map((item, index) => (
+          { timeseries.map((item : any , index : number ) => (
 
-            <Grid id={ item.group_id } key={ index } item xs={ 12 } lg={ 4 }>
+            <Grid key={ item.group_id } id={ item.group_id } item xs={ 12 } lg={ 4 }>
 
               <SingleTimeSerie
-                key={ item.group_id }
+                
                 group_id={ item.group_id }
                 group_unit={ item.group_unit }
                 group_name={ item.group_name }

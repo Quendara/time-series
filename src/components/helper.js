@@ -20,6 +20,9 @@ export const sortArrayByJs = (items, sortByKey = 'rating', ascending=true) => {
     return items; // .slice(0, 5);
 }
 
+export const groupByJs = (timedate, functionHandle) => {
+    return groupBy(timedate, functionHandle );
+}
 
 
 export const findUniqueJs = ( list, group, sortByCount = true, limit=50 ) => {

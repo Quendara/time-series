@@ -1,26 +1,52 @@
 import React from "react";
+
+import {
+  Chart as ChartJS,
+  LinearScale,
+  PointElement,
+  LineElement,
+  CategoryScale,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
 import { Scatter } from "react-chartjs-2";
-import { groupBy } from "underscore";
+// import { groupBy } from "underscore";
 import { Divider, Grid } from '@material-ui/core';
 
 import { DashboardNumber } from "./DashboardNumber"
-// import {numberWithCommas} from "./helpers"
+import { groupByJs } from "./helper"
 // import { Dashboard } from "@material-ui/icons";
 
-export const LineChart = ({ group_unit, group_id, values, render = "simple" }) => {
+ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, CategoryScale);
+
+
+export interface ValueType {
+  x: Date;
+  y: number;  
+}
+
+interface Props {
+  group_unit: string;
+  group_id: string;
+  values: ValueType[];
+  render: string;
+}
+
+export const LineChart = ({ group_unit, group_id, values, render = "simple" }: Props) => {
 
   let avgDay = 0;
   let avgMonth = 0;
   let avgYear = 0;
 
-  const data = {
+  const data: any = {
     datasets: []
   }
 
   const fontColor = '#b0bec5'
   const gridColor = '#102027'
 
-  const options = {
+  const options: any = {
     // aspectRatio:5,
     maintainAspectRatio: false,
     legend: {
@@ -33,9 +59,9 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }) =
       xAxes: [
         {
           type: "time",
-          time: {
-            unit: "month"
-          },
+          // time: {
+          //   unit: "month"
+          // },
           ticks: {
             fontColor: fontColor,
           },
@@ -62,7 +88,7 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }) =
 
 
 
-  const calAvg = (timedate) => {
+  const calAvg = (timedate: ValueType[] ) => {
 
     if (timedate === undefined) {
       return 2
@@ -88,10 +114,10 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }) =
     return avgDay;
   }
 
-  const splitDataInYears = (timedate) => {
+  const splitDataInYears = (timedate: ValueType[]) => {
     // const year = timedate[0].x.getFullYear();
 
-    let groupsArr = groupBy(timedate, function (date) {
+    let groupsArr = groupByJs(timedate, function (date: any) {
       return date.x.getFullYear();
     });
 
@@ -99,7 +125,7 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }) =
     return groupsArr;
   }
 
-  const getDatasets = (items) => {
+  const getDatasets = ( items: ValueType[] ) => {
     if (items == null || !Array.isArray(items)) {
       console.error("Array expected, got (" + group_id + ") : ");
       console.error(items);
@@ -177,8 +203,7 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }) =
           //   return { x: new Date(dataField.x * 1000), y: +dataField.y };
           // });          
 
-          localtimedate = localtimedate.map((item, index) => 
-          {
+          localtimedate = localtimedate.map((item, index) => {
             // let newObject = Object.assign({}, item)
 
             const newX = item.x.getTime() - (delta * secondsperyear)
@@ -209,20 +234,27 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }) =
     return data
   }
 
+  // class="chart-container" style={ { "height": "35vh" } }
   return (
-    <>
-      <div className="chart-container" style={ { "height": "35vh" } }>
-        { data.datasets.length === undefined ? (<h1>No Data</h1>) :
-          (<Scatter data={ getDatasets(values) } options={ options } />) }
-      </div>
-      <br />
-      <Divider variant="middle" />
 
-      <Grid container spacing={ 3 } justify="space-between" alignItems="flex-start" >
-        <DashboardNumber value={ calAvg(values) } unit={ group_unit } info=" per day" />
-        <DashboardNumber value={ avgMonth } unit={ group_unit } info=" per month" />
-        <DashboardNumber value={ avgYear } unit={ group_unit } info=" per year" />
-      </Grid>
+    <>
+      {getDatasets(values) !== undefined &&
+        <>
+          <div>
+            {data.datasets.length === 1 ? (<h1>No Data</h1>) :
+              (<Scatter data={getDatasets(values)} options={options} />)}
+          </div>
+          <br />
+          <Divider variant="middle" />
+
+          <Grid container spacing={3} justify="space-between" alignItems="flex-start" >
+            <DashboardNumber value={calAvg(values)} unit={group_unit} info=" per day" />
+            <DashboardNumber value={avgMonth} unit={group_unit} info=" per month" />
+            <DashboardNumber value={avgYear} unit={group_unit} info=" per year" />
+          </Grid>
+        </>
+      }
+
 
     </>
   )
