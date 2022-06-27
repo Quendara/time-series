@@ -50,7 +50,7 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }: P
   const gridColor = '#102027'
 
   const options: any = {
-    // aspectRatio:5,
+    aspectRatio:5,
     maintainAspectRatio: false,
     legend: {
       labels: {
@@ -244,7 +244,7 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }: P
     <>
       {getDatasets(values) !== undefined &&
         <>
-          <div>
+          <div className="chart-container" style={ { "height": "35vh" } }>
             {data.datasets.length === 1 ? (<h1>No Data</h1>) :
               (<Scatter data={getDatasets(values)} options={options} />)}
           </div>
