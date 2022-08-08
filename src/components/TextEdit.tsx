@@ -19,6 +19,16 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
     const [internalName, setInternalName] = useState<string>(value);
     const [edit, setEdit] = useState<boolean>(false);
 
+    const [hover, setHover] = useState( false );
+
+    const handleMouseIn = () => {
+        setHover(true);
+      };
+    
+      const handleMouseOut = () => {
+        setHover(false);
+      };    
+
 
     useEffect(() => {
         setInternalName(value)
@@ -104,7 +114,10 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                 )}
             </>
         ) : (
-            <a style={{"cursor": "pointer" }} onClick={() => setEdit(true)}>{children ? children : internalName} <MyIcon icon="edit"></MyIcon> </a> 
+            <a onMouseOver={handleMouseIn} onMouseOut={handleMouseOut} style={{"cursor": "pointer" }} onClick={() => setEdit(true)}>
+                {children ? children : internalName} 
+                { hover && <MyIcon icon="edit"></MyIcon>  }
+                </a> 
         )
         }
         </>
