@@ -17,6 +17,9 @@ export const MyPaperHeader = styled(Paper)({
 
 export const MyCardHeader = styled(CardHeader)({
   background: '#102027',
+  textOverflow: "ellipsis",  
+  overflow: "hidden",
+  whiteSpace: "nowrap"
 });
 
 

@@ -4,6 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { GenericGroup } from "../components/helpers"
 
+import { MyIcon } from "./MyIcon";
 interface Props {
 
     value: string;
@@ -86,11 +87,13 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                                 setInternalName(
                                     newValue
                                 );
+                                callback( newValue )
                             } else if (newValue && newValue.value) {
                                 // Create a new value from the user input
                                 setInternalName(
                                     newValue.value,
                                 );
+                                callback( newValue.value )
                             } else {
                                 console.error( "UNEXPECTED TYPE", newValue )
                                 // setInternalName( newValue as string );
@@ -101,7 +104,7 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                 )}
             </>
         ) : (
-            <a onClick={() => setEdit(true)}>{children ? children : internalName} </a>
+            <a style={{"cursor": "pointer" }} onClick={() => setEdit(true)}>{children ? children : internalName} <MyIcon icon="edit"></MyIcon> </a> 
         )
         }
         </>

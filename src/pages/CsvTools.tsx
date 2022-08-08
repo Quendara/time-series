@@ -46,27 +46,21 @@ const fullMatch = "#00a152"
 const orange = "#ff9100"
 const blue = "#2979ff"
 
-
-
-
-interface Props {
-
-    line: any; // json data
-    headerCheckedArr: string[]; // parsed header
-
-
-}
 const bull = <span style={{ "margin": "5px" }}>•</span>;
 
-const ListCsvItem = (props: Props) => {
+interface PropsSimple {
+
+    valueArr: string[]; // parsed header
+}
+
+
+const ListCsvItemSimple = (props: PropsSimple) => {
 
     const getValueOf = (column: number) => {
 
-        const keyName = props.headerCheckedArr[column]
-        return props.line[keyName]
+        return props.valueArr[column]
 
     }
-
 
     return (
         <ListItem>
@@ -77,8 +71,66 @@ const ListCsvItem = (props: Props) => {
                 secondary={
                     <>
                         {getValueOf(1)}
-                        {bull}
-                        {getValueOf(2)}
+                        {props.valueArr.length > 2 &&
+                            <>
+                                {bull}
+                                {getValueOf(2)}
+                            </>
+                        }
+
+                    </>
+                }
+            />
+        </ListItem>
+    )
+}
+
+interface ConfigFieldProps {
+    header: string;
+    children: React.ReactNode
+}
+
+const ConfigItem = (props: ConfigFieldProps) => {
+
+    return (
+        <MyCard>
+            <Box style={{ background: blue, padding: "5px" }} >{props.header}</Box>
+            <ListItem>
+                {props.children}
+            </ListItem>
+        </MyCard>
+    )
+}
+
+interface Props {
+    line: any; // json data
+    headerCheckedArr: string[]; // parsed header
+}
+
+
+const ListCsvItem = (props: Props) => {
+
+    const getValueOf = (column: number) => {
+
+        const keyName = props.headerCheckedArr[column]
+        return props.line[keyName]
+    }
+
+    return (
+        <ListItem>
+            <ListItemText
+                primary={
+                    getValueOf(0)
+                }
+                secondary={
+                    <>
+                        {getValueOf(1)}
+                        {props.headerCheckedArr.length > 2 &&
+                            <>
+                                {bull}
+                                {getValueOf(2)}
+                            </>
+                        }
                     </>
                 }
             />
@@ -101,6 +153,8 @@ export const CsvTools = ({ }) => {
     const [groupname, setGroupname] = useState<string>("HauptprojektBez");
     const [seperator, setSeperator] = useState<string>(";");
     const [sumField, setSumField] = useState<string>("Spanne");
+    const [columnWidth, setColumnWidth] = useState<string>("2");
+
 
     const [state, setState] = React.useState({
         prim: "Bemerkung",
@@ -149,6 +203,15 @@ export const CsvTools = ({ }) => {
 
     const groups = findUnique(data, groupname, false)
 
+    const getColunmWidth = (columnWidth: string) => {
+        switch (columnWidth) {
+            case "2": return 2;
+            case "3": return 3;
+            case "4": return 4;
+            default: return 2;
+        }
+    }
+
 
 
     return (
@@ -158,8 +221,8 @@ export const CsvTools = ({ }) => {
             <Grid item xs={12}   >
                 <Stepper nonLinear activeStep={activeStep}>
 
-                <Step><StepButton color="inherit" onClick={handleStep(0)}>Data Input</StepButton></Step>
-                <Step><StepButton color="inherit" onClick={handleStep(1)}>Output</StepButton></Step>
+                    <Step><StepButton color="inherit" onClick={handleStep(0)}>Data Input</StepButton></Step>
+                    <Step><StepButton color="inherit" onClick={handleStep(1)}>Output</StepButton></Step>
 
                 </Stepper>
             </Grid>
@@ -170,13 +233,15 @@ export const CsvTools = ({ }) => {
                 <Grid item xs={12}   >
 
                     <Grid item xs={3} >
-                        <Box style={{ background: blue, padding: "5px" }} >Seperator</Box>
+                        
+                        <ConfigItem header="Seperator" >
                         <TextEdit
                             value={seperator}
                             label="Primary"
                             groups={[{ value: "\t" }, { value: ";" }]}
                             callback={(s) => { setSeperator(s) }}
                         />
+                        </ConfigItem>
                     </Grid>
 
                     <Box style={{ background: blue, padding: "5px" }} >Input - nLines:  {data?.length}</Box>
@@ -195,75 +260,90 @@ export const CsvTools = ({ }) => {
             }
             {activeStep === 1 &&
                 <>
-                    <Grid item xs={12} >
-                        <MyCard>
-                            <Grid container justify="flex-start" spacing={1} >
+                    <Grid item xs={4} >
+                        <ConfigItem header="Group" >
+                            <TextEdit
+                                value={groupname}
+                                label="Primary"
+                                groups={headerStringArr.map(x => { return { value: x } })}
+                                callback={(s) => { setGroupname(s) }}
+                            />
+                        </ConfigItem>
+                    </Grid>
+                    <Grid item xs={4} >
+                        <ConfigItem header="Sum Field" >
+                            <TextEdit
+                                value={sumField}
+                                label="Primary"
+                                groups={headerStringArr.map(x => { return { value: x } })}
+                                callback={(s) => { setSumField(s) }}
+                            />
+                        </ConfigItem>
+                    </Grid>
+                    <Grid item xs={4} >
+                        <ConfigItem header="Width" >
+                            <TextEdit
+                                value={columnWidth}
+                                label="Primary"
+                                groups={[{ value: "2" }, { value: "3" }, { value: "4" }]}
+                                callback={(s) => { setColumnWidth(s) }}
+                            />
+                        </ConfigItem>
+                    </Grid>
 
-                                <Grid item xs={3} >
-                                    <Box style={{ background: blue, padding: "5px" }} >Group</Box>
+                    <Grid item xs={3} >
+                        <ConfigItem header="Specify your Layout " >
+
+
+                            <ListItemText
+                                primary={
                                     <TextEdit
-                                        value={groupname}
+                                        value={state.prim}
                                         label="Primary"
                                         groups={headerStringArr.map(x => { return { value: x } })}
-                                        callback={(s) => { setGroupname(s) }}
+                                        callback={(s) => { handleChange("prim", s) }}
                                     />
-                                </Grid>
-                                <Grid item xs={3} >
-                                    <Box style={{ background: blue, padding: "5px" }} >Sum Field</Box>
-                                    <TextEdit
-                                        value={sumField}
-                                        label="Primary"
-                                        groups={headerStringArr.map(x => { return { value: x } })}
-                                        callback={(s) => { setSumField(s) }}
-                                    />
-                                </Grid>                                
-                                <Grid item xs={3} >
-                                    <Box style={{ background: blue, padding: "5px" }}>Specify your Layout </Box>
+                                }
+                                secondary={
+                                    <>
+                                        <TextEdit
+                                            value={state.secA}
+                                            label="Secondary 1"
+                                            groups={headerStringArr.map(x => { return { value: x } })}
+                                            callback={(s) => { handleChange("secA", s) }}
 
-                                    <ListItem>
-                                        <ListItemText
-                                            primary={
-                                                <TextEdit
-                                                    value={state.prim}
-                                                    label="Primary"
-                                                    groups={headerStringArr.map(x => { return { value: x } })}
-                                                    callback={(s) => { handleChange("prim", s) }}
-                                                />
-                                            }
-                                            secondary={
-                                                <>
-                                                    <TextEdit
-                                                        value={state.secA}
-                                                        label="Secondary 1"
-                                                        groups={headerStringArr.map(x => { return { value: x } })}
-                                                        callback={(s) => { handleChange("secA", s) }}
-
-                                                    />
-                                                    {bull}
-                                                    <TextEdit
-                                                        value={state.secB}
-                                                        label="Secondary 2"
-                                                        groups={headerStringArr.map(x => { return { value: x } })}
-                                                        callback={(s) => { handleChange("secB", s) }}
-                                                    />
-                                                </>
-                                            }
                                         />
-                                    </ListItem>
-                                </Grid>
-                            </Grid>
-                        </MyCard>
+                                        {bull}
+                                        <TextEdit
+                                            value={state.secB}
+                                            label="Secondary 2"
+                                            groups={headerStringArr.map(x => { return { value: x } })}
+                                            callback={(s) => { handleChange("secB", s) }}
+                                        />
+                                    </>
+                                }
+                            />
+
+                        </ConfigItem>
+
+
+
                     </Grid>
                     <Grid item xs={12} >
                         <Grid container justify="flex-start" spacing={1} >
                             {
                                 groups.map((group, index) => (
 
-                                    <Grid item xs={2} >
+                                    <Grid item xs={getColunmWidth(columnWidth)} >
                                         <MyCard>
                                             <MyCardHeader subheader={group.value} />
 
-                                            { sumArray( group.listitems, sumField ) }
+
+
+                                            <ListCsvItemSimple
+                                                valueArr={[String(sumArray(group.listitems, sumField)), "Summe"]}
+                                            />
+                                            <Divider></Divider>
 
                                             {group.listitems.map((line: any) => (
 
