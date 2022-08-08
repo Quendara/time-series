@@ -28,13 +28,13 @@ export function addLeadingZeros(num: number, totalLength: number): string {
 //     return shuffle(list)
 // }
 
-// export const sumArray = ( list, key ) => {
-//     // return reduce( list, function(memo, num){ return memo + num[key]; }, 0);
-//     let sum = 0;
-//     list.map( (item, index)  => { sum += item[key] } )
-//     return sum
+export const sumArray = ( list: any, key: string ) => {
+    // return reduce( list, function(memo, num){ return memo + num[key]; }, 0);
+    let sum : number = 0.0;
+    list.map( (item: any, index : number )  => { sum += parseFloat( item[key].replaceAll(',', '.') ) } )
+    return sum
 
-// }
+}
 
 export const sortArrayBy = <T,>( items : T[] , sortByKey : string = 'rating', ascending:boolean=true) : T[] => {
 
@@ -114,6 +114,7 @@ export const csvToJson = (csv: string, seperator : string ) => {
 
         if( properties.length !== headers.length ){
             console.log( "SKIP LINE properties.length !== headers.length",  properties.length, headers.length )
+            console.log( str )
             continue
         }
 
@@ -137,6 +138,6 @@ export const csvToJson = (csv: string, seperator : string ) => {
     // Convert the resultant array to json and
     // generate the JSON output file.
     // let json = JSON.stringify(result);
-    console.log(result)
+    // console.log(result)
     return result
 }

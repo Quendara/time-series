@@ -3,14 +3,14 @@ import React, { Component, useState, useEffect } from "react";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
-import { Toolbar, Box, Button, TextField, Grid, Card, CardContent, FormGroup, Paper, ListItem, ListItemText, Divider } from '@material-ui/core/';
+import { Toolbar, Box, Button, TextField, Grid, Card, CardContent, FormGroup, Paper, ListItem, ListItemText, Divider, Stepper, Step, StepButton } from '@material-ui/core/';
 
 import { MyCard, MyCardHeader, MyTextareaAutosize } from "../components/StyledComponents"
 
 import { TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { TextEdit } from "../components/TextEdit";
 
-import { findUnique, csvToJson } from "../components/helpers";
+import { findUnique, csvToJson, sumArray } from "../components/helpers";
 
 
 
@@ -46,7 +46,7 @@ const fullMatch = "#00a152"
 const orange = "#ff9100"
 const blue = "#2979ff"
 
-const seperator = ";"
+
 
 
 interface Props {
@@ -90,18 +90,27 @@ const ListCsvItem = (props: Props) => {
 
 export const CsvTools = ({ }) => {
 
+    const [activeStep, setActiveStep] = React.useState(0);
+
     const [list1, setList1] = useState(l1);
 
     const [headerStringArr, setHeaderStringArr] = useState<string[]>([]);
 
     const [data, setData] = useState<any>([]);
+
     const [groupname, setGroupname] = useState<string>("HauptprojektBez");
+    const [seperator, setSeperator] = useState<string>(";");
+    const [sumField, setSumField] = useState<string>("Spanne");
 
     const [state, setState] = React.useState({
         prim: "Bemerkung",
         secA: "Arbeitsauftrag",
         secB: "Spanne"
     });
+
+    const handleStep = (step: number) => () => {
+        setActiveStep(step);
+    };
 
 
     useEffect(() => {
@@ -145,104 +154,132 @@ export const CsvTools = ({ }) => {
     return (
 
         <Grid container justify="flex-start" spacing={1} >
+
             <Grid item xs={12}   >
-                <Box style={{ background: blue, padding: "5px" }} >Input</Box>
-                <MyTextareaAutosize
-                    value={list1 ? list1 : ""}
-                    rowsMin={10}
-                    // error={ hasError(linkName) }
-                    // label="Name"
+                <Stepper nonLinear activeStep={activeStep}>
 
-                    // size="small"
-                    // fullWidth
-                    //variant="outlined"
-                    // onKeyPress={ e => checkEnter(e) }
-                    onChange={e => setList1(e.target.value)} />
+                <Step><StepButton color="inherit" onClick={handleStep(0)}>Data Input</StepButton></Step>
+                <Step><StepButton color="inherit" onClick={handleStep(1)}>Output</StepButton></Step>
+
+                </Stepper>
             </Grid>
-            <Grid item xs={12} >
-                <MyCard>
-                    <Grid container justify="flex-start" spacing={1} >
 
-                        <Grid item xs={3} >
-                            <Box style={{ background: blue, padding: "5px" }} >Group</Box>
-                            <TextEdit
-                                value={groupname}
-                                label="Primary"
-                                groups={headerStringArr.map(x => { return { value: x } })}
-                                callback={(s) => { setGroupname(s) }}
-                            />
-                        </Grid>
-                        <Grid item xs={3} >
-                            <Box style={{ background: blue, padding: "5px" }}>Specify your Layout </Box>
+            {activeStep === 0 &&
 
-                            <ListItem>
-                                <ListItemText
-                                    primary={
-                                        <TextEdit
-                                            value={state.prim}
-                                            label="Primary"
-                                            groups={headerStringArr.map(x => { return { value: x } })}
-                                            callback={(s) => { handleChange("prim", s) }}
+
+                <Grid item xs={12}   >
+
+                    <Grid item xs={3} >
+                        <Box style={{ background: blue, padding: "5px" }} >Seperator</Box>
+                        <TextEdit
+                            value={seperator}
+                            label="Primary"
+                            groups={[{ value: "\t" }, { value: ";" }]}
+                            callback={(s) => { setSeperator(s) }}
+                        />
+                    </Grid>
+
+                    <Box style={{ background: blue, padding: "5px" }} >Input - nLines:  {data?.length}</Box>
+                    <MyTextareaAutosize
+                        value={list1 ? list1 : ""}
+                        rowsMin={10}
+                        // error={ hasError(linkName) }
+                        // label="Name"
+
+                        // size="small"
+                        // fullWidth
+                        //variant="outlined"
+                        // onKeyPress={ e => checkEnter(e) }
+                        onChange={e => setList1(e.target.value)} />
+                </Grid>
+            }
+            {activeStep === 1 &&
+                <>
+                    <Grid item xs={12} >
+                        <MyCard>
+                            <Grid container justify="flex-start" spacing={1} >
+
+                                <Grid item xs={3} >
+                                    <Box style={{ background: blue, padding: "5px" }} >Group</Box>
+                                    <TextEdit
+                                        value={groupname}
+                                        label="Primary"
+                                        groups={headerStringArr.map(x => { return { value: x } })}
+                                        callback={(s) => { setGroupname(s) }}
+                                    />
+                                </Grid>
+                                <Grid item xs={3} >
+                                    <Box style={{ background: blue, padding: "5px" }} >Sum Field</Box>
+                                    <TextEdit
+                                        value={sumField}
+                                        label="Primary"
+                                        groups={headerStringArr.map(x => { return { value: x } })}
+                                        callback={(s) => { setSumField(s) }}
+                                    />
+                                </Grid>                                
+                                <Grid item xs={3} >
+                                    <Box style={{ background: blue, padding: "5px" }}>Specify your Layout </Box>
+
+                                    <ListItem>
+                                        <ListItemText
+                                            primary={
+                                                <TextEdit
+                                                    value={state.prim}
+                                                    label="Primary"
+                                                    groups={headerStringArr.map(x => { return { value: x } })}
+                                                    callback={(s) => { handleChange("prim", s) }}
+                                                />
+                                            }
+                                            secondary={
+                                                <>
+                                                    <TextEdit
+                                                        value={state.secA}
+                                                        label="Secondary 1"
+                                                        groups={headerStringArr.map(x => { return { value: x } })}
+                                                        callback={(s) => { handleChange("secA", s) }}
+
+                                                    />
+                                                    {bull}
+                                                    <TextEdit
+                                                        value={state.secB}
+                                                        label="Secondary 2"
+                                                        groups={headerStringArr.map(x => { return { value: x } })}
+                                                        callback={(s) => { handleChange("secB", s) }}
+                                                    />
+                                                </>
+                                            }
                                         />
-                                    }
-                                    secondary={
-                                        <>
-                                            <TextEdit
-                                                value={state.secA}
-                                                label="Secondary 1"
-                                                groups={headerStringArr.map(x => { return { value: x } })}
-                                                callback={(s) => { handleChange("secA", s) }}
+                                    </ListItem>
+                                </Grid>
+                            </Grid>
+                        </MyCard>
+                    </Grid>
+                    <Grid item xs={12} >
+                        <Grid container justify="flex-start" spacing={1} >
+                            {
+                                groups.map((group, index) => (
 
-                                            />
-                                            {bull}
-                                            <TextEdit
-                                                value={state.secB}
-                                                label="Secondary 2"
-                                                groups={headerStringArr.map(x => { return { value: x } })}
-                                                callback={(s) => { handleChange("secB", s) }}
-                                            />
-                                        </>
-                                    }
-                                />
-                            </ListItem>
+                                    <Grid item xs={2} >
+                                        <MyCard>
+                                            <MyCardHeader subheader={group.value} />
+
+                                            { sumArray( group.listitems, sumField ) }
+
+                                            {group.listitems.map((line: any) => (
+
+                                                <ListCsvItem
+                                                    line={line}
+                                                    headerCheckedArr={[state.prim, state.secA, state.secB]}
+                                                />
+                                            ))}
+                                        </MyCard>
+                                    </Grid>
+                                ))
+                            }
                         </Grid>
                     </Grid>
-                </MyCard>
-            </Grid>
-
-
-
-            <Grid item xs={12} >
-                <Grid container justify="flex-start" spacing={1} >
-                    {
-                        groups.map((group, index) => (
-
-                            <Grid item xs={2} >
-
-                                <MyCard>
-                                    <MyCardHeader subheader={group.value} />
-
-
-                                    {group.listitems.map((line: any) => (
-                                        <ListCsvItem
-                                            line={line}
-                                            headerCheckedArr={[state.prim, state.secA, state.secB]}
-
-                                        />
-
-                                    ))}
-                                </MyCard>
-                            </Grid>
-
-                        ))
-                    }
-                </Grid>
-            </Grid>
-
-
+                </>
+            }
         </Grid >
-
-
-
     )
 }
