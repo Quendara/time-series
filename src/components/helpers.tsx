@@ -30,9 +30,17 @@ export function addLeadingZeros(num: number, totalLength: number): string {
 
 export const sumArray = ( list: any, key: string ) => {
     // return reduce( list, function(memo, num){ return memo + num[key]; }, 0);
-    let sum : number = 0.0;
-    list.map( (item: any, index : number )  => { sum += parseFloat( item[key].replaceAll(',', '.') ) } )
-    return sum
+    if( key.length === 0 ) return undefined
+
+    try{
+        let sum : number = 0.0;
+        list.map( (item: any, index : number )  => { sum += parseFloat( item[key].replaceAll(',', '.') ) } )
+        return sum    
+    }
+    catch( e ){
+        return undefined;
+    }
+
 
 }
 

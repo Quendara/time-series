@@ -15,13 +15,19 @@ export const MyPaperHeader = styled(Paper)({
   background: '#102027',
 });
 
-export const MyCardHeader = styled(CardHeader)({
-  background: '#102027',
+export const MySubCardHeader = styled(CardHeader)({
+  background: '#014040',
   textOverflow: "ellipsis",  
   overflow: "hidden",
   whiteSpace: "nowrap"
 });
 
+export const MyCardHeader = styled(CardHeader)({
+  background: '#02735E',
+  textOverflow: "ellipsis",  
+  overflow: "hidden",
+  whiteSpace: "nowrap"
+});
 
 export const TypographyDisabled = styled(Typography)({
   color: "#AAA",});

@@ -3,9 +3,9 @@ import React, { Component, useState, useEffect } from "react";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
-import { Toolbar, Box, Button, TextField, Grid, Card, CardContent, FormGroup, Paper, ListItem, ListItemText, Divider, Stepper, Step, StepButton } from '@material-ui/core/';
+import { Toolbar, Box, Button, TextField, Grid, Chip, Card, CardContent, FormGroup, Paper, ListItem, ListItemText, Divider, Stepper, Step, StepButton } from '@material-ui/core/';
 
-import { MyCard, MyCardHeader, MyTextareaAutosize } from "../components/StyledComponents"
+import { MyCard, MyCardHeader, MySubCardHeader, MyTextareaAutosize } from "../components/StyledComponents"
 
 import { TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { TextEdit } from "../components/TextEdit";
@@ -42,10 +42,7 @@ return $1
 
 const l3 = `(.*)`
 
-const fullMatch = "#00a152"
-const orange = "#ff9100"
-const blue = "#2979ff"
-
+const blue = "#02735E"
 const bull = <span style={{ "margin": "5px" }}>•</span>;
 
 interface PropsSimple {
@@ -116,26 +113,37 @@ const ListCsvItem = (props: Props) => {
         return props.line[keyName]
     }
 
+    const value0 = getValueOf(0)
+    const value1 = getValueOf(1)
+    const value2 = getValueOf(2)
+
     return (
-        <ListItem>
-            <ListItemText
-                primary={
-                    getValueOf(0)
-                }
-                secondary={
-                    <>
-                        {getValueOf(1)}
-                        {props.headerCheckedArr.length > 2 &&
+        <>
+            {(value0 || value1 || value2) ? (
+                <ListItem>
+                    <ListItemText
+                        primary={
+                            getValueOf(0)
+                        }
+                        secondary={
                             <>
-                                {bull}
-                                {getValueOf(2)}
+                                {getValueOf(1)}
+                                {props.headerCheckedArr.length > 2 &&
+                                    <>
+                                        {value2 && bull}
+                                        {getValueOf(2)}
+                                    </>
+                                }
                             </>
                         }
-                    </>
-                }
-            />
+                    />
 
-        </ListItem>
+                </ListItem>) : (
+                <></>
+            )
+            }
+
+        </>
     )
 
 }
@@ -151,6 +159,8 @@ export const CsvTools = ({ }) => {
     const [data, setData] = useState<any>([]);
 
     const [groupname, setGroupname] = useState<string>("HauptprojektBez");
+    const [subgroupname, setSubGroupname] = useState<string>("Arbeitsauftrag");
+
     const [seperator, setSeperator] = useState<string>(";");
     const [sumField, setSumField] = useState<string>("Spanne");
     const [columnWidth, setColumnWidth] = useState<string>("2");
@@ -171,7 +181,15 @@ export const CsvTools = ({ }) => {
         performHandle()
         setData(csvToJson(list1, seperator))
 
-    }, [state, list1]); // second parameter avoid frequent loading
+    }, [state, seperator, list1]); // second parameter avoid frequent loading
+
+    useEffect(() => {
+        console.log("Monitor : ", subgroupname)
+
+    }, [subgroupname]); // second parameter avoid frequent loading
+
+
+
 
     const performHandle = () => {
 
@@ -203,14 +221,24 @@ export const CsvTools = ({ }) => {
 
     const groups = findUnique(data, groupname, false)
 
-    const getColunmWidth = (columnWidth: string) => {
+    const getColunmWidth = (columnWidth: string | undefined) => {
         switch (columnWidth) {
             case "2": return 2;
             case "3": return 3;
             case "4": return 4;
+            case "6": return 6;
+            case "12": return 12;
             default: return 2;
         }
     }
+
+    const getOptions = (headerStringArr: string[]) => {
+        let arr: any = headerStringArr.map(x => { return { value: x } })
+        arr.push({ key: "EMPTY", value: "" })
+
+        return arr
+    }
+
 
 
 
@@ -231,61 +259,85 @@ export const CsvTools = ({ }) => {
 
 
                 <Grid item xs={12}   >
+                    <Grid container justify="flex-start" spacing={1} >
 
-                    <Grid item xs={3} >
-                        
-                        <ConfigItem header="Seperator" >
-                        <TextEdit
-                            value={seperator}
-                            label="Primary"
-                            groups={[{ value: "\t" }, { value: ";" }]}
-                            callback={(s) => { setSeperator(s) }}
-                        />
-                        </ConfigItem>
+                        <Grid item xs={3} >
+                            <ConfigItem header="Seperator" >
+                                <TextEdit
+                                    value={seperator}
+                                    label="Primary"
+                                    groups={[{ value: "\t", key: "TAB" }, { value: ";", key: "Semikolon" }]}
+                                    callback={(s) => { setSeperator(s) }}
+                                />
+                            </ConfigItem>
+                        </Grid>
+                        <Grid item xs={9} >
+                            <ConfigItem header="Header" >
+                                {headerStringArr.map(x => {
+                                    return (<Chip label={x} />)
+                                })}
+                            </ConfigItem>
+                        </Grid>
+
+
+
+                        <Grid item xs={12}   >
+                            <MyCard>
+                            <Box style={{ background: blue, padding: "5px" }} >Input </Box>
+                            <MyTextareaAutosize
+                                value={list1 ? list1 : ""}
+                                rowsMin={10}
+                                // error={ hasError(linkName) }
+                                // label="Name"
+
+                                // size="small"
+                                // fullWidth
+                                //variant="outlined"
+                                // onKeyPress={ e => checkEnter(e) }
+                                onChange={e => setList1(e.target.value)} />
+                            </MyCard>
+                        </Grid>
                     </Grid>
-
-                    <Box style={{ background: blue, padding: "5px" }} >Input - nLines:  {data?.length}</Box>
-                    <MyTextareaAutosize
-                        value={list1 ? list1 : ""}
-                        rowsMin={10}
-                        // error={ hasError(linkName) }
-                        // label="Name"
-
-                        // size="small"
-                        // fullWidth
-                        //variant="outlined"
-                        // onKeyPress={ e => checkEnter(e) }
-                        onChange={e => setList1(e.target.value)} />
                 </Grid>
             }
             {activeStep === 1 &&
                 <>
-                    <Grid item xs={4} >
+                    <Grid item xs={3} >
                         <ConfigItem header="Group" >
                             <TextEdit
                                 value={groupname}
                                 label="Primary"
-                                groups={headerStringArr.map(x => { return { value: x } })}
+                                groups={getOptions(headerStringArr)}
                                 callback={(s) => { setGroupname(s) }}
                             />
                         </ConfigItem>
                     </Grid>
-                    <Grid item xs={4} >
+                    <Grid item xs={3} >
+                        <ConfigItem header="SubGroup" >
+                            <TextEdit
+                                value={subgroupname}
+                                label="Primary"
+                                groups={getOptions(headerStringArr)}
+                                callback={(s) => { setSubGroupname(s) }}
+                            />
+                        </ConfigItem>
+                    </Grid>
+                    <Grid item xs={3} >
                         <ConfigItem header="Sum Field" >
                             <TextEdit
                                 value={sumField}
                                 label="Primary"
-                                groups={headerStringArr.map(x => { return { value: x } })}
+                                groups={getOptions(headerStringArr)}
                                 callback={(s) => { setSumField(s) }}
                             />
                         </ConfigItem>
                     </Grid>
-                    <Grid item xs={4} >
+                    <Grid item xs={3} >
                         <ConfigItem header="Width" >
                             <TextEdit
                                 value={columnWidth}
                                 label="Primary"
-                                groups={[{ value: "2" }, { value: "3" }, { value: "4" }]}
+                                groups={[{ value: "2" }, { value: "3" }, { value: "4" }, { value: "6" }, { value: "12" }]}
                                 callback={(s) => { setColumnWidth(s) }}
                             />
                         </ConfigItem>
@@ -300,7 +352,7 @@ export const CsvTools = ({ }) => {
                                     <TextEdit
                                         value={state.prim}
                                         label="Primary"
-                                        groups={headerStringArr.map(x => { return { value: x } })}
+                                        groups={getOptions(headerStringArr)}
                                         callback={(s) => { handleChange("prim", s) }}
                                     />
                                 }
@@ -309,7 +361,7 @@ export const CsvTools = ({ }) => {
                                         <TextEdit
                                             value={state.secA}
                                             label="Secondary 1"
-                                            groups={headerStringArr.map(x => { return { value: x } })}
+                                            groups={getOptions(headerStringArr)}
                                             callback={(s) => { handleChange("secA", s) }}
 
                                         />
@@ -317,7 +369,7 @@ export const CsvTools = ({ }) => {
                                         <TextEdit
                                             value={state.secB}
                                             label="Secondary 2"
-                                            groups={headerStringArr.map(x => { return { value: x } })}
+                                            groups={getOptions(headerStringArr)}
                                             callback={(s) => { handleChange("secB", s) }}
                                         />
                                     </>
@@ -336,27 +388,54 @@ export const CsvTools = ({ }) => {
 
                                     <Grid item xs={getColunmWidth(columnWidth)} >
                                         <MyCard>
-                                            <MyCardHeader subheader={group.value} />
+                                            <MyCardHeader title={(sumArray(group.listitems, sumField))} subheader={group.value} />
+
+                                            {subgroupname.length === 0 ? (
+                                                <>
+                                                    {group.listitems.map((line: any) => (<>
+
+                                                        <ListCsvItem
+                                                            line={line}
+                                                            headerCheckedArr={[state.prim, state.secA, state.secB]}
+                                                        />
+                                                    </>))}
+
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {findUnique(group.listitems, subgroupname, false).map((subgroup: any) => (
+                                                        <>
+                                                            <MySubCardHeader subheader={subgroup.value} title={[(sumArray(subgroup.listitems, sumField))]} />
+
+                                                            {subgroup.listitems.map((line: any) => (<>
+
+                                                                <ListCsvItem
+                                                                    line={line}
+                                                                    headerCheckedArr={[state.prim, state.secA, state.secB]}
+                                                                />
+                                                            </>))}
+
+                                                        </>
+
+                                                    ))}
+                                                </>
+                                            )}
 
 
-
-                                            <ListCsvItemSimple
+                                            {/* <ListCsvItemSimple
                                                 valueArr={[String(sumArray(group.listitems, sumField)), "Summe"]}
                                             />
-                                            <Divider></Divider>
+                                            <Divider></Divider> */}
 
-                                            {group.listitems.map((line: any) => (
 
-                                                <ListCsvItem
-                                                    line={line}
-                                                    headerCheckedArr={[state.prim, state.secA, state.secB]}
-                                                />
-                                            ))}
+
                                         </MyCard>
                                     </Grid>
                                 ))
                             }
                         </Grid>
+
+
                     </Grid>
                 </>
             }

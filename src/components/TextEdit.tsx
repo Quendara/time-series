@@ -8,26 +8,26 @@ import { MyIcon } from "./MyIcon";
 interface Props {
 
     value: string;
-    callback: (s: string) => void;
+    callback: (s: string  ) => void;
     label?: string;
     groups?: any;
     children?: React.ReactNode
 }
 
-export const TextEdit = ({ value, label, callback, groups, children } : Props) => {
+export const TextEdit = ({ value, label, callback, groups, children }: Props) => {
 
     const [internalName, setInternalName] = useState<string>(value);
     const [edit, setEdit] = useState<boolean>(false);
 
-    const [hover, setHover] = useState( false );
+    const [hover, setHover] = useState(false);
 
     const handleMouseIn = () => {
         setHover(true);
-      };
-    
-      const handleMouseOut = () => {
+    };
+
+    const handleMouseOut = () => {
         setHover(false);
-      };    
+    };
 
 
     useEffect(() => {
@@ -35,13 +35,13 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
     }, [value]);
 
 
-    const checkEnter = (event: React.KeyboardEvent<HTMLInputElement> ) => {
+    const checkEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
 
-        console.log( "KEy : ", event.key ) 
+        console.log("KEy : ", event.key)
 
         if (event.key === "Enter") {
             // alert("Enter")
-            callback( internalName?internalName:"unknown")
+            callback(internalName ? internalName : "unknown")
             setEdit(false)
         }
         if (event.key === "Escape") {
@@ -49,8 +49,33 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
             // callback(internalName)
             setEdit(false)
         }
+    }
 
-        
+    // interface IfOptionLabel {
+    //     key: undefined | string;
+    //     value: string;
+    // }    
+
+    const myGetOptionLabel = (option: any) => {
+
+
+        if (option.key) return option.key
+        switch (option.value) {
+            case undefined:
+                return "undefined"
+            case "\t":
+                return "TAB"
+            case "":
+                return "EMPTY"
+            default:
+                return option.value
+
+        }
+
+    }
+
+    const getInternalName = ( internalName : string ) => {
+        return internalName.length>0 ? internalName : "UNSPEC"
     }
 
     return (
@@ -62,10 +87,10 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                         // error = { hasError(internalName) }
                         label={label}
                         size="small"
-                        
+
                         variant="outlined"
-                        onKeyPress={ (e:React.KeyboardEvent<HTMLInputElement> ) => checkEnter(e)}
-                        onChange={ (e:any) => setInternalName(e.target.value)}
+                        onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
+                        onChange={(e: any) => setInternalName(e.target.value)}
                     />
                 ) : (
                     <Autocomplete
@@ -74,38 +99,46 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                         size="small"
                         freeSolo
                         fullWidth
-                        value={{ value: internalName }}
+                        value={{ value: internalName, key: undefined }}
                         // error={ groupName === undefined || groupName.length == 0 }
-                        getOptionLabel={ (option) => option?.value }
-                        onKeyPress={ ( e:React.KeyboardEvent<HTMLInputElement> ) => checkEnter(e)}
+                        getOptionLabel={(option) => myGetOptionLabel(option)}
+                        onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
                         onInputChange={(event, newValue) => {
                             if (typeof newValue === 'string') {
-                                if( newValue.length > 0 ){
+                                if (newValue.length > 0) {
                                     setInternalName(
                                         newValue
-                                    );    
+                                    );
                                 }
-                                
+
                             }
-                            console.error( "onInputChange", newValue )
+                            console.error("onInputChange", newValue)
                         }}
                         onChange={(event, newValue) => {
-                            if ( newValue === null ) {
+                            if (newValue === null) {
                                 setEdit(false)
                             }
                             else if (typeof newValue === 'string') {
                                 setInternalName(
                                     newValue
                                 );
-                                callback( newValue )
+                                callback(newValue)
                             } else if (newValue && newValue.value) {
                                 // Create a new value from the user input
                                 setInternalName(
                                     newValue.value,
                                 );
-                                callback( newValue.value )
-                            } else {
-                                console.error( "UNEXPECTED TYPE", newValue )
+                                callback(newValue.value)
+
+                            } else if (newValue && newValue.key) {
+                                // Create a new value from the user input
+                                setInternalName(
+                                    "newValue.value",
+                                );
+                                callback("")
+                            }
+                            else {
+                                console.error("UNEXPECTED TYPE", newValue)
                                 // setInternalName( newValue as string );
                             }
                         }}
@@ -114,10 +147,10 @@ export const TextEdit = ({ value, label, callback, groups, children } : Props) =
                 )}
             </>
         ) : (
-            <a onMouseOver={handleMouseIn} onMouseOut={handleMouseOut} style={{"cursor": "pointer" }} onClick={() => setEdit(true)}>
-                {children ? children : internalName} 
-                { hover && <MyIcon icon="edit"></MyIcon>  }
-                </a> 
+            <a onMouseOver={handleMouseIn} onMouseOut={handleMouseOut} style={{ "cursor": "pointer" }} onClick={() => setEdit(true)}>
+                {children ? children : getInternalName( internalName ) }
+                {hover && <MyIcon icon="edit"></MyIcon>}
+            </a>
         )
         }
         </>
