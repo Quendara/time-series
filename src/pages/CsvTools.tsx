@@ -13,34 +13,16 @@ import { TextEdit } from "../components/TextEdit";
 import { findUnique, csvToJson, sumArray } from "../components/helpers";
 
 
-
-const doku = `---
-Brackets
-`
-
-const l1 = `Jahr;Monat;Woche;Teilwoche;Teilwoche bis;Name;Vorname;MitId;K�rzel;HauptprojektBez;HauptprojektNr;TeilprojektBez;TeilprojektNr;Arbeitsauftrag;Spanne;Tag;Bemerkung;(Projekt-)Typ;Fakt_Kennz;Erledigt;Freigegeben;Mitarb_BU;Mitarb_Bereich;Mitarb_Abteilung;Mitarb_Team;Mitarb_OrgNr
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"DHL (Hauptprojekt)";"8441005F";"DHL, nGKP";"43201135";"BTG-Scrum Master";"1";13.06.2022;"Daily";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"Daimler, SCiP Verbauquote";"43201225";"Daimler, SCiP Verbauquote";"43201225";"BTG-Skill Klasse B1-B, Scrum Master";"1";13.06.2022;"Daily";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"Mercedes-Benz Mobility AG, Comet 2022";"43201239";"Mercedes-Benz Mobility AG, Comet 2022";"43201239";"BTG-Projektleitung";"1";13.06.2022;"Projektleitung";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"Daimler Truck Financial Services GmbH, COMET f�r DTFS 2022";"43201238";"Daimler Truck Financial Services GmbH, COMET f�r D";"43201238";"BTG-Umsetzung";"1";13.06.2022;"Daily und Follow ups";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"DHL (Hauptprojekt)";"8441005F";"DHL, nGKP";"43201135";"BTG-Scrum Master";"1";13.06.2022;"Sprint Wechsel Vorbereitung";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"2022 VU - Software Factory (neu g�ltig ab 30.05.22) !!";"43101016";"2022 VU - Software Factory (neu g�ltig ab 30.05.22";"43101016";"BTG-Diverse VU";"2";13.06.2022;"SCiP Projekte";"VU";"N";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"BL DE AaP 02";"43221002";"BL DE AaP 02";"43221002";"NON-Weiterbildung";"1";13.06.2022;"AWS";"IN";"N";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"DHL (Hauptprojekt)";"8441005F";"DHL, nGKP";"43201135";"BTG-Scrum Master";"7";14.06.2022;"Sprint Wechsel";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"Daimler Truck Financial Services GmbH, COMET f�r DTFS 2022";"43201238";"Daimler Truck Financial Services GmbH, COMET f�r D";"43201238";"BTG-Projektleitung";"1";14.06.2022;"Weekly, Projektleitung";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"2022 VU - Software Factory (neu g�ltig ab 30.05.22) !!";"43101016";"2022 VU - Software Factory (neu g�ltig ab 30.05.22";"43101016";"BTG-Diverse VU";"1";15.06.2022;"VU IHK";"VU";"N";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"DHL (Hauptprojekt)";"8441005F";"DHL, nGKP";"43201135";"BTG-Scrum Master";"1,5";15.06.2022;"SoS Extended";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"Daimler, SCiP Verbauquote";"43201225";"Daimler, SCiP Verbauquote";"43201225";"BTG-Skill Klasse B1-B, Scrum Master";"4";15.06.2022;"Daily, Refinements";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"Mercedes-Benz Mobility AG, Comet 2022";"43201239";"Mercedes-Benz Mobility AG, Comet 2022";"43201239";"BTG-Projektleitung";"1";15.06.2022;"Weekly";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
-2022;6;24;"N";"";"Garstka";"Mark-Andr�";10066;GaM;"Mercedes-Benz Mobility AG, Comet 2022";"43201239";"Mercedes-Benz Mobility AG, Comet 2022";"43201239";"BTG-Umsetzung";"0,5";15.06.2022;"Daily";"EX";"J";J;J;"BL Digital Transformation";"BL Digital Transformation";"BL DT Software Factory";"BL DT Software Factory 02";"01_BL-DE-AAP-02_6"
+const l1 = `Jahr; Ausgaben; Kategorie
+2022; 120; Gas
+2022; 200; Oil
+2022; 100; Coal
+2021; 150; Gas
+2021; 180; Oil
+2021; 100; Coal
 `
 
 
-const l2 = `case $1:
-return $1
-`
-
-const l3 = `(.*)`
 
 const blue = "#02735E"
 const bull = <span style={{ "margin": "5px" }}>•</span>;
@@ -152,24 +134,24 @@ export const CsvTools = ({ }) => {
 
     const [activeStep, setActiveStep] = React.useState(0);
 
-    const [list1, setList1] = useState(l1);
+    const [inputData, setInputData] = useState(l1);
+    const [configData, setConfigData] = useState("");
 
     const [headerStringArr, setHeaderStringArr] = useState<string[]>([]);
 
     const [data, setData] = useState<any>([]);
 
-    const [groupname, setGroupname] = useState<string>("HauptprojektBez");
-    const [subgroupname, setSubGroupname] = useState<string>("Arbeitsauftrag");
-
     const [seperator, setSeperator] = useState<string>(";");
-    const [sumField, setSumField] = useState<string>("Spanne");
-    const [columnWidth, setColumnWidth] = useState<string>("2");
 
+    const [groupname, setGroupname] = useState<string>("Jahr");
+    const [subgroupname, setSubGroupname] = useState<string>("");
+    const [sumField, setSumField] = useState<string>("");
+    const [columnWidth, setColumnWidth] = useState<string>("3");
 
     const [state, setState] = React.useState({
-        prim: "Bemerkung",
-        secA: "Arbeitsauftrag",
-        secB: "Spanne"
+        primary: "Ausgaben",
+        secondaryA: "Kategorie",
+        secondaryB: ""
     });
 
     const handleStep = (step: number) => () => {
@@ -179,23 +161,20 @@ export const CsvTools = ({ }) => {
 
     useEffect(() => {
         performHandle()
-        setData(csvToJson(list1, seperator))
+        setData(csvToJson(inputData, seperator))
 
-    }, [state, seperator, list1]); // second parameter avoid frequent loading
+    }, [state, seperator, inputData]); // second parameter avoid frequent loading
 
-    useEffect(() => {
-        console.log("Monitor : ", subgroupname)
-
-    }, [subgroupname]); // second parameter avoid frequent loading
-
-
+    // useEffect(() => {
+    //     console.log("Monitor subgroupname : ", subgroupname)
+    // }, [subgroupname]); // second parameter avoid frequent loading
 
 
     const performHandle = () => {
 
         let localHeaderArr = {}
         let localHeaderStringArr: string[] = []
-        const lines = list1.split("\n")
+        const lines = inputData.split("\n")
 
         for (let i = 0; i < lines.length; ++i) {
 
@@ -239,6 +218,36 @@ export const CsvTools = ({ }) => {
         return arr
     }
 
+    const setJsonConfig = (data: string) => {
+        setConfigData(data)
+        const jsonObj: any = JSON.parse(data);
+
+        console.log("groupname", jsonObj.hasOwnProperty('groupname'))
+
+        jsonObj.hasOwnProperty('groupname') ? setGroupname(jsonObj['groupname']) : ""
+        jsonObj.hasOwnProperty('subgroupname') ? setSubGroupname(jsonObj['subgroupname']) : ""
+        jsonObj.hasOwnProperty('sumField') ? setSumField(jsonObj['sumField']) : ""
+        jsonObj.hasOwnProperty('columnWidth') ? setColumnWidth(jsonObj['columnWidth']) : ""
+        jsonObj.hasOwnProperty('format.primary') ? handleChange("primary", jsonObj['format.primary']) : ""
+        jsonObj.hasOwnProperty('format.secondaryA') ? handleChange("secondaryA", jsonObj['format.secondaryA']) : ""
+        jsonObj.hasOwnProperty('format.secondaryB') ? handleChange("secondaryB", jsonObj['format.secondaryB']) : ""
+    }
+
+    const createJsonConfig = ( ) => {
+
+        const json = {
+            "groupname": groupname,
+            "subgroupname": subgroupname,
+            "sumField": sumField,
+            "columnWidth": columnWidth,
+            "format.primary": state.primary,
+            "format.secondaryA": state.secondaryA,
+            "format.secondaryB": state.secondaryB
+       }
+
+       return JSON.stringify(json, null, 2 )
+    }
+
 
 
 
@@ -250,7 +259,8 @@ export const CsvTools = ({ }) => {
                 <Stepper nonLinear activeStep={activeStep}>
 
                     <Step><StepButton color="inherit" onClick={handleStep(0)}>Data Input</StepButton></Step>
-                    <Step><StepButton color="inherit" onClick={handleStep(1)}>Output</StepButton></Step>
+                    <Step><StepButton color="inherit" onClick={handleStep(1)}>Configuration</StepButton></Step>
+                    <Step><StepButton color="inherit" onClick={handleStep(2)}>Output</StepButton></Step>
 
                 </Stepper>
             </Grid>
@@ -283,24 +293,36 @@ export const CsvTools = ({ }) => {
 
                         <Grid item xs={12}   >
                             <MyCard>
-                            <Box style={{ background: blue, padding: "5px" }} >Input </Box>
-                            <MyTextareaAutosize
-                                value={list1 ? list1 : ""}
-                                rowsMin={10}
-                                // error={ hasError(linkName) }
-                                // label="Name"
-
-                                // size="small"
-                                // fullWidth
-                                //variant="outlined"
-                                // onKeyPress={ e => checkEnter(e) }
-                                onChange={e => setList1(e.target.value)} />
+                                <Box style={{ background: blue, padding: "5px" }} >Input </Box>
+                                <MyTextareaAutosize
+                                    value={inputData ? inputData : "" }
+                                    rowsMin={10}
+                                    onChange={e => setInputData(e.target.value)} />
                             </MyCard>
                         </Grid>
                     </Grid>
                 </Grid>
             }
             {activeStep === 1 &&
+                <>
+                    <Grid item xs={12}   >
+                        <MyCard>
+                            <Box style={{ background: blue, padding: "5px" }} >Input </Box>
+                            <MyTextareaAutosize
+                                value={configData ? configData : createJsonConfig() }
+                                rowsMin={10}
+                                onChange={e => setJsonConfig(e.target.value)} />
+
+                            <Divider></Divider>
+                            <ListItemText
+                                primary="groupname"
+                                secondary={groupname}
+                            />
+                        </MyCard>
+                    </Grid>
+                </>
+            }
+            {activeStep === 2 &&
                 <>
                     <Grid item xs={3} >
                         <ConfigItem header="Group" >
@@ -350,27 +372,27 @@ export const CsvTools = ({ }) => {
                             <ListItemText
                                 primary={
                                     <TextEdit
-                                        value={state.prim}
+                                        value={state.primary}
                                         label="Primary"
                                         groups={getOptions(headerStringArr)}
-                                        callback={(s) => { handleChange("prim", s) }}
+                                        callback={(s) => { handleChange("primary", s) }}
                                     />
                                 }
                                 secondary={
                                     <>
                                         <TextEdit
-                                            value={state.secA}
-                                            label="Secondary 1"
+                                            value={state.secondaryA}
+                                            label="SecondaryA"
                                             groups={getOptions(headerStringArr)}
-                                            callback={(s) => { handleChange("secA", s) }}
+                                            callback={(s) => { handleChange("secondaryA", s) }}
 
                                         />
                                         {bull}
                                         <TextEdit
-                                            value={state.secB}
-                                            label="Secondary 2"
+                                            value={state.secondaryB}
+                                            label="SecondaryB"
                                             groups={getOptions(headerStringArr)}
-                                            callback={(s) => { handleChange("secB", s) }}
+                                            callback={(s) => { handleChange("secondaryB", s) }}
                                         />
                                     </>
                                 }
@@ -396,7 +418,7 @@ export const CsvTools = ({ }) => {
 
                                                         <ListCsvItem
                                                             line={line}
-                                                            headerCheckedArr={[state.prim, state.secA, state.secB]}
+                                                            headerCheckedArr={[state.primary, state.secondaryA, state.secondaryB]}
                                                         />
                                                     </>))}
 
@@ -411,7 +433,7 @@ export const CsvTools = ({ }) => {
 
                                                                 <ListCsvItem
                                                                     line={line}
-                                                                    headerCheckedArr={[state.prim, state.secA, state.secB]}
+                                                                    headerCheckedArr={[state.primary, state.secondaryA, state.secondaryB]}
                                                                 />
                                                             </>))}
 
@@ -420,15 +442,6 @@ export const CsvTools = ({ }) => {
                                                     ))}
                                                 </>
                                             )}
-
-
-                                            {/* <ListCsvItemSimple
-                                                valueArr={[String(sumArray(group.listitems, sumField)), "Summe"]}
-                                            />
-                                            <Divider></Divider> */}
-
-
-
                                         </MyCard>
                                     </Grid>
                                 ))

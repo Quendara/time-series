@@ -83,6 +83,8 @@ export const csvToJson = (csv: string, seperator : string ) => {
     // in headers array
     let headers = array[0].split(seperator)
 
+    headers = headers.map( x => { return x.trim() } ) 
+
     // Since headers are separated, we
     // need to traverse remaining n-1 rows.
     for (let i = 1; i < array.length - 1; i++) {
