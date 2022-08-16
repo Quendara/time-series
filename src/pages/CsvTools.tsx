@@ -4,6 +4,9 @@ import React, { Component, useState, useEffect } from "react";
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
 import { Toolbar, Box, Button, TextField, Grid, Chip, Card, CardContent, FormGroup, Paper, ListItem, ListItemText, Divider, Stepper, Step, StepButton } from '@material-ui/core/';
+import { AlertTitle, Alert } from '@material-ui/lab';
+
+
 
 import { MyCard, MyCardHeader, MySubCardHeader, MyTextareaAutosize } from "../components/StyledComponents"
 
@@ -140,6 +143,7 @@ export const CsvTools = ({ }) => {
     const [headerStringArr, setHeaderStringArr] = useState<string[]>([]);
 
     const [data, setData] = useState<any>([]);
+    const [skippedLines, setSkippedLines] = useState<any>([]);
 
     const [seperator, setSeperator] = useState<string>(";");
 
@@ -161,7 +165,11 @@ export const CsvTools = ({ }) => {
 
     useEffect(() => {
         performHandle()
-        setData(csvToJson(inputData, seperator))
+
+        const output = csvToJson(inputData, seperator)
+
+        setData(output.json)
+        setSkippedLines(output.skippedLines)
 
     }, [state, seperator, inputData]); // second parameter avoid frequent loading
 
@@ -233,7 +241,7 @@ export const CsvTools = ({ }) => {
         jsonObj.hasOwnProperty('format.secondaryB') ? handleChange("secondaryB", jsonObj['format.secondaryB']) : ""
     }
 
-    const createJsonConfig = ( ) => {
+    const createJsonConfig = () => {
 
         const json = {
             "groupname": groupname,
@@ -243,9 +251,9 @@ export const CsvTools = ({ }) => {
             "format.primary": state.primary,
             "format.secondaryA": state.secondaryA,
             "format.secondaryB": state.secondaryB
-       }
+        }
 
-       return JSON.stringify(json, null, 2 )
+        return JSON.stringify(json, null, 2)
     }
 
 
@@ -266,8 +274,6 @@ export const CsvTools = ({ }) => {
             </Grid>
 
             {activeStep === 0 &&
-
-
                 <Grid item xs={12}   >
                     <Grid container justify="flex-start" spacing={1} >
 
@@ -292,13 +298,22 @@ export const CsvTools = ({ }) => {
 
 
                         <Grid item xs={12}   >
+                            {skippedLines.length !== 0 &&
+                                <Alert severity="error">
+                                    <AlertTitle>Lines skipped : </AlertTitle>
+                                    {skippedLines.map((line: string) => (<p>{line}</p>))}
+                                </Alert>
+                            }
                             <MyCard>
                                 <Box style={{ background: blue, padding: "5px" }} >Input </Box>
                                 <MyTextareaAutosize
-                                    value={inputData ? inputData : "" }
+
+                                    value={inputData ? inputData : ""}
                                     rowsMin={10}
                                     onChange={e => setInputData(e.target.value)} />
                             </MyCard>
+
+
                         </Grid>
                     </Grid>
                 </Grid>
@@ -309,7 +324,7 @@ export const CsvTools = ({ }) => {
                         <MyCard>
                             <Box style={{ background: blue, padding: "5px" }} >Input </Box>
                             <MyTextareaAutosize
-                                value={configData ? configData : createJsonConfig() }
+                                value={configData ? configData : createJsonConfig()}
                                 rowsMin={10}
                                 onChange={e => setJsonConfig(e.target.value)} />
 

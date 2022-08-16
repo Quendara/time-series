@@ -142,7 +142,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
                                 // setInternalName( newValue as string );
                             }
                         }}
-                        renderInput={(params) => <TextField {...params} label="Groups" fullWidth variant="outlined" />}
+                        renderInput={(params) => <TextField {...params} label={label} fullWidth variant="outlined" />}
                     />
                 )}
             </>

@@ -68,7 +68,12 @@ export const findUnique  = <T,>( list : T[], group: string, sortByCount:boolean 
     return returnVal;
 }  
 
-export const csvToJson = (csv: string, seperator : string ) => {
+export interface CsvReturn{
+    json: any[], 
+    skippedLines: string[]
+}
+
+export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {
     // Convert the data to String and
     // split it in an array
     var array = csv.toString().split("\n");
@@ -76,7 +81,10 @@ export const csvToJson = (csv: string, seperator : string ) => {
     // All the rows of the CSV will be
     // converted to JSON objects which
     // will be added to result in an array
-    let result = [];
+    let result : CsvReturn = {
+        json:[],
+        skippedLines:[]
+    };
 
     // The array[0] contains all the
     // header columns so we store them
@@ -123,8 +131,9 @@ export const csvToJson = (csv: string, seperator : string ) => {
         let properties = s.split("|")
 
         if( properties.length !== headers.length ){
-            console.log( "SKIP LINE properties.length !== headers.length",  properties.length, headers.length )
-            console.log( str )
+
+            result.skippedLines.push( "line length !== headers length : "  +  properties.length +" != " +  headers.length )
+            result.skippedLines.push( str )
             continue
         }
 
@@ -142,7 +151,7 @@ export const csvToJson = (csv: string, seperator : string ) => {
 
         // Add the generated object to our
         // result array
-        result.push(obj)
+        result.json.push(obj)
     }
 
     // Convert the resultant array to json and

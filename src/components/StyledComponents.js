@@ -67,11 +67,13 @@ export const MyTextareaAutosize = styled(TextareaAutosize)({
   fontWeight:"100",
   width: "100%",
   borderRadius: "5px",
-  height:"52vh"
+  height:"52vh",
+  whiteSpace: "nowrap"
+  
   // letterSpacing:"0.2em",
   //#paddingTop:"0px"
 
-});
+}); 
 
 export  const MyTextareaRead = styled(Typography)({
   fontFamily:"monospace",
