@@ -8,12 +8,13 @@ import {
   CategoryScale,
   Tooltip,
   Legend,
-  TimeSeriesScale
+  TimeSeriesScale, 
+  TimeScale
 } from 'chart.js'; 
 
 import 'chartjs-adapter-moment';
 
-import { Scatter } from "react-chartjs-2";
+import { Scatter, Line } from "react-chartjs-2";
 // import { groupBy } from "underscore";
 import { Divider, Grid } from '@material-ui/core';
 
@@ -62,18 +63,17 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }: P
       // scaleOverride : true,
       x: 
         {
-          type: "timeseries",
-          // time: {
-          //   unit: "month"
-          // },
+          type: "time",
+          time: {
+            unit: "month"
+          },
           ticks: {
             fontColor: fontColor,
           },
           gridLines: {
             display: true,
-            color: gridColor,
-
-          },
+            color: gridColor
+          }
         }
       ,
       y: 
@@ -246,11 +246,10 @@ export const LineChart = ({ group_unit, group_id, values, render = "simple" }: P
         <>
           <div className="chart-container" style={ { "height": "35vh" } }>
             {data.datasets.length === 1 ? (<h1>No Data</h1>) :
-              (<Scatter data={getDatasets(values)} options={options} />)}
+              (<Line data={getDatasets(values)} options={options} />)}
           </div>
           <br />
           <Divider variant="middle" />
-
           <Grid container spacing={3} justify="space-between" alignItems="flex-start" >
             <DashboardNumber value={calAvg(values)} unit={group_unit} info=" per day" />
             <DashboardNumber value={avgMonth} unit={group_unit} info=" per month" />
