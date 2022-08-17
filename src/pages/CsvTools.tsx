@@ -309,7 +309,7 @@ export const CsvTools = ({ }) => {
                                 <MyTextareaAutosize
 
                                     value={inputData ? inputData : ""}
-                                    rowsMin={10}
+                                    rowsMin={20}
                                     onChange={e => setInputData(e.target.value)} />
                             </MyCard>
 
@@ -325,7 +325,7 @@ export const CsvTools = ({ }) => {
                             <Box style={{ background: blue, padding: "5px" }} >Input </Box>
                             <MyTextareaAutosize
                                 value={configData ? configData : createJsonConfig()}
-                                rowsMin={10}
+                                rowsMin={20}
                                 onChange={e => setJsonConfig(e.target.value)} />
 
                             <Divider></Divider>

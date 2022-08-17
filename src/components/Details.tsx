@@ -4,7 +4,7 @@ import {
     // IndexRoute,
     // useRouteMatch,
     useLocation,
-    useNavigate 
+    useNavigate
 } from "react-router-dom";
 
 
@@ -14,7 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 
 
 import { Grid, Button, TextField, Divider, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
-import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
+import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead, MyDivider } from "./StyledComponents"
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
 
@@ -254,48 +254,31 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
 
                             }
                         />
-                    </MyCard>
-                    <br></br>
 
-                    <MyCard>
-
-                        {/* <List>
-                            <ListItem>
-                                
-                                <hr />
-
-                                <TextEdit
-                                    value={currentItem.group}
-                                    groups={findUnique(todos, "group", false)}
-                                    label="Group"
-                                    callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
-                                    {currentItem.group}
-                                </TextEdit>
-
-                       
-                            </ListItem>
-                        </List> */}
 
                         <CardContent>
-
-
-
-
                             <Grid
                                 container
                                 direction="row"
                                 justify="flex-start"
                                 alignItems="flex-start" >
 
+                                <Grid item xs={12}>
+                                    {
+                                        edit ? (
+                                            <Button variant="contained" color={"primary"} onClick={updateHandle}><MyIcon icon={"update"} /> </Button>
+                                        ) : (
+                                            <Button variant="contained" onClick={() => setEdit(true)}><MyIcon icon={"edit"} /> </Button>
+                                        )
+                                    }
+
+                                    <MyDivider />
+                                </Grid>
+
+
                                 {edit ? (
                                     <>
-                                        <Grid item xs={12}>
-                                            <Button variant="contained" disabled={!edit} onClick={updateHandle}><MyIcon icon="update" /> </Button>
-                                            <br/>
-                                            <Divider></Divider>
-                                            
-                                        </Grid>
-                                        
+
 
                                         <Grid item xs={12}>
                                             <MarkdownTextareaAutosize
@@ -307,7 +290,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                 ) : (
 
                                     <Grid item xs={12}>
-                                        <div className="markdown" onClick={() => setEdit(true)}>
+                                        <div className="markdown" >
                                             <DetailsMarkdown value={selectedItemValue} />
                                         </div>
                                     </Grid>
@@ -318,14 +301,31 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                             </Grid>
                         </CardContent>
 
+                        
+
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="flex-start" >
+
+                            <Grid item xs={12}>
+                            <MyDivider />
+                            </Grid>
+
+                            <Grid item xs={9}>
+                                <ListGraphInternal
+                                    items={localitems}
+                                    lists={lists}
+                                    username={username}
+                                    listid={currentItem.id}
+                                    listtype={TodoListType.TODO_SIMPLE} />
+
+                            </Grid>
+                        </Grid>
+
                     </MyCard>
-                    <br />
-                    <ListGraphInternal
-                        items={localitems}
-                        lists={lists}
-                        username={username}
-                        listid={currentItem.id}
-                        listtype={TodoListType.TODO_SIMPLE} />
+
                 </>
             )
             }

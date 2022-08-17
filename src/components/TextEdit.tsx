@@ -1,5 +1,5 @@
 import React, { useState, useEffect, KeyboardEvent } from "react";
-import { TextField } from '@material-ui/core';
+import { TextField, Grid } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { GenericGroup } from "../components/helpers"
@@ -8,7 +8,7 @@ import { MyIcon } from "./MyIcon";
 interface Props {
 
     value: string;
-    callback: (s: string  ) => void;
+    callback: (s: string) => void;
     label?: string;
     groups?: any;
     children?: React.ReactNode
@@ -41,8 +41,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
 
         if (event.key === "Enter") {
             // alert("Enter")
-            callback(internalName ? internalName : "unknown")
-            setEdit(false)
+            callCallback()
         }
         if (event.key === "Escape") {
             // alert("Enter")
@@ -50,6 +49,14 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
             setEdit(false)
         }
     }
+
+    const callCallback = () => {
+        callback(internalName ? internalName : "unknown")
+        setEdit(false)
+
+    }
+
+
 
     // interface IfOptionLabel {
     //     key: undefined | string;
@@ -74,24 +81,34 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
 
     }
 
-    const getInternalName = ( internalName : string ) => {
-        return internalName.length>0 ? internalName : "UNSPEC"
+    const getInternalName = (internalName: string) => {
+        return internalName.length > 0 ? internalName : "UNSPEC"
     }
 
     return (
         <>{edit ? (
             <>
                 {groups === undefined ? (
-                    <TextField
-                        value={internalName}
-                        // error = { hasError(internalName) }
-                        label={label}
-                        size="small"
+                    <Grid
+                        container
+                    >
 
-                        variant="outlined"
-                        onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
-                        onChange={(e: any) => setInternalName(e.target.value)}
-                    />
+                        <Grid item >
+                            <TextField
+                                value={internalName}
+                                // error = { hasError(internalName) }
+                                label={label}
+                                size="small"
+                                fullWidth={false}
+                                variant="outlined"
+                                onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
+                                onChange={(e: any) => setInternalName(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item onClick={callCallback}  >
+                            <MyIcon icon="check" />
+                        </Grid>
+                    </Grid>
                 ) : (
                     <Autocomplete
                         id="combo-box-demo"
@@ -148,7 +165,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
             </>
         ) : (
             <a onMouseOver={handleMouseIn} onMouseOut={handleMouseOut} style={{ "cursor": "pointer" }} onClick={() => setEdit(true)}>
-                {children ? children : getInternalName( internalName ) }
+                {children ? children : getInternalName(internalName)}
                 {hover && <MyIcon icon="edit"></MyIcon>}
             </a>
         )
