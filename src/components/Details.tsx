@@ -299,21 +299,14 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
 
                                 )}
                             </Grid>
-                        </CardContent>
-
                         
-
-                        <Grid
-                            container
-                            direction="row"
-                            justify="center"
-                            alignItems="flex-start" >
+                 
 
                             <Grid item xs={12}>
                             <MyDivider />
                             </Grid>
 
-                            <Grid item xs={9}>
+                            <Grid item xs={12}>
                                 <ListGraphInternal
                                     items={localitems}
                                     lists={lists}
@@ -322,7 +315,8 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                     listtype={TodoListType.TODO_SIMPLE} />
 
                             </Grid>
-                        </Grid>
+                        
+                        </CardContent>
 
                     </MyCard>
 
