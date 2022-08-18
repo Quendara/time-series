@@ -18,19 +18,15 @@ import { UpdateTodosInput, CreateTodosInput } from "../API"
 
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
 import { TodoListType } from "../components/List"
+import { BooleanModel } from 'aws-sdk/clients/gamelift';
 
 interface ListProps {
     lists: TodoMainItem[];
     username: string;
+    horizontally:boolean;
 }
 
-interface ListUseParams {
-    listid: string;
-    listtype: TodoListType;
-    itemid?: string;
-}
-
-export const ListGraphQL = (props: ListProps) => {
+export const ListGraphQL = ( props: ListProps ) => {
 
     let { listid, listtype, itemid } = useParams<{listid : string , listtype  : TodoListType , itemid? : string }>();
 
@@ -43,6 +39,7 @@ export const ListGraphQL = (props: ListProps) => {
                 listid={listid?listid:""}
                 items={items}
                 listtype={listtype?listtype:TodoListType.UNDEFINED}
+                horizontally={ props.horizontally }
                 itemid={itemid}
                 lists={props.lists}
                 username={props.username} />
@@ -58,11 +55,12 @@ interface ListPropsInternal {
     username: string;
     listid: string;
     listtype: TodoListType;
+    horizontally: boolean;
     itemid?: string;
 }
 
 
-export const ListGraphInternal = ({ items, lists, username, listid, listtype, itemid }: ListPropsInternal) => {
+export const ListGraphInternal = ({ items, lists, username, horizontally, listid, listtype, itemid }: ListPropsInternal) => {
 
     const [todos, dispatch] = useReducer(reducerTodo, items);
 
@@ -178,6 +176,7 @@ export const ListGraphInternal = ({ items, lists, username, listid, listtype, it
                 listtype={listtype}
                 listid={listid}
                 addItemHandle={addItemHandle}
+                horizontally={horizontally}
                 // getItem             = {getItem}
                 removeItemHandle={removeItemHandle}
                 updateFunction={updateFunction}

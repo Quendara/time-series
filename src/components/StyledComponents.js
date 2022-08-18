@@ -11,6 +11,13 @@ export const MyCard = styled(Card)({
   borderRadius: 10,
 });
 
+export const MyCard2 = styled(Card)({
+  // background: 'linear-gradient(45deg, #102027 30%, #263238 90%)',
+  background: '#2F3E45',
+  border: 0,
+  borderRadius: 10,
+});
+
 
 
 export const MyDivider = styled(Divider)({

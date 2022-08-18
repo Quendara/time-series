@@ -14,7 +14,7 @@ import Alert from '@material-ui/lab/Alert';
 
 
 import { Grid, Button, TextField, Divider, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
-import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead, MyDivider } from "./StyledComponents"
+import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead, MyDivider, MyCard2 } from "./StyledComponents"
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MyIcon } from "./MyIcon";
 
@@ -215,7 +215,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                 <h1> ... </h1>
             ) : (
                 <>
-                    <MyCard>
+                    <MyCard2>
                         <MyCardHeader
                             avatar={
                                 <Avatar aria-label="recipe">
@@ -311,6 +311,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                     items={localitems}
                                     lists={lists}
                                     username={username}
+                                    horizontally={true}
                                     listid={currentItem.id}
                                     listtype={TodoListType.TODO_SIMPLE} />
 
@@ -318,7 +319,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                         
                         </CardContent>
 
-                    </MyCard>
+                    </MyCard2>
 
                 </>
             )

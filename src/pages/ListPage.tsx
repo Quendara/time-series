@@ -41,6 +41,7 @@ interface ListProps {
     todos: TodoItem[];
     listtype: TodoListType;
     listid: string;
+    horizontally: boolean;
     addItemHandle: any;
     // getItem: (id:string) => any;
     removeItemHandle: (id: string) => void;
@@ -52,19 +53,22 @@ interface ListProps {
 
 }
 
-export const ListPage = ({
-    todos,
-    listtype,
-    listid,
-    addItemHandle,
-    removeItemHandle,
-    // getItem,
-    updateFunction,
-    toggleFunction,
-    uncheckFunction,
-    lists,
-    username
-}: ListProps) => {
+export const ListPage = (
+//     {
+//     todos,
+//     listtype,
+//     listid,
+//     addItemHandle,
+//     removeItemHandle,
+//     horizontally,
+//     // getItem,
+//     updateFunction,
+//     toggleFunction,
+//     uncheckFunction,
+//     lists,
+//     username
+// } 
+props: ListProps) => {
 
     // const [selectedItem, setSelectedItem] = useState(undefined);
     const [selectedItemId, setSelectedItemId] = useState("");
@@ -72,7 +76,7 @@ export const ListPage = ({
     const [edit, setEdit] = useState(false);
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
-    const [horizontally, setHorizontally] = useState(false);
+    const [ stateHorizontally, setHorizontally] = useState( props.horizontally );
 
     const { scrollX, scrollY } = useWindowScrollPositions()
 
@@ -88,7 +92,7 @@ export const ListPage = ({
     useEffect(
         () => {
             setSelectedItemId("");
-        }, [listid])
+        }, [props.listid])
 
     const callbackFilter = (text: string) => {
         setFilterText(text)
@@ -108,7 +112,7 @@ export const ListPage = ({
 
             setSuccessSnackbarMessage("Uncheck item " + filteredTodos[0].name);
 
-            uncheckFunction(filteredTodos[0].id)
+            props.uncheckFunction(filteredTodos[0].id)
             setFilterText("")
         }
     }
@@ -148,17 +152,17 @@ export const ListPage = ({
     }
 
 
-    const filteredTodos = filterCompleted(todos, hideCompleted, filterText)
+    const filteredTodos = filterCompleted( props.todos, hideCompleted, filterText)
 
 
     const createLists = (items: TodoItem[]) => {
 
         let groups: GenericGroup<TodoItem>[] = [];
 
-        if (listid === "current") {
+        if ( props.listid === "current") {
             const groups_uniq = findUnique(items, "listid", false)
             groups = groups_uniq.map((el: GenericGroup<TodoItem>) => {
-                el.value = "(" + el.value + ") " + getItemGlobalList(lists, el.value)?.name
+                el.value = "(" + el.value + ") " + getItemGlobalList( props.lists, el.value)?.name
                 return el
             }
             )
@@ -171,7 +175,7 @@ export const ListPage = ({
 
         return (
             <>
-                {(horizontally && groups) ? (
+                {(stateHorizontally && groups) ? (
                     // 
                     <div style={{ "width": "100%", "overflowX": "scroll" }}>
                         {groups.map((item: GenericGroup<TodoItem>, index: number) => (
@@ -185,12 +189,12 @@ export const ListPage = ({
                                             group={item.value}
                                             items={sortArrayBy(item.listitems, "name")}
                                             groups={groups}
-                                            addItemHandle={addItemHandle}
-                                            type={listtype}
+                                            addItemHandle={ props.addItemHandle}
+                                            type={ props.listtype}
                                             selectFunction={selectHandle}
-                                            removeItemHandle={removeItemHandle}
-                                            updateFunction={updateFunction}
-                                            toggleFunction={toggleFunction}
+                                            removeItemHandle={ props.removeItemHandle }
+                                            updateFunction={ props.updateFunction }
+                                            toggleFunction={ props.toggleFunction }
                                         />
                                     </MyCard>
                                 </div>
@@ -210,12 +214,12 @@ export const ListPage = ({
                                         group={item.value}
                                         items={sortArrayBy(item.listitems, "name",)}
                                         groups={groups}
-                                        addItemHandle={addItemHandle}
-                                        type={listtype}
+                                        addItemHandle={ props.addItemHandle}
+                                        type={ props.listtype }
                                         selectFunction={selectHandle}
-                                        removeItemHandle={removeItemHandle}
-                                        updateFunction={updateFunction}
-                                        toggleFunction={toggleFunction}
+                                        removeItemHandle={ props.removeItemHandle }
+                                        updateFunction={ props.updateFunction }
+                                        toggleFunction={ props.toggleFunction }
                                     />
                                 </MyCard>
                             </Grid>
@@ -245,7 +249,7 @@ export const ListPage = ({
             <Grid container spacing={4} >
                 <Grid item lg={12} xs={12} >
                     <MyCard>
-                        {todos.length > 5 &&
+                        { props.todos.length > 5 &&
                             <MyPaperHeader >
                                 <List>
                                     <ListItem>
@@ -255,10 +259,10 @@ export const ListPage = ({
                                                 {edit ? (
                                                     <AddForm
                                                         renderModal={false}
-                                                        onClickFunction={addItemHandle}
+                                                        onClickFunction={ props.addItemHandle}
                                                         handleDeleteClick={undefined}
-                                                        type={listtype}
-                                                        groups={findUnique(todos, "group", false)} ></AddForm>
+                                                        type={ props.listtype}
+                                                        groups={findUnique( props.todos, "group", false)} ></AddForm>
                                                 ) : (
 
                                                     <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
@@ -267,12 +271,10 @@ export const ListPage = ({
                                             <Grid item xs={2} lg={4} >
                                                 <Grid container justify="flex-end">
                                                     
-                                                        <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
+                                                        {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
                                                             <EditIcon />
-                                                        </IconButton>
-                                                        {/* <Hidden mdDown>
-                                                    </Hidden> */}
-                                                    <IconButton color={horizontally ? "primary" : "default"} onClick={() => setHorizontally(!horizontally)} >
+                                                        </IconButton> */}
+                                                    <IconButton color={ stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                         <TextRotationNoneIcon />
                                                     </IconButton>
                                                     <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
@@ -307,20 +309,26 @@ export const ListPage = ({
                                             edit={false}
                                             setEditCallback={(e: boolean) => { }} />
                                         <ListItem>
-                                            <AddForm renderModal={false} handleDeleteClick={undefined} name={filterText} onClickFunction={addItemHandle} type={listtype} groups={findUnique(todos, "group", false)} ></AddForm>
+                                            <AddForm
+                                                renderModal={false}
+                                                handleDeleteClick={undefined} 
+                                                name={filterText} 
+                                                onClickFunction={ props.addItemHandle } 
+                                                type={ props.listtype } 
+                                                groups={ findUnique( props.todos, "group", false)} ></AddForm>
                                         </ListItem>
                             </MyCard> )}
                     </MyCard>
                 </Grid>
 
-                {listtype === TodoListType.TODO_SIMPLE ? (
+                { props.listtype === TodoListType.TODO_SIMPLE ? (
                     <Grid item xs={12}  >
-                        {todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                        { props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                     </Grid>
                 ) : (
-                    <Grid item md={horizontally ? 12 : 4} sm={horizontally ? 12 : 6} xs={12}  >
+                    <Grid item md={stateHorizontally ? 12 : 4} sm={stateHorizontally ? 12 : 6} xs={12}  >
                         <div className={"my-container-content"} >
-                            {todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                            { props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                         </div>
                     </Grid>
                 )
@@ -334,15 +342,15 @@ export const ListPage = ({
 
                 {(selectedItemId) &&
                     <>
-                        <Grid item md={horizontally ? 12 : 8} sm={horizontally ? 12 : 6} xs={12} >
+                        <Grid item md={stateHorizontally ? 12 : 8} sm={stateHorizontally ? 12 : 6} xs={12} >
 
                             <div className={"my-container-content"} >
                                 <DetailsById
                                     itemid={selectedItemId}
-                                    updateFunction={updateFunction}
-                                    lists={lists}
-                                    listtype={listtype}
-                                    username={username}
+                                    updateFunction={ props.updateFunction }
+                                    lists={ props.lists }
+                                    listtype={ props.listtype }
+                                    username={ props.username }
 
                                 />
                                 <div>Scroll position is ({scrollX}, {scrollY})</div>
