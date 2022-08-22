@@ -22,7 +22,7 @@ import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListIte
 import { Error } from "./components/Error"
 import { MyIcon } from "./components/MyIcon";
 
-import { MyCard, MyPaperHeader } from "./components/StyledComponents"
+import { MyCard, MyPaperHeader, MyCardHeader } from "./components/StyledComponents"
 
 import { MainNavigation } from './organisms/navigation';
 
@@ -161,14 +161,17 @@ const App = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
+            
             <MenuItem>
               <ListItemIcon><Avatar>{username[0]}</Avatar></ListItemIcon>{username}
             </MenuItem>
-            <Divider />
+
+            <Divider />               
 
             {amplifyInitilaized &&
 
               <MainNavigation
+                horizontally={false}
                 render="simple"
                 username={username}
                 handleSetConfig={handleSetConfig} />}
@@ -179,7 +182,7 @@ const App = () => {
         <Grid container justify="center" spacing={1} >
           <Grid item xs={11} ><br /></Grid>
 
-          <Grid item xs={11} lg={10}>
+          <Grid item xs={12} lg={11}>
             {username.length > 0 &&
               (<>
                 {!amplifyInitilaized ? (<h1> Loading </h1>) :
@@ -211,18 +214,13 @@ const App = () => {
                      
 
                       <Route path="/" element={
-                        <Grid container justify="center" spacing={5} >
-                          <Grid item xs={12} md={6}>
-                            <Paper elevation={3} >
-                              <MyCard>
-                                <MyPaperHeader >
+                        <Grid container justify="center" spacing={2} >
+                          <Grid item xs={12} md={12}>
                                   <MainNavigation
+                                    horizontally={true}
                                     render="nnx"
                                     username={username}
                                     handleSetConfig={handleSetConfig} />
-                                </MyPaperHeader>
-                              </MyCard>
-                            </Paper>
                           </Grid>
                           <Grid item xs={12} md={6}>
                             {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */}

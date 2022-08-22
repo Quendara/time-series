@@ -16,11 +16,12 @@ import {
 
 import { useGetMainTodos } from '../hooks/useGetMainTodo';
 
-import { findUnique, GenericGroup } from "../components/helpers";
+import { findUnique, GenericGroup, sortArrayBy } from "../components/helpers";
 
 import { MyIcon } from "../components/MyIcon";
 import { TextEdit } from "../components/TextEdit";
-import StarIcon from '@material-ui/icons/Star';
+import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGrid"
+
 
 import { reducerTodoMain } from "../reducer/reducerTodoMain"
 import { ToggleItem, UpdateItem, AddItem } from "../reducer/dispatchFunctionsMainTodos"
@@ -30,6 +31,7 @@ import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 // import { GroupItem } from "../models/Definitions"
 
 import { useStyles } from "../Styles"
+import { MyCard, MyCardHeader, MySubCardHeader } from "../components/StyledComponents";
 
 
 interface NavItemProps {
@@ -103,31 +105,32 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
         return (
             <ListItem>
                 <ListItemAvatar >
-                    <NavLink
-                        className={classes.title}
-                        to={"/" + [item.component, item.listid, item.render].join('/')}   >
+                    <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
+                        <MyIcon icon={item.icon} />
+                    </Avatar>
 
-                        <Avatar style={{ backgroundColor: color }} >
-                            <MyIcon icon={item.icon} />
-                        </Avatar>
-                    </NavLink>
                 </ListItemAvatar>
                 <ListItemText primary={
-                    <TextEdit value={item.name} callback={handleEditName} />
+                    <TextEdit value={item.name} label="Name" callback={handleEditName} />
                 }
                     secondary={<>
 
-                        <TextEdit value={item.group ? item.group : "keine"} label="group" callback={handleEditGroup} />
+                        <TextEdit value={item.group ? item.group : "keine"} label="Group" callback={handleEditGroup} />
                         {bull}
-                        <TextEdit value={item.icon ? item.icon : "keine"} label="icon" callback={handleEditIcon} />
+                        <TextEdit value={item.icon ? item.icon : "keine"} label="Icon" callback={handleEditIcon} />
                         {bull}
                         {item.render}
                     </>} />
                 <ListItemSecondaryAction>
-                    <Tooltip title="Show in navbar" aria-label="add">
-                        <IconButton onClick={handleComplete} edge="end" aria-label="delete">
-                            <MyIcon icon={item.navbar ? "check" : "remove"} />
-                        </IconButton>
+                    <Tooltip title="Open" aria-label="add">
+                        <NavLink
+                            className={classes.title}
+                            to={"/" + [item.component, item.listid, item.render].join('/')}   >
+
+                            <IconButton edge="end" aria-label="delete">
+                                <MyIcon icon="launch" />
+                            </IconButton>
+                        </NavLink>
                     </Tooltip>
                 </ListItemSecondaryAction>
             </ListItem>
@@ -170,15 +173,29 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
 
     return (<>
         {todos !== undefined &&
-            <List>
-                <ListItem>{groupname}
-                    <Button onClick={handleEditIcon}  >+</Button>
-                </ListItem>
+            <>
+                <MyCardHeader title={groupname}
+                    avatar={
+                        <Avatar style={{ backgroundColor: color }} >
+                            <MyIcon icon="star" />
+                        </Avatar>
+                    }
 
-                {todos.map((item: TodoMainItem, index: number) => (
-                    <NavItem key={index} item={item} render={render} dispatch={dispatch} color={color} />
-                ))}
-            </List>}
+                    action={
+                        <IconButton onClick={handleEditIcon} >
+                            <MyIcon icon="add" />
+                        </IconButton>
+                    }
+                >
+
+                </MyCardHeader>
+                <List>
+                    {sortArrayBy(todos, "name").map((item: TodoMainItem, index: number) => (
+                        <NavItem key={index} item={item} render={render} dispatch={dispatch} color={color} />
+                    ))}
+                </List>
+            </>
+        }
     </>
     )
 
@@ -188,19 +205,20 @@ interface MainNavigationProps {
     handleSetConfig: (items: TodoMainItem[]) => void;
     render: string;
     username: string;
+    horizontally: boolean;
 }
 
 
 
-export const MainNavigation = ({ render, username, handleSetConfig }: MainNavigationProps) => {
+export const MainNavigation = (props: MainNavigationProps) => {
 
     // const [items, setItems] = useState(userConfig);
-    const items = useGetMainTodos(username)
+    const items = useGetMainTodos(props.username)
 
     useEffect(
         () => {
             if (items !== undefined) {
-                handleSetConfig(items)
+                props.handleSetConfig(items)
             }
 
         }, [items])
@@ -217,13 +235,38 @@ export const MainNavigation = ({ render, username, handleSetConfig }: MainNaviga
         <>
 
             {items !== undefined &&
-                <>
+
+                <HorizontallyGrid horizontally={props.horizontally} groups={groups} >
+
                     {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
-                        <NavItemList key={"sfdfsd" + index} groupname={item.value} items={item.listitems} render={render} username={username}
-                            color={colorArr[index % (colorArr.length)]}
-                        />
+                        <HorizontallyItem horizontally={ props.horizontally } >
+                            { props.horizontally ?
+                            ( <MyCard>
+                                <NavItemList 
+                                    key={"sfdfsd" + index}
+                                    groupname={item.value}
+                                    items={item.listitems}
+                                    render={props.render}
+                                    username={props.username}
+                                    color={colorArr[index % (colorArr.length)]}
+                                    />
+                                    </MyCard>                            
+
+                            ) : (
+                                <NavItemList 
+                                    key={"sfdfsd" + index}
+                                    groupname={item.value}
+                                    items={item.listitems}
+                                    render={props.render}
+                                    username={props.username}
+                                    color={colorArr[index % (colorArr.length)]}
+                                    />                            
+
+                            )}
+                        </HorizontallyItem>
                     ))}
-                </>}
+                </HorizontallyGrid>
+            }
         </>
     )
 }

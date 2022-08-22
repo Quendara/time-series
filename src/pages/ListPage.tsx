@@ -34,6 +34,7 @@ import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 
 import { UpdateTodosInput } from "../API"
 import { TodoListType } from "../components/List"
+import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGrid"
 
 
 
@@ -53,22 +54,7 @@ interface ListProps {
 
 }
 
-export const ListPage = (
-//     {
-//     todos,
-//     listtype,
-//     listid,
-//     addItemHandle,
-//     removeItemHandle,
-//     horizontally,
-//     // getItem,
-//     updateFunction,
-//     toggleFunction,
-//     uncheckFunction,
-//     lists,
-//     username
-// } 
-props: ListProps) => {
+export const ListPage = ( props: ListProps ) => {
 
     // const [selectedItem, setSelectedItem] = useState(undefined);
     const [selectedItemId, setSelectedItemId] = useState("");
@@ -76,7 +62,7 @@ props: ListProps) => {
     const [edit, setEdit] = useState(false);
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
-    const [ stateHorizontally, setHorizontally] = useState( props.horizontally );
+    const [stateHorizontally, setHorizontally] = useState(props.horizontally);
 
     const { scrollX, scrollY } = useWindowScrollPositions()
 
@@ -152,17 +138,17 @@ props: ListProps) => {
     }
 
 
-    const filteredTodos = filterCompleted( props.todos, hideCompleted, filterText)
+    const filteredTodos = filterCompleted(props.todos, hideCompleted, filterText)
 
 
     const createLists = (items: TodoItem[]) => {
 
         let groups: GenericGroup<TodoItem>[] = [];
 
-        if ( props.listid === "current") {
+        if (props.listid === "current") {
             const groups_uniq = findUnique(items, "listid", false)
             groups = groups_uniq.map((el: GenericGroup<TodoItem>) => {
-                el.value = "(" + el.value + ") " + getItemGlobalList( props.lists, el.value)?.name
+                el.value = "(" + el.value + ") " + getItemGlobalList(props.lists, el.value)?.name
                 return el
             }
             )
@@ -175,58 +161,38 @@ props: ListProps) => {
 
         return (
             <>
-                {(stateHorizontally && groups) ? (
-                    // 
-                    <div style={{ "width": "100%", "overflowX": "scroll" }}>
-                        {groups.map((item: GenericGroup<TodoItem>, index: number) => (
-                            <div key={"xxy" + index} style={{ "width": groups.length * 310 + "px" }}>
-                                <div key={index} style={{ "width": "300px", "float": "left", "marginRight": "10px" }} >
-                                    <MyCard>
-                                        <ListQ
-                                            key={index}
-                                            editList={edit}
-                                            header={item.value}
-                                            group={item.value}
-                                            items={sortArrayBy(item.listitems, "name")}
-                                            groups={groups}
-                                            addItemHandle={ props.addItemHandle}
-                                            type={ props.listtype}
-                                            selectFunction={selectHandle}
-                                            removeItemHandle={ props.removeItemHandle }
-                                            updateFunction={ props.updateFunction }
-                                            toggleFunction={ props.toggleFunction }
-                                        />
-                                    </MyCard>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                { groups && (
 
-                ) : (
-                    <Grid container spacing={2} >
-                        {groups && groups.map((item: GenericGroup<TodoItem>, index: number) => (
-                            <Grid key={"xxxyy" + index} item xs={12}>
-                                <MyCard key={"agjhl" + index}>
+                    <HorizontallyGrid horizontally={stateHorizontally} groups={ groups }>
+                        {groups.map((item: GenericGroup<TodoItem>, index: number) => (                            
+                            <HorizontallyItem horizontally={stateHorizontally} >
+                                <MyCard>
                                     <ListQ
-                                        key={"agjhxg" + index}
+                                        key={index}
                                         editList={edit}
                                         header={item.value}
                                         group={item.value}
-                                        items={sortArrayBy(item.listitems, "name",)}
+                                        items={sortArrayBy(item.listitems, "name")}
                                         groups={groups}
-                                        addItemHandle={ props.addItemHandle}
-                                        type={ props.listtype }
+                                        addItemHandle={props.addItemHandle}
+                                        type={props.listtype}
                                         selectFunction={selectHandle}
-                                        removeItemHandle={ props.removeItemHandle }
-                                        updateFunction={ props.updateFunction }
-                                        toggleFunction={ props.toggleFunction }
+                                        removeItemHandle={props.removeItemHandle}
+                                        updateFunction={props.updateFunction}
+                                        toggleFunction={props.toggleFunction}
                                     />
-                                </MyCard>
-                            </Grid>
-                        ))}
-                    </Grid>
-                )
 
+                                </MyCard>
+                            </HorizontallyItem>
+
+                        ))}
+
+                    </HorizontallyGrid>
+
+               
+
+                ) 
+              
                 }
             </>
 
@@ -249,7 +215,7 @@ props: ListProps) => {
             <Grid container spacing={4} >
                 <Grid item lg={12} xs={12} >
                     <MyCard>
-                        { props.todos.length > 5 &&
+                        {props.todos.length > 5 &&
                             <MyPaperHeader >
                                 <List>
                                     <ListItem>
@@ -259,10 +225,10 @@ props: ListProps) => {
                                                 {edit ? (
                                                     <AddForm
                                                         renderModal={false}
-                                                        onClickFunction={ props.addItemHandle}
+                                                        onClickFunction={props.addItemHandle}
                                                         handleDeleteClick={undefined}
-                                                        type={ props.listtype}
-                                                        groups={findUnique( props.todos, "group", false)} ></AddForm>
+                                                        type={props.listtype}
+                                                        groups={findUnique(props.todos, "group", false)} ></AddForm>
                                                 ) : (
 
                                                     <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
@@ -270,11 +236,11 @@ props: ListProps) => {
                                             </Grid>
                                             <Grid item xs={2} lg={4} >
                                                 <Grid container justify="flex-end">
-                                                    
-                                                        {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
+
+                                                    {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
                                                             <EditIcon />
                                                         </IconButton> */}
-                                                    <IconButton color={ stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
+                                                    <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                         <TextRotationNoneIcon />
                                                     </IconButton>
                                                     <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
@@ -300,35 +266,35 @@ props: ListProps) => {
                             </CardContent>
                         )}
                         {filteredTodos.length === 0 && (
-                         
-                                         <MyCard>
+
+                            <MyCard>
 
 
-                                        <ListHeader
-                                            header={"Checklist"}
-                                            edit={false}
-                                            setEditCallback={(e: boolean) => { }} />
-                                        <ListItem>
-                                            <AddForm
-                                                renderModal={false}
-                                                handleDeleteClick={undefined} 
-                                                name={filterText} 
-                                                onClickFunction={ props.addItemHandle } 
-                                                type={ props.listtype } 
-                                                groups={ findUnique( props.todos, "group", false)} ></AddForm>
-                                        </ListItem>
-                            </MyCard> )}
+                                <ListHeader
+                                    header={"Checklist"}
+                                    edit={false}
+                                    setEditCallback={(e: boolean) => { }} />
+                                <ListItem>
+                                    <AddForm
+                                        renderModal={false}
+                                        handleDeleteClick={undefined}
+                                        name={filterText}
+                                        onClickFunction={props.addItemHandle}
+                                        type={props.listtype}
+                                        groups={findUnique(props.todos, "group", false)} ></AddForm>
+                                </ListItem>
+                            </MyCard>)}
                     </MyCard>
                 </Grid>
 
-                { props.listtype === TodoListType.TODO_SIMPLE ? (
+                {props.listtype === TodoListType.TODO_SIMPLE ? (
                     <Grid item xs={12}  >
-                        { props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                        {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                     </Grid>
                 ) : (
                     <Grid item md={stateHorizontally ? 12 : 4} sm={stateHorizontally ? 12 : 6} xs={12}  >
                         <div className={"my-container-content"} >
-                            { props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                            {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                         </div>
                     </Grid>
                 )
@@ -347,10 +313,10 @@ props: ListProps) => {
                             <div className={"my-container-content"} >
                                 <DetailsById
                                     itemid={selectedItemId}
-                                    updateFunction={ props.updateFunction }
-                                    lists={ props.lists }
-                                    listtype={ props.listtype }
-                                    username={ props.username }
+                                    updateFunction={props.updateFunction}
+                                    lists={props.lists}
+                                    listtype={props.listtype}
+                                    username={props.username}
 
                                 />
                                 <div>Scroll position is ({scrollX}, {scrollY})</div>

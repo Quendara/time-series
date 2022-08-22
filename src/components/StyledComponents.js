@@ -37,8 +37,15 @@ export const MySubCardHeader = styled(CardHeader)({
   whiteSpace: "nowrap"
 });
 
-export const MyCardHeader = styled(CardHeader)({
+export const MyCardHeaderAlt = styled(CardHeader)({
   background: '#02735E',
+  textOverflow: "ellipsis",  
+  overflow: "hidden",
+  whiteSpace: "nowrap"
+});
+
+export const MyCardHeader = styled(CardHeader)({
+  background: '#102027',
   textOverflow: "ellipsis",  
   overflow: "hidden",
   whiteSpace: "nowrap"
