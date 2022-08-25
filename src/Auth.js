@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton } from '@material-ui/core/';
 import { List, ListItem } from '@material-ui/core/';
 
+import { Alert, AlertTitle } from '@material-ui/lab';
+
+
+
 import { MyIcon } from "./components/MyIcon";
-import {useStyles} from "./Styles"
+import { useStyles } from "./Styles"
 
 
 
@@ -58,14 +62,14 @@ const Auth = ({ authSuccessCallback, children }) => {
 
           const decoded = jwt_decode(jwtToken);
 
-          console.log("decoded jwtToken" );
-          console.log( decoded);
+          console.log("decoded jwtToken");
+          console.log(decoded);
 
-          const apikey = decoded["custom:APIKEY"];  
-          const apikey_timetree = decoded["custom:TIMETREETOKEN"];  
-          
-          console.log("apikey_timetree : ", apikey_timetree );
-  
+          const apikey = decoded["custom:APIKEY"];
+          const apikey_timetree = decoded["custom:TIMETREETOKEN"];
+
+          console.log("apikey_timetree : ", apikey_timetree);
+
           setCognitoUser(cognitoUser);
           setUsername(username);
           // callback to parent
@@ -73,7 +77,7 @@ const Auth = ({ authSuccessCallback, children }) => {
         });
       }
     }
-  }, [ authSuccessCallback ]);
+  }, [authSuccessCallback]);
 
   const signIn = event => {
     // event.preventDefault();
@@ -108,7 +112,7 @@ const Auth = ({ authSuccessCallback, children }) => {
   };
 
   const onPasswortChange = (e) => {
-    
+
     if (e.key === "Enter") {
       signIn(e)
     }
@@ -148,7 +152,7 @@ const Auth = ({ authSuccessCallback, children }) => {
         let decoded = jwt_decode(idToken);
 
         let username = decoded["cognito:username"];
-        let apikey = decoded["custom:APIKEY"]; 
+        let apikey = decoded["custom:APIKEY"];
 
         // callback to parent
         authSuccessCallback(username, idToken, apikey);
@@ -159,7 +163,7 @@ const Auth = ({ authSuccessCallback, children }) => {
       },
       onFailure: function (err) {
         setTrySend(false);
-        console.error("Cannot log in ", err );
+        console.error("Cannot log in ", err);
         setAuthError({
           'code': err.code,
           'message': err.message,
@@ -235,13 +239,18 @@ const Auth = ({ authSuccessCallback, children }) => {
                   <ListItem>
                     <Button color="primary" variant="contained" onClick={ signIn } style={ { margin: 8 } } >
                       { trySend ? "Loading" : "Sign-In" }
-                      <MyIcon>chevron_right</MyIcon>
+                      <MyIcon icon={ "chevron_right" }></MyIcon>
                     </Button>
                   </ListItem>
                 </form>
               </List>
               <CardContent>
-                <h2>{ authError.message }</h2>
+                { authError &&
+                  <Alert severity="error">
+                    <AlertTitle>Failed to Login</AlertTitle>
+                    { authError.message }
+                  </Alert>
+                }
               </CardContent>
             </Card>
           </Grid>
@@ -252,13 +261,13 @@ const Auth = ({ authSuccessCallback, children }) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar position="static" className={classes.appBar}>
+        <AppBar position="static" className={ classes.appBar }>
           <Toolbar>
-            
+
 
             { children }
-            
-            {/* <Button onClick={ signOut }><ExitToAppIcon /></Button> */}
+
+            {/* <Button onClick={ signOut }><ExitToAppIcon /></Button> */ }
             <IconButton variant="inherit" className={ classes.menuButton } onClick={ signOut }>
               <MyIcon icon="exit_to_app" /> </IconButton>
           </Toolbar>

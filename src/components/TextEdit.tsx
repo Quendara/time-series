@@ -1,5 +1,5 @@
 import React, { useState, useEffect, KeyboardEvent } from "react";
-import { TextField, Grid } from '@material-ui/core';
+import { TextField, Grid, IconButton } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { GenericGroup } from "../components/helpers"
@@ -90,23 +90,26 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
             <>
                 {groups === undefined ? (
                     <Grid
-                        container
+                        container justify="flex-start" spacing={2}
                     >
 
-                        <Grid item >
+                        <Grid item xs={9} >
                             <TextField
                                 value={internalName}
                                 // error = { hasError(internalName) }
                                 label={label}
                                 size="small"
-                                fullWidth={false}
+                                fullWidth={true}
                                 variant="outlined"
                                 onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
                                 onChange={(e: any) => setInternalName(e.target.value)}
                             />
+
                         </Grid>
-                        <Grid item onClick={callCallback}  >
-                            <MyIcon icon="check" />
+                        <Grid item xs={1}   >
+                            <IconButton  size="small" onClick={callCallback}>
+                                <MyIcon icon="check" />
+                            </IconButton>
                         </Grid>
                     </Grid>
                 ) : (
@@ -164,9 +167,12 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
                 )}
             </>
         ) : (
-            <a onMouseOver={handleMouseIn} onMouseOut={handleMouseOut} style={{ "cursor": "pointer" }} onClick={() => setEdit(true)}>
+            <a style={{ "cursor": "pointer", "position": "relative" }}
+                onMouseOver={handleMouseIn} onMouseOut={handleMouseOut}
+                onClick={() => setEdit(true)}>
                 {children ? children : getInternalName(internalName)}
-                {hover && <MyIcon icon="edit"></MyIcon>}
+                {hover && <div style={{ "position": "absolute", "right": "-28px", "top": "0px" }} ><MyIcon icon="edit"></MyIcon></div>
+                }
             </a>
         )
         }

@@ -250,8 +250,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                                     username={props.username}
                                     color={colorArr[index % (colorArr.length)]}
                                     />
-                                    </MyCard>                            
-
+                                    </MyCard>
                             ) : (
                                 <NavItemList 
                                     key={"sfdfsd" + index}
@@ -260,8 +259,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                                     render={props.render}
                                     username={props.username}
                                     color={colorArr[index % (colorArr.length)]}
-                                    />                            
-
+                                    />
                             )}
                         </HorizontallyItem>
                     ))}
