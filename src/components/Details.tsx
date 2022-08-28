@@ -294,9 +294,6 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                             <DetailsMarkdown value={selectedItemValue} />
                                         </div>
                                     </Grid>
-
-
-
                                 )}
                             </Grid>
                         

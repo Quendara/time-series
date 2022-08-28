@@ -33,7 +33,7 @@ import { SandboxQl } from "./pages/SandboxQl";
 import { TimeTree } from "./pages/TimeTree2";
 import { CompareLists } from "./pages/CompareLists";
 import { ReplaceLists } from "./pages/ReplaceLists";
-import { CsvTools } from "./pages/CsvTools";
+import { CsvToolsPage } from "./pages/CsvToolsPage";
 
 
 import { TodoItem, TodoMainItem } from "./models/TodoItems"
@@ -209,7 +209,7 @@ const App = () => {
                       </Route>
                       <Route path="/replace" element={ <ReplaceLists /> }>                        
                       </Route>
-                      <Route path="/csvtools" element={ <CsvTools /> }>                        
+                      <Route path="/csvtools" element={ <CsvToolsPage /> }>                        
                       </Route>
                      
 

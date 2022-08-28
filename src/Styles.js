@@ -1,10 +1,10 @@
 import React, { Component, useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { purple, lightGreen, pink, lightBlue, red, green } from '@material-ui/core/colors/';
 
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
   palette: {
     type: "dark",
     primary: lightBlue,

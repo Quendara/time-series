@@ -72,7 +72,8 @@ export const findUnique  = <T,>( list : T[], group: string, sortByCount:boolean 
 
 export interface CsvReturn{
     json: any[], 
-    skippedLines: string[]
+    skippedLines: string[],
+    headers: string[]
 }
 
 export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {
@@ -85,15 +86,16 @@ export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {
     // will be added to result in an array
     let result : CsvReturn = {
         json:[],
-        skippedLines:[]
+        skippedLines:[],
+        headers:[]
     };
 
     // The array[0] contains all the
     // header columns so we store them
     // in headers array
-    let headers = array[0].split(seperator)
+    let headersT = array[0].split(seperator)
 
-    headers = headers.map( x => { return x.trim() } ) 
+    result.headers = headersT.map( x => { return x.trim() } ) 
 
     // Since headers are separated, we
     // need to traverse remaining n-1 rows.
@@ -132,9 +134,9 @@ export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {
         // and store the values in a properties array
         let properties = s.split("|")
 
-        if( properties.length !== headers.length ){
+        if( properties.length !== result.headers.length ){
 
-            result.skippedLines.push( "line length !== headers length : "  +  properties.length +" != " +  headers.length )
+            result.skippedLines.push( "line length !== headers length : "  +  properties.length +" != " +  result.headers.length )
             result.skippedLines.push( str )
             continue
         }
@@ -143,12 +145,12 @@ export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {
         // multiple comma separated data, then we
         // store it in the form of array otherwise
         // directly the value is stored
-        for (let j in headers) {
+        for (let j in result.headers) {
             if (properties[j].includes(seperator)) {
-                obj[headers[j]] = properties[j]
+                obj[ result.headers[j]] = properties[j]
                     .split(seperator).map(item => item.trim())
             }
-            else obj[headers[j]] = properties[j]
+            else obj[ result.headers[j] ] = properties[j]
         }
 
         // Add the generated object to our

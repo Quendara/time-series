@@ -22,8 +22,9 @@ export const HorizontallyGrid = <Type extends object>(props: Props<Type>) => {
         <>
             { ( props.horizontally && biggerThenXs ) ? (
                 // 
-                <div style={{ "width": "100%", "overflowX": "auto" }}>
-                    <div key={"xxyjhgjhg"} style={{ "width": props.groups.length * 320 + "px" }}>                    
+                <div style={{ "width": "100vw", }}>
+                    {/* <div key={"xxyjhgjhg"} style={{ "width": props.groups.length * 320 + "px", "scrollSnapType": "x mandatory" }}> */}
+                    <div key={"xxyjhgjhg"} style={{  "scrollSnapType": "x mandatory", "overflowX": "scroll", "display":"flex"  }}>                    
                         {props.children}
                     </div>
                 </div>
@@ -50,7 +51,7 @@ export const HorizontallyItem = (props: ItemProps) => {
     return (
         <>
             { ( props.horizontally && biggerThenXs )  ? (
-                <div style={{ "width": "310px", "float": "left", "marginRight": "10px" }} >
+                <div style={{ "width": "330px", "float": "left", "marginRight": "10px", "scrollSnapAlign":"start" }} >
                     {props.children}
                 </div>
             ) : (
