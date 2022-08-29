@@ -18,6 +18,18 @@ export const useStyles = makeStyles((theme) =>
     root: {
       flexGrow: 1,
     },
+    horizontalSnapContainer: {
+
+      "scrollSnapType": "x mandatory",
+      "overflowX": "scroll",
+      "display": "flex"
+    },
+    horizontalSnapItem: {
+      "min-width": "310px",
+      "float": "left",
+      "marginRight": "10px",
+      "scrollSnapAlign": "start"
+    }, 
     paper: {
       // paddingTop: 50,
       // opacity: 0.5,

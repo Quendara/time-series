@@ -4,6 +4,8 @@ import { Grid } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+import { useStyles } from "../Styles"
+
 interface Props<Type> {
     groups: Type[]
     horizontally: boolean;
@@ -13,20 +15,17 @@ interface Props<Type> {
 
 export const HorizontallyGrid = <Type extends object>(props: Props<Type>) => {
 
-
+    const classes = useStyles();
     const theme = useTheme();
-    const biggerThenXs = useMediaQuery( theme.breakpoints.up('sm') )
+    const biggerThenXs = useMediaQuery(theme.breakpoints.up('sm'))
 
 
     return (
         <>
-            { ( props.horizontally && biggerThenXs ) ? (
-                // 
-                <div style={{ "width": "100vw", }}>
-                    {/* <div key={"xxyjhgjhg"} style={{ "width": props.groups.length * 320 + "px", "scrollSnapType": "x mandatory" }}> */}
-                    <div key={"xxyjhgjhg"} style={{  "scrollSnapType": "x mandatory", "overflowX": "scroll", "display":"flex"  }}>                    
-                        {props.children}
-                    </div>
+            {(props.horizontally && biggerThenXs) ? (
+
+                <div key={"xxyjhgjhg"} className={classes.horizontalSnapContainer} >
+                    {props.children}
                 </div>
             ) : (
                 <Grid container spacing={2} >
@@ -45,13 +44,16 @@ interface ItemProps {
 
 
 export const HorizontallyItem = (props: ItemProps) => {
+
+    const classes = useStyles();
+
     const theme = useTheme();
-    const biggerThenXs = useMediaQuery( theme.breakpoints.up('sm') )
+    const biggerThenXs = useMediaQuery(theme.breakpoints.up('sm'))
 
     return (
         <>
-            { ( props.horizontally && biggerThenXs )  ? (
-                <div style={{ "width": "330px", "float": "left", "marginRight": "10px", "scrollSnapAlign":"start" }} >
+            {(props.horizontally && biggerThenXs) ? (
+                <div className={classes.horizontalSnapItem}  >
                     {props.children}
                 </div>
             ) : (
