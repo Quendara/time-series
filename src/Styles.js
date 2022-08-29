@@ -13,7 +13,7 @@ export const theme = createTheme({
   }
 });
 
-export const useStyles = makeStyles((theme) =>
+export const useStyles = makeStyles( (theme) =>
   createStyles({
     root: {
       flexGrow: 1,

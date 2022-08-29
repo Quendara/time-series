@@ -317,10 +317,10 @@ export const ListPage = ( props: ListProps ) => {
                                     lists={props.lists}
                                     listtype={props.listtype}
                                     username={props.username}
-
-                                />
-                                <div>Scroll position is ({scrollX}, {scrollY})</div>
+                                    />
+                                
                             </div>
+                            <div>Scroll position is ({scrollX}, {scrollY})</div>
                         </Grid>
                     </>
                 }

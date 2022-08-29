@@ -17,8 +17,7 @@ export const HorizontallyGrid = <Type extends object>(props: Props<Type>) => {
 
     const classes = useStyles();
     const theme = useTheme();
-    const biggerThenXs = useMediaQuery(theme.breakpoints.up('sm'))
-
+    const biggerThenXs = true // useMediaQuery(theme.breakpoints.up('sm'))
 
     return (
         <>
@@ -48,7 +47,7 @@ export const HorizontallyItem = (props: ItemProps) => {
     const classes = useStyles();
 
     const theme = useTheme();
-    const biggerThenXs = useMediaQuery(theme.breakpoints.up('sm'))
+    const biggerThenXs = true // useMediaQuery(theme.breakpoints.up('sm'))
 
     return (
         <>

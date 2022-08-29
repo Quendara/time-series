@@ -215,7 +215,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                 <h1> ... </h1>
             ) : (
                 <>
-                    <MyCard2>
+                    <MyCard2 elevation={4}>
                         <MyCardHeader
                             avatar={
                                 <Avatar aria-label="recipe">
