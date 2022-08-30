@@ -22,12 +22,15 @@ export const useStyles = makeStyles( (theme) =>
 
       "scrollSnapType": "x mandatory",
       "overflowX": "scroll",
-      "display": "flex"
+      "display": "flex",
+      "marginLeft":"5px"
+
     },
     horizontalSnapItem: {
       "min-width": "340px",
       "float": "left",
       "marginRight": "10px",
+      
       "scrollSnapAlign": "start"
     }, 
     paper: {
