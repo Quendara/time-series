@@ -25,7 +25,7 @@ export const useStyles = makeStyles( (theme) =>
       "display": "flex"
     },
     horizontalSnapItem: {
-      "min-width": "310px",
+      "min-width": "340px",
       "float": "left",
       "marginRight": "10px",
       "scrollSnapAlign": "start"

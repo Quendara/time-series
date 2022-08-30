@@ -7,7 +7,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useStyles } from "../Styles"
 
 interface Props<Type> {
-    groups: Type[]
+    
     horizontally: boolean;
     children: React.ReactNode;
 }

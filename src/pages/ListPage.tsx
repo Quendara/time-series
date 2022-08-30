@@ -163,7 +163,7 @@ export const ListPage = ( props: ListProps ) => {
             <>
                 { groups && (
 
-                    <HorizontallyGrid horizontally={stateHorizontally} groups={ groups }>
+                    <HorizontallyGrid horizontally={stateHorizontally} >
                         {groups.map((item: GenericGroup<TodoItem>, index: number) => (                            
                             <HorizontallyItem horizontally={stateHorizontally} >
                                 <MyCard>

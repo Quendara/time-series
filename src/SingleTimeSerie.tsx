@@ -6,9 +6,9 @@ import React, { useState, useEffect } from "react";
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 // import { Button } from '@material-ui/core';
 import { Edit } from "@material-ui/icons";
-import { Button, CardContent, Typography, TextField, Grid } from '@material-ui/core';
+import { Button, CardContent, Typography, TextField, Grid, Divider } from '@material-ui/core';
 
-import { MyCard } from "./components/StyledComponents"
+import { MyCard, MyDivider } from "./components/StyledComponents"
 import { LineChart, ValueType } from "./components/LineChart";
 import { DashboardNumber } from "./components/DashboardNumber"
 import { SelectionView } from "./components/SelectionView"
@@ -232,6 +232,8 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
         <Typography variant="h5" component="h2">
           { group_name } - <small>[ { group_unit } ]</small>
         </Typography>
+        <MyDivider></MyDivider>
+
         <SelectionView  currentValue={ renderMode } iconsOnly={ false } valueArr={ ['simple', 'year', 'compare'] } callback={ setRenderMode } ></SelectionView>
       </CardContent>
       <CardContent>

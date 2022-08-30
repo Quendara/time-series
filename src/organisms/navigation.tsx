@@ -236,7 +236,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
             {items !== undefined &&
 
-                <HorizontallyGrid horizontally={props.horizontally} groups={groups} >
+                <HorizontallyGrid horizontally={props.horizontally} >
 
                     {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
                         <HorizontallyItem horizontally={ props.horizontally } >
