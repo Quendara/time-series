@@ -179,7 +179,7 @@ const App = () => {
         </Auth>
 
 
-        <Grid container justify="center" spacing={1} >
+        <Grid container justifyContent="center" spacing={1} >
           <Grid item xs={11} ><br /></Grid>
 
           <Grid item xs={12} lg={11}>
@@ -214,7 +214,7 @@ const App = () => {
                      
 
                       <Route path="/" element={
-                        <Grid container justify="center" spacing={2} >
+                        <Grid container justifyContent="center" spacing={2} >
                           <Grid item xs={12} md={12}>
                                   <MainNavigation
                                     horizontally={true}
@@ -234,7 +234,7 @@ const App = () => {
                         )}
                       </Route> */}
                       <Route path="/sandbox" element={ 
-                        <Grid container justify="center" >
+                        <Grid container justifyContent="center" >
                         
                         </Grid>
                       } />                      

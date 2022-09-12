@@ -235,7 +235,7 @@ const ListEl = (
                                 <Grid
                                     container
                                     direction="row"
-                                    justify="flex-start"
+                                    justifyContent="flex-start"
                                     alignItems="flex-start"
                                     spacing={4}
                                 >

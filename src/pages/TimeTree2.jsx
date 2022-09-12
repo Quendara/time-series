@@ -169,7 +169,7 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
     return (
         <MyCard>
             <MyPaperHeader >
-                <Grid container justify="center" spacing={ 2 } >
+                <Grid container justifyContent="center" spacing={ 2 } >
                     <Grid item xs={ 12 } >
                         <Divider></Divider>
                     </Grid>

@@ -80,7 +80,6 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
 
 
     async function toggleFunction(todoid: string) {
-
         dispatch(ToggleItem(todoid))
 
         // // get Check Status
@@ -164,7 +163,6 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
 
     async function removeItemHandle(todoid: string) {
         dispatch(DeleteItem(todoid))
-
         // await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid } }));
     };
 

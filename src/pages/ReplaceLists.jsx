@@ -237,7 +237,7 @@ export const ReplaceLists = ({ }) => {
 
     return (
 
-        <Grid container justify="center" spacing={ 1 } >
+        <Grid container justifyContent="center" spacing={ 1 } >
             <Grid item xs={ 3 }   >
                 <Box style={ { background: blue } } >List 1</Box>
                 <MyTextareaAutosize
@@ -282,7 +282,7 @@ export const ReplaceLists = ({ }) => {
             <Grid item xs={ 6 } >
                 <MyCard>
                     <CardContent>
-                        <Grid container justify="center" spacing={ 1 } >
+                        <Grid container justifyContent="center" spacing={ 1 } >
 
                             <Grid item xs={ 12 } >
                                 <Button variant="outlined" onClick={ performHandle } >run</Button>

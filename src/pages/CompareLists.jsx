@@ -280,7 +280,7 @@ export const CompareLists = ({ }) => {
 
     return (
 
-        <Grid container justify="center" spacing={ 1 } >
+        <Grid container justifyContent="center" spacing={ 1 } >
             <Grid item xs={ 5 }   >
                 <Box style={ { background: color.blue } } >List 1</Box>
                 <MyTextareaAutosize
@@ -311,7 +311,7 @@ export const CompareLists = ({ }) => {
             <Grid item xs={ 12 } >
                 <MyCard>
                     <CardContent>
-                        <Grid container justify="space-between" spacing={ 1 } >
+                        <Grid container justifyContent="space-between" spacing={ 1 } >
 
                             <Grid item xs={ 12 } >
                                 <Button variant="outlined" onClick={ performDiffHandle } >run Diff</Button>

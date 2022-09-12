@@ -190,7 +190,7 @@ const Auth = ({ authSuccessCallback, children }) => {
       <>
         <Grid
           container
-          justify="center"
+          justifyContent="center"
           alignItems="center"  >
 
           <Grid item xs={ 11 } lg={ 12 } >

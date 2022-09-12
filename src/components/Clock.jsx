@@ -155,7 +155,7 @@ const Letter = ({ word, letter }) => {
 export const Clock = () => {
 
     return (
-        <Grid container justify="center" >
+        <Grid container justifyContent="center" >
         <Card>
             <CardContent style={{"padding":"120px", background: '#102027',}}>                
                 <Grid container spacing={4}>

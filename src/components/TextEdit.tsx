@@ -90,7 +90,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
             <>
                 {groups === undefined ? (
                     <Grid
-                        container justify="flex-start" spacing={2}
+                        container justifyContent="flex-start" spacing={2}
                     >
 
                         <Grid item xs={9} >

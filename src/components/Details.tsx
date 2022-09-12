@@ -260,7 +260,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                             <Grid
                                 container
                                 direction="row"
-                                justify="flex-start"
+                                justifyContent="flex-start"
                                 alignItems="flex-start" >
 
                                 <Grid item xs={12}>

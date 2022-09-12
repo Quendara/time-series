@@ -236,7 +236,7 @@ export const AddForm = ({
     return (
         <>
             { renderModal ? (
-                <Grid container alignItems="center" justify="space-between" spacing={ 4 } >
+                <Grid container alignItems="center" justifyContent="space-between" spacing={ 4 } >
                     <Grid item xs={ 12 } >
                         { getName() }
                     </Grid>
@@ -273,7 +273,7 @@ export const AddForm = ({
                     </Grid>
                 </Grid>
             ) : (
-                <Grid container alignItems="center" justify="space-between" spacing={ 2 } >
+                <Grid container alignItems="center" justifyContent="space-between" spacing={ 2 } >
                     <Grid item xs={ renderModal ? 12 : 8 } md={ getWidthMd() } >
                         { getName() }
                     </Grid>

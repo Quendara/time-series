@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+// import Amplify, { API, graphqlOperation, GraphQLResult } from 'aws-amplify';
+import API, {GraphQLResult, graphqlOperation }  from '@aws-amplify/api';
+import Observable from 'zen-observable-ts';
+
 import { listTodos, queryTodos, getTodos } from '../graphql/queries';
 import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscriptions';
 import { TodoItem } from "../models/TodoItems"
@@ -49,76 +52,78 @@ export const useGetTodos = ( listid : string  | undefined ) => {
 
     // TODO CURRENTLY ubscription ARE  REMOVED
     
-    // const subscriptionCreateTodos : any = API.graphql(
-    //   graphqlOperation(onCreateTodos)
-    // )
-
-    // subscriptionCreateTodos.subscribe({
-    //   next: (x : any ) => {
-    //     // Do something with the data
-    //     // console.log( x )          
-    //     const item = x.value.data.onCreateTodos
-    //     console.log("create Items : ", item);
-    //     // console.log("items : ", items);
-    //     // setItems([...items, { id, name, link, group, checked }]); // push to the end
-
-    //     console.log("onCreateTodos         : #", todos.length );
-
-    //     if ( String(item.listid) !== String(listid) ) {
-    //       console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
-    //       return;
-    //     }
-
-    //     console.log("onCreateTodos... : ", todos.length );
-    //     setTodos([...todos, item]); // push to the end
-    //     console.log("onCreateTodos... length : ", todos.length );
-    //   },
-    //   error: ( error : string )  => {
-    //     console.log("error : ", error);
-    //   }
-    // })
-
-    // const subscriptionUpdateTodos : any = API.graphql(
-    //   graphqlOperation(onUpdateTodos)
-    // ); 
+    // const test : Observable<object> = subscriptionCreateTodos
     
-    // subscriptionUpdateTodos.subscribe({
-    //   next: (x : any ) => {
-    //     // Do something with the data
-    //     // console.log( x )          
-    //     const item = x.value.data.onUpdateTodos
-    //     console.log("updated Item : ", item);
-    //     const updatedList = uiUpdateTodo(todos, item)
-    //     setTodos(updatedList)
-    //   },
-    //   error: ( error : string ) => {
-    //     console.log("error : ", error);
-    //   }
-    // })
+    const apiCreateTodos : any = API.graphql(
+      graphqlOperation(onCreateTodos)
+    )    
 
-    // const subscriptionDeleteTodos : any = API.graphql(
-    //   graphqlOperation(onDeleteTodos)
-    // )
+    const subscriptionCreateTodos : any = apiCreateTodos.subscribe({
+      next: (x : any ) => {
+        // Do something with the data
+        // console.log( x )          
+        const item = x.value.data.onCreateTodos
+        // console.log("create Items : ", item);
+        // console.log("items : ", items);
+        // setItems([...items, { id, name, link, group, checked }]); // push to the end
+
+        // console.log("onCreateTodos         : #", todos.length );
+
+        if ( String(item.listid) !== String(listid) ) {
+          console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
+          return;
+        }
+
+        // console.log("onCreateTodos... : ", todos.length );
+        setTodos([...todos, item]); // push to the end
+        console.log("onCreateTodos... length : ", todos.length );
+      },
+      error: ( error : string )  => {
+        console.log("error : ", error);
+      }
+    })
+
+    const apiUpdateTodos : any = API.graphql(
+      graphqlOperation(onUpdateTodos)
+    ); 
     
-    // subscriptionDeleteTodos.subscribe({
-    //   next: (x : any ) => {
-    //     // Do something with the data          
-    //     const item = x.value.data.onDeleteTodos
-    //     // console.log("deleted Item x    : ", x);
-    //     console.log("deleted Item item : ", item);
-    //     const updatedList = uiDeleteTodo(todos, item.id)
-    //     setTodos(updatedList)
-    //   },
-    //   error: ( error : string ) => {
-    //     console.log("error : ", error);
-    //   }
-    // })
+    const subscriptionUpdateTodos : any = apiUpdateTodos.subscribe({
+      next: (x : any ) => {
+        // Do something with the data
+        // console.log( x )          
+        const item = x.value.data.onUpdateTodos
+        console.log("updated Item : ", item);
+        const updatedList = uiUpdateTodo(todos, item)
+        setTodos(updatedList)
+      },
+      error: ( error : string ) => {
+        console.log("error : ", error);
+      }
+    })
 
-    // return () => {
-    //   // subscriptionUpdateTodos.unsubscribe();
-    //   // subscriptionDeleteTodos.unsubscribe();
-    //   // subscriptionCreateTodos.unsubscribe();
-    // };
+    const apiDeleteTodos : any = API.graphql(
+      graphqlOperation(onDeleteTodos)
+    )
+    
+    const subscriptionDeleteTodos : any = apiDeleteTodos.subscribe({
+      next: (x : any ) => {
+        // Do something with the data          
+        const item = x.value.data.onDeleteTodos
+        // console.log("deleted Item x    : ", x);
+        console.log("deleted Item item : ", item);
+        const updatedList = uiDeleteTodo(todos, item.id)
+        setTodos(updatedList)
+      },
+      error: ( error : string ) => {
+        console.log("error : ", error);
+      }
+    })
+
+    return () => {
+      subscriptionUpdateTodos.unsubscribe();
+      subscriptionDeleteTodos.unsubscribe();
+      subscriptionCreateTodos.unsubscribe();
+    };
 
   })
 

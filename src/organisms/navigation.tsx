@@ -239,11 +239,11 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 <HorizontallyGrid horizontally={props.horizontally} >
 
                     {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
-                        <HorizontallyItem horizontally={ props.horizontally } >
+                        <HorizontallyItem key={ "MainNavTop" +index } horizontally={ props.horizontally } >
                             { props.horizontally ?
                             ( <MyCard>
                                 <NavItemList 
-                                    key={"sfdfsd" + index}
+                                    key={"MainNav" + index}
                                     groupname={item.value}
                                     items={item.listitems}
                                     render={props.render}
@@ -253,7 +253,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                                     </MyCard>
                             ) : (
                                 <NavItemList 
-                                    key={"sfdfsd" + index}
+                                    key={"MainNav" + index}
                                     groupname={item.value}
                                     items={item.listitems}
                                     render={props.render}

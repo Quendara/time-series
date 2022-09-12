@@ -165,7 +165,7 @@ export const ListPage = ( props: ListProps ) => {
 
                     <HorizontallyGrid horizontally={stateHorizontally} >
                         {groups.map((item: GenericGroup<TodoItem>, index: number) => (                            
-                            <HorizontallyItem horizontally={stateHorizontally} >
+                            <HorizontallyItem key={"ListPage"+index} horizontally={stateHorizontally} >
                                 <MyCard>
                                     <ListQ
                                         key={index}
@@ -219,7 +219,7 @@ export const ListPage = ( props: ListProps ) => {
                             <MyPaperHeader >
                                 <List>
                                     <ListItem>
-                                        <Grid container alignItems="center" justify="flex-start" spacing={2} >
+                                        <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
 
                                             <Grid item xs={10} lg={8} >
                                                 {edit ? (
@@ -235,7 +235,7 @@ export const ListPage = ( props: ListProps ) => {
                                                 )}
                                             </Grid>
                                             <Grid item xs={2} lg={4} >
-                                                <Grid container justify="flex-end">
+                                                <Grid container justifyContent="flex-end">
 
                                                     {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
                                                             <EditIcon />
@@ -268,8 +268,6 @@ export const ListPage = ( props: ListProps ) => {
                         {filteredTodos.length === 0 && (
 
                             <MyCard>
-
-
                                 <ListHeader
                                     header={"Checklist"}
                                     edit={false}

@@ -115,7 +115,7 @@ export const CsvToolsConfiguration = ( props : Props ) => {
     }    
 
     return (
-        <Grid container justify="flex-start" spacing={1} >
+        <Grid container justifyContent="flex-start" spacing={1} >
    
                     <Grid item xs={12}   >
                         <MyCard>

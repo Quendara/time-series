@@ -120,7 +120,7 @@ export const SandboxQl = ({ username, token, listid, listtype }) => {
                 <MyCard>
                     <MyCardHeader >
                         <List>
-                            <Grid container justify="center" alignItems="center" spacing={ 4 }>
+                            <Grid container justifyContent="center" alignItems="center" spacing={ 4 }>
                                 <Grid item><CircularProgress /></Grid>
                                 <Grid item><Box component="span" m={ 1 }> Loading ... </Box></Grid>
                             </Grid>
