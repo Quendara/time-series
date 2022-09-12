@@ -8,7 +8,7 @@ import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscrip
 import { TodoItem } from "../models/TodoItems"
 
 // import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
-const uiUpdateTodo = (items : TodoItem[], todo : TodoItem ) => {
+const updateTodos = (items : TodoItem[], todo : TodoItem ) => {
 
   const newitems = items.map((e, index) => {
 
@@ -93,7 +93,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
         // console.log( x )          
         const item = x.value.data.onUpdateTodos
         console.log("updated Item : ", item);
-        const updatedList = uiUpdateTodo(todos, item)
+        const updatedList = updateTodos(todos, item)
         setTodos(updatedList)
       },
       error: ( error : string ) => {

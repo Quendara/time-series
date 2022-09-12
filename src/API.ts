@@ -407,14 +407,6 @@ export type OnDeleteTodosSubscription = {
   } | null,
 };
 
-export type OnCreateTodoMainSubscriptionVariables = {
-  id?: string | null,
-  owner?: string | null,
-  component?: string | null,
-  icon?: string | null,
-  listid?: string | null,
-};
-
 export type OnCreateTodoMainSubscription = {
   onCreateTodoMain?:  {
     __typename: "TodoMain",
@@ -430,14 +422,6 @@ export type OnCreateTodoMainSubscription = {
   } | null,
 };
 
-export type OnUpdateTodoMainSubscriptionVariables = {
-  id?: string | null,
-  owner?: string | null,
-  component?: string | null,
-  icon?: string | null,
-  listid?: string | null,
-};
-
 export type OnUpdateTodoMainSubscription = {
   onUpdateTodoMain?:  {
     __typename: "TodoMain",
@@ -451,14 +435,6 @@ export type OnUpdateTodoMainSubscription = {
     render?: string | null,
     group?: string | null,
   } | null,
-};
-
-export type OnDeleteTodoMainSubscriptionVariables = {
-  id?: string | null,
-  owner?: string | null,
-  component?: string | null,
-  icon?: string | null,
-  listid?: string | null,
 };
 
 export type OnDeleteTodoMainSubscription = {

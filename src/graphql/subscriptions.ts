@@ -45,20 +45,8 @@ export const onDeleteTodos = /* GraphQL */ `
   }
 `;
 export const onCreateTodoMain = /* GraphQL */ `
-  subscription OnCreateTodoMain(
-    $id: String
-    $owner: String
-    $component: String
-    $icon: String
-    $listid: String
-  ) {
-    onCreateTodoMain(
-      id: $id
-      owner: $owner
-      component: $component
-      icon: $icon
-      listid: $listid
-    ) {
+  subscription OnCreateTodoMain {
+    onCreateTodoMain {
       id
       owner
       component
@@ -72,20 +60,8 @@ export const onCreateTodoMain = /* GraphQL */ `
   }
 `;
 export const onUpdateTodoMain = /* GraphQL */ `
-  subscription OnUpdateTodoMain(
-    $id: String
-    $owner: String
-    $component: String
-    $icon: String
-    $listid: String
-  ) {
-    onUpdateTodoMain(
-      id: $id
-      owner: $owner
-      component: $component
-      icon: $icon
-      listid: $listid
-    ) {
+  subscription OnUpdateTodoMain {
+    onUpdateTodoMain {
       id
       owner
       component
@@ -99,20 +75,8 @@ export const onUpdateTodoMain = /* GraphQL */ `
   }
 `;
 export const onDeleteTodoMain = /* GraphQL */ `
-  subscription OnDeleteTodoMain(
-    $id: String
-    $owner: String
-    $component: String
-    $icon: String
-    $listid: String
-  ) {
-    onDeleteTodoMain(
-      id: $id
-      owner: $owner
-      component: $component
-      icon: $icon
-      listid: $listid
-    ) {
+  subscription OnDeleteTodoMain {
+    onDeleteTodoMain {
       id
       owner
       component

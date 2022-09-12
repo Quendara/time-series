@@ -221,6 +221,8 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 props.handleSetConfig(items)
             }
 
+            console.log( "MainNavigation (items updated) ", items.length )
+
         }, [items])
 
     const groups: GenericGroup<TodoMainItem>[] = findUnique(items, "group", false)

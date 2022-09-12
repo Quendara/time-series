@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
+
 import { listTodoMains } from '../graphql/queries';
+import { onUpdateTodoMain, onUpdateTodos } from '../graphql/subscriptions';
+
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
 
 
@@ -14,28 +17,86 @@ import { TodoItem, TodoMainItem } from "../models/TodoItems"
 //     } | null,
 //   };
 
-export const useGetMainTodos = ( owner : string ) : TodoMainItem[]  => {
+const updateTodos = (items: TodoMainItem[], todo: TodoMainItem) => {
 
-    const [todos, setTodos] = useState<TodoMainItem[] >( [] );
+    const newitems = items.map((e, index) => {
 
-    useEffect( () => {             
-            fetchTodos( owner )        
-    }, [ owner ])
+        if (e.id === todo.id) {
+            let newObject = Object.assign({}, e)
+            newObject['name'] = todo.name
+            newObject['group'] = todo.group
 
-    async function fetchTodos( owner : string ) {
-    
-        console.log("useGetMainTodos (id) : ", owner );
-        if( owner === undefined ) return {}
+            newObject['listid'] = todo.listid
+            newObject['component'] = todo.component
+            newObject['icon'] = todo.icon
+            newObject['owner'] = todo.owner
+            newObject['navbar'] = todo.navbar
+            newObject['render'] = todo.render
+
+            return newObject
+        }
+        return e
+    })
+
+    return newitems;
+}
+
+export const useGetMainTodos = (owner: string): TodoMainItem[] => {
+
+    const [todos, setTodos] = useState<TodoMainItem[]>([]);
+
+    useEffect(() => {
+        fetchTodos(owner)
 
 
-        const response : any = await API.graphql(
-            graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} }, limit: 200  } ) ) 
-       
+
+    }, [owner])
+
+    useEffect(() => { 
+
+        const apiUpdateTodos: any = API.graphql(
+            graphqlOperation(onUpdateTodoMain)
+        );
+
+        const subscriptionUpdateTodos: any = apiUpdateTodos.subscribe({
+            next: (x: any) => {
+                // Do something with the data
+                // console.log( x )          
+
+                console.log("onUpdateTodoMain: (data) : ", x);
+
+                const item = x.value.data.onUpdateTodoMain
+                // console.log("onUpdateTodoMain: ", item);
+                const updatedList = updateTodos(todos, item)
+                setTodos(updatedList)
+            },
+            error: (error: string) => {
+                console.log("error : ", error);
+            }
+        })
+
+        return () => {
+            subscriptionUpdateTodos.unsubscribe();
+            // subscriptionDeleteTodos.unsubscribe();
+            // subscriptionCreateTodos.unsubscribe();
+        };        
+
+    })    
+
+    async function fetchTodos(owner: string) {
+
+        console.log("useGetMainTodos (id) : ", owner);
+        if (owner === undefined) return {}
+
+
+        const response: any = await API.graphql(
+            graphqlOperation(listTodoMains, { filter: { owner: { eq: owner } }, limit: 200 })
+        );
 
         const items = response.data?.listTodoMains?.items
         console.log("useGetMainTodos : ", items);
-        setTodos( items )    
-    
+        setTodos(items)
+
         // const response = (await API.graphql(
         //         graphqlOperation(listTodoMains,{ filter: { owner: {eq:owner} } } ) ) 
         //     ) as { data: ListTodosQuery };
@@ -46,9 +107,9 @@ export const useGetMainTodos = ( owner : string ) : TodoMainItem[]  => {
         //     if( items ){
         //         setTodos( items )    
         //     }
-            
+
         // }
-    }    
+    }
 
     return todos;
 }
