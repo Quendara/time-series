@@ -10,10 +10,6 @@ import { Todos, TodoMain, GetTodosQuery, ListTodosQuery } from "../API"
 import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 import { UpdateTodosInput, CreateTodosInput } from "../API"
 
-
-
-
-
 export async function createFunctionTodo( inputObject: CreateTodosInput  ) {
 
     // let inputObject = { id: "" + id, name:name, icon, render, navbar, group } // , link: link, group: group, owner: username, name: name, description: description } }

@@ -41,7 +41,7 @@ interface NavItemProps {
     color: string;
 }
 
-const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
+const NavItem = ( { item, dispatch, render, color }: NavItemProps) => {
 
     const classes = useStyles();
 
@@ -56,8 +56,7 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
         let element: UpdateTodoMainInput
         element = {
             id: item.id,
-            name: name
-            // component: 
+            name: name            
         }
 
         dispatch(UpdateItem(element))
@@ -92,9 +91,12 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
         return (
             <NavLink className={classes.title} to={"/" + [item.component, item.listid, item.render].join('/')}   >
                 <MenuItem>
-                    <ListItemIcon style={{ color: color }} >
+                <ListItemAvatar >
+                <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
                         <MyIcon icon={item.icon} />
-                    </ListItemIcon>
+                    </Avatar>
+
+                </ListItemAvatar>
                     <ListItemText
                         primary={item.name}
                     ></ListItemText>
@@ -119,7 +121,7 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
                         {bull}
                         <TextEdit value={item.icon ? item.icon : "keine"} label="Icon" callback={handleEditIcon} />
                         {bull}
-                        {item.render}
+                        {item.render} 
                     </>} />
                 <ListItemSecondaryAction>
                     <Tooltip title="Open" aria-label="add">
@@ -190,7 +192,7 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
 
                 </MyCardHeader>
                 <List>
-                    {sortArrayBy(todos, "name").map((item: TodoMainItem, index: number) => (
+                    {sortArrayBy(items, "name").map((item: TodoMainItem, index: number) => (
                         <NavItem key={index} item={item} render={render} dispatch={dispatch} color={color} />
                     ))}
                 </List>
@@ -221,7 +223,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 props.handleSetConfig(items)
             }
 
-            console.log( "MainNavigation (items updated) ", items.length )
+            console.log("MainNavigation (items updated) ", items.length)
 
         }, [items])
 
@@ -241,28 +243,28 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 <HorizontallyGrid horizontally={props.horizontally} >
 
                     {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
-                        <HorizontallyItem key={ "MainNavTop" +index } horizontally={ props.horizontally } >
-                            { props.horizontally ?
-                            ( <MyCard>
-                                <NavItemList 
-                                    key={"MainNav" + index}
-                                    groupname={item.value}
-                                    items={item.listitems}
-                                    render={props.render}
-                                    username={props.username}
-                                    color={colorArr[index % (colorArr.length)]}
+                        <HorizontallyItem key={"MainNavTop" + index} horizontally={props.horizontally} >
+                            {props.horizontally ?
+                                (<MyCard>
+                                    <NavItemList
+                                        key={"MainNav" + index}
+                                        groupname={item.value}
+                                        items={item.listitems}
+                                        render={props.render}
+                                        username={props.username}
+                                        color={colorArr[index % (colorArr.length)]}
                                     />
-                                    </MyCard>
-                            ) : (
-                                <NavItemList 
-                                    key={"MainNav" + index}
-                                    groupname={item.value}
-                                    items={item.listitems}
-                                    render={props.render}
-                                    username={props.username}
-                                    color={colorArr[index % (colorArr.length)]}
+                                </MyCard>
+                                ) : (
+                                    <NavItemList
+                                        key={"MainNav" + index}
+                                        groupname={item.value}
+                                        items={item.listitems}
+                                        render={props.render}
+                                        username={props.username}
+                                        color={colorArr[index % (colorArr.length)]}
                                     />
-                            )}
+                                )}
                         </HorizontallyItem>
                     ))}
                 </HorizontallyGrid>

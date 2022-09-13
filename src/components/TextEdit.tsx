@@ -107,7 +107,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
 
                         </Grid>
                         <Grid item xs={1}   >
-                            <IconButton  size="small" onClick={callCallback}>
+                            <IconButton size="medium" color="primary" onClick={callCallback}>
                                 <MyIcon icon="check" />
                             </IconButton>
                         </Grid>
