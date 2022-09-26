@@ -231,16 +231,20 @@ const App = () => {
                       {/* <Route path="/sandboxQl" >
                         {!amplifyInitilaized ? (<h1> Loading </h1>) : (
                           <SandboxQl />
+
+                          
+
                         )}
                       </Route> */}
                       <Route path="/sandbox" element={
                         <Grid container justifyContent="flex-start" spacing={2} >
                           <Grid item xs={3} >
                             <Grid container justifyContent="flex-start" spacing={2} >
-                              <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-                              <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
+                            {/* "aspectRatio": "1 / 1" */}
+                              <Grid item xs={6} ><Paper style={{  "aspectRatio": "1 / 1"  }} ></Paper></Grid>
+                              <Grid item xs={6} ><Paper style={{  "aspectRatio": "1 / 1" }} ></Paper></Grid>
 
-                              <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
+                              <Grid item xs={6} ><Paper style={{  "aspectRatio": "4 / 1"  }} ></Paper></Grid>
                               <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
 
                               <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
@@ -250,7 +254,7 @@ const App = () => {
                           </Grid>
                           <Grid item xs={6} >
                             <Grid container justifyContent="flex-start" spacing={2} >
-                              <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
+                              <Grid item xs={12} ><Paper style={{ "aspectRatio": "4 / 1" }} ></Paper></Grid>
 
                               <Grid item xs={12} ><Paper style={{ "height": "35vh" }} ></Paper></Grid>
 
@@ -273,7 +277,7 @@ const App = () => {
                               <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
 
                               <Grid item xs={4} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-                              <Grid item xs={8} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
+                              <Grid item xs={4} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
 
 
                             </Grid>

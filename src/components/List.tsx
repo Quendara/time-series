@@ -89,12 +89,12 @@ interface PropsEl {
     checked: boolean;
     id: string;
     removeClickFunction: (id: string) => void;
-    updateFunction: (item: UpdateTodosInput) => void;
+    updateFunction?: (item: UpdateTodosInput) => void;
     selectFunction: (id: string) => void;
     toggleFunction: (id: string) => void;
     type: TodoListType;
     groups: GenericGroup<TodoItem>[];
-    group: string;
+    group: string | undefined;
     editList: boolean
 }
 
@@ -141,8 +141,11 @@ const ListEl = (
     }
 
     const onUpdateFunction = (linkName: string, linkUrl: string, groupname: string) => {
-        updateFunction({ id, link: linkUrl, name: linkName, group: groupname })
-        setEdit(false)
+
+        if( updateFunction ){
+            updateFunction({ id, link: linkUrl, name: linkName, group: groupname })
+            setEdit(false)    
+        }
     }
 
     const onCheckToggle = (linkName: string, linkUrl: string) => {
@@ -244,7 +247,8 @@ const ListEl = (
                                             renderModal={true}
                                             name={name}
                                             url={link}
-                                            group={group} groups={groups}
+                                            group={group} 
+                                            groups={groups}
                                             onClickFunction={onUpdateFunction}
                                             type={type}
                                             buttonName="Update"
@@ -284,7 +288,8 @@ const ListEl = (
                         renderModal={false}
                         name={name}
                         url={link}
-                        group={group} groups={groups}
+                        group={group} 
+                        groups={groups}
                         onClickFunction={onUpdateFunction}
                         type={type}
                         buttonName="Update"
@@ -359,19 +364,6 @@ const ListEl = (
     );
 };
 
-interface PropsQ {
-    items: TodoItem[];
-    removeItemHandle: any;
-    header: string;
-    addItemHandle: any;
-    updateFunction: (item: UpdateTodosInput) => void;
-    toggleFunction: (id: string) => void;
-    selectFunction: any;
-    type: TodoListType;
-    group: string;
-    groups: GenericGroup<TodoItem>[];
-    editList: boolean
-};
 
 interface PropsHeader {
     items?: TodoItem[];
@@ -401,8 +393,22 @@ export const ListHeader = (props: PropsHeader) => {
             </List>
         </MyPaperHeader>
     )
-
 }
+
+
+interface PropsQ {
+    items: TodoItem[];
+    removeItemHandle: (id: string) => void;
+    header: string;
+    addItemHandle?:  (name: string, link: string, groupname: string) => void ;
+    updateFunction?: (item: UpdateTodosInput) => void ;
+    toggleFunction: (id: string) => void;
+    selectFunction: (id: string) => void;
+    type: TodoListType;
+    group: string;
+    groups?: GenericGroup<TodoItem>[];
+    editList: boolean
+};
 
 
 export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, selectFunction, toggleFunction, type, group, groups, editList }: PropsQ) => {
@@ -411,8 +417,11 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
     const [name, setName] = useState("");
 
     const onClickFunction = (name: string, link: string, groupname: string) => {
-        addItemHandle(name, link, groupname)
-        setName("")
+
+        if( addItemHandle ){
+            addItemHandle(name, link, groupname)
+            setName("")    
+        }
 
     }
 
@@ -440,13 +449,13 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         <AddForm renderModal={false}
                             name={name}
                             group={group}
-                            groups={groups}
+                            groups={groups?groups:[] }
                             onClickFunction={onClickFunction}
                             type={type} buttonName="Add"
                             showGroupsSelector={false}
                             handleDeleteClick={undefined} />
                         <Divider />
-                    </ListItem>}
+                    </ListItem> }
 
 
                 {items.map((item, index) => (
@@ -457,7 +466,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                             id={item.id}
                             name={item.name}
                             group={group}
-                            groups={groups}
+                            groups={ groups?groups:[] }
                             checked={item.checked}
                             link={item.link}
                             selectFunction={selectFunction}

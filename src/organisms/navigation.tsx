@@ -7,7 +7,7 @@ import React, { Component, useState, useEffect, useReducer } from "react";
 // import { listTodos, getTodos } from '../graphql/queries';
 
 
-import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box, Switch, MenuItem, Divider, Button } from '@material-ui/core';
+import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box, Switch, MenuItem, Divider, Button, CardContent } from '@material-ui/core';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@material-ui/core';
 
 import {
@@ -32,6 +32,9 @@ import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 
 import { useStyles } from "../Styles"
 import { MyCard, MyCardHeader, MySubCardHeader } from "../components/StyledComponents";
+import { FilterComponent } from "../components/FilterComponent";
+import { getTodosByName } from "../components/GraphQlFunctions";
+import { ListQ, TodoListType } from "../components/List";
 
 
 interface NavItemProps {
@@ -41,7 +44,9 @@ interface NavItemProps {
     color: string;
 }
 
-const NavItem = ( { item, dispatch, render, color }: NavItemProps) => {
+const bull = <span style={{ "margin": "5px" }}>•</span>;
+
+const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
 
     const classes = useStyles();
 
@@ -56,7 +61,7 @@ const NavItem = ( { item, dispatch, render, color }: NavItemProps) => {
         let element: UpdateTodoMainInput
         element = {
             id: item.id,
-            name: name            
+            name: name
         }
 
         dispatch(UpdateItem(element))
@@ -84,19 +89,19 @@ const NavItem = ( { item, dispatch, render, color }: NavItemProps) => {
         dispatch(UpdateItem(element))
     };
 
-    const bull = <span style={{ "margin": "5px" }}>•</span>;
+
 
 
     if (render === "simple") {
         return (
             <NavLink className={classes.title} to={"/" + [item.component, item.listid, item.render].join('/')}   >
                 <MenuItem>
-                <ListItemAvatar >
-                <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
-                        <MyIcon icon={item.icon} />
-                    </Avatar>
+                    <ListItemAvatar >
+                        <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
+                            <MyIcon icon={item.icon} />
+                        </Avatar>
 
-                </ListItemAvatar>
+                    </ListItemAvatar>
                     <ListItemText
                         primary={item.name}
                     ></ListItemText>
@@ -121,7 +126,7 @@ const NavItem = ( { item, dispatch, render, color }: NavItemProps) => {
                         {bull}
                         <TextEdit value={item.icon ? item.icon : "keine"} label="Icon" callback={handleEditIcon} />
                         {bull}
-                        {item.render} 
+                        {item.render}
                     </>} />
                 <ListItemSecondaryAction>
                     <Tooltip title="Open" aria-label="add">
@@ -217,6 +222,56 @@ export const MainNavigation = (props: MainNavigationProps) => {
     // const [items, setItems] = useState(userConfig);
     const items = useGetMainTodos(props.username)
 
+    const [filterText, setFilterText] = useState("");
+
+    const [todos, setTodos] = useState<TodoItem[]>([]);
+
+    const callbackFilter = (text: string) => {
+        setFilterText(text)
+    }
+
+    const callbackEnter = () => {
+
+        getTodosByName(filterText).then(
+            (todos) => {
+                console.log(todos)
+                setTodos(todos)
+            } // 
+        )
+
+        console.log("callbackEnter : ", todos)
+    }
+
+    const getListname = (listid: string) => {
+        const i = items.filter(item => {
+            if (item.listid === listid) return item
+        })
+
+        if (i.length === 1) {
+            return i[0].name
+        }
+        return "Unknown"
+    }
+
+
+
+    const filterCompleted = (items: TodoMainItem[], filterText: string) => {
+
+        let filteredItems = items
+
+        const FILTER = filterText.toUpperCase()
+
+        if (filterText.length !== 0) {
+            filteredItems = filteredItems.filter(item => {
+                const currentItem = item.name.toUpperCase()
+                return (currentItem.indexOf(FILTER) !== -1)
+            })
+        }
+
+        return filteredItems
+    }
+
+
     useEffect(
         () => {
             if (items !== undefined) {
@@ -227,7 +282,9 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
         }, [items])
 
-    const groups: GenericGroup<TodoMainItem>[] = findUnique(items, "group", false)
+
+    const filteredItems = filterCompleted(items, filterText)
+    const groups: GenericGroup<TodoMainItem>[] = findUnique(filteredItems, "group", false)
 
     const colorArr = [
         "rgb(144, 202, 249)",
@@ -238,10 +295,22 @@ export const MainNavigation = (props: MainNavigationProps) => {
     return (
         <>
 
-            {items !== undefined &&
+            <Grid container alignItems="center" justifyContent="center" spacing={2} >
+
+                <Grid item xs={10} lg={8} >
+                    <MyCard>
+                        <CardContent>
+                            <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
+                        </CardContent>
+                    </MyCard>
+                    <br /><br />
+
+                </Grid>
+            </Grid>
+
+            {(items !== undefined && groups.length > 0) &&
 
                 <HorizontallyGrid horizontally={props.horizontally} >
-
                     {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
                         <HorizontallyItem key={"MainNavTop" + index} horizontally={props.horizontally} >
                             {props.horizontally ?
@@ -269,6 +338,45 @@ export const MainNavigation = (props: MainNavigationProps) => {
                     ))}
                 </HorizontallyGrid>
             }
+
+            {todos.length > 0 &&
+                <MyCard>
+                    {todos.map((todo: TodoItem) => (
+                        <ListItem>
+                            <ListItemIcon>
+                                {todo.checked ? <MyIcon icon="check_circle_outline" /> : <MyIcon icon="radio_button_unchecked" />}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={todo.name}
+                                secondary={<> {todo.group}  {bull}  {getListname(todo.listid)} </>}
+                            />
+                            <ListItemSecondaryAction>
+                                {/* to={"/" + [item.component, todo.listid, todo.render].join('/')}   > */}
+                                <NavLink to={"/" + ["list", todo.listid, "todo"].join('/')}   >
+                                    <IconButton>
+                                        <MyIcon icon="launch" />
+                                    </IconButton>
+                                </NavLink>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    ))
+                    }
+
+                </MyCard>
+            }
+
+            {/* <MyCard>
+                <ListQ
+                    items={todos}
+                    removeItemHandle={(id: string) => { }}
+                    header=""
+                    toggleFunction={(id: string) => { }}
+                    selectFunction={(id: string) => { }}
+                    type={TodoListType.TODO_SIMPLE}
+                    group="many"
+                    editList={false}
+                />
+            </MyCard> */}
         </>
     )
 }

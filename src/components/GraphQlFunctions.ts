@@ -73,4 +73,15 @@ export const getTodosByListIdFcn = async ( listid: string ) => {
     return items
 }
 
+export const getTodosByName = async ( name: string ) => {
+    
+    // const response : { data: ListTodosQuery } =
+    const response : any =
+        ( await API.graphql(graphqlOperation( listTodos, { filter: { name: { contains: "" + name } }, limit: 500 }))) 
+    // const any_response =  response as any;
+    const items = response.data.listTodos.items
+    
+    console.log("getTodosByName : ", items);    
+    return items
+}
 
