@@ -4,9 +4,8 @@ import { List, ListItem } from '@mui/material';
 import { Alert, AlertTitle } from '@mui/material';
 
 import { MyIcon } from "./components/MyIcon";
-import { useStyles } from "./Styles"
 
-
+import { cssClasses } from "./Styles"
 
 import jwt_decode from "jwt-decode";
 
@@ -25,7 +24,7 @@ const poolData = {
 
 const Auth = ({ authSuccessCallback, children }) => {
 
-  const classes = useStyles();
+  
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -258,14 +257,14 @@ const Auth = ({ authSuccessCallback, children }) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar position="static" className={ classes.appBar }>
+        <AppBar position="static" >
           <Toolbar>
 
 
             { children }
 
             {/* <Button onClick={ signOut }><ExitToAppIcon /></Button> */ }
-            <IconButton variant="inherit" className={ classes.menuButton } onClick={ signOut }>
+            <IconButton variant="inherit" sx={ cssClasses.cssClasses } onClick={ signOut }>
               <MyIcon icon="exit_to_app" /> </IconButton>
           </Toolbar>
         </AppBar>

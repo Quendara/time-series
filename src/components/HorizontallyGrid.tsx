@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { cssClasses } from "../Styles"
 
-import { useStyles } from "../Styles"
 
 interface Props<Type> {
     
@@ -23,9 +21,9 @@ export const HorizontallyGrid = <Type extends object>(props: Props<Type>) => {
         <>
             {(props.horizontally && biggerThenXs) ? (
 
-                <div key={"xxyjhgjhg"} className={classes.horizontalSnapContainer} >
+                <Box key={"xxyjhgjhg"} sx={cssClasses.horizontalSnapContainer} >
                     {props.children}
-                </div>
+                </Box>
             ) : (
                 <Grid container spacing={2} >
                     {props.children}
@@ -44,17 +42,15 @@ interface ItemProps {
 
 export const HorizontallyItem = (props: ItemProps) => {
 
-    const classes = useStyles();
-
-    const theme = useTheme();
+    //const theme = useTheme();
     const biggerThenXs = true // useMediaQuery(theme.breakpoints.up('sm'))
 
     return (
         <>
             {(props.horizontally && biggerThenXs) ? (
-                <div className={classes.horizontalSnapItem}  >
+                <Box sx={cssClasses.horizontalSnapItem}  >
                     {props.children}
-                </div>
+                </Box>
             ) : (
                 <Grid item xs={12}>
                     {props.children}

@@ -1,7 +1,5 @@
 import React, { useState, useEffect, KeyboardEvent } from "react";
-import { TextField, Grid, IconButton } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-
+import { TextField, Grid, IconButton, Autocomplete } from '@mui/material';
 import { GenericGroup } from "../components/helpers"
 
 import { MyIcon } from "./MyIcon";

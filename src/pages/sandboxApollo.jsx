@@ -16,7 +16,7 @@ import Settings from "../Settings";
 import SingleTimeSerie from "../SingleTimeSerie";
 
 
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material';
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
 
 import AWSAppSyncClient from 'aws-appsync'
@@ -54,53 +54,6 @@ export const Sandbox = ({ username, token, listid, listtype }) => {
       // jwtToken: async () => token, // Required when you use Cognito UserPools OR OpenID Connect. token object is obtained previously
     }
   })
-
-
-
-  // const httpLink = createHttpLink({
-  //   uri: endpointHttp,
-  // });
-
-
-  // const wsLink = new WebSocketLink({
-  //   uri: endpointWs,
-  //   options: {
-  //     connectionParams: {
-  //       accessToken: token
-  //     },
-  //     lazy:true, 
-  //     reconnect: true
-  //   }
-  // });
-
-
-  // console.log( "Sandbox" ) 
-
-  // const classes = useStyles();
-
-
-  // const authLink = setContext((_, { headers }) => {
-  //   // get the authentication token from local storage if it exists
-  //   // const token = localStorage.getItem('token');
-  //   // return the headers to the context so httpLink can read them
-  //   return {
-  //     headers: {
-  //       ...headers,
-  //       Authorization: token
-  //     }
-  //   }
-  // });
-
-  // function isSubscription(operation)
-  // {
-  //   const definition = getMainDefinition( operation.query ) 
-  //   return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
-  // }
-
-  // const client = new ApolloClient({
-  //   link: split( isSubscription, wsLink, authLink.concat(httpLink) ),
-  //   cache: new InMemoryCache()
-  // });
 
   return (
       <></>

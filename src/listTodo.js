@@ -4,14 +4,13 @@ import { findUnique, restCallToBackendAsync } from "./components/helper";
 
 import { MyCard } from "./components/StyledComponents"
 import { Button, ButtonGroup, Divider } from '@mui/material';
-import { useStyles } from "./Styles"
+import { cssClasses } from "./Styles"
 
 
 
 
 export const ListTodo = ({ token, listid }) => {
-
-    const classes = useStyles();
+    
     const baseRestApi = "https://f7oa7pm5ig.execute-api.eu-central-1.amazonaws.com/Prod"
 
     // const [tabValue, setTabValue] = useState("Start");

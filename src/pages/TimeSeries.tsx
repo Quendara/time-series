@@ -1,17 +1,16 @@
 
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-import { Grid, List, ListItem, Hidden, Box, CircularProgress } from '@mui/material';
+import { Grid, List, Box, CircularProgress } from '@mui/material';
 
 import { MyCard, MyPaperHeader } from "../components/StyledComponents"
 import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGrid"
 
 // import { Navigation } from "../organisms/navigation"
-import { useStyles } from "../Styles"
 
 import Settings from "../Settings";
 import SingleTimeSerie from "../SingleTimeSerie";
-import { findUnique, GenericGroup, sortArrayBy } from "../components/helpers";
+import { findUnique, GenericGroup } from "../components/helpers";
 
 interface Props {
   username: string;

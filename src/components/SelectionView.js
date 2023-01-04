@@ -1,9 +1,5 @@
 import React from 'react';
-// import { Icon } from "./Icons"
-// { iconsOnly && <Icon icon={ item } className="ml-2 mr-2" /> }
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-
+import {Button ButtonGroup } from '@mui/material';
 
 export const SelectionView = ({ valueArr, iconsOnly, currentValue, callback }) => {
 

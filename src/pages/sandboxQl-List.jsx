@@ -7,13 +7,12 @@ import { listTodos, getTodos } from '../graphql/queries';
 import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 import { onUpdateTodos, onCreateTodos } from '../graphql/subscriptions';
 
-import { Grid, List, ListItem, Box, Card, CardContent } from '@material-ui/core';
+import { Grid, List, ListItem, Box, Card, CardContent, CircularProgress } from '@mui/material';
 
 import { ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
 import { findUnique, restCallToBackendAsync } from "../components/helper";
 import { MyCard, MyCardHeader } from "../components/StyledComponents"
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const SandboxQl = ({ username, token, listid, listtype }) => {
 

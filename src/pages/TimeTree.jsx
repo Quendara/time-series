@@ -1,22 +1,11 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-    useParams,
     useLocation
 } from "react-router-dom";
 
-import { ThemeProvider, Grid, TextField, Card, CardContent, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Button, List, ListItem, ListItemText } from "@material-ui/core";
+import { Grid, TextField, Card, CardContent, Button, List, ListItem, ListItemText } from "@mui/material";
 
-// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import Settings from "../Settings";
-import SingleTimeSerie from "../SingleTimeSerie";
-
-
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { MyCard, MyPaperHeader } from "../components/StyledComponents"
-import { MyIcon } from "../components/MyIcon";
-
-
-import { useStyles } from "../Styles"
 
 const baseRestApi = "https://timetreeapp.com"
 
@@ -25,9 +14,6 @@ const baseRestApi = "https://timetreeapp.com"
 function useQuery() {
     return new URLSearchParams(useLocation().search);
 }
-
-
-
 
 
 const getAccessToken = (code) => {

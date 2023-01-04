@@ -1,9 +1,8 @@
-import React, { Component, useState } from "react";
-
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 
-import { purple, lightGreen, pink, lightBlue, red, green } from '@material-ui/core/colors/';
+
+import { purple, lightGreen, pink, lightBlue, red, green } from '@mui/material/colors/';
 
 
 // export const theme = createTheme({
@@ -21,13 +20,8 @@ export const theme = createTheme({
   },
 });
 
-export const useStyles = makeStyles( (theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    horizontalSnapContainer: {
-
+export const cssClasses = {
+     horizontalSnapContainer: {
       "scrollSnapType": "x mandatory",
       "overflowX": "scroll",
       "display": "flex",
@@ -37,8 +31,7 @@ export const useStyles = makeStyles( (theme) =>
     horizontalSnapItem: {
       "min-width": "340px",
       "float": "left",
-      "marginRight": "10px",
-      
+      "marginRight": "10px",      
       "scrollSnapAlign": "start"
     }, 
     paper: {
@@ -96,7 +89,5 @@ export const useStyles = makeStyles( (theme) =>
     weekend: {
       color: red[500],
       // backgroundColor: green[500],
-    },
-
-  }),
-);
+    }
+  }

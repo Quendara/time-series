@@ -34,7 +34,7 @@ import { MyCard, MyCardHeader } from "../components/StyledComponents";
 import { FilterComponent } from "../components/FilterComponent";
 import { getTodosByName } from "../components/GraphQlFunctions";
 
-import { useStyles } from "../Styles"
+import { cssClasses } from "../Styles"
 
 interface NavItemProps {
     item: TodoMainItem;
@@ -46,8 +46,6 @@ interface NavItemProps {
 const bull = <span style={{ "margin": "5px" }}>•</span>;
 
 const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
-
-    const classes = useStyles();
 
     const handleComplete = () => {
         // dispatch({ type: "COMPLETE", id: item.id });
@@ -93,7 +91,7 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
 
     if (render === "simple") {
         return (
-            <NavLink className={classes.title} to={"/" + [item.component, item.listid, item.render].join('/')}   >
+            <NavLink sx={cssClasses.title} to={"/" + [item.component, item.listid, item.render].join('/')}   >
                 <MenuItem>
                     <ListItemAvatar >
                         <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
@@ -387,7 +385,6 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
 // export const Navigation = ({ list, anchor, name } : NavigationProps ) => {
 
-//     const classes = useStyles();
 
 //     const jumpTo = (anchor : string ) => {
 //         window.location.href = "#" + anchor;

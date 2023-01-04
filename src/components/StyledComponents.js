@@ -2,8 +2,7 @@
 // import { styled } from '@material-ui/core/styles';
 import { styled } from '@mui/system';
 import { Card, CardHeader, Typography, ListItem, TextareaAutosize, Divider, Paper } from '@mui/material';
-
-import { lightBlue } from '@material-ui/core/colors/';
+import { lightBlue } from '@mui/material/colors/';
 
 export const MyCard = styled(Card)({
   // background: 'linear-gradient(45deg, #102027 30%, #263238 90%)',
@@ -26,7 +25,7 @@ export const MyDivider = styled(Divider)({
 
 
 export const MyPaperHeader = styled(Paper)({
-  background: '#102027',
+  // background: '#102027',
 });
 
 export const MySubCardHeader = styled(CardHeader)({

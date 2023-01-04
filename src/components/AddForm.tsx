@@ -6,10 +6,7 @@ import { Button, TextField, Grid, Autocomplete } from '@mui/material';
 
 
 // hideGroups: When this is in context of a group, the group can be hidden
-import { useStyles } from "../Styles"
 import { MyIcon } from "./MyIcon";
-import { GenericGroup } from "./helpers";
-
 interface Props {
     onClickFunction: ( linkname:string, linkUrl:string, groupName:string) => void;
     name: string;
@@ -38,8 +35,6 @@ export const AddForm = ({
     handleDeleteClick,
     renderModal = false } : Props ) => {
 
-    // props replaced by
-    const classes = useStyles();
 
     const [linkName, setLinkName] = useState(name);
     const [groupName, setGroupName] = useState(group);

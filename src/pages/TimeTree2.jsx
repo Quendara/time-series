@@ -1,22 +1,9 @@
-import React, { Component, useState, useEffect } from "react";
-import {
-    useParams,
-    useLocation
-} from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
-import { ThemeProvider, Grid, TextField, Card, CardContent, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Chip, Divider, Avatar, Button, List, ListItem, ListItemText, Typography } from "@material-ui/core";
-
-// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import Settings from "../Settings";
-import SingleTimeSerie from "../SingleTimeSerie";
-
-
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Grid, Chip, Divider, Typography } from "@mui/material";
 import { MyCard, MyPaperHeader } from "../components/StyledComponents"
-import { MyIcon } from "../components/MyIcon";
 
-
-import { useStyles } from "../Styles"
+import { cssClasses } from "../Styles"
 import { OAuthClient } from "@timetreeapp/web-api";
 
 const baseRestApi = "https://timetreeapp.com"
@@ -69,8 +56,6 @@ const Event = ({ event, lables }) => {
 
 const OneDay = ({ today, offset, events, lables }) => {
 
-    const classes = useStyles();
-
     //const today = new Date();
     const day = new Date();
     day.setDate(today.getDate() + offset)
@@ -79,8 +64,8 @@ const OneDay = ({ today, offset, events, lables }) => {
     const isWeekend = (day.getDay() === 0 || day.getDay() === 6)
 
     const getClass = (today, weekend) => {
-        if (today) return classes.today
-        if (weekend) return classes.weekend
+        if (today) return cssClasses.today
+        if (weekend) return cssClasses.weekend
         return ""
     }
 
@@ -107,15 +92,15 @@ const OneDay = ({ today, offset, events, lables }) => {
         <>
             <Grid item xs={ 3 } >
                 {/* <ListItemText primary={ <Event item={item} /> } secondary={ dateToYear(itemStartDate) } /> */ }
-                <Typography className={ getClass(isToday, isWeekend) } >{ dateToYear(day) } </Typography>
-                { isToday && <Typography className={ classes.today } >Heute</Typography> }
+                <Typography sx={ getClass(isToday, isWeekend) } >{ dateToYear(day) } </Typography>
+                { isToday && <Typography sx={ cssClasses.today } >Heute</Typography> }
             </Grid>
             <Grid item xs={ 8 }  >
-                <div className={ classes.chiplist }>
+                <Box sx={ classes.chiplist }>
                     { filteredEvents.map((item, index) => (
                         <Event key={ "event_" + index } event={ item } lables={ lables } />
                     )) }
-                </div>
+                </Box>
             </Grid>
             <Grid item xs={ 12 } >
                 <Divider></Divider>
@@ -128,8 +113,6 @@ const OneDay = ({ today, offset, events, lables }) => {
 
 
 export const TimeTree = ({ username, token, timetreeToken }) => {
-
-    const classes = useStyles();
 
     const [time, setItem] = useState("");
     const [events, setEvents] = useState([]);
@@ -181,7 +164,7 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
                     )) }
 
                     <Grid item xs={ 10 } >
-                        <div className={ classes.chiplist }>
+                        <Box sx={ cssClasses.chiplist }>
 
                             { lables.map((item, index) => {
 
@@ -196,7 +179,7 @@ export const TimeTree = ({ username, token, timetreeToken }) => {
                                 return (<Event event={ event } lables={ lables } />)
 
                             }) }
-                        </div>
+                        </Box>
                     </Grid >
                 </Grid>
             </MyPaperHeader>
