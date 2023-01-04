@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import SearchIcon from '@material-ui/icons/Search';
 
-import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, Typography, TextField, List, ListItem, Divider, Hidden, Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-
-import Autocomplete from '@material-ui/lab/Autocomplete';
-
-
-import { ThemeProvider, CssBaseline } from "@material-ui/core";
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import InputAdornment from '@material-ui/core/InputAdornment';
-
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import ClearIcon from '@material-ui/icons/Clear';
-import TextRotationNoneIcon from '@material-ui/icons/TextRotationNone';
+import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton } from '@mui/material';
 
 import { FilterComponent } from '../components/FilterComponent';
 
@@ -23,11 +9,11 @@ import { MyCard, MyPaperHeader } from "../components/StyledComponents"
 
 import { ListHeader, ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
-import { Details, DetailsById } from '../components/Details';
+import { DetailsById } from '../components/Details';
 
-import { findUnique, GenericGroup, sortArrayBy } from "../components/helpers";
+import { findUnique, GenericGroup, mapGenericToStringGroup, sortArrayBy } from "../components/helpers";
 
-import { TodoItem, TodoUpdateItem, TodoMainItem } from '../models/TodoItems';
+import { TodoItem, TodoMainItem } from '../models/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 // import { UpdateFunc } from "../models/Definitions"
 // import { GroupItem } from "../models/Definitions"
@@ -35,6 +21,7 @@ import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
 import { UpdateTodosInput } from "../API"
 import { TodoListType } from "../components/List"
 import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGrid"
+import { MyIcon } from '../components/MyIcon';
 
 
 
@@ -43,7 +30,7 @@ interface ListProps {
     listtype: TodoListType;
     listid: string;
     horizontally: boolean;
-    addItemHandle: any;
+    addItemHandle: ( linkname:string, linkUrl:string, groupName:string) => void;
     // getItem: (id:string) => any;
     removeItemHandle: (id: string) => void;
     updateFunction: (input: UpdateTodosInput) => void;
@@ -199,13 +186,12 @@ export const ListPage = ( props: ListProps ) => {
         )
     }
 
-
+// onClose={handleClose}
     return (
         <>
             <Snackbar
                 open={successSnackbarMessage.length > 0}
-                autoHideDuration={2000}
-                onClose={handleClose}
+                autoHideDuration={2000}                
                 message="Saved" >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
@@ -224,11 +210,12 @@ export const ListPage = ( props: ListProps ) => {
                                             <Grid item xs={10} lg={8} >
                                                 {edit ? (
                                                     <AddForm
+                                                        name=""
                                                         renderModal={false}
                                                         onClickFunction={props.addItemHandle}
                                                         handleDeleteClick={undefined}
                                                         type={props.listtype}
-                                                        groups={findUnique(props.todos, "group", false)} ></AddForm>
+                                                        groups={ mapGenericToStringGroup( findUnique(props.todos, "group", false)) } ></AddForm>
                                                 ) : (
 
                                                     <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
@@ -241,10 +228,11 @@ export const ListPage = ( props: ListProps ) => {
                                                             <EditIcon />
                                                         </IconButton> */}
                                                     <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
-                                                        <TextRotationNoneIcon />
+                                                        
+                                                        <MyIcon icon="text_rotation_none"></MyIcon>
                                                     </IconButton>
                                                     <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
-                                                        <VisibilityIcon />
+                                                        <MyIcon icon="visibility" />
                                                     </IconButton>
                                                 </Grid>
                                             </Grid>
@@ -279,7 +267,7 @@ export const ListPage = ( props: ListProps ) => {
                                         name={filterText}
                                         onClickFunction={props.addItemHandle}
                                         type={props.listtype}
-                                        groups={findUnique(props.todos, "group", false)} ></AddForm>
+                                        groups={ mapGenericToStringGroup(findUnique(props.todos, "group", false) ) } ></AddForm>
                                 </ListItem>
                             </MyCard>)}
                     </MyCard>

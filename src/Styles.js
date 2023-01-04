@@ -1,16 +1,24 @@
 import React, { Component, useState } from "react";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { createTheme } from "@material-ui/core/styles";
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+
 import { purple, lightGreen, pink, lightBlue, red, green } from '@material-ui/core/colors/';
 
 
+// export const theme = createTheme({
+//   palette: {
+//     type: "dark",
+//     primary: lightBlue,
+//     secondary: pink,
+//     danger: red
+//   }
+// });
+
 export const theme = createTheme({
   palette: {
-    type: "dark",
-    primary: lightBlue,
-    secondary: pink,
-    danger: red
-  }
+    mode: 'dark',
+  },
 });
 
 export const useStyles = makeStyles( (theme) =>

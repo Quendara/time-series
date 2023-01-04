@@ -1,12 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Grid } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Button, TextField, Grid, Autocomplete } from '@mui/material';
+
+// import AddIcon from '@material-ui/icons/Add';
+// import DeleteIcon from '@material-ui/icons/Delete';
 
 
 // hideGroups: When this is in context of a group, the group can be hidden
 import { useStyles } from "../Styles"
+import { MyIcon } from "./MyIcon";
+import { GenericGroup } from "./helpers";
+
+interface Props {
+    onClickFunction: ( linkname:string, linkUrl:string, groupName:string) => void;
+    name: string;
+    url?: string;
+    type: string;
+    group?: string;
+    groups: string[];
+    buttonName?: string;
+    clearAfterClick?: boolean;
+    showGroupsSelector?: boolean;
+    handleDeleteClick? : () => void;
+    renderModal: boolean 
+}
+
 
 export const AddForm = ({
     onClickFunction,
@@ -19,7 +36,7 @@ export const AddForm = ({
     clearAfterClick = true,
     showGroupsSelector = true,
     handleDeleteClick,
-    renderModal = false }) => {
+    renderModal = false } : Props ) => {
 
     // props replaced by
     const classes = useStyles();
@@ -29,7 +46,7 @@ export const AddForm = ({
     const [linkUrl, setLinkUrl] = useState(url);
     const [trySend, setTrySend] = useState(false);
 
-    const handleGroupChange = (event) => {
+    const handleGroupChange = ( event : any ) => {
         console.log(event)
         console.log("groups", groups)
         setGroupName(event.target.value);
@@ -67,9 +84,7 @@ export const AddForm = ({
 
     // const simpleGroups = groups.map((x) => { return x.value })
 
-    const handleClick = event => {
-        event.preventDefault();
-
+    const handleButtonClick = () => {
         if (type !== "links") {
             if (linkName.length > 0) {
                 // send ONLY when it's filled out
@@ -83,7 +98,6 @@ export const AddForm = ({
                 // indicate that user has tried to send, now how potenial issues on UI
                 setTrySend(true);
             }
-
         }
         else {
 
@@ -99,9 +113,14 @@ export const AddForm = ({
                 setTrySend(true);
             }
         }
+    }
+
+    const handleClick = ( event : any ) => {
+        event.preventDefault();
+        handleButtonClick()
     };
 
-    const hasError = val => {
+    const hasError = ( val : string ) => {
         if (val === undefined || val === null) return true;
         if (val.length > 0) {
             return false
@@ -111,7 +130,7 @@ export const AddForm = ({
         }
     };
 
-    const checkEnter = (e) => {
+    const checkEnter = (e : React.KeyboardEvent ) => {
         if (e.key === "Enter") {
             // alert("Enter")
             handleClick(e)
@@ -157,10 +176,10 @@ export const AddForm = ({
                             options={ groups }
                             size="small"
                             freeSolo
-                            fullWidth
-                            value={ { value: groupName } }
+                            
+                            value={ groupName}
                             // error={ groupName === undefined || groupName.length == 0 }
-                            getOptionLabel={ (option) => option.value }
+                            getOptionLabel={ (option) => option }
                             onKeyPress={ e => checkEnter(e) }
                             onInputChange={ (event, newValue) => {
                                 if (typeof newValue === 'string') {
@@ -174,16 +193,17 @@ export const AddForm = ({
                                     setGroupName(
                                         newValue
                                     );
-                                } else if (newValue && newValue.value) {
-                                    // Create a new value from the user input
-                                    setGroupName(
-                                        newValue.value,
-                                    );
-                                } else {
-                                    setGroupName(newValue);
-                                }
-                            } }
-                            renderInput={ (params) => <TextField { ...params } label="Groups" fullWidth variant="outlined" /> }
+                                // } else if (newValue && newValue.value) {
+                                //     // Create a new value from the user input
+                                //     setGroupName(
+                                //         newValue.value,
+                                //     );
+                                // } else {
+                                //     setGroupName(newValue);
+                                // }
+                            } } }
+                            renderInput={ (params) => <TextField {...params} label="Groups" fullWidth variant="outlined" /> }
+                            
                         />
 
                     ) }
@@ -255,7 +275,7 @@ export const AddForm = ({
                             <Button
                                 onClick={ handleDeleteClick }
                                 color="secondary"
-                                startIcon={ <DeleteIcon /> }
+                                startIcon={ <MyIcon icon="delete" />}
                                 variant="contained" >
                                 Delete
                             </Button>
@@ -264,13 +284,12 @@ export const AddForm = ({
                     <Grid item >
                         <Button
                             variant="contained"
-                            color={ isValid() ? "primary" : "default" }
-                            onClick={ handleClick }
-                            startIcon={ <AddIcon /> }
-                            className={ classes.green } >
+                            color={ isValid() ? "primary" : undefined  }
+                            onClick={ handleButtonClick }
+                            startIcon={ <MyIcon icon="add" />} >
                             { buttonName }
                         </Button >
-                    </Grid>
+                    </Grid> 
                 </Grid>
             ) : (
                 <Grid container alignItems="center" justifyContent="space-between" spacing={ 2 } >
@@ -292,7 +311,7 @@ export const AddForm = ({
                             <Button
                                 onClick={ handleDeleteClick }
                                 color="secondary"
-                                startIcon={ <DeleteIcon /> }
+                                startIcon={ <MyIcon icon="delete" /> }
                                 variant="contained" >
                                 Delete
                             </Button>
@@ -301,10 +320,9 @@ export const AddForm = ({
                     <Grid item >
                         <Button
                             variant="contained"
-                            color={ isValid() ? "primary" : "default" }
-                            onClick={ handleClick }
-                            startIcon={ <AddIcon /> }
-                            className={ classes.green } >
+                            color={ isValid() ? "primary" : undefined }
+                            onClick={ handleButtonClick }
+                            startIcon={ <MyIcon icon="add" />} >
                             { buttonName }
                         </Button >
                     </Grid>

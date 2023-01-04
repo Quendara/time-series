@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 // import Settings from "../Settings";
 // import SingleTimeSerie from "../SingleTimeSerie";
@@ -7,8 +7,8 @@ import React, { Component, useState, useEffect, useReducer } from "react";
 // import { listTodos, getTodos } from '../graphql/queries';
 
 
-import { Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Box, Switch, MenuItem, Divider, Button, CardContent } from '@material-ui/core';
-import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@material-ui/core';
+import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent } from '@mui/material';
+import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
 
 import {
     NavLink,
@@ -30,12 +30,11 @@ import { TodoItem, TodoMainItem } from "../models/TodoItems"
 import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 // import { GroupItem } from "../models/Definitions"
 
-import { useStyles } from "../Styles"
-import { MyCard, MyCardHeader, MySubCardHeader } from "../components/StyledComponents";
+import { MyCard, MyCardHeader } from "../components/StyledComponents";
 import { FilterComponent } from "../components/FilterComponent";
 import { getTodosByName } from "../components/GraphQlFunctions";
-import { ListQ, TodoListType } from "../components/List";
 
+import { useStyles } from "../Styles"
 
 interface NavItemProps {
     item: TodoMainItem;
@@ -115,7 +114,6 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
                     <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
                         <MyIcon icon={item.icon} />
                     </Avatar>
-
                 </ListItemAvatar>
                 <ListItemText primary={
                     <TextEdit value={item.name} label="Name" callback={handleEditName} />
@@ -341,8 +339,8 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
             {todos.length > 0 &&
                 <MyCard>
-                    {todos.map((todo: TodoItem) => (
-                        <ListItem>
+                    {todos.map((todo: TodoItem, index:number ) => (
+                        <ListItem key={"LI"+index }>
                             <ListItemIcon>
                                 {todo.checked ? <MyIcon icon="check_circle_outline" /> : <MyIcon icon="radio_button_unchecked" />}
                             </ListItemIcon>

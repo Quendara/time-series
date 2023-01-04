@@ -1,10 +1,7 @@
 
 import React, { Component, useState, useEffect } from "react";
-// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import CircularProgress from '@material-ui/core/CircularProgress';
 
-
-import { Grid, List, ListItem, Hidden, Box } from '@material-ui/core';
+import { Grid, List, ListItem, Hidden, Box, CircularProgress } from '@mui/material';
 
 import { MyCard, MyPaperHeader } from "../components/StyledComponents"
 import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGrid"
@@ -22,8 +19,6 @@ interface Props {
 }
 
 export const TimeSeries = ({ username, token }: Props) => {
-
-  const classes = useStyles();
 
   const [timeseries, setTimeseries] = useState<any[]>([]);
   const [error, setError] = useState("");
@@ -75,13 +70,13 @@ export const TimeSeries = ({ username, token }: Props) => {
           </>) : (
             <>
               {groups.map((item: GenericGroup<any>, index: number) => (
-                  <Grid item xs={12} >
+                  <Grid key={"hg"+index} item xs={12} >
                     <h1>{item.value}</h1>
                     <HorizontallyGrid horizontally={true} >
 
-                      {item.listitems.map((item: any, index: number) => (
-                        <HorizontallyItem horizontally={true} >
-                          <Grid key={item.group_id} id={item.group_id} item xs={12} >
+                      {item.listitems.map((item: any, sindex: number) => (
+                        <HorizontallyItem key={"hgi"+index+"_"+sindex}  horizontally={true} >
+                          <Grid  id={item.group_id} item xs={12} >
 
                             <SingleTimeSerie
                               group_id={item.group_id}

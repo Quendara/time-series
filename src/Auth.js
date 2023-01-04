@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton } from '@material-ui/core/';
-import { List, ListItem } from '@material-ui/core/';
-
-import { Alert, AlertTitle } from '@material-ui/lab';
-
-
+import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton } from '@mui/material';
+import { List, ListItem } from '@mui/material';
+import { Alert, AlertTitle } from '@mui/material';
 
 import { MyIcon } from "./components/MyIcon";
 import { useStyles } from "./Styles"

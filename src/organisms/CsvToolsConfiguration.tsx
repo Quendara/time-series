@@ -121,8 +121,8 @@ export const CsvToolsConfiguration = ( props : Props ) => {
                         <MyCard>
                             <Box style={{ background: blue, padding: "5px" }} >Input </Box>
                             <MyTextareaAutosize
-                                value={configData ? configData : createJsonConfig()}
-                                rowsMin={20}
+                                value={configData ? configData : createJsonConfig()}                                
+                                minRows={20}
                                 onChange={e => setJsonConfig(e.target.value)} />
 
                             <Divider></Divider>

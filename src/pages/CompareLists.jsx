@@ -1,20 +1,14 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-import Settings from "../Settings";
-import SingleTimeSerie from "../SingleTimeSerie";
 
-import { AppBar, Toolbar, Box, Button, TextField, Grid, Card, CardContent, Typography, Divider, IconButton } from '@material-ui/core/';
+import { Box, Button, Grid, CardContent } from '@material-ui/core/';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { MyCard, MyCardHeader, MyTextareaAutosize } from "../components/StyledComponents"
-import { useStyles } from "../Styles"
+import { MyCard, MyTextareaAutosize } from "../components/StyledComponents"
 
-import ReactMarkdown from "react-markdown";
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
+import { Table, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
 // const l1 = `
 // 1000

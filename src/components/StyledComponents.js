@@ -1,7 +1,8 @@
 
-import { styled } from '@material-ui/core/styles';
-import { Card, CardHeader, Typography, ListItem, TextareaAutosize, Divider } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
+// import { styled } from '@material-ui/core/styles';
+import { styled } from '@mui/system';
+import { Card, CardHeader, Typography, ListItem, TextareaAutosize, Divider, Paper } from '@mui/material';
+
 import { lightBlue } from '@material-ui/core/colors/';
 
 export const MyCard = styled(Card)({
@@ -17,8 +18,6 @@ export const MyCard2 = styled(Card)({
   // border: 0,
   borderRadius: 10,
 });
-
-
 
 export const MyDivider = styled(Divider)({
   "marginTop": "10px",
@@ -45,6 +44,7 @@ export const MyCardHeaderAlt = styled(CardHeader)({
 });
 
 export const MyCardHeader = styled(CardHeader)({
+  color:"#FFF",
   background: '#102027',
   textOverflow: "ellipsis",  
   overflow: "hidden",

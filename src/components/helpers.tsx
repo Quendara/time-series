@@ -46,11 +46,10 @@ export const sumArray = ( list: any, key: string ) => {
 
 export const sortArrayBy = <T,>( items : T[] , sortByKey : string = 'rating', ascending:boolean=true) : T[] => {
 
-    return items = sortArrayByJs(items, sortByKey, ascending); // .slice(0, 5);
+    return sortArrayByJs(items, sortByKey, ascending); // .slice(0, 5);
 }
 
 export interface GenericGroup<Type>{
-    
     value: string,
     count: number,
     listitems: Type[]    
@@ -61,6 +60,14 @@ export const findUnique  = <T,>( list : T[], group: string, sortByCount:boolean 
     const returnVal : GenericGroup<T>[] = findUniqueJs( list, group, sortByCount, limit )
     return returnVal;
 }  
+
+export function mapGenericToStringGroup<T>( group: GenericGroup<T>[] | undefined ){
+    let retGroups : string[] = [];
+    if( group !== undefined ){
+        retGroups = group.map( (x : GenericGroup<T>) => { return x.value } )
+    }
+    return retGroups;
+}
 
 export interface CsvReturn{
     json: any[], 

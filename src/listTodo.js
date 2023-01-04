@@ -1,17 +1,12 @@
-import React, { Component, useState, useEffect } from "react";
-import { render } from "react-dom";
+import React, { useState } from "react";
 import { ListQ } from "./list"
 import { findUnique, restCallToBackendAsync } from "./components/helper";
 
 import { MyCard } from "./components/StyledComponents"
-import { CardHeader, CardContent, Button, ButtonGroup, Divider } from '@material-ui/core';
-import { useStyles, theme } from "./Styles"
+import { Button, ButtonGroup, Divider } from '@mui/material';
+import { useStyles } from "./Styles"
 
-import { todoListMockData } from "./data/todo"
-import Settings from "./Settings";
 
-import EditIcon from '@material-ui/icons/Edit';
-import VisibilityIcon from '@material-ui/icons/Visibility';
 
 
 export const ListTodo = ({ token, listid }) => {
@@ -246,8 +241,8 @@ export const ListTodo = ({ token, listid }) => {
             { loadWhenTokenSet(token) }
 
             <ButtonGroup variant="contained" >
-                <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } startIcon={ <EditIcon /> }> Edit Lists</Button>
-                <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } startIcon={ <VisibilityIcon /> } >Hide Completed</Button>
+                <Button color={ edit ? "primary" : "default" } onClick={ () => setEdit(!edit) } startIcon={ <MyIcon icon="edit" /> }> Edit Lists</Button>
+                <Button color={ hideCompleted ? "primary" : "default" } onClick={ () => setHideCompleted(!hideCompleted) } startIcon={ <MyIcon icon="visibility" /> } >Hide Completed</Button>
             </ButtonGroup>
             <Divider variant="middle" />
 

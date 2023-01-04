@@ -16,11 +16,10 @@ import 'chartjs-adapter-moment';
 
 import { Scatter, Line } from "react-chartjs-2";
 // import { groupBy } from "underscore";
-import { Divider, Grid } from '@material-ui/core';
+import { Divider, Grid } from '@mui/material';
 
 import { DashboardNumber } from "./DashboardNumber"
 import { groupByJs } from "./helper"
-// import { Dashboard } from "@material-ui/icons";
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend, CategoryScale, TimeSeriesScale);
 

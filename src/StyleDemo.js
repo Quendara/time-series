@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Button, CardContent, Typography, TextField, Grid, List, Card, CardItem, ListItem } from '@material-ui/core';
+import { Button, CardContent, Typography, TextField, Grid, List, Card, CardItem, ListItem } from '@mui/material';
 
 
 export const StyleDemo = () => {

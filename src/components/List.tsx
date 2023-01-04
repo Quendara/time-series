@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 
 import {
     // IndexRoute,
@@ -9,32 +9,23 @@ import {
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-import { Modal, ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Button, Typography, TextField, Grid, Card, CardContent, Divider, MenuItem, CardHeader } from '@material-ui/core';
+import { Icon, IconButton, Modal, ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Typography, Grid, Card, CardContent, Divider, CardHeader, Dialog } from '@mui/material';
 
 import useLongPress from "../hooks/useLongPress";
 
-
-import DeleteIcon from '@material-ui/icons/Delete';
-// import AddIcon from '@material-ui/icons/Add';
-// import Autocomplete from '@material-ui/lab/Autocomplete';
-import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
 import { ArrowDropDown, ArrowRight } from '@material-ui/icons';
-
-import Icon from '@material-ui/core/Icon';
 
 // import { QAutocomplete } from "./QAutocomplete"
 import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
-import { TypographyDisabled, TypographyEnabled, MyListItemHeader, MyPaperHeader } from "./StyledComponents"
+import { TypographyDisabled, TypographyEnabled, MyPaperHeader } from "./StyledComponents"
 
 // import CloseIcon from '@material-ui/icons/Close';
 import { MyIcon } from "./MyIcon"
 
 import { TodoItem } from "../models/TodoItems"
-import { GenericGroup } from "../components/helpers"
+import { GenericGroup, mapGenericToStringGroup } from "../components/helpers"
 
 import { AddForm } from "./AddForm"
-import { DetailsById } from "./Details"
 // import { UpdateFunc } from "../models/Definitions" 
 import { UpdateTodosInput } from "../API"
 
@@ -45,26 +36,6 @@ export enum TodoListType {
     LINKS = 'links',
     UNDEFINED = 'undefined',
 }
-
-const useStyles = makeStyles({
-    card_main: {
-        fontSize: 16,
-        margin: 6,
-    },
-    card_sec: {
-        fontSize: 12,
-        textAlign: "right",
-        margin: 6,
-    },
-    modal: {
-        display: 'absolute',
-        top: "10px",
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: "50%",
-        padding: '20px'
-    },
-});
 
 
 // { percentge(filterCompleted(items).length / items.length) }
@@ -117,7 +88,6 @@ const ListEl = (
     let location = useLocation();
     // const history = useHistory();
     const navigate = useNavigate();
-    const classes = useStyles();
 
     const [edit, setEdit] = useState(false);
     // const [checked, setChecked] = useState(false);
@@ -142,9 +112,9 @@ const ListEl = (
 
     const onUpdateFunction = (linkName: string, linkUrl: string, groupname: string) => {
 
-        if( updateFunction ){
+        if (updateFunction) {
             updateFunction({ id, link: linkUrl, name: linkName, group: groupname })
-            setEdit(false)    
+            setEdit(false)
         }
     }
 
@@ -162,7 +132,7 @@ const ListEl = (
 
             if (link.startsWith("/")) {
                 // history.push(link);
-                navigate( link );
+                navigate(link);
             } else {
                 // Open in new window
                 window.open(link, "_blank")
@@ -209,13 +179,13 @@ const ListEl = (
         <>
             {edit &&
 
-                <Modal
+                <Dialog
                     open={edit}
                     onClose={() => setEdit(false)}
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
                 >
-                    <div className={classes.modal}>
+                    <div >
                         <Card>
                             <CardHeader
                                 title={"Update Item "}
@@ -247,8 +217,8 @@ const ListEl = (
                                             renderModal={true}
                                             name={name}
                                             url={link}
-                                            group={group} 
-                                            groups={groups}
+                                            group={group}
+                                            groups={groups.map((x) => { return x.value })}
                                             onClickFunction={onUpdateFunction}
                                             type={type}
                                             buttonName="Update"
@@ -256,28 +226,11 @@ const ListEl = (
                                     </Grid>
 
 
-                                    {/* <Grid item xs={12} >
-                                        <DetailsById
-                                            itemid={id}
-                                            updateFunction={updateFunction}
-                                            listtype={type}
-                                            lists={[]} />
-                                    </Grid>
-                                    <Grid item xs={12} >
-                                        <Button
-                                            onClick={handleDeleteClick}
-                                            color="secondary"
-                                            startIcon={<DeleteIcon />}
-                                            variant="contained" >
-                                            Delete
-                                        </Button>
-                                    </Grid>
-                                    */}
                                 </Grid>
                             </CardContent>
                         </Card>
                     </div>
-                </Modal>
+                </Dialog>
             }
             {(editList) ? (
                 <ListItem  >
@@ -288,15 +241,15 @@ const ListEl = (
                         renderModal={false}
                         name={name}
                         url={link}
-                        group={group} 
-                        groups={groups}
+                        group={group}
+                        groups={mapGenericToStringGroup(groups)}
                         onClickFunction={onUpdateFunction}
                         type={type}
                         buttonName="Update"
                         handleDeleteClick={undefined} />
                     <ListItemSecondaryAction >
-                        <IconButton edge="end" onClick={handleDeleteClick} color="secondary" aria-label="delete">
-                            <DeleteIcon />
+                        <IconButton edge="end" onClick={handleDeleteClick} color="error" aria-label="delete">
+                            <MyIcon icon="delete" />
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
@@ -400,8 +353,8 @@ interface PropsQ {
     items: TodoItem[];
     removeItemHandle: (id: string) => void;
     header: string;
-    addItemHandle?:  (name: string, link: string, groupname: string) => void ;
-    updateFunction?: (item: UpdateTodosInput) => void ;
+    addItemHandle?: (name: string, link: string, groupname: string) => void;
+    updateFunction?: (item: UpdateTodosInput) => void;
     toggleFunction: (id: string) => void;
     selectFunction: (id: string) => void;
     type: TodoListType;
@@ -418,14 +371,15 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
 
     const onClickFunction = (name: string, link: string, groupname: string) => {
 
-        if( addItemHandle ){
+        if (addItemHandle) {
             addItemHandle(name, link, groupname)
-            setName("")    
+            setName("")
         }
-
     }
 
-    // , ArrowRight
+
+
+
 
     return (
 
@@ -449,13 +403,13 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                         <AddForm renderModal={false}
                             name={name}
                             group={group}
-                            groups={groups?groups:[] }
+                            groups={mapGenericToStringGroup(groups)}
                             onClickFunction={onClickFunction}
                             type={type} buttonName="Add"
                             showGroupsSelector={false}
                             handleDeleteClick={undefined} />
                         <Divider />
-                    </ListItem> }
+                    </ListItem>}
 
 
                 {items.map((item, index) => (
@@ -466,7 +420,7 @@ export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFu
                             id={item.id}
                             name={item.name}
                             group={group}
-                            groups={ groups?groups:[] }
+                            groups={groups ? groups : []}
                             checked={item.checked}
                             link={item.link}
                             selectFunction={selectFunction}

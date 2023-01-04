@@ -127,8 +127,8 @@ export const MarkdownTextareaAutosize = ({ initValue, updateFunction }: PropMTA)
     return (
         <MyTextareaAutosize
             // value={ selectedItemValue ? selectedItemValue : "" }
-            rowsMin={20}
-            rowsMax={40}
+            minRows={20}
+            maxRows={40}
             // error={ hasError(linkName) }
             // label="Name"
             // size="small"

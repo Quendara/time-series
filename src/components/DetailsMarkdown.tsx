@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+
+// import remark from 'remark';
 import ReactMarkdown from "react-markdown";
 
 // import { remark } from 'remark'
 // import remarkParse from 'remark-parse'
-// import remarkGfm from 'remark-gfm'
+import remarkGfm from 'remark-gfm'
 // import remarkMath from 'remark-math'
 // import remarkRehype from 'remark-rehype'
 // //import remarkSource from 'remark-sources' 
@@ -38,6 +40,8 @@ L = \frac{1}{2} \rho v^2 S C_L
 $$ 
   
 `
+// import remarkGfm from 'remark-gfm'
+// <ReactMarkdown children={markdown} remarkPlugins={[remarkGfm]} />,
 
 // { value ? value : "No Description" } 
 
@@ -50,7 +54,7 @@ export const DetailsMarkdown = ({ value, initValue } : Props ) => {
    
     return (
         <>
-            <ReactMarkdown children={ value ? value : initValue } remarkPlugins={ [] } />
+            <ReactMarkdown children={ value ? value : initValue } remarkPlugins={ [remarkGfm] } />
         </>
     )
 

@@ -1,44 +1,36 @@
 "use strict";
 
-import React, { Component, useState, useEffect } from "react";
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import React, { useState, useEffect } from "react";
+import Amplify, {  } from 'aws-amplify';
 
 import { render } from "react-dom";
 import {
   BrowserRouter as Router,
   Route,
   NavLink,
-  Routes,
-  // IndexRoute,
-  useLocation
-} from "react-router-dom";
+  Routes} from "react-router-dom";
 
 
 import { useStyles, theme } from "./Styles"
 
-import { ThemeProvider, Grid, CssBaseline, Badge, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip } from "@material-ui/core";
+import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip } from "@mui/material";
 
 // import { ListTodo } from './listTodo';
 import { Error } from "./components/Error"
 import { MyIcon } from "./components/MyIcon";
 
-import { MyCard, MyPaperHeader, MyCardHeader } from "./components/StyledComponents"
 
 import { MainNavigation } from './organisms/navigation';
 
 import { ListGraphQL } from './pages/listGraphQL';
 import TimeSeries from "./pages/TimeSeries";
-import { Sandbox } from "./pages/sandbox";
-import { SandboxQl } from "./pages/SandboxQl";
-import { TimeTree } from "./pages/TimeTree2";
 import { CompareLists } from "./pages/CompareLists";
 import { ReplaceLists } from "./pages/ReplaceLists";
 import { CsvToolsPage } from "./pages/CsvToolsPage";
 
 
-import { TodoItem, TodoMainItem } from "./models/TodoItems"
+import { TodoMainItem } from "./models/TodoItems"
 
-import { Clock } from "./components/Clock";
 import { StyleDemo } from "./StyleDemo";
 import { Auth } from "./Auth";
 

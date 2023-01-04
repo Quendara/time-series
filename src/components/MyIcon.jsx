@@ -1,5 +1,7 @@
 import React from "react";
-import Icon from '@material-ui/core/Icon';
+
+import { Icon } from '@mui/material';
+
 
 export const MyIcon = ({ icon, className="" }) => {
 

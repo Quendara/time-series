@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
     // IndexRoute,
@@ -9,20 +9,16 @@ import {
 
 
 
-import { ListItem, List, CardContent, Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { CardContent, Snackbar, Alert, Grid, Button, Avatar, IconButton } from '@mui/material';
 
 
-import { Grid, Button, TextField, Divider, Typography, CardHeader, Avatar, IconButton } from '@material-ui/core';
-import { MyCard, MyCardHeader, MyTextareaAutosize, MyTextareaRead, MyDivider, MyCard2 } from "./StyledComponents"
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { MyCardHeader, MyDivider, MyCard2 } from "./StyledComponents"
 import { MyIcon } from "./MyIcon";
 
 import { DetailsMarkdown } from "./DetailsMarkdown"
-import { TodoItem, TodoMainItem, createEmptyTodoItem, TodoUpdateItem } from "../models/TodoItems"
+import { TodoItem, TodoMainItem } from "../models/TodoItems"
 
 import { findUnique } from "../components/helpers";
-import { useStyles } from "../Styles"
 
 import { removeItemById } from "../components/GraphQlFunctions"
 
@@ -194,8 +190,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
         <>
             <Snackbar
                 open={successSnackbarMessage.length > 0}
-                autoHideDuration={2000}
-                onClose={handleClose}
+                autoHideDuration={2000}                
                 message="Saved" >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}

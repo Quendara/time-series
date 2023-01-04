@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { Grid, Paper, Card, CardHeader, CardContent, Button, ButtonGroup, Typography, TextField, List, ListItem, Divider, Hidden } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
+
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
-
-import IconButton from '@material-ui/core/IconButton';
 
 interface FilterProps { 
     filterText: string;
@@ -37,7 +34,7 @@ export const FilterComponent = ({ filterText, callback, callbackEnter } : Filter
     return (
         <TextField
             value={ item }
-            label="Filter"
+            label="Filter 2"
             fullWidth
             variant="outlined"
             InputProps={ {
