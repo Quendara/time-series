@@ -13,10 +13,10 @@ import { Icon, IconButton, Modal, ListItem, ListItemIcon, ListItemText, List, Li
 
 import useLongPress from "../hooks/useLongPress";
 
-import { ArrowDropDown, ArrowRight } from '@material-ui/icons';
+// import { ArrowDropDown, ArrowRight } from '@material-ui/icons';
+// import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 
 // import { QAutocomplete } from "./QAutocomplete"
-import { CheckCircleOutline, RadioButtonUnchecked } from '@material-ui/icons';
 import { TypographyDisabled, TypographyEnabled, MyPaperHeader } from "./StyledComponents"
 
 // import CloseIcon from '@material-ui/icons/Close';
@@ -235,7 +235,7 @@ const ListEl = (
             {(editList) ? (
                 <ListItem  >
                     <ListItemIcon onClick={handleToggleFunction} >
-                        {isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked />}
+                        {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon> }
                     </ListItemIcon>
                     <AddForm
                         renderModal={false}
@@ -263,7 +263,7 @@ const ListEl = (
                                 selected={false} >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
-                                    {isChecked(checked) ? <CheckCircleOutline color="primary" /> : <RadioButtonUnchecked />}
+                                    {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon> }
                                 </ListItemIcon>
                                 <ListItemText
                                     onClick={handleSelect}
@@ -332,7 +332,7 @@ export const ListHeader = (props: PropsHeader) => {
             <List>
                 <ListItem>
                     <ListItemIcon>
-                        {props.edit ? <ArrowDropDown /> : <ArrowRight />}
+                        {props.edit ? <MyIcon icon="arrow_drop_down" />  : <MyIcon icon="arrow_right" /> }
                     </ListItemIcon>
 
                     {props.header}

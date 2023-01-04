@@ -1,5 +1,4 @@
-import { createTheme } from '@mui/material/styles';, 
-
+import { createTheme } from '@mui/material/styles'; 
  
 import { purple, lightGreen, pink, lightBlue, red, green } from '@mui/material/colors/';
 

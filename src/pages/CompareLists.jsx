@@ -3,12 +3,9 @@ import React, { useState, useEffect } from "react";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 
-import { Box, Button, Grid, CardContent } from '@material-ui/core/';
-
-import { MyCard, MyTextareaAutosize } from "../components/StyledComponents"
+import { Box, Button, Grid, CardContent, Table, TableCell, TableContainer, TableHead, TableRow  } from '@mui/material/';
 
 
-import { Table, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
 // const l1 = `
 // 1000

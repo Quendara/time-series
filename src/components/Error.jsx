@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from '@mui/material';
 
 export const Error = ({ errorMessages }) => {
 
