@@ -4,22 +4,17 @@ import React, { useState, useEffect } from "react";
 // import SetDialog from "./SetDialog";
 
 // import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-// import { Button } from '@material-ui/core';
-import { Edit } from "@material-ui/icons";
-import { Button, CardContent, Typography, TextField, Grid, Divider } from '@material-ui/core';
+import { Button, CardContent, Typography, TextField, Grid, Divider } from '@mui/material';
 
 import { MyCard, MyDivider } from "./components/StyledComponents"
 import { LineChart, ValueType } from "./components/LineChart";
 import { DashboardNumber } from "./components/DashboardNumber"
 import { SelectionView } from "./components/SelectionView"
 
-
-import AddIcon from '@material-ui/icons/Add';
-import CheckIcon from '@material-ui/icons/Check';
-
 // import { InputNumber } from "antd";
 import Settings from "./Settings";
 import {addLeadingZeros} from "./components/helpers";
+import { MyIcon } from "./components/MyIcon";
 
 
 // class SingleTimeSerie extends React.Component {
@@ -190,14 +185,14 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
       if (dataValid) {
         button = (
           (<Button variant="contained" color="primary" onClick={ mySubmitHandler }>
-            <AddIcon />
+            <MyIcon icon="add" />
           </Button>
           )
         );
       } else {
         button = (
           <Button variant="contained" disabled>
-            <AddIcon />
+            <MyIcon icon="add" />
           </Button>
         );
       }
@@ -206,7 +201,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
       if (!error) {
         button = (
           <Button variant="contained" disabled>
-            <CheckIcon />
+            <MyIcon icon="check" />
           </Button>
         );
       } else {
@@ -272,7 +267,7 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
               <>
                 <DashboardNumber value={ lastValue.y } unit={ group_unit } info={ "latest value from " + formatDate(lastValue.x) } />
                 <Grid item xs={ 1 }>
-                  <Button onClick={ () => setEdit(true) }><Edit /></Button>
+                  <Button onClick={ () => setEdit(true) }><MyIcon icon="edit" /></Button>
                 </Grid>
               </>
             )
