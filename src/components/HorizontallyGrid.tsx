@@ -13,8 +13,6 @@ interface Props<Type> {
 
 export const HorizontallyGrid = <Type extends object>(props: Props<Type>) => {
 
-    const classes = useStyles();
-    const theme = useTheme();
     const biggerThenXs = true // useMediaQuery(theme.breakpoints.up('sm'))
 
     return (

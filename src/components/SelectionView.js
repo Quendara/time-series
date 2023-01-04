@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button ButtonGroup } from '@mui/material';
+import {Button, ButtonGroup } from '@mui/material';
 
 export const SelectionView = ({ valueArr, iconsOnly, currentValue, callback }) => {
 

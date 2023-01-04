@@ -9,9 +9,9 @@ import {
   Routes} from "react-router-dom";
 
 
-import { cssClasses } from "./Styles"
+import { cssClasses, theme } from "./Styles"
 
-import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip } from "@mui/material";
+import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip, Box } from "@mui/material";
 
 // import { ListTodo } from './listTodo';
 import { Error } from "./components/Error"
@@ -124,22 +124,22 @@ const App = () => {
 
         <Auth authSuccessCallback={authSuccessCallback} >
 
-          <NavLink key={"nl_" + 1332} to={"/"} sx={{cssClasses.menuButton}}  ><MyIcon icon={"home"} /> </NavLink>
+          <NavLink key={"nl_" + 1332} to={"/"}  ><MyIcon icon={"home"} /> </NavLink>
 
           {userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <div key={"fdf" + index} sx={{cssClasses.menuButton}}    >
+              <Box key={"fdf" + index} sx={ cssClasses.menuButton }    >
                 <Tooltip title={item.name} aia-label="add">
-                  <NavLink key={"nl_" + index} to={"/" + [item.component, item.listid, item.render].join('/')} sx={{cssClasses.menuButton}}   >
+                  <NavLink key={"nl_" + index} to={"/" + [item.component, item.listid, item.render].join('/')}   >
                     <MyIcon icon={item.icon} />
                   </NavLink>
                 </Tooltip>
-              </div>
+              </Box>
             )
           }
           )}
 
-          <IconButton sx={{cssClasses.menuButton}}  onClick={menuHandleClick} ><MyIcon icon="more_horiz" /> </IconButton>
+          <IconButton sx={cssClasses.menuButton}  onClick={menuHandleClick} ><MyIcon icon="more_horiz" /> </IconButton>
 
 
           <Menu

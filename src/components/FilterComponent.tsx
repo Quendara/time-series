@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from 'react';
 
 import { TextField, InputAdornment, IconButton } from '@mui/material';
+import { MyIcon } from './MyIcon';
 
-import SearchIcon from '@material-ui/icons/Search';
-import ClearIcon from '@material-ui/icons/Clear';
-
-interface FilterProps { 
+interface FilterProps {
     filterText: string;
-    callback: ( text: string ) => void ;
-    callbackEnter: () => void; 
- };
+    callback: (text: string) => void;
+    callbackEnter: () => void;
+};
 
-export const FilterComponent = ({ filterText, callback, callbackEnter } : FilterProps ) => {
+export const FilterComponent = ({ filterText, callback, callbackEnter }: FilterProps) => {
 
     const [item, setItem] = useState(filterText);
 
     useEffect(() => {
-        setItem( filterText )
-      }, [ filterText ]);
+        setItem(filterText)
+    }, [filterText]);
 
-    const setFilter = (text: string ) => {
+    const setFilter = (text: string) => {
         setItem(text)
         callback(text)
     }
 
-    const checkEnter = ( e: React.KeyboardEvent<HTMLDivElement>) => {
-        if ( e.key === "Enter" ) {
+    const checkEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Enter") {
             // alert("Enter")            
             callbackEnter()
         }
@@ -33,30 +31,28 @@ export const FilterComponent = ({ filterText, callback, callbackEnter } : Filter
 
     return (
         <TextField
-            value={ item }
+            value={item}
             label="Filter 2"
             fullWidth
             variant="outlined"
-            InputProps={ {
+            InputProps={{
                 startAdornment: (
                     <InputAdornment position="end" >
-                        <SearchIcon />
+                        <MyIcon icon="search" />
                     </InputAdornment>
                 ),
                 endAdornment: (
                     <InputAdornment position="end" >
                         <IconButton
-                            disabled={ item.length === 0 }
-                            onClick={ () => setFilter("") }
-
-                        >
-                            <ClearIcon />
+                            disabled={item.length === 0}
+                            onClick={() => setFilter("")} >
+                            <MyIcon icon="clear" />
                         </IconButton>
                     </InputAdornment>
                 )
-            } }
-            onKeyPress={ e => checkEnter(e) }
-            onChange={ e => setFilter(e.target.value) }
+            }}
+            onKeyPress={e => checkEnter(e)}
+            onChange={e => setFilter(e.target.value)}
         />
     )
 }

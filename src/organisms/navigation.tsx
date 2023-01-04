@@ -91,7 +91,7 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
 
     if (render === "simple") {
         return (
-            <NavLink sx={cssClasses.title} to={"/" + [item.component, item.listid, item.render].join('/')}   >
+            <NavLink to={"/" + [item.component, item.listid, item.render].join('/')}   >
                 <MenuItem>
                     <ListItemAvatar >
                         <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
@@ -126,10 +126,8 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
                     </>} />
                 <ListItemSecondaryAction>
                     <Tooltip title="Open" aria-label="add">
-                        <NavLink
-                            className={classes.title}
+                        <NavLink                            
                             to={"/" + [item.component, item.listid, item.render].join('/')}   >
-
                             <IconButton edge="end" aria-label="delete">
                                 <MyIcon icon="launch" />
                             </IconButton>
