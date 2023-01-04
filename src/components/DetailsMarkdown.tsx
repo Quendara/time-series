@@ -41,51 +41,16 @@ $$
 
 // { value ? value : "No Description" } 
 
-export const DetailsMarkdown = ({ value }) => {
+interface Props {
+    value: string;
+    initValue: string
+}
 
-    // const [markdown, setMarkdown] = useState("false");
-
-    // async function loadMD( value ) {
-    //     const data =  await unified()
-    //     .use(remarkParse)
-    //     .use(remarkGfm)
-    //     .use(remarkMath)
-    //     // .use(remarkRehype)                
-    //     .use(rehypeKatex)
-    //     // .use(rehypeHighlight)                 
-    //     // .use(remarkSource) 
-    //     .use(remarkHtml)
-
-    //     .parse(value)
-
-    //     // return data
-        
-    //     setMarkdown(String(data))
-    //     // .then((file) => {
-    //     //     //     // console.log(String(file))
-
-            
-    //     // })
-    // }
-
-    // useEffect(
-    //     () => {
-    //         // const data = 
-    //         loadMD( value )
-    //         // setMarkdown(String(data))
-
-
-    //         // setMarkdown(String(file))
-    //     },
-    //     [value]
-
-    // ) 
-
-
-    /* <ReactMarkdown children={ value } remarkPlugins={ [] } /> */
+export const DetailsMarkdown = ({ value, initValue } : Props ) => {
+   
     return (
         <>
-            <ReactMarkdown children={ value ? value : "Add comments here ..." } remarkPlugins={ [] } />
+            <ReactMarkdown children={ value ? value : initValue } remarkPlugins={ [] } />
         </>
     )
 

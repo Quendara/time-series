@@ -50,7 +50,7 @@ export const CsvToolsConfiguration = ( props : Props ) => {
     // const [headerStringArr, setHeaderStringArr] = useState<string[]>([]);
     const [configData, setConfigData] = useState( "" );
 
-    const [seperator, setSeperator] = useState<string>(";");
+    const [seperator, setSeperator] = useState<string>( ";" );
     const [groupname, setGroupname] = useState<string>("");
     const [subgroupname, setSubGroupname] = useState<string>("");
     const [sumField, setSumField] = useState<string>("");
@@ -138,7 +138,7 @@ export const CsvToolsConfiguration = ( props : Props ) => {
                                     value={seperator}
                                     label="Primary"
                                     groups={[{ value: "\t", key: "Tab" }, { value: ",", key: "Komma" }, { value: ";", key: "Semikolon" }]}
-                                    callback={(s) => { setSeperator(s) }}
+                                    callback={(s) => { handleChange("seperator", s) }}
                                 />
                             </ConfigItem>
                         </Grid>                    

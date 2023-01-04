@@ -69,37 +69,10 @@ export const CsvToolsPage = ({ }) => {
             </Grid>
             {activeStep === 0 &&
                 <Grid item xs={12}   >
-                    <Grid container justifyContent="flex-start" spacing={1} >
-
-                        
-                        <Grid item xs={9} >
-                            <ConfigItem header="Header" >
-                                {headerStringArr.map(x => {
-                                    return (<Chip label={x} />)
-                                })}
-                            </ConfigItem>
-                        </Grid>
+                    <Grid container justifyContent="flex-start" spacing={1} >                        
 
 
 
-                        <Grid item xs={12}   >
-                            {skippedLines.length !== 0 &&
-                                <Alert severity="error">
-                                    <AlertTitle>Lines skipped : </AlertTitle>
-                                    {skippedLines.map((line: string) => (<p>{line}</p>))}
-                                </Alert>
-                            }
-                            <MyCard>
-                                <Box style={{ padding: "5px" }} >Input </Box>
-                                <MyTextareaAutosize
-
-                                    value={inputData ? inputData : ""}
-                                    rowsMin={20}
-                                    onChange={e => setInputData(e.target.value)} />
-                            </MyCard>
-
-
-                        </Grid>
                     </Grid>
                 </Grid>
             }

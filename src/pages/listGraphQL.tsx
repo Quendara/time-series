@@ -64,7 +64,7 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
 
     const [todos, dispatch] = useReducer(reducerTodo, items);
 
-    useEffect(() => {
+    useEffect(() => { 
 
         dispatch(UpdateState(items))
 

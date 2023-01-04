@@ -77,13 +77,9 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
 
     const localitems = useGetTodos(selectedItem?.id);
 
-    // (updateFunction(todoid, name, link, group, description=undefined ) )
-    // const uiUpdateTodo = (items, todo) => {
-
-    // const [selectionStart, setSelectionStart] = useState("");
-
     const [edit, setEdit] = useState(false);
-    // const [listvalue, setListValue] = useState <TodoUpdateItem | undefined > ( undefined);
+    const [addTodos, setAddTodos] = useState(false);
+
 
     // currentItem can be set to undefined, when deleted
     const [currentItem, setCurrentItem] = useState<TodoItem | undefined>(selectedItem);
@@ -97,10 +93,6 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
         }
         setSuccessSnackbarMessage("");
     };
-
-    // const handleClick = () => {
-    //     setOpen(true);
-    // };
 
     useEffect(() => {
 
@@ -121,6 +113,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
             setSelectedValue(selectedItem.description)
         }
 
+        setAddTodos(false);
         setEdit(false);
         return () => { };
 
@@ -186,9 +179,6 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
         }
     }
 
-    const markdownData = `Just a link: https://reactjs.com.`;
-    /// const remarkGfmLL = <any>remarkGfm
-
     const removeItemHandle = () => {
         if (selectedItem) {
             setCurrentItem(undefined)
@@ -240,7 +230,6 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                         groups={findUnique(todos, "group", false)}
                                         label="Group"
                                         callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
-
                                     </TextEdit>
                                     {bull}
                                     <TextEdit
@@ -249,9 +238,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                         label="Lists"
                                         callback={(list) => { }} >
                                     </TextEdit>
-
                                 </>
-
                             }
                         />
 
@@ -266,21 +253,32 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                 <Grid item xs={12}>
                                     {
                                         edit ? (
-                                            <Button variant="contained" color={"primary"} onClick={updateHandle}><MyIcon icon={"update"} /> </Button>
+                                            <Button startIcon={<MyIcon icon={"update"} />} variant="contained" color={"primary"} onClick={updateHandle}> Save </Button>
                                         ) : (
-                                            <Button variant="contained" onClick={() => setEdit(true)}><MyIcon icon={"edit"} /> </Button>
+                                            <Button startIcon={<MyIcon icon={"edit"} /> } variant="contained" onClick={() => setEdit(true)}>Edit </Button>
                                         )
                                     }
+                                    {(localitems.length === 0) &&
 
-                                    <MyDivider />
+                                        <Button
+                                            variant="contained"                                            
+                                            style={{ "marginLeft": "20px" }}
+                                            startIcon={<MyIcon icon={"rule"} />}
+                                            onClick={() => setAddTodos(true)}> Add Checklist
+                                        </Button>
+                                    }
+
                                 </Grid>
+
+
+
 
 
                                 {edit ? (
                                     <>
 
-
                                         <Grid item xs={12}>
+                                            <MyDivider />
                                             <MarkdownTextareaAutosize
                                                 initValue={selectedItemValue}
                                                 updateFunction={(val: string) => setSelectedValue(val)}
@@ -288,32 +286,37 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                         </Grid>
                                     </>
                                 ) : (
+                                    <>
+                                        {selectedItemValue.length > 0 &&
+                                            <Grid item xs={12}>
+                                                <MyDivider />
 
-                                    <Grid item xs={12}>
-                                        <div className="markdown" >
-                                            <DetailsMarkdown value={selectedItemValue} />
-                                        </div>
-                                    </Grid>
+                                                <div className="markdown" >
+                                                    <DetailsMarkdown value={selectedItemValue} initValue="Add comments here ... " />
+                                                </div>
+                                            </Grid>
+                                        }
+                                    </>
                                 )}
                             </Grid>
-                        
-                 
 
-                            <Grid item xs={12}>
-                            <MyDivider />
-                            </Grid>
 
-                            <Grid item xs={12}>
-                                <ListGraphInternal
-                                    items={localitems}
-                                    lists={lists}
-                                    username={username}
-                                    horizontally={true}
-                                    listid={currentItem.id}
-                                    listtype={TodoListType.TODO_SIMPLE} />
+                            {(addTodos || localitems.length > 0) && <>
 
-                            </Grid>
-                        
+                                <Grid item xs={12}>
+                                    <MyDivider />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <ListGraphInternal
+                                        items={localitems}
+                                        lists={lists}
+                                        username={username}
+                                        horizontally={true}
+                                        listid={currentItem.id}
+                                        listtype={TodoListType.TODO_SIMPLE} />
+                                </Grid>
+                            </>}
                         </CardContent>
 
                     </MyCard2>

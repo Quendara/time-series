@@ -86,7 +86,7 @@ const ReducerUpdateItem = (state: TodoItem[], action: TodoActionUPDATE) => {
 }
 
 // reducer Mapping
-export const reducerTodo = (state: TodoItem[], action: TodoAction): TodoItem[] => {
+export const reducerTodo = ( state: TodoItem[], action: TodoAction ): TodoItem[] => {
 
     const { type, payload } = action;
 

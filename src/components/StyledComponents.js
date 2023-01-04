@@ -90,7 +90,7 @@ export const MyTextareaAutosize = styled(TextareaAutosize)({
   width: "100%",
   borderRadius: "5px",
   height:"52vh",
-  whiteSpace: "nowrap"
+  // whiteSpace: "nowrap"
   
   // letterSpacing:"0.2em",
   //#paddingTop:"0px"

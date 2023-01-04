@@ -56,16 +56,8 @@ export interface GenericGroup<Type>{
     listitems: Type[]    
   }
 
-// const item = {
-//     value: key,
-//     count: groups[key].length,
-//     listitems: groups[key]
-// }
-
 export const findUnique  = <T,>( list : T[], group: string, sortByCount:boolean = true, limit:number =50 ) : GenericGroup<T>[]  => {
  
-    
-    
     const returnVal : GenericGroup<T>[] = findUniqueJs( list, group, sortByCount, limit )
     return returnVal;
 }  
