@@ -1,5 +1,3 @@
-"use strict";
-
 import React, { useState, useEffect } from "react";
 import Amplify, {  } from 'aws-amplify';
 
@@ -11,7 +9,7 @@ import {
   Routes} from "react-router-dom";
 
 
-import { useStyles, theme } from "./Styles"
+import { cssClasses } from "./Styles"
 
 import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip } from "@mui/material";
 
@@ -54,8 +52,6 @@ const App = () => {
   const [apikey, setApi] = useState("");
   const [amplifyInitilaized, setAmplifyInitilaized] = useState(false);
   const [apikeyTimetree, setApikeyTimetree] = useState("");
-
-  const classes = useStyles();
 
   const handleSetConfig = (config: TodoMainItem[]) => {
     setUserConfiguration(config)
