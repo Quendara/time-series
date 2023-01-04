@@ -58,6 +58,7 @@ export const cssClasses = {
     },
     title: {
       flexGrow: 2,
+      marginRight: "30px",
       color: "#FFFFFF",
       textDecoration: "none"
     },
@@ -65,6 +66,8 @@ export const cssClasses = {
       color: "#FFFF00",
     },
     appBar: {
+      backgroundColor: theme.palette.primary.dark,
+      
       //top: 'auto',
       //bottom: 0,
     },

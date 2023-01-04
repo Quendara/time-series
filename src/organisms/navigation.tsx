@@ -7,7 +7,7 @@ import React, { useState, useEffect, useReducer } from "react";
 // import { listTodos, getTodos } from '../graphql/queries';
 
 
-import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent } from '@mui/material';
+import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent, Icon, ListItemButton } from '@mui/material';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
 
 import {
@@ -95,11 +95,11 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
                 <MenuItem>
                     <ListItemAvatar >
                         <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
-                            <MyIcon icon={item.icon} />
+                            <Icon sx={cssClasses.menuButton} >{item.icon} </Icon>
                         </Avatar>
-
                     </ListItemAvatar>
                     <ListItemText
+                        sx={{ color: color, textDecoration: "none" }}
                         primary={item.name}
                     ></ListItemText>
                 </MenuItem>
@@ -107,7 +107,8 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
     }
     else {
         return (
-            <ListItem>
+            <ListItemButton>
+                
                 <ListItemAvatar >
                     <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
                         <MyIcon icon={item.icon} />
@@ -126,7 +127,7 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
                     </>} />
                 <ListItemSecondaryAction>
                     <Tooltip title="Open" aria-label="add">
-                        <NavLink                            
+                        <NavLink
                             to={"/" + [item.component, item.listid, item.render].join('/')}   >
                             <IconButton edge="end" aria-label="delete">
                                 <MyIcon icon="launch" />
@@ -134,7 +135,7 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
                         </NavLink>
                     </Tooltip>
                 </ListItemSecondaryAction>
-            </ListItem>
+            </ListItemButton>
 
         )
     }
@@ -335,8 +336,8 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
             {todos.length > 0 &&
                 <MyCard>
-                    {todos.map((todo: TodoItem, index:number ) => (
-                        <ListItem key={"LI"+index }>
+                    {todos.map((todo: TodoItem, index: number) => (
+                        <ListItem key={"LI" + index}>
                             <ListItemIcon>
                                 {todo.checked ? <MyIcon icon="check_circle_outline" /> : <MyIcon icon="radio_button_unchecked" />}
                             </ListItemIcon>

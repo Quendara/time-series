@@ -265,17 +265,7 @@ export const AddForm = ({
                             { getLink() }
                         </Grid> }
                     
-                    <Grid item  >
-                        { handleDeleteClick !== undefined &&
-                            <Button
-                                onClick={ handleDeleteClick }
-                                color="secondary"
-                                startIcon={ <MyIcon icon="delete" />}
-                                variant="contained" >
-                                Delete
-                            </Button>
-                        }
-                    </Grid>
+
                     <Grid item >
                         <Button
                             variant="contained"
@@ -285,6 +275,17 @@ export const AddForm = ({
                             { buttonName }
                         </Button >
                     </Grid> 
+                    <Grid item  >
+                        { handleDeleteClick !== undefined &&
+                            <Button
+                                onClick={ handleDeleteClick }
+                                color="error"
+                                startIcon={ <MyIcon icon="delete" />}
+                                variant="contained" >
+                                Delete
+                            </Button>
+                        }
+                    </Grid>                    
                 </Grid>
             ) : (
                 <Grid container alignItems="center" justifyContent="space-between" spacing={ 2 } >
@@ -301,17 +302,7 @@ export const AddForm = ({
                             { getLink() }
                         </Grid> }
 
-                    { handleDeleteClick !== undefined &&
-                        <Grid item  >
-                            <Button
-                                onClick={ handleDeleteClick }
-                                color="secondary"
-                                startIcon={ <MyIcon icon="delete" /> }
-                                variant="contained" >
-                                Delete
-                            </Button>
-                        </Grid>
-                    }
+
                     <Grid item >
                         <Button
                             variant="contained"
@@ -321,6 +312,17 @@ export const AddForm = ({
                             { buttonName }
                         </Button >
                     </Grid>
+                    { handleDeleteClick !== undefined &&
+                        <Grid item  >
+                            <Button
+                                onClick={ handleDeleteClick }
+                                color="error"
+                                startIcon={ <MyIcon icon="delete" /> }
+                                variant="contained" >
+                                Delete
+                            </Button>
+                        </Grid>
+                    }                    
                 </Grid>
             )
             }

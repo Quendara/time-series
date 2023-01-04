@@ -229,7 +229,11 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
         </Typography>
         <MyDivider></MyDivider>
 
-        <SelectionView  currentValue={ renderMode } iconsOnly={ false } valueArr={ ['simple', 'year', 'compare'] } callback={ setRenderMode } ></SelectionView>
+        <SelectionView 
+          currentValue={ renderMode } 
+          iconsOnly={ false } 
+          valueArr={ ['simple', 'year', 'compare'] }
+          callback={ setRenderMode } ></SelectionView>
       </CardContent>
       <CardContent>
 
@@ -272,8 +276,6 @@ const SingleTimeSerie = ({ group_name, group_id, group_unit } : Props) => {
               </>
             )
           }
-
-
         </Grid>
 
       </CardContent>

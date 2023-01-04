@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Amplify, {  } from 'aws-amplify';
+import Amplify, { } from 'aws-amplify';
 
 import { render } from "react-dom";
 import {
   BrowserRouter as Router,
   Route,
   NavLink,
-  Routes} from "react-router-dom";
+  Routes
+} from "react-router-dom";
 
 
 import { cssClasses, theme } from "./Styles"
 
-import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip, Box } from "@mui/material";
+import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip, Box, Icon } from "@mui/material";
 
 // import { ListTodo } from './listTodo';
 import { Error } from "./components/Error"
@@ -124,14 +125,18 @@ const App = () => {
 
         <Auth authSuccessCallback={authSuccessCallback} >
 
-          <NavLink key={"nl_" + 1332} to={"/"}  ><MyIcon icon={"home"} /> </NavLink>
+          <NavLink key={"nl_" + 1332} to={"/"}  >
+            <IconButton><Icon sx={cssClasses.title} >home</Icon></IconButton>
+           </NavLink>
 
           {userConfiguration.map((item, index) => {
             if (item.navbar) return (
-              <Box key={"fdf" + index} sx={ cssClasses.menuButton }    >
+              <Box key={"fdf" + index} sx={cssClasses.menuButton}    >
                 <Tooltip title={item.name} aia-label="add">
                   <NavLink key={"nl_" + index} to={"/" + [item.component, item.listid, item.render].join('/')}   >
-                    <MyIcon icon={item.icon} />
+                    <IconButton>
+                      <Icon sx={cssClasses.menuButton} >{item.icon}</Icon>
+                    </IconButton>
                   </NavLink>
                 </Tooltip>
               </Box>
@@ -139,7 +144,7 @@ const App = () => {
           }
           )}
 
-          <IconButton sx={cssClasses.menuButton}  onClick={menuHandleClick} ><MyIcon icon="more_horiz" /> </IconButton>
+          <IconButton sx={cssClasses.menuButton} onClick={menuHandleClick} ><MyIcon icon="more_horiz" /> </IconButton>
 
 
           <Menu
@@ -228,11 +233,11 @@ const App = () => {
                         <Grid container justifyContent="flex-start" spacing={2} >
                           <Grid item xs={3} >
                             <Grid container justifyContent="flex-start" spacing={2} >
-                            {/* "aspectRatio": "1 / 1" */}
-                              <Grid item xs={6} ><Paper style={{  "aspectRatio": "1 / 1"  }} ></Paper></Grid>
-                              <Grid item xs={6} ><Paper style={{  "aspectRatio": "1 / 1" }} ></Paper></Grid>
+                              {/* "aspectRatio": "1 / 1" */}
+                              <Grid item xs={6} ><Paper style={{ "aspectRatio": "1 / 1" }} ></Paper></Grid>
+                              <Grid item xs={6} ><Paper style={{ "aspectRatio": "1 / 1" }} ></Paper></Grid>
 
-                              <Grid item xs={6} ><Paper style={{  "aspectRatio": "4 / 1"  }} ></Paper></Grid>
+                              <Grid item xs={6} ><Paper style={{ "aspectRatio": "4 / 1" }} ></Paper></Grid>
                               <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
 
                               <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
@@ -257,7 +262,7 @@ const App = () => {
                           </Grid>
                           <Grid item xs={3} >
                             <Grid container justifyContent="flex-start" spacing={2} >
-                              <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>                              
+                              <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
 
                               <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
                               <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
