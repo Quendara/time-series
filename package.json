@@ -28,6 +28,7 @@
     "react-markdown": "^8.0.4",
     "react-router-dom": "^6.6.1",
     "remark-gfm": "^3.0.1",
+    "remark-typescript": "^0.6.1",
     "stream-browserify": "^3.0.0",
     "subscriptions-transport-ws": "^0.9.18",
     "underscore": "^1.13.6"

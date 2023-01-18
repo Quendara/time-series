@@ -43,19 +43,19 @@ export interface TodoItem {
     render: string;
   } 
 
-  // export const createEmptyTodoMainItem = () : TodoItem => {
-  //   return {  
-  //     id: "";
-  //     listid: "";
-  //     component: "";
-  //     icon: "";
-  //     owner: "";
-  //     name: "string";
-  //     navbar: "boolean";
-  //     group: string;
-  //     render: string;
-  //     } 
-  // }
+  export const createEmptyTodoMainItem = () : TodoMainItem => {
+    return {  
+      id: "unknown",
+      listid: "unknown",
+      component: "unknown",
+      icon: "unknown",
+      owner: "unknown",
+      name: "unknown",
+      navbar: false,
+      group: "unknown",
+      render: "unknown"
+      } 
+  }
 
   // export interface TodoMainUpdateItem {
   //   id: string;

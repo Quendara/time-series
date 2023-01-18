@@ -9,6 +9,7 @@ import { updateTodoMain, deleteTodoMain, createTodoMain } from '../graphql/mutat
 import { Todos, TodoMain, GetTodosQuery, ListTodosQuery } from "../API"
 import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 import { UpdateTodosInput, CreateTodosInput } from "../API"
+import { TodoItem } from '../models/TodoItems';
 
 export async function createFunctionTodo( inputObject: CreateTodosInput  ) {
 
@@ -79,9 +80,21 @@ export const getTodosByName = async ( name: string ) => {
     const response : any =
         ( await API.graphql(graphqlOperation( listTodos, { filter: { name: { contains: "" + name } }, limit: 500 }))) 
     // const any_response =  response as any;
-    const items = response.data.listTodos.items
+    const items = response.data.listTodos.items as TodoItem[]
     
     console.log("getTodosByName : ", items);    
+    return items
+}
+
+export const getTodosByGroupName = async ( name: string ) => {
+    
+    // const response : { data: ListTodosQuery } =
+    const response : any =
+        ( await API.graphql(graphqlOperation( listTodos, { filter: { group: { contains: "" + name } }, limit: 500 }))) 
+    // const any_response =  response as any;
+    const items = response.data.listTodos.items as TodoItem[]
+    
+    console.log("getTodosByGroupName : ", items);    
     return items
 }
 

@@ -6,6 +6,8 @@ import ReactMarkdown from "react-markdown";
 // import { remark } from 'remark'
 // import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
+// import  {remarkTypescript}  from 'remark-typescript'
+
 // import remarkMath from 'remark-math'
 // import remarkRehype from 'remark-rehype'
 // //import remarkSource from 'remark-sources' 
@@ -54,7 +56,7 @@ export const DetailsMarkdown = ({ value, initValue } : Props ) => {
    
     return (
         <>
-            <ReactMarkdown children={ value ? value : initValue } remarkPlugins={ [remarkGfm] } />
+            <ReactMarkdown children={ value ? value : initValue } remarkPlugins={ [ remarkGfm ] } />
         </>
     )
 

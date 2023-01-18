@@ -23,13 +23,30 @@ export const cssClasses = {
       "scrollSnapType": "x mandatory",
       "overflowX": "scroll",
       "display": "flex",
-      "marginLeft":"5px"
+      "margin":"5px",
+
+      '&::-webkit-scrollbar': {
+        width: "11px",
+        height: "11px"
+      },
+      '&::-webkit-scrollbar-track': {
+        background: 'rgba(10, 10, 10, 0.3)'
+      },
+      "&::-webkit-resizer":{
+        background: theme.palette.mode === 'dark' ? 'rgb(22, 11, 11)' : 'rgb(253, 237, 237)',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        width: "0.5px",
+        backgroundColor: theme.palette.grey[900],
+        borderRadius: "5px"      
+      },          
 
     },
     horizontalSnapItem: {
       "min-width": "340px",
       "float": "left",
       "marginRight": "10px",      
+      "marginBottom": "10px",      
       "scrollSnapAlign": "start"
     }, 
     paper: {

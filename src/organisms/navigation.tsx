@@ -26,13 +26,13 @@ import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGr
 import { reducerTodoMain } from "../reducer/reducerTodoMain"
 import { ToggleItem, UpdateItem, AddItem } from "../reducer/dispatchFunctionsMainTodos"
 
-import { TodoItem, TodoMainItem } from "../models/TodoItems"
+import { createEmptyTodoMainItem, TodoItem, TodoMainItem } from "../models/TodoItems"
 import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 // import { GroupItem } from "../models/Definitions"
 
 import { MyCard, MyCardHeader } from "../components/StyledComponents";
 import { FilterComponent } from "../components/FilterComponent";
-import { getTodosByName } from "../components/GraphQlFunctions";
+import { getTodosByGroupName, getTodosByName } from "../components/GraphQlFunctions";
 
 import { cssClasses } from "../Styles"
 
@@ -108,7 +108,7 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
     else {
         return (
             <ListItemButton>
-                
+
                 <ListItemAvatar >
                     <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
                         <MyIcon icon={item.icon} />
@@ -227,6 +227,8 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
     const callbackEnter = () => {
 
+        // getTodosByGroupName 
+         
         getTodosByName(filterText).then(
             (todos) => {
                 console.log(todos)
@@ -237,15 +239,19 @@ export const MainNavigation = (props: MainNavigationProps) => {
         console.log("callbackEnter : ", todos)
     }
 
-    const getListname = (listid: string) => {
+    const getListItem = (listid: string): TodoMainItem => {
+
+
         const i = items.filter(item => {
             if (item.listid === listid) return item
         })
 
         if (i.length === 1) {
-            return i[0].name
+            return i[0]
         }
-        return "Unknown"
+
+        return createEmptyTodoMainItem();
+
     }
 
 
@@ -336,26 +342,30 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
             {todos.length > 0 &&
                 <MyCard>
-                    {todos.map((todo: TodoItem, index: number) => (
-                        <ListItem key={"LI" + index}>
-                            <ListItemIcon>
-                                {todo.checked ? <MyIcon icon="check_circle_outline" /> : <MyIcon icon="radio_button_unchecked" />}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={todo.name}
-                                secondary={<> {todo.group}  {bull}  {getListname(todo.listid)} </>}
-                            />
-                            <ListItemSecondaryAction>
-                                {/* to={"/" + [item.component, todo.listid, todo.render].join('/')}   > */}
-                                <NavLink to={"/" + ["list", todo.listid, "todo"].join('/')}   >
-                                    <IconButton>
-                                        <MyIcon icon="launch" />
-                                    </IconButton>
-                                </NavLink>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    ))
-                    }
+                    <List>
+                        {todos.map((todo: TodoItem, index: number) => (
+                            <ListItemButton key={"LI" + index}>
+                                <ListItemAvatar >
+                                    <Avatar>
+                                        <Icon>{getListItem(todo.listid).icon}</Icon>
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={todo.name}
+                                    secondary={<> {todo.group}  {bull}  {getListItem(todo.listid).name} </>}
+                                />
+                                <ListItemSecondaryAction>
+                                    {/* to={"/" + [item.component, todo.listid, todo.render].join('/')}   > */}
+                                    <NavLink to={"/" + ["list", todo.listid, getListItem(todo.listid).render].join('/')}   >
+                                        <IconButton>
+                                            <MyIcon icon="launch" />
+                                        </IconButton>
+                                    </NavLink>
+                                </ListItemSecondaryAction>
+                            </ListItemButton>
+                        ))
+                        }
+                    </List>
 
                 </MyCard>
             }
