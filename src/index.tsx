@@ -126,16 +126,16 @@ const App = () => {
         <Auth authSuccessCallback={authSuccessCallback} >
 
           <NavLink key={"nl_" + 1332} to={"/"}  >
-            <IconButton><Icon sx={cssClasses.title} >home</Icon></IconButton>
-           </NavLink>
+            <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
+          </NavLink>
 
           {userConfiguration.map((item, index) => {
             if (item.navbar) return (
               <Box key={"fdf" + index} sx={cssClasses.menuButton}    >
                 <Tooltip title={item.name} aia-label="add">
                   <NavLink key={"nl_" + index} to={"/" + [item.component, item.listid, item.render].join('/')}   >
-                    <IconButton>
-                      <Icon sx={cssClasses.menuButton} >{item.icon}</Icon>
+                    <IconButton sx={cssClasses.menuButton} >
+                      <Icon>{item.icon}</Icon>
                     </IconButton>
                   </NavLink>
                 </Tooltip>
@@ -144,7 +144,11 @@ const App = () => {
           }
           )}
 
-          <IconButton sx={cssClasses.menuButton} onClick={menuHandleClick} ><MyIcon icon="more_horiz" /> </IconButton>
+          <IconButton
+            sx={cssClasses.menuButton}
+            onClick={menuHandleClick} >
+            <Icon>more_horiz</Icon>
+          </IconButton>
 
 
           <Menu
