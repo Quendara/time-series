@@ -46,9 +46,9 @@ export async function createFunctionTodoMain( inputObject: CreateTodoMainInput  
 
 
 
-export const getTodosFcn = async ( itemid : string , owner : string ) => {
+export const getTodosFcn = async ( itemid : string ) => {
     
-    const response : any = (await API.graphql(graphqlOperation(getTodos, { id: itemid, owner: owner } )))
+    const response : any = (await API.graphql(graphqlOperation(getTodos, { id: itemid } )))
 
     // const response : GraphQLResult<GetTodoQuery> = await API.graphql(graphqlOperation(getTodos, { id: itemid, owner: owner }));
 

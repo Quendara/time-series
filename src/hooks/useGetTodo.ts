@@ -14,12 +14,16 @@ export const useGetTodo = ( itemid : string ) : TodoItem|undefined  => {
     }, [ itemid ])
 
     async function fetchTodos( itemid : string ) {
+
+        
             
         if( itemid === undefined ) return {}
 
         const response : any = await API.graphql(graphqlOperation(getTodos, { id: itemid } ));
         const any_resonse = response;
         const item = any_resonse.data.getTodos
+
+        console.log( "useGetTodo", item )
     
         setTodo( item );        
     }    

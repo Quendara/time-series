@@ -7,7 +7,7 @@ import React, { useState, useEffect, useReducer } from "react";
 // import { listTodos, getTodos } from '../graphql/queries';
 
 
-import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent, Icon, ListItemButton } from '@mui/material';
+import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent, Icon, ListItemButton, CardHeader } from '@mui/material';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
 
 import {
@@ -35,6 +35,9 @@ import { FilterComponent } from "../components/FilterComponent";
 import { getTodosByGroupName, getTodosByName } from "../components/GraphQlFunctions";
 
 import { cssClasses } from "../Styles"
+import { SearchResponse } from "./SearchResponse";
+
+import { bull } from "../components/helpers"
 
 interface NavItemProps {
     item: TodoMainItem;
@@ -43,7 +46,7 @@ interface NavItemProps {
     color: string;
 }
 
-const bull = <span style={{ "margin": "5px" }}>•</span>;
+
 
 const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
 
@@ -228,31 +231,20 @@ export const MainNavigation = (props: MainNavigationProps) => {
     const callbackEnter = () => {
 
         // getTodosByGroupName 
-         
-        getTodosByName(filterText).then(
-            (todos) => {
-                console.log(todos)
-                setTodos(todos)
-            } // 
-        )
+
+        if (filterText.length > 2) {
+            getTodosByName(filterText).then(
+                (todos) => {
+                    console.log(todos)
+                    setTodos(todos)
+                } // 
+            )
+        }
 
         console.log("callbackEnter : ", todos)
     }
 
-    const getListItem = (listid: string): TodoMainItem => {
 
-
-        const i = items.filter(item => {
-            if (item.listid === listid) return item
-        })
-
-        if (i.length === 1) {
-            return i[0]
-        }
-
-        return createEmptyTodoMainItem();
-
-    }
 
 
 
@@ -297,14 +289,13 @@ export const MainNavigation = (props: MainNavigationProps) => {
         <>
 
             <Grid container alignItems="center" justifyContent="center" spacing={2} >
-
                 <Grid item xs={10} lg={8} >
                     <MyCard>
                         <CardContent>
                             <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
                         </CardContent>
                     </MyCard>
-                    <br /><br />
+                    <br />
 
                 </Grid>
             </Grid>
@@ -340,77 +331,19 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 </HorizontallyGrid>
             }
 
-            {todos.length > 0 &&
-                <MyCard>
-                    <List>
-                        {todos.map((todo: TodoItem, index: number) => (
-                            <ListItemButton key={"LI" + index}>
-                                <ListItemAvatar >
-                                    <Avatar>
-                                        <Icon>{getListItem(todo.listid).icon}</Icon>
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={todo.name}
-                                    secondary={<> {todo.group}  {bull}  {getListItem(todo.listid).name} </>}
-                                />
-                                <ListItemSecondaryAction>
-                                    {/* to={"/" + [item.component, todo.listid, todo.render].join('/')}   > */}
-                                    <NavLink to={"/" + ["list", todo.listid, getListItem(todo.listid).render].join('/')}   >
-                                        <IconButton>
-                                            <MyIcon icon="launch" />
-                                        </IconButton>
-                                    </NavLink>
-                                </ListItemSecondaryAction>
-                            </ListItemButton>
-                        ))
-                        }
-                    </List>
+            <Grid container alignItems="center" justifyContent="center" spacing={2} >
+                <Grid item xs={10} lg={8} >
+                    {( groups.length === 0 && todos.length === 0 ) && (
+                        <MyCard>
+                            <CardHeader subheader="Press Enter to start search ... " />
+                        </MyCard>
+                    )}
+                </Grid>
+                <Grid item xs={10} lg={8} >
+                    <SearchResponse mainTodos={items} searchResponse={todos} />
+                </Grid>
+            </Grid>
 
-                </MyCard>
-            }
-
-            {/* <MyCard>
-                <ListQ
-                    items={todos}
-                    removeItemHandle={(id: string) => { }}
-                    header=""
-                    toggleFunction={(id: string) => { }}
-                    selectFunction={(id: string) => { }}
-                    type={TodoListType.TODO_SIMPLE}
-                    group="many"
-                    editList={false}
-                />
-            </MyCard> */}
         </>
     )
 }
-
-// interface NavigationProps {
-//     list : TodoMainItem[];
-//     anchor : string;
-//     name : string;
-// }
-
-// export const Navigation = ({ list, anchor, name } : NavigationProps ) => {
-
-
-//     const jumpTo = (anchor : string ) => {
-//         window.location.href = "#" + anchor;
-//         setAnchor(anchor)
-//     }
-
-//     const [curAnchor, setAnchor] = useState("");
-
-//     return (
-//         <List>
-//             { list.map((item : TodoMainItem, index) => (
-//                 <ListItem button onClick={ () => jumpTo(item[anchor]) } key={ item[anchor] } >
-//                     <Box color={ item[anchor] === curAnchor ? "text.primary" : "text.secondary" } >
-//                         { item[name] }
-//                     </Box>
-//                 </ListItem>
-//             )) }
-//         </List>
-//     )
-// }

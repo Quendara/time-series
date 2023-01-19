@@ -23,12 +23,12 @@ import { BooleanModel } from 'aws-sdk/clients/gamelift';
 interface ListProps {
     lists: TodoMainItem[];
     username: string;
-    horizontally:boolean;
+    horizontally: boolean;
 }
 
-export const ListGraphQL = ( props: ListProps ) => {
+export const ListGraphQL = (props: ListProps) => {
 
-    let { listid, listtype, itemid } = useParams<{listid : string , listtype  : TodoListType , itemid? : string }>();
+    let { listid, listtype, itemid } = useParams<{ listid: string, listtype: TodoListType, itemid?: string }>();
 
     const items = useGetTodos(listid);
 
@@ -36,10 +36,10 @@ export const ListGraphQL = ( props: ListProps ) => {
         <>
 
             <ListGraphInternal
-                listid={listid?listid:""}
+                listid={listid ? listid : ""}
                 items={items}
-                listtype={listtype?listtype:TodoListType.UNDEFINED}
-                horizontally={ props.horizontally }
+                listtype={listtype ? listtype : TodoListType.UNDEFINED}
+                horizontally={props.horizontally}
                 itemid={itemid}
                 lists={props.lists}
                 username={props.username} />
@@ -64,7 +64,7 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
 
     const [todos, dispatch] = useReducer(reducerTodo, items);
 
-    useEffect(() => { 
+    useEffect(() => {
 
         dispatch(UpdateState(items))
 
@@ -167,35 +167,35 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
     };
 
 
-    if (itemid === undefined) {
-        return (
-            <ListPage
-                todos={todos}
-                listtype={listtype}
-                listid={listid}
-                addItemHandle={addItemHandle}
-                horizontally={horizontally}
-                // getItem             = {getItem}
-                removeItemHandle={removeItemHandle}
-                updateFunction={updateFunction}
-                toggleFunction={toggleFunction}
-                uncheckFunction={uncheckFunction}
-                lists={lists}
-                username = { username }
-            />)
-
-    }
-    else {
-        console.log("itemid : ", itemid)
-        return (<DetailsById
-            itemid={itemid}
-            updateFunction={updateFunction}
+    //if (itemid === undefined) {
+    return (
+        <ListPage
+            todos={todos}
             listtype={listtype}
-            lists={lists} 
-            username = { username }
-            />
-            )
-    }
+            listid={listid}
+            addItemHandle={addItemHandle}
+            horizontally={horizontally}
+            selectedItemId={itemid}
+            removeItemHandle={removeItemHandle}
+            updateFunction={updateFunction}
+            toggleFunction={toggleFunction}
+            uncheckFunction={uncheckFunction}
+            lists={lists}
+            username={username}
+        />)
+
+    // }
+    // else {
+    //     console.log("itemid : ", itemid)
+    //     return (<DetailsById
+    //         itemid={itemid}
+    //         updateFunction={updateFunction}
+    //         listtype={listtype}
+    //         lists={lists} 
+    //         username = { username }
+    //         />
+    //         )
+    // }
 }
 
 

@@ -32,7 +32,7 @@ export const FilterComponent = ({ filterText, callback, callbackEnter }: FilterP
     return (
         <TextField
             value={item}
-            label="Filter"
+            label="Search"
             fullWidth
             variant="outlined"
             InputProps={{

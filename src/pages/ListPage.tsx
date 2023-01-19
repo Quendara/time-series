@@ -29,6 +29,7 @@ interface ListProps {
     todos: TodoItem[];
     listtype: TodoListType;
     listid: string;
+    selectedItemId?: string;
     horizontally: boolean;
     addItemHandle: ( linkname:string, linkUrl:string, groupName:string) => void;
     // getItem: (id:string) => any;
@@ -64,8 +65,8 @@ export const ListPage = ( props: ListProps ) => {
 
     useEffect(
         () => {
-            setSelectedItemId("");
-        }, [props.listid])
+            setSelectedItemId( props.selectedItemId?props.selectedItemId:"" );
+        }, [props.listid, props.selectedItemId ])
 
     const callbackFilter = (text: string) => {
         setFilterText(text)
@@ -152,10 +153,10 @@ export const ListPage = ( props: ListProps ) => {
 
                     <HorizontallyGrid horizontally={stateHorizontally} >
                         {groups.map((item: GenericGroup<TodoItem>, index: number) => (                            
-                            <HorizontallyItem key={"ListPage"+index} horizontally={stateHorizontally} >
+                            <HorizontallyItem key={"ListPage"+item.value} horizontally={stateHorizontally} >
                                 <MyCard>
                                     <ListQ
-                                        key={index}
+                                        key={"ListQ"+item.value}
                                         editList={edit}
                                         header={item.value}
                                         group={item.value}
@@ -164,6 +165,7 @@ export const ListPage = ( props: ListProps ) => {
                                         addItemHandle={props.addItemHandle}
                                         type={props.listtype}
                                         selectFunction={selectHandle}
+                                        selectedItemId={selectedItemId}
                                         removeItemHandle={props.removeItemHandle}
                                         updateFunction={props.updateFunction}
                                         toggleFunction={props.toggleFunction}

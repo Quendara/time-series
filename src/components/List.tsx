@@ -9,7 +9,7 @@ import {
 // import { useHistory } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-import { Icon, IconButton, Modal, ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Typography, Grid, Card, CardContent, Divider, CardHeader, Dialog } from '@mui/material';
+import { Icon, IconButton, Modal, ListItem, ListItemIcon, ListItemText, List, ListItemSecondaryAction, Typography, Grid, Card, CardContent, Divider, CardHeader, Dialog, ListItemButton } from '@mui/material';
 
 import useLongPress from "../hooks/useLongPress";
 
@@ -59,6 +59,7 @@ interface PropsEl {
     link: string;
     checked: boolean;
     id: string;
+    selectedItemId?: string;
     removeClickFunction: (id: string) => void;
     updateFunction?: (item: UpdateTodosInput) => void;
     selectFunction: (id: string) => void;
@@ -76,6 +77,7 @@ const ListEl = (
         link,
         checked,
         id,
+        selectedItemId,
         removeClickFunction,
         updateFunction,
         selectFunction,
@@ -154,22 +156,6 @@ const ListEl = (
     // const longPressEvent = useLongPress(handleEditClick, handleToggleFunction, defaultOptions);
     const longPressEvent = useLongPress(handleEditClick, () => { }, defaultOptions);
     const longPressEventLink = useLongPress(handleEditClick, onMainClick, defaultOptions);
-
-
-    // const onMainClick = (type: string) => {
-    //     if (type === TodoListType.TODO) {
-    //         toggleFunction(id)
-    //     }
-    //     else {
-
-    //         if (link.startsWith("/")) {
-    //             history.push(link);
-    //         } else {
-    //             // Open in new window
-    //             window.open(link, "_blank")
-    //         }
-    //     }
-    // }
 
 
 
@@ -257,10 +243,9 @@ const ListEl = (
                 (
                     <>
                         {(type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE) &&
-                            <ListItem
-                                button={!(editList)}
+                            <ListItemButton                                
                                 onClick={handleSelect}
-                                selected={false} >
+                                selected={ (selectedItemId===id) } >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
                                     {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon> }
@@ -283,7 +268,7 @@ const ListEl = (
                                         <Icon>launch</Icon>
                                     </IconButton>
                                 </ListItemSecondaryAction>
-                            </ListItem>}
+                            </ListItemButton>}
 
                         {type === TodoListType.MESSAGE &&
                             <ListItem button onClick={handleSelect} >
@@ -351,6 +336,7 @@ export const ListHeader = (props: PropsHeader) => {
 
 interface PropsQ {
     items: TodoItem[];
+    selectedItemId?: string;
     removeItemHandle: (id: string) => void;
     header: string;
     addItemHandle?: (name: string, link: string, groupname: string) => void;
@@ -364,73 +350,70 @@ interface PropsQ {
 };
 
 
-export const ListQ = ({ items, removeItemHandle, header, addItemHandle, updateFunction, selectFunction, toggleFunction, type, group, groups, editList }: PropsQ) => {
+export const ListQ = ( props: PropsQ) => {
 
     const [edit, setEdit] = useState(false);
     const [name, setName] = useState("");
 
     const onClickFunction = (name: string, link: string, groupname: string) => {
 
-        if (addItemHandle) {
-            addItemHandle(name, link, groupname)
+        if (props.addItemHandle) {
+            props.addItemHandle(name, link, groupname)
             setName("")
         }
     }
-
-
-
-
 
     return (
 
         <>
             <ListHeader
-                header={header}
+                header={props.header}
                 edit={edit}
-                setEditCallback={(e: boolean) => {
+                setEditCallback={ (e: boolean) => {
                     return setEdit(e);
                 }}
-
             />
 
             <List
                 dense={false}
-                id={header}
+                id={props.header}
             >
-
                 {edit &&
                     <ListItem>
                         <AddForm renderModal={false}
                             name={name}
-                            group={group}
-                            groups={mapGenericToStringGroup(groups)}
-                            onClickFunction={onClickFunction}
-                            type={type} buttonName="Add"
+                            group={props.group}
+                            groups={mapGenericToStringGroup(props.groups)}
+                            onClickFunction={ onClickFunction }
+                            type={ props.type }
+                            buttonName="Add"
                             showGroupsSelector={false}
                             handleDeleteClick={undefined} />
                         <Divider />
                     </ListItem>}
 
 
-                {items.map((item, index) => (
-                    <React.Fragment key={"hjk" + index} >
+                {props.items.map((item, index) => (
+                    <React.Fragment key={"hjk" + item.id } >
+                        
                         <ListEl
-                            editList={editList}
+                            editList={props.editList}
                             key={index}
                             id={item.id}
                             name={item.name}
-                            group={group}
-                            groups={groups ? groups : []}
+                            group={props.group}
+                            groups={props.groups ? props.groups : []}
                             checked={item.checked}
                             link={item.link}
-                            selectFunction={selectFunction}
-                            updateFunction={updateFunction}
-                            removeClickFunction={removeItemHandle}
-                            toggleFunction={toggleFunction}
-                            type={type}
+                            selectedItemId={props.selectedItemId}
+                            selectFunction={props.selectFunction}
+                            updateFunction={props.updateFunction}
+                            removeClickFunction={props.removeItemHandle}
+                            toggleFunction={props.toggleFunction}
+                            type={props.type}
                         />
 
-                        {index !== items.length - 1 && <Divider component="li" />}
+                        {index !== props.items.length - 1 && <Divider component="li" />}
                     </React.Fragment>
                 ))}
 

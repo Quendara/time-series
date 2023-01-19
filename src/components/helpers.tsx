@@ -1,6 +1,10 @@
+import React, { } from "react";
+
 import { findUniqueJs  } from "./helper"
 import { sortArrayByJs  } from "./helper"
 
+
+export const bull = <span style={{ "margin": "5px" }}>•</span>;
 
 
 export async function restCallToBackendAsync(url:string, token:string, loggingMessage = "Generic Call")
