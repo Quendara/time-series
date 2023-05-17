@@ -39,7 +39,7 @@ export const ListGraphQL = (props: ListProps) => {
                 listid={listid ? listid : ""}
                 items={items}
                 listtype={listtype ? listtype : TodoListType.UNDEFINED}
-                horizontally={props.horizontally}
+                horizontally={ listtype === TodoListType.LINKS }
                 itemid={itemid}
                 lists={props.lists}
                 username={props.username} />

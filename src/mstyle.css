@@ -28,13 +28,13 @@
 	overflow-y: auto;
 	overflow-x: hidden;
   }
-/* 
-.details {
-	position:fixed;
-	width:55%;	
+.details-xs {
+	position:sticky;
+	top: 0px;	
 	transition: transform 0.5s;
 }
 
+/*
 .details.down {
 	transform: translate(0px, -160px);
 } */

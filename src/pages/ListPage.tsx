@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton } from '@mui/material';
+import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box } from '@mui/material';
 
 import { FilterComponent } from '../components/FilterComponent';
 
@@ -31,7 +31,7 @@ interface ListProps {
     listid: string;
     selectedItemId?: string;
     horizontally: boolean;
-    addItemHandle: ( linkname:string, linkUrl:string, groupName:string) => void;
+    addItemHandle: (linkname: string, linkUrl: string, groupName: string) => void;
     // getItem: (id:string) => any;
     removeItemHandle: (id: string) => void;
     updateFunction: (input: UpdateTodosInput) => void;
@@ -42,7 +42,7 @@ interface ListProps {
 
 }
 
-export const ListPage = ( props: ListProps ) => {
+export const ListPage = (props: ListProps) => {
 
     // const [selectedItem, setSelectedItem] = useState(undefined);
     const [selectedItemId, setSelectedItemId] = useState("");
@@ -65,8 +65,8 @@ export const ListPage = ( props: ListProps ) => {
 
     useEffect(
         () => {
-            setSelectedItemId( props.selectedItemId?props.selectedItemId:"" );
-        }, [props.listid, props.selectedItemId ])
+            setSelectedItemId(props.selectedItemId ? props.selectedItemId : "");
+        }, [props.listid, props.selectedItemId])
 
     const callbackFilter = (text: string) => {
         setFilterText(text)
@@ -149,14 +149,14 @@ export const ListPage = ( props: ListProps ) => {
 
         return (
             <>
-                { groups && (
+                {groups && (
 
                     <HorizontallyGrid horizontally={stateHorizontally} >
-                        {groups.map((item: GenericGroup<TodoItem>, index: number) => (                            
-                            <HorizontallyItem key={"ListPage"+item.value} horizontally={stateHorizontally} >
+                        {groups.map((item: GenericGroup<TodoItem>, index: number) => (
+                            <HorizontallyItem key={"ListPage" + item.value} horizontally={stateHorizontally} >
                                 <MyCard>
                                     <ListQ
-                                        key={"ListQ"+item.value}
+                                        key={"ListQ" + item.value}
                                         editList={edit}
                                         header={item.value}
                                         group={item.value}
@@ -178,22 +178,22 @@ export const ListPage = ( props: ListProps ) => {
 
                     </HorizontallyGrid>
 
-               
 
-                ) 
-              
+
+                )
+
                 }
             </>
 
         )
     }
 
-// onClose={handleClose}
+    // onClose={handleClose}
     return (
         <>
             <Snackbar
                 open={successSnackbarMessage.length > 0}
-                autoHideDuration={2000}                
+                autoHideDuration={2000}
                 message="Saved" >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
@@ -209,7 +209,7 @@ export const ListPage = ( props: ListProps ) => {
                                     <ListItem>
                                         <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
 
-                                            <Grid item xs={10} lg={8} >
+                                            <Grid item xs={9} lg={8} >
                                                 {edit ? (
                                                     <AddForm
                                                         name=""
@@ -217,20 +217,20 @@ export const ListPage = ( props: ListProps ) => {
                                                         onClickFunction={props.addItemHandle}
                                                         handleDeleteClick={undefined}
                                                         type={props.listtype}
-                                                        groups={ mapGenericToStringGroup( findUnique(props.todos, "group", false)) } ></AddForm>
+                                                        groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
                                                 ) : (
 
                                                     <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
                                                 )}
                                             </Grid>
-                                            <Grid item xs={2} lg={4} >
+                                            <Grid item xs={3} lg={4} >
                                                 <Grid container justifyContent="flex-end">
 
                                                     {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
                                                             <EditIcon />
                                                         </IconButton> */}
                                                     <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
-                                                        
+
                                                         <MyIcon icon="text_rotation_none"></MyIcon>
                                                     </IconButton>
                                                     <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
@@ -256,7 +256,6 @@ export const ListPage = ( props: ListProps ) => {
                             </CardContent>
                         )}
                         {filteredTodos.length === 0 && (
-
                             <MyCard>
                                 <ListHeader
                                     header={"Checklist"}
@@ -269,34 +268,31 @@ export const ListPage = ( props: ListProps ) => {
                                         name={filterText}
                                         onClickFunction={props.addItemHandle}
                                         type={props.listtype}
-                                        groups={ mapGenericToStringGroup(findUnique(props.todos, "group", false) ) } ></AddForm>
+                                        groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
                                 </ListItem>
                             </MyCard>)}
                     </MyCard>
                 </Grid>
+            </Grid>
+            <Box sx={{ display: { sm: 'block', xs: 'none', paddingTop:"1em" } }} >
+            <Grid container spacing={2} >
 
                 {props.listtype === TodoListType.TODO_SIMPLE ? (
                     <Grid item xs={12}  >
                         {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                     </Grid>
                 ) : (
-                    <Grid item md={stateHorizontally ? 12 : 4} sm={stateHorizontally ? 12 : 6} xs={12}  >
+                    <Grid item md={stateHorizontally ? 11 : 4} sm={stateHorizontally ? 12 : 6} xs={11}  >
                         <div className={"my-container-content"} >
                             {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                         </div>
                     </Grid>
                 )
-
                 }
-
-
-                {/* 
-                <div style={{ position: "relative" }}>
-                <div className={(scrollY > 190) ? "details down" : "details"} ></div> */}
 
                 {(selectedItemId) &&
                     <>
-                        <Grid item md={stateHorizontally ? 12 : 8} sm={stateHorizontally ? 12 : 6} xs={12} >
+                        <Grid item md={stateHorizontally ? 12 : 8 } sm={stateHorizontally ? 12 : 6} xs={12} >
 
                             <div className={"my-container-content"} >
                                 <DetailsById
@@ -305,14 +301,48 @@ export const ListPage = ( props: ListProps ) => {
                                     lists={props.lists}
                                     listtype={props.listtype}
                                     username={props.username}
-                                    />
-                                
+                                />
+
                             </div>
                             <div>Scroll position is ({scrollX}, {scrollY})</div>
                         </Grid>
                     </>
                 }
             </Grid >
+            </Box>
+
+            <Box sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
+
+                <HorizontallyGrid horizontally={true}  >
+                    <HorizontallyItem key={"Lists"} horizontally={true} >
+                        <Grid item xs={12}>
+                            {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                        </Grid>
+                    </HorizontallyItem>
+                    <HorizontallyItem key={"Lists"} horizontally={true} >
+                        {(selectedItemId) &&
+                            <>
+                                <Grid item xs={12} >
+
+                                    <div className={"my-container-content details-xs"} >
+                                        <DetailsById
+                                            itemid={selectedItemId}
+                                            updateFunction={props.updateFunction}
+                                            lists={props.lists}
+                                            listtype={props.listtype}
+                                            username={props.username}
+                                        />
+
+                                    </div>
+                                    <div>Scroll position is ({scrollX}, {scrollY})</div>
+                                </Grid>
+                            </>
+                        }
+                    </HorizontallyItem>
+                </HorizontallyGrid>
+
+            </Box>
+
         </>
     )
 
