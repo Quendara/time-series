@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box } from '@mui/material';
+import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box, Stack, Card } from '@mui/material';
 
 import { FilterComponent } from '../components/FilterComponent';
 
@@ -39,7 +39,6 @@ interface ListProps {
     uncheckFunction: (id: string) => void;
     lists: TodoMainItem[];
     username: string;
-
 }
 
 export const ListPage = (props: ListProps) => {
@@ -274,49 +273,53 @@ export const ListPage = (props: ListProps) => {
                     </MyCard>
                 </Grid>
             </Grid>
-            <Box sx={{ display: { sm: 'block', xs: 'none', paddingTop:"1em" } }} >
-            <Grid container spacing={2} >
+            <Box sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
+                <Grid container spacing={2} alignItems="stretch" >
 
-                {props.listtype === TodoListType.TODO_SIMPLE ? (
-                    <Grid item xs={12}  >
-                        {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                    </Grid>
-                ) : (
-                    <Grid item md={stateHorizontally ? 11 : 4} sm={stateHorizontally ? 12 : 6} xs={11}  >
-                        <div className={"my-container-content"} >
+                    {props.listtype === TodoListType.TODO_SIMPLE ? (
+                        <Grid item xs={12}  >
                             {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                        </div>
-                    </Grid>
-                )
-                }
-
-                {(selectedItemId) &&
-                    <>
-                        <Grid item md={stateHorizontally ? 12 : 8 } sm={stateHorizontally ? 12 : 6} xs={12} >
-
-                            <div className={"my-container-content"} >
-                                <DetailsById
-                                    itemid={selectedItemId}
-                                    updateFunction={props.updateFunction}
-                                    lists={props.lists}
-                                    listtype={props.listtype}
-                                    username={props.username}
-                                />
-
-                            </div>
-                            <div>Scroll position is ({scrollX}, {scrollY})</div>
                         </Grid>
-                    </>
-                }
-            </Grid >
+                    ) : (
+                        <Grid item md={stateHorizontally ? 8 : 6 } sm={stateHorizontally ? 6 : 6} xs={11}  >
+                            <div className={"my-container-content"} >
+                                {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                            </div>
+                        </Grid>
+                    )
+                    }
+
+                    {(selectedItemId) &&
+                        <>
+                            <Grid item md={stateHorizontally ? 4 : 6 } sm={stateHorizontally ? 6 : 6} xs={12} >
+
+                                <div className={"my-container-content"} >
+                                    <DetailsById
+                                        itemid={selectedItemId}
+                                        updateFunction={props.updateFunction}
+                                        lists={props.lists}
+                                        listtype={props.listtype}
+                                        username={props.username}
+                                    />
+
+                                </div>
+                                <div>Scroll position is ({scrollX}, {scrollY})</div>
+                            </Grid>
+                        </>
+                    }
+                </Grid >
             </Box>
+
+
 
             <Box sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
 
                 <HorizontallyGrid horizontally={true}  >
                     <HorizontallyItem key={"Lists"} horizontally={true} >
                         <Grid item xs={12}>
+                        <div className={"my-container-content"} >
                             {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                            </div>
                         </Grid>
                     </HorizontallyItem>
                     <HorizontallyItem key={"Lists"} horizontally={true} >
@@ -324,7 +327,7 @@ export const ListPage = (props: ListProps) => {
                             <>
                                 <Grid item xs={12} >
 
-                                    <div className={"my-container-content details-xs"} >
+                                    <div className={"my-container-content details-xs"} style={{ position:"relative" }} >
                                         <DetailsById
                                             itemid={selectedItemId}
                                             updateFunction={props.updateFunction}

@@ -44,6 +44,7 @@ export const cssClasses = {
     },
     horizontalSnapItem: {
       "min-width": "340px",
+      
       "float": "left",
       "marginRight": "10px",      
       "marginBottom": "10px",      
