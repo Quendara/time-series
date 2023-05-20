@@ -281,7 +281,9 @@ export const ListPage = (props: ListProps) => {
                             {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                         </Grid>
                     ) : (
-                        <Grid item md={stateHorizontally ? 8 : 6 } sm={stateHorizontally ? 6 : 6} xs={11}  >
+                        <Grid item md={selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
+                            sm={selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
+                            xs={11}  >
                             <div className={"my-container-content"} >
                                 {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                             </div>
@@ -291,7 +293,7 @@ export const ListPage = (props: ListProps) => {
 
                     {(selectedItemId) &&
                         <>
-                            <Grid item md={stateHorizontally ? 4 : 6 } sm={stateHorizontally ? 6 : 6} xs={12} >
+                            <Grid item md={stateHorizontally ? 4 : 8} sm={stateHorizontally ? 6 : 6} xs={12} >
 
                                 <div className={"my-container-content"} >
                                     <DetailsById
@@ -299,6 +301,11 @@ export const ListPage = (props: ListProps) => {
                                         updateFunction={props.updateFunction}
                                         lists={props.lists}
                                         listtype={props.listtype}
+                                        action={
+                                            <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
+                                                <MyIcon icon="close" />
+                                            </IconButton>
+                                        }
                                         username={props.username}
                                     />
 
@@ -317,8 +324,8 @@ export const ListPage = (props: ListProps) => {
                 <HorizontallyGrid horizontally={true}  >
                     <HorizontallyItem key={"Lists"} horizontally={true} >
                         <Grid item xs={12}>
-                        <div className={"my-container-content"} >
-                            {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                            <div className={"my-container-content"} >
+                                {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                             </div>
                         </Grid>
                     </HorizontallyItem>
@@ -327,12 +334,13 @@ export const ListPage = (props: ListProps) => {
                             <>
                                 <Grid item xs={12} >
 
-                                    <div className={"my-container-content details-xs"} style={{ position:"relative" }} >
+                                    <div className={"my-container-content details-xs"} style={{ position: "relative" }} >
                                         <DetailsById
                                             itemid={selectedItemId}
                                             updateFunction={props.updateFunction}
                                             lists={props.lists}
                                             listtype={props.listtype}
+                                            action={<></>}
                                             username={props.username}
                                         />
 

@@ -39,16 +39,27 @@ interface Props {
     updateFunction: (input: UpdateTodosInput) => any;
     lists: TodoMainItem[];
     username: string;
+    action: React.ReactNode;
 }
 
-export const DetailsById = ({ itemid, listtype, updateFunction, lists, username }: Props) => {
+export const DetailsById = ({ itemid, listtype, updateFunction, lists, username, action }: Props) => {
 
     const item = useGetTodo(itemid);
     const todos = useGetTodos(item?.listid);
 
+    const location = useLocation();
+    const navigate = useNavigate();
+
 
     return (
-        <Details selectedItem={item} todos={todos} updateFunction={updateFunction} lists={lists} listtype={listtype} username={username} />
+        <Details
+            selectedItem={item}
+            todos={todos}
+            updateFunction={updateFunction}
+            lists={lists}
+            action={ action }
+            listtype={listtype}
+            username={username} />
     )
 
 }
@@ -60,10 +71,11 @@ interface PropsDetails {
     todos: TodoItem[];
     lists: TodoMainItem[];
     username: string;
+    action: React.ReactNode;
 }
 
 
-export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, username }: PropsDetails) => {
+export const Details = (props: PropsDetails) => {
 
     // const classes = useStyles();
 
@@ -71,14 +83,14 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
     // const history = useHistory();
     const navigate = useNavigate();
 
-    const localitems = useGetTodos(selectedItem?.id);
+    const localitems = useGetTodos(props.selectedItem?.id);
 
     const [edit, setEdit] = useState(false);
     const [addTodos, setAddTodos] = useState(false);
 
 
     // currentItem can be set to undefined, when deleted
-    const [currentItem, setCurrentItem] = useState<TodoItem | undefined>(selectedItem);
+    const [currentItem, setCurrentItem] = useState<TodoItem | undefined>(props.selectedItem);
 
     const [selectedItemValue, setSelectedValue] = useState("");
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
@@ -92,28 +104,28 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
 
     useEffect(() => {
 
-        if (edit && selectedItem) // ( selectedItem.id !== selectedItemId ) 
+        if (edit && props.selectedItem) // ( selectedItem.id !== selectedItemId ) 
         {
             const value: UpdateTodosInput = {
-                id: selectedItem.id,
+                id: props.selectedItem.id,
                 description: selectedItemValue
             }
 
-            updateFunction(value)
+            props.updateFunction(value)
 
         }
 
-        if (selectedItem) {
-            console.log("useEffect", selectedItem.description)
-            setCurrentItem(selectedItem)
-            setSelectedValue(selectedItem.description)
+        if (props.selectedItem) {
+            console.log("useEffect", props.selectedItem.description)
+            setCurrentItem(props.selectedItem)
+            setSelectedValue(props.selectedItem.description)
         }
 
         setAddTodos(false);
         setEdit(false);
         return () => { };
 
-    }, [selectedItem]);
+    }, [props.selectedItem]);
 
     const updateHandle = () => {
         // updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
@@ -125,7 +137,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
             description: selectedItemValue
         }
 
-        updateFunction(value)
+        props.updateFunction(value)
         setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
     }
@@ -141,7 +153,7 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
             group: groupname
         }
 
-        updateFunction(value)
+        props.updateFunction(value)
         setEdit(false)
     }
 
@@ -160,14 +172,14 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
 
     const handleListChange = (selecedList: TodoMainItem) => {
 
-        if (selecedList !== null && selectedItem) {
+        if (selecedList !== null && props.selectedItem) {
             console.log("handleListIdChange : ", selecedList.id, selecedList.name)
 
             const value: UpdateTodosInput = {
-                id: selectedItem.id,
+                id: props.selectedItem.id,
                 listid: selecedList.id
             }
-            updateFunction(value)
+            props.updateFunction(value)
 
             // updateFunction(selectedItem.id, { listid: selecedList.id })
 
@@ -176,21 +188,21 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
     }
 
     const removeItemHandle = () => {
-        if (selectedItem) {
+        if (props.selectedItem) {
             setCurrentItem(undefined)
-            removeItemById(selectedItem.id)
+            removeItemById(props.selectedItem.id)
         }
     }
 
     const bull = <span style={{ "margin": "5px" }}>•</span>;
-    const currentList = getGlobalList(lists, selectedItem?.listid)
+    const currentList = getGlobalList(props.lists, props.selectedItem?.listid)
 
 
     return (
         <>
             <Snackbar
                 open={successSnackbarMessage.length > 0}
-                autoHideDuration={2000}                
+                autoHideDuration={2000}
                 message="Saved" >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
@@ -208,28 +220,26 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                 </Avatar>
                             }
                             action={
-                                <IconButton onClick={() => { navigate(location.pathname + "/" + currentItem.id) }} aria-label="open">
-                                    <MyIcon icon="launch" />
-                                </IconButton>
+                                props.action
                             }
                             title={<TextEdit
                                 value={currentItem.name}
                                 label="Name"
-                                callback={(newName: string) => updateFunction({ id: currentItem.id, name: newName })} >
+                                callback={(newName: string) => props.updateFunction({ id: currentItem.id, name: newName })} >
                             </TextEdit>
                             }
                             subheader={
                                 <>
                                     <TextEdit
                                         value={currentItem.group}
-                                        groups={findUnique(todos, "group", false)}
+                                        groups={findUnique(props.todos, "group", false)}
                                         label="Group"
-                                        callback={(group) => updateFunction({ id: currentItem.id, group: group })} >
+                                        callback={(group) => props.updateFunction({ id: currentItem.id, group: group })} >
                                     </TextEdit>
                                     {bull}
                                     <TextEdit
                                         value={currentList ? currentList.name : "unknown"}
-                                        groups={lists.map((x) => { return { value: x.name } })}
+                                        groups={props.lists.map((x) => { return { value: x.name } })}
                                         label="Lists"
                                         callback={(list) => { }} >
                                     </TextEdit>
@@ -250,13 +260,13 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                         edit ? (
                                             <Button startIcon={<MyIcon icon={"update"} />} variant="contained" color={"primary"} onClick={updateHandle}> Save </Button>
                                         ) : (
-                                            <Button startIcon={<MyIcon icon={"edit"} /> } variant="contained" onClick={() => setEdit(true)}>Edit </Button>
+                                            <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>
                                         )
                                     }
                                     {(localitems.length === 0) &&
 
                                         <Button
-                                            variant="contained"                                            
+                                            variant="contained"
                                             style={{ "marginLeft": "20px" }}
                                             startIcon={<MyIcon icon={"rule"} />}
                                             onClick={() => setAddTodos(true)}> Add Checklist
@@ -305,8 +315,8 @@ export const Details = ({ selectedItem, updateFunction, lists, todos, listtype, 
                                 <Grid item xs={12}>
                                     <ListGraphInternal
                                         items={localitems}
-                                        lists={lists}
-                                        username={username}
+                                        lists={props.lists}
+                                        username={props.username}
                                         horizontally={true}
                                         listid={currentItem.id}
                                         listtype={TodoListType.TODO_SIMPLE} />
