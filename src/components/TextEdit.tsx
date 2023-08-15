@@ -35,7 +35,9 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
 
     const checkEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
 
-        console.log("KEy : ", event.key)
+        event.preventDefault()
+
+        console.log("Key xx : ", event.key)
 
         if (event.key === "Enter") {
             // alert("Enter")
