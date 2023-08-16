@@ -297,10 +297,7 @@ export const ReplaceLists = ({ }) => {
                                     size="small"
                                     fullWidth
                                     variant="outlined"
-                                    
                                     />
-
-
 
                             </Grid>
                         </Grid>

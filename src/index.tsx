@@ -35,6 +35,7 @@ import { Auth } from "./Auth";
 
 import './mstyle.css';
 import { SandboxH } from "./pages/SandboxH";
+import { Sandbox } from "./pages/sandbox";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -208,7 +209,9 @@ const App = () => {
                       <Route path="/replace" element={<ReplaceLists />}>
                       </Route>
                       <Route path="/sandboxH" element={<SandboxH />}>
-                      </Route>                      
+                      </Route>      
+                      <Route path="/sandbox" element={<Sandbox />}>
+                      </Route>                                        
 
                       
                       <Route path="/csvtools" element={<CsvToolsPage />}>

@@ -1,5 +1,29 @@
-
-
+.responsive-img {
+	max-width: 100%;
+	
+}
+.responsive-img.rotate0 {
+	max-width: 100%;
+	min-height: 100%;
+  }
+  
+  .responsive-img.rotate90 {
+	transform: rotate(90deg) translateY(-100%);
+	transform-origin: top left;
+  }
+  
+  .responsive-img.rotate180 {
+	max-width: 100%;
+	min-height: 100%;
+	transform: rotate(180deg);
+	height: auto;
+  }
+  
+  .responsive-img.rotate270 {
+	transform: rotate(270deg) translateX(-100%);
+	transform-origin: top left;
+  }
+  
 .ml-2{
 	margin-left: 1em;
 }

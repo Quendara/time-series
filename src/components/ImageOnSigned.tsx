@@ -30,7 +30,6 @@ export const ImageOnSigned = ({ folder, dirname_physical, item, className, media
 
     const url = (media === "video") ? [endpoint, my_folder, item+conv_extension,"raw"].join("/") : [endpoint, my_folder, item,"raw"].join("/")
 
-
       // const signed_url = ""
       restCallToBackendAsync(url, token).then(data => {
           console.log( "signed_url", data )

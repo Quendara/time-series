@@ -281,7 +281,6 @@ export const Details = (props: PropsDetails) => {
 
                                 {edit ? (
                                     <>
-
                                         <Grid item xs={12}>
                                             <MyDivider />
                                             <MarkdownTextareaAutosize

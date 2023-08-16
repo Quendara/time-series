@@ -10,10 +10,10 @@ import { Image, Mediatype } from "../models/Image"
 interface Props {
   image: Image;
   className: string;
-  onClick: any;
+  onClick?: any;
   fullRes: boolean;
   token: string;
-  visibilityThreshold: number;
+  visibilityThreshold?: number;
 }
 
 
@@ -91,7 +91,6 @@ export const ImageOnDemand = ({
 
     <div style={{ backgroundColor: "#2D2D31", height: "100%" }} >
 
-      { visibility }
 
       {image !== undefined &&
         <>
