@@ -128,7 +128,6 @@ export const Details = (props: PropsDetails) => {
     }, [props.selectedItem]);
 
     const updateHandle = () => {
-        // updateFunction(selectedItem.id, selectedItem.name, selectedItem.link, selectedItem.group, selectedItemValue)
 
         if (currentItem === undefined) return;
 
@@ -141,6 +140,22 @@ export const Details = (props: PropsDetails) => {
         setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
     }
+
+    const updateMarkdownHandle = ( newItemValue : string ) => {
+
+        if (currentItem === undefined) return;
+
+        setSelectedValue( newItemValue )
+
+        const value: UpdateTodosInput = {
+            id: currentItem.id,
+            description: newItemValue
+        }
+
+        props.updateFunction(value)
+        setSuccessSnackbarMessage("Saved !!! ")
+        setEdit(false)
+    }    
 
     const updateNameLinkHandle = (linkName: string, linkUrl: string, groupname: string) => {
 
@@ -203,6 +218,8 @@ export const Details = (props: PropsDetails) => {
             <Snackbar
                 open={successSnackbarMessage.length > 0}
                 autoHideDuration={2000}
+                anchorOrigin={{ vertical:"top", horizontal:"center" }}
+                onClose={ ()=>setSuccessSnackbarMessage("") }
                 message="Saved" >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
@@ -275,10 +292,6 @@ export const Details = (props: PropsDetails) => {
 
                                 </Grid>
 
-
-
-
-
                                 {edit ? (
                                     <>
                                         <Grid item xs={12}>
@@ -296,7 +309,11 @@ export const Details = (props: PropsDetails) => {
                                                 <MyDivider />
 
                                                 <div className="markdown" >
-                                                    <DetailsMarkdown value={selectedItemValue} initValue="Add comments here ... " />
+                                                    <DetailsMarkdown 
+                                                        value={selectedItemValue} 
+                                                        initValue="Add comments here ... "
+                                                        updateFunction={(val: string) => updateMarkdownHandle(val)}
+                                                        />
                                                 </div>
                                             </Grid>
                                         }

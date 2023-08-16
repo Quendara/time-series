@@ -7,8 +7,10 @@ import ReactMarkdown from "react-markdown";
 // import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Grid } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Grid } from "@mui/material";
 import { extract } from "query-string/base";
+import { stringMap } from "aws-sdk/clients/backup";
+import { bool } from "aws-sdk/clients/signer";
 // import  {remarkTypescript}  from 'remark-typescript'
 
 // import remarkMath from 'remark-math'
@@ -53,26 +55,84 @@ $$
 interface Props {
     value: string;
     initValue: string
+    updateFunction: (s: string) => void;
 }
 
-export const DetailsMarkdown = (props: Props) => {
+export const DetailsMarkdown = ( props: Props ) => {
+
+    const replaceLineInContent = ( lineNumberToReplace : number, newLine: string ) => {
+
+        const val = props.value
+
+        const lines = val.split("\n");
+
+        const newContent = lines.map((line, index: number) => {
+            if( index === lineNumberToReplace ){
+                return newLine
+            }
+            else{ 
+                return line
+            }
+        })
+
+        return newContent.join("\n")
+    }
+
 
     const getPhotoJSX = (line: string) => {
 
         const regex = /\$\$Photo:"([^"]+)"/;
-
         const matches = line.match(regex);
 
         if (matches && matches.length >= 2) {
             const extractedString = matches[1];
             const filename = extractedString.split("/")
             return (
-
                 <Grid item xs={3} ><ImageFromPhotos folder={filename[0]} file={filename[1]} /></Grid>
-
             )
         } else {
             console.log("Kein Übereinstimmung gefunden.");
+            return (<></>)
+        }
+    }
+
+    const getCheckboxJSX = (line: string, index: number) => {
+
+        let isCheckbox = false
+        let isChecked = false
+        if (line.startsWith("$$ []")) { isCheckbox = true }
+        else if (line.startsWith("$$ [x]")) { isCheckbox = true; isChecked = true }
+
+        const handleCheck = ( check:bool, label : string ) => {
+
+            const checkStr = check?"[x]":"[]"
+            
+            const replacedLine =  `$$ ${checkStr} ${label.trim()}`
+            
+            const replacedContent = replaceLineInContent( index, replacedLine )
+            
+            props.updateFunction( replacedContent )
+
+        }
+
+        if (isCheckbox) {
+            const labelFromLine = line.split("]").at(1)
+            let label = labelFromLine?labelFromLine:"label"
+          
+            return (
+                <Grid item xs={12} >
+                    <Box ml={2} mr={2}>
+                        <FormControlLabel control={
+                            <Checkbox 
+                                defaultChecked={isChecked}
+                                onChange={ () => handleCheck( !isChecked, label ) }
+
+                         />} label={label} />
+                    </Box>
+                </Grid>
+            )
+        } else {
+
             return (<></>)
         }
     }
@@ -83,13 +143,13 @@ export const DetailsMarkdown = (props: Props) => {
         const lines = val.split("\n")
         let content = ""
 
-        const contentJSX = lines.map((currentLine) => {
+        const contentJSX = lines.map((currentLine, index: number) => {
 
             if (currentLine.startsWith("$$Grid")) {
 
                 let width = 6
                 const splittetLine = currentLine.split(":")
-                if( splittetLine.length == 2 ){
+                if (splittetLine.length == 2) {
                     width = +splittetLine[1]
                 }
 
@@ -98,9 +158,10 @@ export const DetailsMarkdown = (props: Props) => {
                 return (<>
 
                     <Grid item xs={width} >
-                        <ReactMarkdown children={mdcontent} remarkPlugins={[remarkGfm]} />
+                        <Box ml={2} mr={2}>
+                            <ReactMarkdown children={mdcontent} remarkPlugins={[remarkGfm]} />
+                        </Box>
                     </Grid>
-
                 </>
                 )
             }
@@ -110,19 +171,20 @@ export const DetailsMarkdown = (props: Props) => {
                 const mdcontent = content
                 content = ""
                 return (<>
-
                     {mdcontent.length > 0 &&
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
+
                             <ReactMarkdown children={mdcontent} remarkPlugins={[remarkGfm]} />
+
                         </Grid>}
                     {getPhotoJSX(currentLine)}
+                    {getCheckboxJSX(currentLine, index)}
                 </>
                 )
             }
             else {
                 content = content + currentLine + "\n"
                 return (<></>)
-
             }
         })
 
@@ -136,25 +198,11 @@ export const DetailsMarkdown = (props: Props) => {
         return contentJSX
     }
 
-
-
-
     return (
         <>
-            <Grid container spacing={1}>
+            <Grid container spacing={0}>
                 {parseText(props.value)}
             </Grid>
-
-
-
-            {/* <Grid container spacing={2}>
-
-                {images.map((image: string) => {
-                    const filename = image.split("/")
-                    return (<Grid item xs={3} ><ImageFromPhotos folder={filename[0]} file={filename[1]} /></Grid>)
-                })
-                }
-            </Grid> */}
         </>
     )
 
