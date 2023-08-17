@@ -89,18 +89,17 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                 event.preventDefault()
                 if (event.shiftKey) {
                     let shiftBack = 0
-                    if (lineWithCursor.startsWith('*')) {
-                        shiftBack = 2
-                    } else if (lineWithCursor.startsWith('  *')) {
-                        shiftBack = 2
-                    } else if (lineWithCursor.startsWith('    *')) {
-                        shiftBack = 2
-                    } else if (lineWithCursor.startsWith('      *')) {
-                        shiftBack = 2
-                    } else if (lineWithCursor.startsWith('        *')) {
+                    const trimmedLine = lineWithCursor.trim()
+                    if ( trimmedLine.startsWith('*')) {
                         shiftBack = 2
                     }
-                    if (lineWithCursor.startsWith('#')) {
+                    if ( trimmedLine.startsWith('$$')) {
+                        shiftBack = 2
+                    }                    
+                    else if (trimmedLine.startsWith('*')) {
+                        shiftBack = 2
+                    }
+                    else if (lineWithCursor.startsWith('#')) {
                         shiftBack = 1
                     }
 
@@ -112,15 +111,15 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                         updateTextArea(insertedText, initialCursor - shiftBack)
                     }
                 } else {
-                    if (lineWithCursor.startsWith('*')) {
+                    
+                    const trimmedLine = lineWithCursor.trim()
+                    if (trimmedLine.startsWith('*')) {
                         insertion_str = "  ";
-                    } else if (lineWithCursor.startsWith('  *')) {
+                    }
+                    else if (trimmedLine.startsWith('$$')) {
                         insertion_str = "  ";
-                    } else if (lineWithCursor.startsWith('    *')) {
-                        insertion_str = "  ";
-                    } else if (lineWithCursor.startsWith('      *')) {
-                        insertion_str = "  ";
-                    } else if (lineWithCursor.startsWith('#')) {
+                    }  
+                    else if (lineWithCursor.startsWith('#')) {
                         insertion_str = "#";
                     } else {
                         // if nothing then add *
