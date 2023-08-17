@@ -159,7 +159,7 @@ export const DetailsMarkdown = (props: Props) => {
                             <Checkbox
                                 defaultChecked={isChecked}
                                 onChange={() => handleCheck(!isChecked, label)}
-                            />} label={label} />
+                            />} label={ label } />
                     </Box>
                 
             )
@@ -230,19 +230,19 @@ export const DetailsMarkdown = (props: Props) => {
                     {currentLine.startsWith("$$Grid") ?
                         <Grid item xs={width} >
                             <Box ml={2} mr={2}>
-                                {markdownWithExtension(mdcontent, offset+1 )}
+                                {markdownWithExtension(mdcontent, offset )}
                             </Box>
                         </Grid> : <Grid item xs={width} >
                             <Card >
                                 <CardContent>
-                                    {markdownWithExtension(mdcontent, offset+1)}
+                                    {markdownWithExtension(mdcontent, offset )}
                                 </CardContent>
                             </Card>
                         </Grid>
                     }
                 </>
 
-                offset = index
+                offset = index+1
 
                 return retJSX
                 
