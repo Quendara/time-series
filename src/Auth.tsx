@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton, Box, css } from '@mui/material';
+import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton, Box, css, Icon, Menu, Avatar, ListItemIcon, MenuItem, ListItemText, ListItemAvatar } from '@mui/material';
 import { List, ListItem } from '@mui/material';
 import { Alert, AlertTitle } from '@mui/material';
 
@@ -22,25 +22,33 @@ const poolData = {
 
 interface Props {
   authSuccessCallback: (username: string, token: string, apikey: string, apikeyTimetree: string) => void;
-  children:  React.ReactNode
+  children: React.ReactNode
 }
 
 
 
-const Auth = ({ authSuccessCallback, children } : Props) => {
+const Auth = ({ authSuccessCallback, children }: Props) => {
 
 
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState<any>("");
-  
+
   // let authError = {}
   //  const [token, setToken] = useState("");
-  
-  const [trySend, setTrySend] = useState(false);
 
+  const [trySend, setTrySend] = useState(false);
   const [cognitoUser, setCognitoUser] = useState<any>(null);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); //
+
+  const menuHandleClick = (event: any) => { // : 
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     // check if user is already logged in
@@ -53,7 +61,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
       console.log("cognitoUser", cognitoUser);
 
       if (cognitoUser !== null) {
-        cognitoUser.getSession(function (err: any, session : any) {
+        cognitoUser.getSession(function (err: any, session: any) {
           if (err) {
             alert(err.message || JSON.stringify(err));
             return;
@@ -63,7 +71,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
           const username = cognitoUser["username"];
           const jwtToken = session.getIdToken().getJwtToken();
 
-          const decoded : any = jwt_decode(jwtToken);
+          const decoded: any = jwt_decode(jwtToken);
 
           console.log("decoded jwtToken");
           console.log(decoded);
@@ -82,7 +90,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
     }
   }, [authSuccessCallback]);
 
-  const signIn = ( event : any ) => {
+  const signIn = (event: any) => {
     // event.preventDefault();
     console.log("username ", username);
     console.log("password ", password);
@@ -114,7 +122,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
     }
   };
 
-  const onPasswortChange = (e : any ) => {
+  const onPasswortChange = (e: any) => {
 
     if (e.key === "Enter") {
       signIn(e)
@@ -124,7 +132,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
     }
   }
 
-  const authImpl = (username : string, password : string ) => {
+  const authImpl = (username: string, password: string) => {
     // Amazon Cognito creates a session which includes the id, access, and refresh tokens of an authenticated user.
 
     const authenticationData = {
@@ -146,13 +154,13 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
     const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
     cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function (result : any ) {
+      onSuccess: function (result: any) {
         // var accessToken = result.getAccessToken().getJwtToken();
 
         // Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer
         let idToken = result.idToken.jwtToken;
 
-        let decoded : any = jwt_decode(idToken);
+        let decoded: any = jwt_decode(idToken);
 
         let username = decoded["cognito:username"];
         let apikey = decoded["custom:APIKEY"];
@@ -164,7 +172,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
         setCognitoUser(cognitoUser);
         setTrySend(false);
       },
-      onFailure: function (err : any ) {
+      onFailure: function (err: any) {
         setTrySend(false);
         console.error("Cannot log in ", err);
         setAuthError({
@@ -177,7 +185,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
     });
   };
 
-  const getInputClass = ( val : string ) => {
+  const getInputClass = (val: string) => {
     let ret = "form-control m-2";
     if (val.length > 0) {
       ret += " is-valid";
@@ -196,7 +204,7 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
           justifyContent="center"
           alignItems="center"  >
 
-          <Grid item xs={ 11 } lg={ 12 } >
+          <Grid item xs={11} lg={12} >
             <br />
             <br />
             <br />
@@ -204,54 +212,54 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
             <br />
             <br />
           </Grid>
-          <Grid item xs={ 11 } lg={ 4 } >
+          <Grid item xs={11} lg={4} >
             <Card>
               <List>
                 <ListItem>
                   <Typography variant="h4" >Log in</Typography>
                   <Divider variant="middle" />
                 </ListItem>
-                <form className="form-inline" onSubmit={ signIn } >
+                <form className="form-inline" onSubmit={signIn} >
                   <ListItem>
                     <TextField
-                      value={ username }
-                      error={ trySend }
+                      value={username}
+                      error={trySend}
                       fullWidth
-                      style={ { margin: 8 } }
+                      style={{ margin: 8 }}
                       variant="outlined"
-                      className={ getInputClass(username) }
+                      className={getInputClass(username)}
                       label="Name"
-                      onChange={ e => setUsername(e.target.value) }
+                      onChange={e => setUsername(e.target.value)}
                     />
                   </ListItem>
                   <ListItem>
                     <TextField
                       type="password"
-                      value={ password }
-                      error={ trySend }
+                      value={password}
+                      error={trySend}
                       fullWidth
-                      style={ { margin: 8 } }
+                      style={{ margin: 8 }}
                       variant="outlined"
-                      className={ getInputClass(password) }
+                      className={getInputClass(password)}
                       label="Password"
-                      onKeyPress={ e => onPasswortChange(e) }
+                      onKeyPress={e => onPasswortChange(e)}
                       // onKeyPress={ e => onPasswortChange ( e.target.value ) }
-                      onChange={ e => setPassword(e.target.value) }
+                      onChange={e => setPassword(e.target.value)}
                     />
                   </ListItem>
                   <ListItem>
-                    <Button color="primary" variant="contained" onClick={ signIn } style={ { margin: 8 } } >
-                      { trySend ? "Loading" : "Sign-In" }
-                      <MyIcon icon={ "chevron_right" }></MyIcon>
+                    <Button color="primary" variant="contained" onClick={signIn} style={{ margin: 8 }} >
+                      {trySend ? "Loading" : "Sign-In"}
+                      <MyIcon icon={"chevron_right"}></MyIcon>
                     </Button>
                   </ListItem>
                 </form>
               </List>
               <CardContent>
-                { authError &&
+                {authError &&
                   <Alert severity="error">
                     <AlertTitle>Failed to Login</AlertTitle>
-                    { authError.message }
+                    {authError.message}
                   </Alert>
                 }
               </CardContent>
@@ -264,18 +272,39 @@ const Auth = ({ authSuccessCallback, children } : Props) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar sx={ cssClasses.appBar } position="static" >
+        <AppBar sx={cssClasses.appBar} position="fixed"  >
           <Toolbar>
 
 
-            { children }
+            {children}
 
-            {/* <Button onClick={ signOut }><ExitToAppIcon /></Button> */ }
-            <Box >
-              <IconButton onClick={ signOut }>
-                <MyIcon icon="exit_to_app" />
-                </IconButton>
+            <Box>
+              <IconButton
+                onClick={menuHandleClick} >
+                <Icon>account_circle</Icon>
+              </IconButton>
             </Box>
+
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+
+              <MenuItem>
+                <ListItemAvatar><Avatar>{username[0]}</Avatar></ListItemAvatar>
+                <ListItemText primary={username} />
+              </MenuItem>
+
+              <Divider />
+
+              <MenuItem onClick={signOut}>
+                <ListItemAvatar><Avatar><MyIcon icon="exit_to_app" /></Avatar></ListItemAvatar>
+                <ListItemText primary="Logout" />
+              </MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
       </>

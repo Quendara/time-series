@@ -85,9 +85,10 @@ export const cssClasses = {
     },
     appBar: {
       backgroundColor: theme.palette.primary.dark,
+            
       
-      //top: 'auto',
-      //bottom: 0,
+      top: 'auto',
+      bottom: 0,
     },
     chiplist: {
       display: 'flex',

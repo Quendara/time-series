@@ -206,7 +206,7 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
         switch (name) {
             case "Arbeit": return "work"
             case "Dev": return "developer_mode"
-            case "Privat": return "person"
+            case "Privat": return "security"
             case "Projekte - Closed": return "check"
 
             default: return "star"
@@ -254,12 +254,9 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
                                 onClose={handleClose}
 
                             >
-                                {renderItems(groups.at(1)?.listitems)}
-                                <Divider />
                                 {renderItems(groups.at(0)?.listitems)}
-
-
-                                {/*  */}
+                                <Divider />
+                                {renderItems(groups.at(1)?.listitems)}
                             </Menu>
                         </Box>
 

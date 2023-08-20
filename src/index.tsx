@@ -84,14 +84,7 @@ const App = () => {
     console.log("apikey timetree : ", apikeyTimetree);
   };
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); //
 
-  const menuHandleClick = (event: any) => { // : 
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const errorHandle = (message: string) => {
 
@@ -154,28 +147,7 @@ const App = () => {
               username={username}
               handleSetConfig={handleSetConfig} />}
 
-          <IconButton
-            sx={cssClasses.menuButton}
-            onClick={menuHandleClick} >
-            <Icon>more_horiz</Icon>
-          </IconButton>
-
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-
-            <MenuItem>
-              <ListItemIcon><Avatar>{username[0]}</Avatar></ListItemIcon>{username}
-            </MenuItem>
-
-            <Divider />
-
-            {/*  */}
-          </Menu>
+         
         </Auth>
 
 
@@ -245,6 +217,11 @@ const App = () => {
           </Grid>
         </Grid>
       </Router>
+
+      <Grid item xs={12} md={6}>
+        <Box sx={{height:"90px"}} >
+          </Box>
+      </Grid>
 
 
     </ThemeProvider>
