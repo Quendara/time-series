@@ -46,9 +46,10 @@ interface NavItemProps {
     dispatch: any; // @todo
     render: RenderMode
     color: string;
+    handleClose: () => void;
 }
 
-const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
+const NavItem = ({ item, dispatch, render, color, handleClose }: NavItemProps) => {
 
     const handleComplete = () => {
         // dispatch({ type: "COMPLETE", id: item.id });
@@ -108,40 +109,38 @@ const NavItem = ({ item, dispatch, render, color }: NavItemProps) => {
     // }
     // else {
     return (
-        <ListItemButton sx={{ minWidth:"300px"}}> 
-                <NavLink
-                        to={"/" + [item.component, item.listid, item.render].join('/')}   >
-            <ListItemAvatar >
-                <Avatar style={item.navbar ? { backgroundColor: color } : {}} >
-                    <MyIcon icon={item.icon} />
-                </Avatar>
-            </ListItemAvatar>
-                </NavLink>
+        <ListItemButton onClick={handleClose} sx={{ minWidth: "300px" }} >
+            <NavLink
+                to={"/" + [item.component, item.listid, item.render].join('/')}   >
+                <ListItemAvatar >
+                    <Avatar style={item.navbar ? { backgroundColor: color } : {}} >
+                        <MyIcon icon={item.icon} />
+                    </Avatar>
+                </ListItemAvatar>
+            </NavLink>
             {render === "navlink" ? (
 
                 <ListItemText
-                    primary={ item.name }
-                    secondary={ "Group : " + item.group ? item.group : "keine" } 
-                    />
-
-            )
-                : (
-                    <ListItemText
-                        primary={<TextEdit value={item.name} label="Name" callback={handleEditName} />}
-                        secondary={<>
-                            <TextEdit value={item.group ? item.group : "keine"} label="Group" callback={handleEditGroup} />
-                            {bull}
-                            <TextEdit value={item.icon ? item.icon : "keine"} label="Icon" callback={handleEditIcon} />
-                            {bull}
-                            {item.render}
-                        </>} />)}
+                    primary={item.name}
+                    secondary={"Group : " + item.group ? item.group : "keine"}
+                />
+            ) : (
+                <ListItemText
+                    primary={<TextEdit value={item.name} label="Name" callback={handleEditName} />}
+                    secondary={<>
+                        <TextEdit value={item.group ? item.group : "keine"} label="Group" callback={handleEditGroup} />
+                        {bull}
+                        <TextEdit value={item.icon ? item.icon : "keine"} label="Icon" callback={handleEditIcon} />
+                        {bull}
+                        {item.render}
+                    </>} />)}
             <ListItemSecondaryAction>
                 <Tooltip title="Favorite" aria-label="add">
-            
-                        <IconButton onClick={handleComplete} edge="end" aria-label="delete">
-                            <MyIcon icon={ item.navbar ? "favorite":"favorite_border" } />
-                        </IconButton>
-                    
+
+                    <IconButton onClick={handleComplete} edge="end" aria-label="delete">
+                        <MyIcon icon={item.navbar ? "favorite" : "favorite_border"} />
+                    </IconButton>
+
                 </Tooltip>
             </ListItemSecondaryAction>
         </ListItemButton>
@@ -198,7 +197,7 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
         return (
             <>
                 {sortArrayBy(items, "name").map((item: TodoMainItem, index: number) => (
-                    <NavItem key={index} item={item} render={"navlink"} dispatch={dispatch} color={color} />
+                    <NavItem handleClose={handleClose}  key={index} item={item} render={ render} dispatch={dispatch} color={color} />
                 ))}
             </>)
     }
@@ -253,12 +252,8 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
                                 keepMounted
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
-                                
+
                             >
-                                {/* <MenuItem>
-
-                                </MenuItem> */}
-
                                 {renderItems(groups.at(1)?.listitems)}
                                 <Divider />
                                 {renderItems(groups.at(0)?.listitems)}
