@@ -35,7 +35,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
 
     const checkEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
 
-        event.preventDefault()
+        // event.preventDefault()
 
         console.log("Key xx : ", event.key)
 
@@ -101,7 +101,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
                                 size="small"
                                 fullWidth={true}
                                 variant="outlined"
-                                onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
+                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
                                 onChange={(e: any) => setInternalName(e.target.value)}
                             />
 
@@ -122,7 +122,7 @@ export const TextEdit = ({ value, label, callback, groups, children }: Props) =>
                         value={{ value: internalName, key: undefined }}
                         // error={ groupName === undefined || groupName.length == 0 }
                         getOptionLabel={(option) => myGetOptionLabel(option)}
-                        onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
                         onInputChange={(event, newValue) => {
                             if (typeof newValue === 'string') {
                                 if (newValue.length > 0) {

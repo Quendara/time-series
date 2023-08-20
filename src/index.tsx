@@ -131,7 +131,7 @@ const App = () => {
             <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
           </NavLink>
 
-          {userConfiguration.map((item, index) => {
+          {/* {userConfiguration.map((item, index) => {
             if (item.navbar) return (
               <Box key={"fdf" + index} sx={cssClasses.menuButton}    >
                 <Tooltip title={item.name} aia-label="add">
@@ -144,14 +144,21 @@ const App = () => {
               </Box>
             )
           }
-          )}
+          )} */}
+
+          {amplifyInitilaized &&
+
+            <MainNavigation
+              horizontally={false}
+              render="navlink"
+              username={username}
+              handleSetConfig={handleSetConfig} />}
 
           <IconButton
             sx={cssClasses.menuButton}
             onClick={menuHandleClick} >
             <Icon>more_horiz</Icon>
           </IconButton>
-
 
           <Menu
             id="simple-menu"
@@ -167,13 +174,7 @@ const App = () => {
 
             <Divider />
 
-            {amplifyInitilaized &&
-
-              <MainNavigation
-                horizontally={false}
-                render="simple"
-                username={username}
-                handleSetConfig={handleSetConfig} />}
+            {/*  */}
           </Menu>
         </Auth>
 
@@ -209,11 +210,11 @@ const App = () => {
                       <Route path="/replace" element={<ReplaceLists />}>
                       </Route>
                       <Route path="/sandboxH" element={<SandboxH />}>
-                      </Route>      
+                      </Route>
                       <Route path="/sandbox" element={<Sandbox />}>
-                      </Route>                                        
+                      </Route>
 
-                      
+
                       <Route path="/csvtools" element={<CsvToolsPage />}>
                       </Route>
 
@@ -223,7 +224,7 @@ const App = () => {
                           <Grid item xs={12} md={12}>
                             <MainNavigation
                               horizontally={true}
-                              render="nnx"
+                              render="main"
                               username={username}
                               handleSetConfig={handleSetConfig} />
                           </Grid>
@@ -233,65 +234,6 @@ const App = () => {
                         </Grid>
                       } >
                       </Route>
-                      {/* <Route path="/sandboxQl" >
-                        {!amplifyInitilaized ? (<h1> Loading </h1>) : (
-                          <SandboxQl />
-
-                          
-
-                        )}
-                      </Route> */}
-                      <Route path="/sandbox" element={
-                        <Grid container justifyContent="flex-start" spacing={2} >
-                          <Grid item xs={3} >
-                            <Grid container justifyContent="flex-start" spacing={2} >
-                              {/* "aspectRatio": "1 / 1" */}
-                              <Grid item xs={6} ><Paper style={{ "aspectRatio": "1 / 1" }} ></Paper></Grid>
-                              <Grid item xs={6} ><Paper style={{ "aspectRatio": "1 / 1" }} ></Paper></Grid>
-
-                              <Grid item xs={6} ><Paper style={{ "aspectRatio": "4 / 1" }} ></Paper></Grid>
-                              <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-
-                              <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-
-                              <Grid item xs={8} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-                              <Grid item xs={4} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>                            </Grid>
-                          </Grid>
-                          <Grid item xs={6} >
-                            <Grid container justifyContent="flex-start" spacing={2} >
-                              <Grid item xs={12} ><Paper style={{ "aspectRatio": "4 / 1" }} ></Paper></Grid>
-
-                              <Grid item xs={12} ><Paper style={{ "height": "35vh" }} ></Paper></Grid>
-
-                              <Grid item xs={6} ><Paper style={{ "height": "15vh" }} ></Paper></Grid>
-                              <Grid item xs={6} ><Paper style={{ "height": "15vh" }} ></Paper></Grid>
-
-                              <Grid item xs={4} ><Paper style={{ "height": "10vh" }} ></Paper></Grid>
-                              <Grid item xs={4} ><Paper style={{ "height": "10vh" }} ></Paper></Grid>
-                              <Grid item xs={4} ><Paper style={{ "height": "10vh" }} ></Paper></Grid>
-                            </Grid>
-
-                          </Grid>
-                          <Grid item xs={3} >
-                            <Grid container justifyContent="flex-start" spacing={2} >
-                              <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-
-                              <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-                              <Grid item xs={6} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-
-                              <Grid item xs={12} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-
-                              <Grid item xs={4} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-                              <Grid item xs={4} ><Paper style={{ "height": "20vh" }} ></Paper></Grid>
-
-
-                            </Grid>
-                          </Grid>
-
-
-                        </Grid>
-
-                      } />
                       <Route path="/demo" element={<StyleDemo />}></Route>
                     </Routes>
                   )}

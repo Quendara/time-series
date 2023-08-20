@@ -50,7 +50,11 @@ export const sumArray = ( list: any, key: string ) => {
 
 export const sortArrayBy = <T,>( items : T[] , sortByKey : string = 'rating', ascending:boolean=true) : T[] => {
 
-    return sortArrayByJs(items, sortByKey, ascending); // .slice(0, 5);
+    const output = sortArrayByJs(items, sortByKey, ascending); // .slice(0, 5);
+
+    console.log( "in/out", items, output ) 
+
+    return output
 }
 
 export interface GenericGroup<Type>{
