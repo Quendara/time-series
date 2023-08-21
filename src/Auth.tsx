@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton, Box, css, Icon, Menu, Avatar, ListItemIcon, MenuItem, ListItemText, ListItemAvatar } from '@mui/material';
+import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton, Box, css, Icon, Menu, Avatar, ListItemIcon, MenuItem, ListItemText, ListItemAvatar, useMediaQuery } from '@mui/material';
 import { List, ListItem } from '@mui/material';
 import { Alert, AlertTitle } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { MyIcon } from "./components/MyIcon";
 
@@ -34,6 +35,9 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState<any>("");
+
+  const theme = useTheme();
+  const matchesUpXs = useMediaQuery(theme.breakpoints.up('sm'));
 
   // let authError = {}
   //  const [token, setToken] = useState("");
@@ -101,7 +105,7 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
 
       setTrySend(true);
 
-      authImpl(username, password);
+      authImpl( username.trim() , password.trim() );
     } else {
     }
   };
@@ -201,22 +205,15 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
       <>
         <Grid
           container
+          sx={{height:"100vh"}}
           justifyContent="center"
           alignItems="center"  >
 
-          <Grid item xs={11} lg={12} >
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-          </Grid>
-          <Grid item xs={11} lg={4} >
+          <Grid item xs={11} md={4} >
             <Card>
               <List>
                 <ListItem>
-                  <Typography variant="h4" >Log in</Typography>
+                  <Typography pl={2} variant="h4" >Log in</Typography>
                   <Divider variant="middle" />
                 </ListItem>
                 <form className="form-inline" onSubmit={signIn} >
@@ -248,7 +245,12 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
                     />
                   </ListItem>
                   <ListItem>
-                    <Button color="primary" variant="contained" onClick={signIn} style={{ margin: 8 }} >
+                    <Button
+                      disabled={password.length === 0 || username.length < 5 }  
+                        color="primary" 
+                        variant="contained" 
+                        onClick={signIn} 
+                        style={{ margin: 8 }} >
                       {trySend ? "Loading" : "Sign-In"}
                       <MyIcon icon={"chevron_right"}></MyIcon>
                     </Button>
@@ -272,9 +274,8 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar sx={cssClasses.appBar} position="fixed"  >
+        <AppBar sx={cssClasses.appBar} position={ matchesUpXs? "static": "fixed"}  >
           <Toolbar>
-
 
             {children}
 

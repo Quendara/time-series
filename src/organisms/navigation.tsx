@@ -7,7 +7,7 @@ import React, { useState, useEffect, useReducer } from "react";
 // import { listTodos, getTodos } from '../graphql/queries';
 
 
-import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent, Icon, ListItemButton, CardHeader, Divider, Menu, Box } from '@mui/material';
+import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent, Icon, ListItemButton, CardHeader, Divider, Menu, Box, useMediaQuery, useTheme } from '@mui/material';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
 
 import {
@@ -162,6 +162,10 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
     const [todos, dispatch] = useReducer(reducerTodoMain, items);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+    const theme = useTheme();
+    const matchesUpXs = useMediaQuery(theme.breakpoints.up('sm'));
+
+
 
     const menuHandleClick = (event: any) => { // : 
         setAnchorEl(event.currentTarget);
@@ -197,7 +201,7 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
         return (
             <>
                 {sortArrayBy(items, "name").map((item: TodoMainItem, index: number) => (
-                    <NavItem handleClose={handleClose}  key={index} item={item} render={ render} dispatch={dispatch} color={color} />
+                    <NavItem handleClose={handleClose} key={index} item={item} render={render} dispatch={dispatch} color={color} />
                 ))}
             </>)
     }
@@ -254,9 +258,13 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
                                 onClose={handleClose}
 
                             >
-                                {renderItems(groups.at(0)?.listitems)}
-                                <Divider />
                                 {renderItems(groups.at(1)?.listitems)}
+
+                                {matchesUpXs &&
+                                    <>
+                                        <Divider />
+                                        {renderItems(groups.at(0)?.listitems)}
+                                    </>}
                             </Menu>
                         </Box>
 
