@@ -2,6 +2,7 @@ import React, { } from "react";
 
 import { findUniqueJs  } from "./helper"
 import { sortArrayByJs  } from "./helper"
+import { TodoMainItem } from "../models/TodoItems";
 
 
 export const bull = <span style={{ "margin": "5px" }}>•</span>;
@@ -44,8 +45,6 @@ export const sumArray = ( list: any, key: string ) => {
     catch( e ){
         return undefined;
     }
-
-
 }
 
 export const sortArrayBy = <T,>( items : T[] , sortByKey : string = 'rating', ascending:boolean=true) : T[] => {
@@ -81,6 +80,19 @@ export interface CsvReturn{
     json: any[], 
     skippedLines: string[],
     headers: string[]
+}
+
+export const getGlobalList = (lists: TodoMainItem[], id?: string): TodoMainItem | undefined => {
+    if (id === undefined) return undefined
+    if (lists !== undefined) {
+        const fl = lists.filter(item => item.listid === id)
+        // console.log("getGlobalList", id, fl, lists)
+
+        if (fl.length > 0) {
+            return fl[0]
+        }
+    }
+    return undefined
 }
 
 export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {

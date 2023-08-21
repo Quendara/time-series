@@ -11,7 +11,7 @@ import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
 
 import {
-    NavLink,
+    NavLink, useNavigate,
 } from "react-router-dom";
 
 import { useGetMainTodos } from '../hooks/useGetMainTodo';
@@ -49,11 +49,13 @@ interface NavItemProps {
     handleClose: () => void;
 }
 
-const NavItem = ({ item, dispatch, render, color, handleClose }: NavItemProps) => {
+const NavItem = ( props : NavItemProps) => {
+
+    const navigate = useNavigate();
 
     const handleComplete = () => {
         // dispatch({ type: "COMPLETE", id: item.id });
-        dispatch(ToggleItem(item.id))
+        props.dispatch(ToggleItem( props.item.id))
     };
 
     const handleEditName = (name: string) => {
@@ -61,35 +63,32 @@ const NavItem = ({ item, dispatch, render, color, handleClose }: NavItemProps) =
         // dispatch(UpdateItem(item.id, name)) 
         let element: UpdateTodoMainInput
         element = {
-            id: item.id,
+            id: props.item.id,
             name: name
         }
-        dispatch(UpdateItem(element))
+        props.dispatch(UpdateItem(element))
     };
 
     const handleEditGroup = (group: string) => {
         // dispatch({ type: "COMPLETE", id: item.id });
         let element: UpdateTodoMainInput
         element = {
-            id: item.id,
+            id: props.item.id,
             group: group
         }
 
-        dispatch(UpdateItem(element))
+        props.dispatch(UpdateItem(element))
     };
 
     const handleEditIcon = (icon: string) => {
         // dispatch({ type: "COMPLETE", id: item.id });
         let element: UpdateTodoMainInput
         element = {
-            id: item.id,
+            id: props.item.id,
             icon: icon
         }
-        dispatch(UpdateItem(element))
+        props.dispatch(UpdateItem(element))
     };
-
-
-
 
     // if (render === "navlink") {
     //     return (
@@ -108,37 +107,47 @@ const NavItem = ({ item, dispatch, render, color, handleClose }: NavItemProps) =
     //         </NavLink>)
     // }
     // else {
+    
+
+    const handleClick = () => {
+        const linkUrl = "/" + [ props.item.component, props.item.listid, props.item.render].join('/')
+        props.handleClose(); 
+        navigate( linkUrl )
+
+    }
+    
     return (
-        <ListItemButton onClick={handleClose} sx={{ minWidth: "300px" }} >
-            <NavLink
-                to={"/" + [item.component, item.listid, item.render].join('/')}   >
-                <ListItemAvatar >
-                    <Avatar style={item.navbar ? { backgroundColor: color } : {}} >
-                        <MyIcon icon={item.icon} />
+        <ListItemButton  sx={{ minWidth: "300px" }} >
+            
+                <ListItemAvatar onClick={ handleClick }>
+                    <Avatar style={ props.item.navbar ? { backgroundColor: props.color } : {}} >
+                        <MyIcon icon={ props.item.icon} />
                     </Avatar>
                 </ListItemAvatar>
-            </NavLink>
-            {render === "navlink" ? (
-
+            
+            
+            { props.render === "navlink" ? (
                 <ListItemText
-                    primary={item.name}
-                    secondary={"Group : " + item.group ? item.group : "keine"}
+                    onClick={ handleClick }
+                    primary={ props.item.name}
+                    secondary={"Group : " + props.item.group ? props.item.group : "keine"}
                 />
             ) : (
                 <ListItemText
-                    primary={<TextEdit value={item.name} label="Name" callback={handleEditName} />}
+                    primary={<TextEdit value={props.item.name} label="Name" callback={handleEditName} />}
                     secondary={<>
-                        <TextEdit value={item.group ? item.group : "keine"} label="Group" callback={handleEditGroup} />
+                        <TextEdit value={ props.item.group ? props.item.group : "keine"} label="Group" callback={handleEditGroup} />
                         {bull}
-                        <TextEdit value={item.icon ? item.icon : "keine"} label="Icon" callback={handleEditIcon} />
+                        <TextEdit value={ props.item.icon ? props.item.icon : "keine"} label="Icon" callback={handleEditIcon} />
                         {bull}
-                        {item.render}
-                    </>} />)}
+                        { props.item.render}
+                    </>} />
+                )}
             <ListItemSecondaryAction>
                 <Tooltip title="Favorite" aria-label="add">
 
                     <IconButton onClick={handleComplete} edge="end" aria-label="delete">
-                        <MyIcon icon={item.navbar ? "favorite" : "favorite_border"} />
+                        <MyIcon icon={ props.item.navbar ? "favorite" : "favorite_border"} />
                     </IconButton>
 
                 </Tooltip>

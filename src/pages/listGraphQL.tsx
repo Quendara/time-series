@@ -34,7 +34,6 @@ export const ListGraphQL = (props: ListProps) => {
 
     return (
         <>
-
             <ListGraphInternal
                 listid={listid ? listid : ""}
                 items={items}

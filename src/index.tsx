@@ -36,6 +36,8 @@ import { Auth } from "./Auth";
 import './mstyle.css';
 import { SandboxH } from "./pages/SandboxH";
 import { Sandbox } from "./pages/sandbox";
+import { Details } from "./components/Details";
+import { UpdateTodosInput } from "./API";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -50,29 +52,18 @@ const App = () => {
 
   // const [hackyNavId, sethackyNavId] = useState("");
 
-  const [userConfiguration, setUserConfiguration] = useState<TodoMainItem[]>([]);
+  const [ todoMainItems, setTodoMainItems] = useState<TodoMainItem[]>([]);
 
   const [apikey, setApi] = useState("");
   const [amplifyInitilaized, setAmplifyInitilaized] = useState(false);
   const [apikeyTimetree, setApikeyTimetree] = useState("");
 
   const handleSetConfig = (config: TodoMainItem[]) => {
-    setUserConfiguration(config)
+    setTodoMainItems(config)
   }
 
   const authSuccessCallback = (username: string, token: string, apikey: string, apikeyTimetree: string) => {
     setUsername(username);
-
-    // if (username === "andre") {
-    //   sethackyNavId("1622632885409")
-    // }
-    // if (username === "jonna") {
-    //   sethackyNavId("1622635443893")
-    // }
-    // if (username === "irena") {
-    //   sethackyNavId("1622638959598")
-    // }
-
 
     setJwtToken(token);
     setApi(apikey);
@@ -81,7 +72,7 @@ const App = () => {
     console.log("username        : ", username);
     console.log("authSuccess     : ", token);
     console.log("apikey          : ", apikey);
-    console.log("apikey timetree : ", apikeyTimetree);
+  
   };
 
 
@@ -105,9 +96,6 @@ const App = () => {
         };
         Amplify.configure(awsmobile);
         setAmplifyInitilaized(true);
-
-        // fetchTodos( listid )
-        // setSelectedItem(undefined)
       }
     }, [apikey])
 
@@ -124,30 +112,13 @@ const App = () => {
             <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
           </NavLink>
 
-          {/* {userConfiguration.map((item, index) => {
-            if (item.navbar) return (
-              <Box key={"fdf" + index} sx={cssClasses.menuButton}    >
-                <Tooltip title={item.name} aia-label="add">
-                  <NavLink key={"nl_" + index} to={"/" + [item.component, item.listid, item.render].join('/')}   >
-                    <IconButton sx={cssClasses.menuButton} >
-                      <Icon>{item.icon}</Icon>
-                    </IconButton>
-                  </NavLink>
-                </Tooltip>
-              </Box>
-            )
-          }
-          )} */}
-
           {amplifyInitilaized &&
-
             <MainNavigation
               horizontally={false}
               render="navlink"
               username={username}
               handleSetConfig={handleSetConfig} />}
 
-         
         </Auth>
 
 
@@ -161,22 +132,16 @@ const App = () => {
                   (
                     <Routes>
                       <Route path="/list/:listid/:listtype/:itemid" element={
-                        <ListGraphQL username={username} lists={userConfiguration} horizontally={false}
+                        <ListGraphQL username={username} lists={todoMainItems} horizontally={false}
                         />
                       } />
                       <Route path="/list/:listid/:listtype" element={
-                        <ListGraphQL username={username} lists={userConfiguration} horizontally={false} />
+                        <ListGraphQL username={username} lists={todoMainItems} horizontally={false} />
                       } />
                       <Route path="/time/:id/:idx" element={
                         <TimeSeries username={username} token={jwtTocken} />
                       } >
                       </Route>
-
-
-                      {/* <Route path="/timetree" >
-                        <TimeTree username={username} token={jwtTocken} timetreeToken={apikeyTimetree} />
-                      </Route> */}
-
                       <Route path="/diff" element={<CompareLists />}>
                       </Route>
                       <Route path="/replace" element={<ReplaceLists />}>
@@ -185,7 +150,6 @@ const App = () => {
                       </Route>
                       <Route path="/sandbox" element={<Sandbox />}>
                       </Route>
-
 
                       <Route path="/csvtools" element={<CsvToolsPage />}>
                       </Route>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box, Stack, Card } from '@mui/material';
+import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box, Stack, Card, ListItemText, Avatar, ListItemAvatar } from '@mui/material';
 
 import { FilterComponent } from '../components/FilterComponent';
 
@@ -11,7 +11,7 @@ import { ListHeader, ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
 import { DetailsById } from '../components/Details';
 
-import { findUnique, GenericGroup, mapGenericToStringGroup, sortArrayBy } from "../components/helpers";
+import { findUnique, GenericGroup, getGlobalList, mapGenericToStringGroup, sortArrayBy } from "../components/helpers";
 
 import { TodoItem, TodoMainItem } from '../models/TodoItems';
 import { useWindowScrollPositions } from '../hooks/useWindowScrollPositions'
@@ -188,6 +188,9 @@ export const ListPage = (props: ListProps) => {
     }
 
     // onClose={handleClose}
+
+    const currentList = getGlobalList(props.lists, props.listid)
+
     return (
         <>
             <Snackbar
@@ -199,16 +202,34 @@ export const ListPage = (props: ListProps) => {
                 </Alert>
             </Snackbar>
 
-            <Grid container spacing={4} >
+            <Grid container spacing={2} >
                 <Grid item lg={12} xs={12} >
                     <MyCard>
                         {props.todos.length > 5 &&
                             <MyPaperHeader >
-                                <List>
-                                    <ListItem>
                                         <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
+                                            <Grid item xs={9} lg={3} >
+                                                <ListItem>
+                                                    <ListItemAvatar><Avatar><MyIcon icon={currentList?.icon} /></Avatar></ListItemAvatar>
+                                                    <ListItemText primary={currentList?.name} secondary={currentList?.group} />
+                                                </ListItem>
+                                            </Grid>
+                                            <Grid item xs={3} lg={2} >
+                                                <Grid container justifyContent="flex-start">
 
-                                            <Grid item xs={9} lg={8} >
+                                                    {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
+                                                            <EditIcon />
+                                                        </IconButton> */}
+                                                    <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
+
+                                                        <MyIcon icon="text_rotation_none"></MyIcon>
+                                                    </IconButton>
+                                                    <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
+                                                        <MyIcon icon="visibility" />
+                                                    </IconButton>
+                                                </Grid>
+                                            </Grid>                                            
+                                            <Grid item xs={9} lg={6} >
                                                 {edit ? (
                                                     <AddForm
                                                         name=""
@@ -222,24 +243,8 @@ export const ListPage = (props: ListProps) => {
                                                     <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
                                                 )}
                                             </Grid>
-                                            <Grid item xs={3} lg={4} >
-                                                <Grid container justifyContent="flex-end">
-
-                                                    {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
-                                                            <EditIcon />
-                                                        </IconButton> */}
-                                                    <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
-
-                                                        <MyIcon icon="text_rotation_none"></MyIcon>
-                                                    </IconButton>
-                                                    <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
-                                                        <MyIcon icon="visibility" />
-                                                    </IconButton>
-                                                </Grid>
-                                            </Grid>
+                                           
                                         </Grid>
-                                    </ListItem>
-                                </List>
                             </MyPaperHeader>
                         }
 

@@ -18,7 +18,7 @@ import { MyIcon } from "./MyIcon";
 import { DetailsMarkdown } from "./DetailsMarkdown"
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
 
-import { findUnique } from "../components/helpers";
+import { findUnique, getGlobalList } from "../components/helpers";
 
 import { removeItemById } from "../components/GraphQlFunctions"
 
@@ -172,18 +172,7 @@ export const Details = (props: PropsDetails) => {
         setEdit(false)
     }
 
-    const getGlobalList = (lists: TodoMainItem[], id?: string): TodoMainItem | undefined => {
-        if (id === undefined) return undefined
-        if (lists !== undefined) {
-            const fl = lists.filter(item => item.listid === id)
-            // console.log("getGlobalList", id, fl, lists)
 
-            if (fl.length > 0) {
-                return fl[0]
-            }
-        }
-        return undefined
-    }
 
     const handleListChange = (selecedList: TodoMainItem) => {
 

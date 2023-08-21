@@ -51,7 +51,7 @@ export const FilterComponent = ({ filterText, callback, callbackEnter }: FilterP
                     </InputAdornment>
                 )
             }}
-            onKeyPress={e => checkEnter(e)}
+            onKeyDown={e => checkEnter(e)}
             onChange={e => setFilter(e.target.value)}
         />
     )
