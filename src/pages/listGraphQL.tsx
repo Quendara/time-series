@@ -42,7 +42,6 @@ export const ListGraphQL = (props: ListProps) => {
                 itemid={itemid}
                 lists={props.lists}
                 username={props.username} />
-
         </>
     )
 }
@@ -72,62 +71,16 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
     const isChecked = (checked: boolean) => {
         return checked
     }
-    //     if (typeof checked === "boolean") { return checked }
-    //     if (typeof checked === "string") { return checked === "true" }
-    //     return false
-    // }
-
 
     async function toggleFunction(todoid: string) {
         dispatch(ToggleItem(todoid))
-
-        // // get Check Status
-        // let newStatus = false
-        // const items2 = todos.map((e, index) => {
-
-        //     if (e.id === todoid) {
-        //         let newObject = Object.assign({}, e)
-        //         newObject['checked'] = !isChecked(e.checked)
-        //         newStatus = newObject['checked']
-        //         // newObject['link'] = link
-        //         return newObject
-        //     }
-        //     return e
-        // })
-
-        // // setTodos(items2)
-
-        // /* update a todo */
-        // await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, checked: newStatus } }));
     }
 
     async function uncheckFunction(todoid: string) {
 
         // TODO WRONG FUNCTION
         dispatch(UncheckItem(todoid))
-
-        // // get Check Status
-        // let newStatus = false
-        // const items2 = todos.map((e, index) => {
-
-        //     if (e.id === todoid) {
-        //         let newObject = Object.assign({}, e)
-        //         newObject['checked'] = false
-        //         newStatus = newObject['checked']                
-        //         return newObject
-        //     }
-        //     return e
-        // })
-
-        // // setTodos(items2)
-
-        // /* update a todo */
-        // await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, checked: newStatus } }));
     }
-
-    // async function updateFunction(todoid, name, link, group, description = undefined) {
-    //     await API.graphql(graphqlOperation(updateTodos, { input: { id: "" + todoid, link: link, group: group, owner: username, name: name, description: description } }));
-    // };
 
     async function updateFunction(inputObject: UpdateTodosInput) {
         dispatch(UpdateItem(inputObject))
@@ -152,12 +105,6 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
         }
 
         dispatch(AddItem(input))
-
-        // const id = new Date().getTime();
-        // await API.graphql(graphqlOperation(createTodos,
-        //     {
-        //         
-        //     }));
     }
 
     async function removeItemHandle(todoid: string) {
@@ -166,7 +113,6 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
     };
 
 
-    //if (itemid === undefined) {
     return (
         <ListPage
             todos={todos}
@@ -182,19 +128,6 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
             lists={lists}
             username={username}
         />)
-
-    // }
-    // else {
-    //     console.log("itemid : ", itemid)
-    //     return (<DetailsById
-    //         itemid={itemid}
-    //         updateFunction={updateFunction}
-    //         listtype={listtype}
-    //         lists={lists} 
-    //         username = { username }
-    //         />
-    //         )
-    // }
 }
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box, Stack, Card, ListItemText, Avatar, ListItemAvatar } from '@mui/material';
+import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box, Stack, Card, ListItemText, Avatar, ListItemAvatar, useMediaQuery } from '@mui/material';
 
 import { FilterComponent } from '../components/FilterComponent';
 
@@ -23,6 +23,7 @@ import { TodoListType } from "../components/List"
 import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGrid"
 import { MyIcon } from '../components/MyIcon';
 
+import { useTheme } from '@mui/material/styles';
 
 
 interface ListProps {
@@ -50,6 +51,7 @@ export const ListPage = (props: ListProps) => {
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
     const [stateHorizontally, setHorizontally] = useState(props.horizontally);
+
 
     const { scrollX, scrollY } = useWindowScrollPositions()
 
@@ -153,6 +155,7 @@ export const ListPage = (props: ListProps) => {
                     <HorizontallyGrid horizontally={stateHorizontally} >
                         {groups.map((item: GenericGroup<TodoItem>, index: number) => (
                             <HorizontallyItem key={"ListPage" + item.value} horizontally={stateHorizontally} >
+                                
                                 <MyCard>
                                     <ListQ
                                         key={"ListQ" + item.value}
@@ -193,6 +196,7 @@ export const ListPage = (props: ListProps) => {
 
     return (
         <>
+
             <Snackbar
                 open={successSnackbarMessage.length > 0}
                 autoHideDuration={2000}
@@ -202,49 +206,51 @@ export const ListPage = (props: ListProps) => {
                 </Alert>
             </Snackbar>
 
-            <Grid container spacing={2} >
-                <Grid item lg={12} xs={12} >
+            <Grid container alignItems="flex-start" justifyContent="flex-start" spacing={2} >
+                  <Grid item md={6} xs={12} >
+                    <MyCard >
+                        <MyPaperHeader>
+                            <Grid sx={{ height: "100px" }} p={1} pl={2} container alignItems="center" justifyContent="flex-start" spacing={2} >
+                                <ListItem sx={{ height: "100px" }} >
+                                    <ListItemAvatar><Avatar><MyIcon icon={currentList?.icon} /></Avatar></ListItemAvatar>
+                                    <ListItemText primary={currentList?.name} secondary={currentList?.group} />
+                                </ListItem>
+                            </Grid>
+                        </MyPaperHeader>
+                    </MyCard>
+                </Grid >
+
+                <Grid item md={6} xs={12} >
                     <MyCard>
                         {props.todos.length > 5 &&
                             <MyPaperHeader >
-                                        <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
-                                            <Grid item xs={9} lg={3} >
-                                                <ListItem>
-                                                    <ListItemAvatar><Avatar><MyIcon icon={currentList?.icon} /></Avatar></ListItemAvatar>
-                                                    <ListItemText primary={currentList?.name} secondary={currentList?.group} />
-                                                </ListItem>
-                                            </Grid>
-                                            <Grid item xs={3} lg={2} >
-                                                <Grid container justifyContent="flex-start">
+                                <Grid sx={{ height: "100px" }} pl={2} pr={2} container alignItems="center" justifyContent="flex-start" spacing={2} >
+                                    <Grid item xs={9} lg={9} >
+                                        {edit ? (
+                                            <AddForm
+                                                name=""
+                                                renderModal={false}
+                                                onClickFunction={props.addItemHandle}
+                                                handleDeleteClick={undefined}
+                                                type={props.listtype}
+                                                groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
+                                        ) : (
 
-                                                    {/* <IconButton color={edit ? "primary" : "default"} onClick={() => setEdit(!edit)} >
-                                                            <EditIcon />
-                                                        </IconButton> */}
-                                                    <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
-
-                                                        <MyIcon icon="text_rotation_none"></MyIcon>
-                                                    </IconButton>
-                                                    <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
-                                                        <MyIcon icon="visibility" />
-                                                    </IconButton>
-                                                </Grid>
-                                            </Grid>                                            
-                                            <Grid item xs={9} lg={6} >
-                                                {edit ? (
-                                                    <AddForm
-                                                        name=""
-                                                        renderModal={false}
-                                                        onClickFunction={props.addItemHandle}
-                                                        handleDeleteClick={undefined}
-                                                        type={props.listtype}
-                                                        groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
-                                                ) : (
-
-                                                    <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
-                                                )}
-                                            </Grid>
-                                           
+                                            <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
+                                        )}
+                                    </Grid>
+                                    <Grid item xs={3} lg={3} >
+                                        <Grid container justifyContent="flex-end">
+                                            <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
+                                                <MyIcon icon="text_rotation_none"></MyIcon>
+                                            </IconButton>
+                                            <IconButton color={hideCompleted ? "primary" : "default"} onClick={() => setHideCompleted(!hideCompleted)} >
+                                                <MyIcon icon="visibility" />
+                                            </IconButton>
                                         </Grid>
+                                    </Grid>
+
+                                </Grid>
                             </MyPaperHeader>
                         }
 
@@ -278,6 +284,7 @@ export const ListPage = (props: ListProps) => {
                     </MyCard>
                 </Grid>
             </Grid>
+
             <Box sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
                 <Grid container spacing={2} alignItems="stretch" >
 

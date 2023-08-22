@@ -12,7 +12,7 @@ import {
 
 import { cssClasses, theme } from "./Styles"
 
-import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip, Box, Icon } from "@mui/material";
+import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip, Box, Icon, useMediaQuery, useTheme } from "@mui/material";
 
 // import { ListTodo } from './listTodo';
 import { Error } from "./components/Error"
@@ -57,6 +57,10 @@ const App = () => {
   const [apikey, setApi] = useState("");
   const [amplifyInitilaized, setAmplifyInitilaized] = useState(false);
   const [apikeyTimetree, setApikeyTimetree] = useState("");
+
+  const theme2 = useTheme();
+  const matchesUpXs = useMediaQuery(theme2.breakpoints.up('sm'));
+
 
   const handleSetConfig = (config: TodoMainItem[]) => {
     setTodoMainItems(config)
@@ -121,10 +125,8 @@ const App = () => {
 
         </Auth>
 
-
-        <Grid container justifyContent="center" spacing={1} >
-          <Grid item xs={11} ><br /></Grid>
-
+        <Grid container pt={ matchesUpXs?2:0 } justifyContent="center" spacing={1} >
+        
           <Grid item xs={12} lg={11}>
             {username.length > 0 &&
               (<>
