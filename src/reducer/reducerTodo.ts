@@ -68,6 +68,7 @@ const ReducerUpdateItem = (state: TodoItem[], action: TodoActionUPDATE) => {
                     name: action.payload.name,
                     group: action.payload.group,
                     description: action.payload.description,
+                    listid: action.payload.listid,
                 })
 
 
@@ -77,6 +78,7 @@ const ReducerUpdateItem = (state: TodoItem[], action: TodoActionUPDATE) => {
             if (action.payload.name) newItem.name = action.payload.name;
             if (action.payload.group) newItem.group = action.payload.group;
             if (action.payload.description) newItem.description = action.payload.description;
+            if (action.payload.listid) newItem.listid = action.payload.listid;
 
             return newItem
         } else {
