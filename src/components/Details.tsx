@@ -57,7 +57,7 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists, username,
             todos={todos}
             updateFunction={updateFunction}
             lists={lists}
-            action={ action }
+            action={action}
             listtype={listtype}
             username={username} />
     )
@@ -141,11 +141,11 @@ export const Details = (props: PropsDetails) => {
         setEdit(false)
     }
 
-    const updateMarkdownHandle = ( newItemValue : string ) => {
+    const updateMarkdownHandle = (newItemValue: string) => {
 
         if (currentItem === undefined) return;
 
-        setSelectedValue( newItemValue )
+        setSelectedValue(newItemValue)
 
         const value: UpdateTodosInput = {
             id: currentItem.id,
@@ -155,7 +155,7 @@ export const Details = (props: PropsDetails) => {
         props.updateFunction(value)
         setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
-    }    
+    }
 
     const updateNameLinkHandle = (linkName: string, linkUrl: string, groupname: string) => {
 
@@ -173,6 +173,21 @@ export const Details = (props: PropsDetails) => {
     }
 
 
+    const updateMainList = (newListName : string ) => {
+
+        // found id of the list, the item should be added
+        const foundList = props.lists.find(item => item.name === newListName );
+        
+        if (props.selectedItem && foundList ) {
+
+            const value: UpdateTodosInput = {
+                id: props.selectedItem.id,
+                listid: foundList.listid
+            }
+            props.updateFunction(value)
+        }
+
+    }
 
     const handleListChange = (selecedList: TodoMainItem) => {
 
@@ -207,8 +222,8 @@ export const Details = (props: PropsDetails) => {
             <Snackbar
                 open={successSnackbarMessage.length > 0}
                 autoHideDuration={2000}
-                anchorOrigin={{ vertical:"top", horizontal:"center" }}
-                onClose={ ()=>setSuccessSnackbarMessage("") }
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                onClose={() => setSuccessSnackbarMessage("")}
                 message="Saved" >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
@@ -244,10 +259,10 @@ export const Details = (props: PropsDetails) => {
                                     </TextEdit>
                                     {bull}
                                     <TextEdit
-                                        value={currentList ? currentList.name : "unknown"}
+                                        value={ currentList ? currentList.name : "unknown"}
                                         groups={props.lists.map((x) => { return { value: x.name } })}
                                         label="Lists"
-                                        callback={(list) => { }} >
+                                        callback={(list) => updateMainList( list ) } >
                                     </TextEdit>
                                 </>
                             }
@@ -298,11 +313,11 @@ export const Details = (props: PropsDetails) => {
                                                 <MyDivider />
 
                                                 <div className="markdown" >
-                                                    <DetailsMarkdown 
-                                                        value={selectedItemValue} 
+                                                    <DetailsMarkdown
+                                                        value={selectedItemValue}
                                                         initValue="Add comments here ... "
                                                         updateFunction={(val: string) => updateMarkdownHandle(val)}
-                                                        />
+                                                    />
                                                 </div>
                                             </Grid>
                                         }

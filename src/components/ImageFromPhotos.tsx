@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { ImageOnDemand } from "./ImageOnDemand"
 import { Image, Mediatype } from "../models/Image"
+import { Dialog } from "@mui/material";
 
 
 
@@ -23,6 +24,8 @@ export const ImageFromPhotos = (props: Props) => {
     const folder = props.folder
     const id = props.file
     const url = [endpoint, "photoData", folder, id].join("/")
+
+    const [edit, setEdit] = useState(false);
 
     const updateFunction = () => { }
 
@@ -58,11 +61,26 @@ export const ImageFromPhotos = (props: Props) => {
 
 
     return (
-        <ImageOnDemand image={fakeImage}
+        <>
+        <Dialog
+                    open={edit}
+                    onClose={() => setEdit(false)}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                >
+ <ImageOnDemand image={fakeImage}
             className="responsive-img"
             onClick={undefined}
             fullRes={false}
             token=""
         />
+                </Dialog>
+        <ImageOnDemand image={fakeImage}
+            className="responsive-img"
+            onClick={ () => setEdit(true )}
+            fullRes={false}
+            token=""
+        />
+        </>
     )
 }
