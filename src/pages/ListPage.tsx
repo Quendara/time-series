@@ -24,6 +24,7 @@ import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGr
 import { MyIcon } from '../components/MyIcon';
 
 import { useTheme } from '@mui/material/styles';
+import { Calendar } from '../organisms/Calendar';
 
 
 interface ListProps {
@@ -32,6 +33,7 @@ interface ListProps {
     listid: string;
     selectedItemId?: string;
     horizontally: boolean;
+    color: string;
     addItemHandle: (linkname: string, linkUrl: string, groupName: string) => void;
     // getItem: (id:string) => any;
     removeItemHandle: (id: string) => void;
@@ -146,8 +148,6 @@ export const ListPage = (props: ListProps) => {
             groups = findUnique(items, "group", false)
         }
 
-
-
         return (
             <>
                 {groups && (
@@ -155,7 +155,7 @@ export const ListPage = (props: ListProps) => {
                     <HorizontallyGrid horizontally={stateHorizontally} >
                         {groups.map((item: GenericGroup<TodoItem>, index: number) => (
                             <HorizontallyItem key={"ListPage" + item.value} horizontally={stateHorizontally} >
-                                
+                            
                                 <MyCard>
                                     <ListQ
                                         key={"ListQ" + item.value}
@@ -212,14 +212,15 @@ export const ListPage = (props: ListProps) => {
                         <MyPaperHeader>
                             <Grid sx={{ height: "100px" }} p={1} pl={2} container alignItems="center" justifyContent="flex-start" spacing={2} >
                                 <ListItem sx={{ height: "100px" }} >
-                                    <ListItemAvatar><Avatar><MyIcon icon={currentList?.icon} /></Avatar></ListItemAvatar>
-                                    <ListItemText primary={currentList?.name} secondary={currentList?.group} />
+                                    <ListItemAvatar>
+                                        <Avatar style={{ backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary={currentList?.name+ ""} secondary={currentList?.group} />
                                 </ListItem>
                             </Grid>
                         </MyPaperHeader>
                     </MyCard>
                 </Grid >
-
                 <Grid item md={6} xs={12} >
                     <MyCard>
                         {props.todos.length > 5 &&

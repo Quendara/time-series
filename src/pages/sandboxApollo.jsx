@@ -11,7 +11,6 @@ import { WebSocketLink } from "apollo-link-ws"
 
 import { setContext } from '@apollo/client/link/context';
 
-// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 import Settings from "../Settings";
 import SingleTimeSerie from "../SingleTimeSerie";
 

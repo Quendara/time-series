@@ -23,7 +23,6 @@ export const cssClasses = {
       "scrollSnapType": "x mandatory",
       "overflowX": "scroll",
       "display": "flex",
-      "margin":"5px",
 
       '&::-webkit-scrollbar': {
         width: "11px",
@@ -46,7 +45,7 @@ export const cssClasses = {
       "min-width": "340px",
       
       "float": "left",
-      "marginRight": "10px",      
+      "marginRight": "20px",      
       "marginBottom": "10px",      
       "scrollSnapAlign": "start"
     }, 

@@ -9,7 +9,7 @@ import {
 
 
 
-import { CardContent, Snackbar, Alert, Grid, Button, Avatar, IconButton } from '@mui/material';
+import { CardContent, Snackbar, Alert, Grid, Button, Avatar, IconButton, Stack } from '@mui/material';
 
 
 import { MyCardHeader, MyDivider, MyCard2 } from "./StyledComponents"
@@ -31,6 +31,7 @@ import { TextEdit } from "../components/TextEdit";
 import { UpdateTodosInput } from "../API"
 import { ListGraphInternal } from "../pages/listGraphQL";
 import { TodoListType } from "../components/List"
+import { Calendar } from "../organisms/Calendar";
 
 
 interface Props {
@@ -277,6 +278,7 @@ export const Details = (props: PropsDetails) => {
                                 alignItems="flex-start" >
 
                                 <Grid item xs={12}>
+                                    <Stack direction={"row"} spacing={2}>
                                     {
                                         edit ? (
                                             <Button startIcon={<MyIcon icon={"update"} />} variant="contained" color={"primary"} onClick={updateHandle}> Save </Button>
@@ -288,11 +290,13 @@ export const Details = (props: PropsDetails) => {
 
                                         <Button
                                             variant="contained"
-                                            style={{ "marginLeft": "20px" }}
                                             startIcon={<MyIcon icon={"rule"} />}
                                             onClick={() => setAddTodos(true)}> Add Checklist
                                         </Button>
                                     }
+
+                                    <Calendar />
+                                    </Stack>
 
                                 </Grid>
 
@@ -336,6 +340,7 @@ export const Details = (props: PropsDetails) => {
                                     <ListGraphInternal
                                         items={localitems}
                                         lists={props.lists}
+                                        color={"#AAA"}
                                         username={props.username}
                                         horizontally={true}
                                         listid={currentItem.id}

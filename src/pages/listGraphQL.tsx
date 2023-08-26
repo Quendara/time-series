@@ -23,6 +23,7 @@ import { BooleanModel } from 'aws-sdk/clients/gamelift';
 interface ListProps {
     lists: TodoMainItem[];
     username: string;
+    color: string;
     horizontally: boolean;
 }
 
@@ -40,6 +41,7 @@ export const ListGraphQL = (props: ListProps) => {
                 listtype={listtype ? listtype : TodoListType.UNDEFINED}
                 horizontally={ listtype === TodoListType.LINKS }
                 itemid={itemid}
+                color={props.color}
                 lists={props.lists}
                 username={props.username} />
         </>
@@ -55,10 +57,11 @@ interface ListPropsInternal {
     listtype: TodoListType;
     horizontally: boolean;
     itemid?: string;
+    color: string
 }
 
 
-export const ListGraphInternal = ({ items, lists, username, horizontally, listid, listtype, itemid }: ListPropsInternal) => {
+export const ListGraphInternal = ({ items, lists, username, horizontally, listid, listtype, itemid, color }: ListPropsInternal) => {
 
     const [todos, dispatch] = useReducer(reducerTodo, items);
 
@@ -121,6 +124,7 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
             addItemHandle={addItemHandle}
             horizontally={horizontally}
             selectedItemId={itemid}
+            color={color}
             removeItemHandle={removeItemHandle}
             updateFunction={updateFunction}
             toggleFunction={toggleFunction}

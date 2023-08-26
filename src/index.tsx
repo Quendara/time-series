@@ -103,6 +103,12 @@ const App = () => {
       }
     }, [apikey])
 
+    const colorArr = [
+      "rgb(144, 202, 249)",
+      "rgb(206, 147, 216)",
+      "rgb(255, 167, 38)"
+  ]    
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -134,11 +140,11 @@ const App = () => {
                   (
                     <Routes>
                       <Route path="/list/:listid/:listtype/:itemid" element={
-                        <ListGraphQL username={username} lists={todoMainItems} horizontally={false}
+                        <ListGraphQL username={username} lists={todoMainItems} color={ colorArr[0]} horizontally={false}
                         />
                       } />
                       <Route path="/list/:listid/:listtype" element={
-                        <ListGraphQL username={username} lists={todoMainItems} horizontally={false} />
+                        <ListGraphQL username={username} lists={todoMainItems} color={ colorArr[0]} horizontally={false} />
                       } />
                       <Route path="/time/:id/:idx" element={
                         <TimeSeries username={username} token={jwtTocken} />
@@ -156,20 +162,14 @@ const App = () => {
                       <Route path="/csvtools" element={<CsvToolsPage />}>
                       </Route>
 
-
                       <Route path="/" element={
-                        <Grid container justifyContent="center" spacing={2} >
-                          <Grid item xs={12} md={12}>
                             <MainNavigation
                               horizontally={true}
                               render="main"
                               username={username}
                               handleSetConfig={handleSetConfig} />
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            {/* <TimeTree username={ username } token={ jwtTocken } timetreeToken={ apikeyTimetree } /> */}
-                          </Grid>
-                        </Grid>
+                          
+                        
                       } >
                       </Route>
                       <Route path="/demo" element={<StyleDemo />}></Route>

@@ -1,12 +1,4 @@
 import React, { useState, useEffect, useReducer } from "react";
-// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
-// import Settings from "../Settings";
-// import SingleTimeSerie from "../SingleTimeSerie";
-
-// import Amplify, { API, input, Auth, graphqlOperation } from 'aws-amplify';
-// import { listTodos, getTodos } from '../graphql/queries';
-
-
 import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent, Icon, ListItemButton, CardHeader, Divider, Menu, Box, useMediaQuery, useTheme } from '@mui/material';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
 
@@ -38,6 +30,7 @@ import { cssClasses } from "../Styles"
 import { SearchResponse } from "./SearchResponse";
 
 import { bull } from "../components/helpers"
+import { Calendar } from "./Calendar";
 
 type RenderMode = "navlink" | "main";
 
@@ -49,13 +42,13 @@ interface NavItemProps {
     handleClose: () => void;
 }
 
-const NavItem = ( props : NavItemProps) => {
+const NavItem = (props: NavItemProps) => {
 
     const navigate = useNavigate();
 
     const handleComplete = () => {
         // dispatch({ type: "COMPLETE", id: item.id });
-        props.dispatch(ToggleItem( props.item.id))
+        props.dispatch(ToggleItem(props.item.id))
     };
 
     const handleEditName = (name: string) => {
@@ -107,47 +100,47 @@ const NavItem = ( props : NavItemProps) => {
     //         </NavLink>)
     // }
     // else {
-    
+
 
     const handleClick = () => {
-        const linkUrl = "/" + [ props.item.component, props.item.listid, props.item.render].join('/')
-        props.handleClose(); 
-        navigate( linkUrl )
+        const linkUrl = "/" + [props.item.component, props.item.listid, props.item.render].join('/')
+        props.handleClose();
+        navigate(linkUrl)
 
     }
-    
+
     return (
-        <ListItemButton  sx={{ minWidth: "300px" }} >
-            
-                <ListItemAvatar onClick={ handleClick }>
-                    <Avatar style={ props.item.navbar ? { backgroundColor: props.color } : {}} >
-                        <MyIcon icon={ props.item.icon} />
-                    </Avatar>
-                </ListItemAvatar>
-            
-            
-            { props.render === "navlink" ? (
+        <ListItemButton sx={{ minWidth: "300px" }} >
+
+            <ListItemAvatar onClick={handleClick}>
+                <Avatar style={props.item.navbar ? { backgroundColor: props.color } : {}} >
+                    <MyIcon icon={props.item.icon} />
+                </Avatar>
+            </ListItemAvatar>
+
+
+            {props.render === "navlink" ? (
                 <ListItemText
-                    onClick={ handleClick }
-                    primary={ props.item.name}
+                    onClick={handleClick}
+                    primary={props.item.name}
                     secondary={"Group : " + props.item.group ? props.item.group : "keine"}
                 />
             ) : (
                 <ListItemText
                     primary={<TextEdit value={props.item.name} label="Name" callback={handleEditName} />}
                     secondary={<>
-                        <TextEdit value={ props.item.group ? props.item.group : "keine"} label="Group" callback={handleEditGroup} />
+                        <TextEdit value={props.item.group ? props.item.group : "keine"} label="Group" callback={handleEditGroup} />
                         {bull}
-                        <TextEdit value={ props.item.icon ? props.item.icon : "keine"} label="Icon" callback={handleEditIcon} />
+                        <TextEdit value={props.item.icon ? props.item.icon : "keine"} label="Icon" callback={handleEditIcon} />
                         {bull}
-                        { props.item.render}
+                        {props.item.render}
                     </>} />
-                )}
+            )}
             <ListItemSecondaryAction>
                 <Tooltip title="Favorite" aria-label="add">
 
                     <IconButton onClick={handleComplete} edge="end" aria-label="delete">
-                        <MyIcon icon={ props.item.navbar ? "favorite" : "favorite_border"} />
+                        <MyIcon icon={props.item.navbar ? "favorite" : "favorite_border"} />
                     </IconButton>
 
                 </Tooltip>
@@ -382,16 +375,21 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 </>
             ) : (
                 <>
-                    <Grid container alignItems="center" justifyContent="center" spacing={2} >
-                        <Grid item xs={10} lg={8} >
+                    <Grid container alignItems="center" justifyContent="center" spacing={2} >    
+                        <Grid item xs={10} lg={6} >
                             <MyCard>
                                 <CardContent>
                                     <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
                                 </CardContent>
                             </MyCard>
-                            <br />
-
                         </Grid>
+                        <Grid item xs={10} lg={6} >
+                            <MyCard>
+                                <CardContent>
+                                    <Calendar />
+                                </CardContent>
+                            </MyCard>
+                        </Grid>                        
                     </Grid>
 
                     {(items !== undefined && groups.length > 0) &&

@@ -1,9 +1,4 @@
 import React, { useState, useEffect } from "react";
-
-// import SetComponent from "./SetComponent";
-// import SetDialog from "./SetDialog";
-
-// import { Row, Col, List, Button, DatePicker, Card, version } from "antd";
 import { Button, CardContent, Typography, TextField, Grid, Divider } from '@mui/material';
 
 import { MyCard, MyDivider } from "./components/StyledComponents"
