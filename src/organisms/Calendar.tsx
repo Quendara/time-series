@@ -10,6 +10,7 @@ import dayjs, { Dayjs } from "dayjs";
 
 
 interface Props {
+  handleDateChange?: (newDate: string) => void
 
 }
 
@@ -36,10 +37,13 @@ export const Calendar = (props: Props) => {
 
   const handleDateChange = (value: Dayjs | null) => {
     setDate(value);
+    if (props?.handleDateChange) {
+      props?.handleDateChange(value?.toString() ? value?.format("YYYY-MM-DD") : "")
+    }
   };
 
   return (<Stack direction={"row"} spacing={4}>
-    
+
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={"de"}>
       <DesktopDatePicker
         label={"Date"}

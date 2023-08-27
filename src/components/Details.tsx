@@ -287,7 +287,6 @@ export const Details = (props: PropsDetails) => {
                                         )
                                     }
                                     {(localitems.length === 0) &&
-
                                         <Button
                                             variant="contained"
                                             startIcon={<MyIcon icon={"rule"} />}
@@ -295,7 +294,7 @@ export const Details = (props: PropsDetails) => {
                                         </Button>
                                     }
 
-                                    <Calendar />
+                                    
                                     </Stack>
 
                                 </Grid>

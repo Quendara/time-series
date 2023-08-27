@@ -3,16 +3,18 @@ import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } fro
 
 
 import { MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
+import { Calendar } from "../organisms/Calendar";
+import { Divider, Stack } from "@mui/material";
 
 
 interface PropMTA {
-    initValue: String;
+    initValue: string;
     updateFunction: (s: string) => void;
 }
 
 
 export const MarkdownTextareaAutosize = (props: PropMTA) => {
-    const textFieldRef = useRef<any>(); // textFieldRef.current.
+    const textFieldRef = useRef<HTMLTextAreaElement>( null ); // textFieldRef.current.
 
     const [caret, setCaret] = useState({
         start: 0,
@@ -21,7 +23,13 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
 
     useEffect(() => {
 
-        textFieldRef.current.value = props.initValue;
+
+        if( textFieldRef ){
+            if( textFieldRef.current ){
+                textFieldRef.current.value = props.initValue;
+            }
+            
+        }
 
         return () => {
 
@@ -76,7 +84,9 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
         let cursorPos = event.target.selectionStart
         let selectionEnd = event.target.selectionEnd
 
-        const previous_value = textFieldRef.current.value as string
+        setCaret( { start: cursorPos, end: selectionEnd } ) 
+
+        const previous_value = textFieldRef?.current?.value as string
 
         const lineWithCursor = getLineWithCursor(previous_value, cursorPos)
         let insertion_str = "";
@@ -90,12 +100,12 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                 if (event.shiftKey) {
                     let shiftBack = 0
                     const trimmedLine = lineWithCursor.trim()
-                    if ( trimmedLine.startsWith('*')) {
+                    if (trimmedLine.startsWith('*')) {
                         shiftBack = 2
                     }
-                    if ( trimmedLine.startsWith('$$')) {
+                    if (trimmedLine.startsWith('$$')) {
                         shiftBack = 2
-                    }                    
+                    }
                     else if (trimmedLine.startsWith('*')) {
                         shiftBack = 2
                     }
@@ -111,14 +121,14 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                         updateTextArea(insertedText, initialCursor - shiftBack)
                     }
                 } else {
-                    
+
                     const trimmedLine = lineWithCursor.trim()
                     if (trimmedLine.startsWith('*')) {
                         insertion_str = "  ";
                     }
                     else if (trimmedLine.startsWith('$$')) {
                         insertion_str = "  ";
-                    }  
+                    }
                     else if (lineWithCursor.startsWith('#')) {
                         insertion_str = "#";
                     } else {
@@ -148,25 +158,44 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                 }
 
                 insertedText = insertText(previous_value, cursorPos, selectionEnd, insertion_str)
-                updateTextArea(insertedText, initialCursor + insertion_str.length)            
+                updateTextArea(insertedText, initialCursor + insertion_str.length)
         }
     }
 
+    const handleDateChange = ( newDate : string ) => {
+
+        const previous_value = textFieldRef?.current?.value as string
+        let cursorPos = caret.start
+        let selectionEnd = caret.end
+
+        textFieldRef.current?.focus()
+
+
+        const insertedText = insertText(previous_value, cursorPos, selectionEnd, newDate)
+        updateTextArea(insertedText, cursorPos + newDate.length)
+
+    }
+
     return (
-        <MyTextareaAutosize
-            // value={ selectedItemValue ? selectedItemValue : "" }
-            minRows={20}
-            maxRows={40}
-            // error={ hasError(linkName) }
-            // label="Name"
-            // size="small"
-            autoFocus={true}
-            // fullWidth
-            // variant="outlined"
-            ref={textFieldRef}
-            onSelect={(e) => handleSelect(e)}
-            onKeyDown={e => handleKeyPress(e)}
-            onChange={e => props.updateFunction(e.target.value)} />
+        <Stack direction="column" spacing={2}>
+            <Calendar handleDateChange={handleDateChange}/>
+            <Divider />
+            
+            <MyTextareaAutosize
+                // value={ selectedItemValue ? selectedItemValue : "" }
+                minRows={20}
+                maxRows={40}
+                // error={ hasError(linkName) }
+                // label="Name"
+                // size="small"
+                autoFocus={true}
+                // fullWidth
+                // variant="outlined"
+                ref={textFieldRef}
+                onSelect={(e) => handleSelect(e)}
+                onKeyDown={e => handleKeyPress(e)}
+                onChange={e => props.updateFunction(e.target.value)} />
+        </Stack>
     )
 
     // <Grid item xs={12} >{caret.start} - {caret.end}</Grid>
