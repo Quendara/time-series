@@ -89,11 +89,13 @@ export const Details = (props: PropsDetails) => {
     const [edit, setEdit] = useState(false);
     const [addTodos, setAddTodos] = useState(false);
 
+    const [selectedItemValue, setSelectedValue] = useState("");
+
 
     // currentItem can be set to undefined, when deleted
     const [currentItem, setCurrentItem] = useState<TodoItem | undefined>(props.selectedItem);
 
-    const [selectedItemValue, setSelectedValue] = useState("");
+
     const [successSnackbarMessage, setSuccessSnackbarMessage] = React.useState("");
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -128,14 +130,16 @@ export const Details = (props: PropsDetails) => {
 
     }, [props.selectedItem]);
 
-    const updateHandle = () => {
+    const updateHandle = (newDescription: string) => {
 
         if (currentItem === undefined) return;
 
         const value: UpdateTodosInput = {
             id: currentItem.id,
-            description: selectedItemValue
+            description: newDescription
         }
+
+        setSelectedValue( newDescription )
 
         props.updateFunction(value)
         setSuccessSnackbarMessage("Saved !!! ")
@@ -174,12 +178,12 @@ export const Details = (props: PropsDetails) => {
     }
 
 
-    const updateMainList = (newListName : string ) => {
+    const updateMainList = (newListName: string) => {
 
         // found id of the list, the item should be added
-        const foundList = props.lists.find(item => item.name === newListName );
-        
-        if (props.selectedItem && foundList ) {
+        const foundList = props.lists.find(item => item.name === newListName);
+
+        if (props.selectedItem && foundList) {
 
             const value: UpdateTodosInput = {
                 id: props.selectedItem.id,
@@ -200,10 +204,6 @@ export const Details = (props: PropsDetails) => {
                 listid: selecedList.id
             }
             props.updateFunction(value)
-
-            // updateFunction(selectedItem.id, { listid: selecedList.id })
-
-            // setListValue(selecedList.name)
         }
     }
 
@@ -260,10 +260,10 @@ export const Details = (props: PropsDetails) => {
                                     </TextEdit>
                                     {bull}
                                     <TextEdit
-                                        value={ currentList ? currentList.name : "unknown"}
+                                        value={currentList ? currentList.name : "unknown"}
                                         groups={props.lists.map((x) => { return { value: x.name } })}
                                         label="Lists"
-                                        callback={(list) => updateMainList( list ) } >
+                                        callback={(list) => updateMainList(list)} >
                                     </TextEdit>
                                 </>
                             }
@@ -277,40 +277,33 @@ export const Details = (props: PropsDetails) => {
                                 justifyContent="flex-start"
                                 alignItems="flex-start" >
 
-                                <Grid item xs={12}>
-                                    <Stack direction={"row"} spacing={2}>
-                                    {
-                                        edit ? (
-                                            <Button startIcon={<MyIcon icon={"update"} />} variant="contained" color={"primary"} onClick={updateHandle}> Save </Button>
-                                        ) : (
-                                            <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>
-                                        )
-                                    }
-                                    {(localitems.length === 0) &&
-                                        <Button
-                                            variant="contained"
-                                            startIcon={<MyIcon icon={"rule"} />}
-                                            onClick={() => setAddTodos(true)}> Add Checklist
-                                        </Button>
-                                    }
 
-                                    
-                                    </Stack>
-
-                                </Grid>
 
                                 {edit ? (
                                     <>
                                         <Grid item xs={12}>
-                                            <MyDivider />
                                             <MarkdownTextareaAutosize
                                                 initValue={selectedItemValue}
-                                                updateFunction={(val: string) => setSelectedValue(val)}
+                                                onSave={updateHandle}
                                             />
                                         </Grid>
                                     </>
                                 ) : (
                                     <>
+                                        <Grid item xs={12}>
+                                            <Stack direction={"row"} spacing={2}>
+
+                                                <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>     
+
+                                                {(localitems.length === 0) &&
+                                                    <Button
+                                                        variant="contained"
+                                                        startIcon={<MyIcon icon={"rule"} />}
+                                                        onClick={() => setAddTodos(true)}> Add Checklist
+                                                    </Button>
+                                                }
+                                            </Stack>
+                                        </Grid>
                                         {selectedItemValue.length > 0 &&
                                             <Grid item xs={12}>
                                                 <MyDivider />

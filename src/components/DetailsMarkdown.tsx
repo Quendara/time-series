@@ -253,15 +253,21 @@ export const DetailsMarkdown = (props: Props) => {
             }
         })
 
+        
         if (content.length > 0) {
+            offset = 0
             contentJSX.push(
                 <Grid item xs={12} >
-                    <ReactMarkdown children={content} remarkPlugins={[remarkGfm]} />
-                </Grid>)
+                    {/* <ReactMarkdown children={content} remarkPlugins={[remarkGfm]} /> */}
+                    {markdownWithExtension(content, offset )}
+                </Grid>
+                )
         }
 
         return contentJSX
     }
+
+    
 
     return (
         <>

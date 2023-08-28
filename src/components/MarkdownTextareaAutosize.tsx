@@ -4,17 +4,20 @@ import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } fro
 
 import { MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
 import { Calendar } from "../organisms/Calendar";
-import { Divider, Stack } from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
+import { MyIcon } from "./MyIcon";
 
 
 interface PropMTA {
     initValue: string;
-    updateFunction: (s: string) => void;
+    onSave: (s: string) => void;
 }
 
 
 export const MarkdownTextareaAutosize = (props: PropMTA) => {
-    const textFieldRef = useRef<HTMLTextAreaElement>( null ); // textFieldRef.current.
+    const textFieldRef = useRef<HTMLTextAreaElement>(null); // textFieldRef.current.
+
+    const [selectedItemValue, setSelectedValue] = useState("");
 
     const [caret, setCaret] = useState({
         start: 0,
@@ -23,16 +26,16 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
 
     useEffect(() => {
 
+        setSelectedValue(props.initValue)
 
-        if( textFieldRef ){
-            if( textFieldRef.current ){
+
+        if (textFieldRef) {
+            if (textFieldRef.current) {
                 textFieldRef.current.value = props.initValue;
             }
-            
         }
 
         return () => {
-
         };
 
     }, [props.initValue]);
@@ -64,7 +67,7 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                 textFieldRef.current.selectionStart = cursorPos
                 textFieldRef.current.selectionEnd = cursorPos
 
-                props.updateFunction(newText)
+                setSelectedValue(newText)
             }
         }
         // setCaret({ start: cursorPos, end: cursorPos })            
@@ -77,6 +80,15 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
         setCaret({ start: e.target.selectionStart, end: e.target.selectionEnd });
     }
 
+    const handleEnterPress = (originalLine: string, trimmedLine: string, searchVal: string) => {
+        let insertion_str = ""
+        if (trimmedLine.startsWith(searchVal)) {
+            const indexOfVal = originalLine.indexOf(searchVal)
+            insertion_str = "\n" + originalLine.slice(0, indexOfVal + searchVal.length + 1)
+        }
+        return insertion_str
+    } 
+
     // React.KeyboardEvent<HTMLTextAreaElement>
     const handleKeyPress = (event: any) => {
 
@@ -84,7 +96,7 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
         let cursorPos = event.target.selectionStart
         let selectionEnd = event.target.selectionEnd
 
-        setCaret( { start: cursorPos, end: selectionEnd } ) 
+        setCaret({ start: cursorPos, end: selectionEnd })
 
         const previous_value = textFieldRef?.current?.value as string
 
@@ -147,22 +159,42 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
             case "Enter":
                 event.preventDefault()
 
-                if (lineWithCursor.startsWith('*')) {
-                    insertion_str = "\n* ";
-                } else if (lineWithCursor.startsWith('  *')) {
-                    insertion_str = "\n  * ";
-                } else if (lineWithCursor.startsWith('    *')) {
-                    insertion_str = "\n    * ";
-                } else {
-                    insertion_str = "\n";
+                const trimmedLine = lineWithCursor.trim()
+
+                // if( trimmedLine.startsWith('*') ){
+                //     const indexOfVal = lineWithCursor.indexOf("*")
+                //     insertion_str = "\n" + lineWithCursor.slice( 0, indexOfVal+1 )
+
+                if (insertion_str.length === 0) {
+                    insertion_str = handleEnterPress(lineWithCursor, trimmedLine, "*")
+                }
+                if (insertion_str.length === 0) {
+                    insertion_str = handleEnterPress(lineWithCursor, trimmedLine, "$$ []")
+                }
+                if (insertion_str.length === 0) {
+                    insertion_str = handleEnterPress(lineWithCursor, trimmedLine, "$$ [x]")
                 }
 
-                insertedText = insertText(previous_value, cursorPos, selectionEnd, insertion_str)
-                updateTextArea(insertedText, initialCursor + insertion_str.length)
+                if (insertion_str.length === 0)
+                    insertion_str = "\n";
         }
+
+        insertedText = insertText(previous_value, cursorPos, selectionEnd, insertion_str)
+        updateTextArea(insertedText, initialCursor + insertion_str.length)
     }
 
-    const handleDateChange = ( newDate : string ) => {
+
+
+
+    const handleTextAreaChange = (val: string) => {
+        setSelectedValue(val)
+    }
+
+    const onSave = () => {
+        props.onSave(selectedItemValue)
+    }
+
+    const handleDateChange = (newDate: string) => {
 
         const previous_value = textFieldRef?.current?.value as string
         let cursorPos = caret.start
@@ -178,9 +210,14 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
 
     return (
         <Stack direction="column" spacing={2}>
-            <Calendar handleDateChange={handleDateChange}/>
+            <Stack direction={"row"} spacing={2} alignContent={"center"}>
+                <Button
+                    startIcon={<MyIcon icon={"save"} />} variant="contained" color={"primary"}
+                    onClick={onSave} > Save </Button>
+                <Calendar handleDateChange={handleDateChange} />
+            </Stack>
             <Divider />
-            
+
             <MyTextareaAutosize
                 // value={ selectedItemValue ? selectedItemValue : "" }
                 minRows={20}
@@ -194,7 +231,7 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                 ref={textFieldRef}
                 onSelect={(e) => handleSelect(e)}
                 onKeyDown={e => handleKeyPress(e)}
-                onChange={e => props.updateFunction(e.target.value)} />
+                onChange={e => handleTextAreaChange(e.target.value)} />
         </Stack>
     )
 
