@@ -5,7 +5,7 @@ import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconBut
 
 import { FilterComponent } from '../components/FilterComponent';
 
-import { MyCard, MyPaperHeader } from "../components/StyledComponents"
+import { MyCard, MyCardBlur, MyPaperHeader } from "../components/StyledComponents"
 
 import { ListHeader, ListQ } from '../components/List';
 import { AddForm } from '../components/AddForm';
@@ -206,27 +206,22 @@ export const ListPage = (props: ListProps) => {
                 </Alert>
             </Snackbar>
 
-            <Grid container alignItems="flex-start" justifyContent="flex-start" spacing={2} >
-                  <Grid item md={6} xs={12} >
-                    <MyCard >
-                        <MyPaperHeader>
-                            <Grid sx={{ height: "100px" }} p={1} pl={2} container alignItems="center" justifyContent="flex-start" spacing={2} >
-                                <ListItem sx={{ height: "100px" }} >
+            <MyCardBlur>
+
+            <Grid container alignItems="center" justifyContent="flex-start" >
+                  <Grid item md={6} xs={4} >
+                                <ListItem>
                                     <ListItemAvatar>
                                         <Avatar style={{ backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
                                     </ListItemAvatar>
                                     <ListItemText primary={currentList?.name+ ""} secondary={currentList?.group} />
                                 </ListItem>
                             </Grid>
-                        </MyPaperHeader>
-                    </MyCard>
-                </Grid >
-                <Grid item md={6} xs={12} >
-                    <MyCard>
+                <Grid item md={6} xs={8} >
                         {props.todos.length > 5 &&
-                            <MyPaperHeader >
-                                <Grid sx={{ height: "100px" }} pl={2} pr={2} container alignItems="center" justifyContent="flex-start" spacing={2} >
-                                    <Grid item xs={9} lg={9} >
+                            < >
+                                <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
+                                    <Grid item xs={8} lg={9} >
                                         {edit ? (
                                             <AddForm
                                                 name=""
@@ -240,7 +235,7 @@ export const ListPage = (props: ListProps) => {
                                             <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
                                         )}
                                     </Grid>
-                                    <Grid item xs={3} lg={3} >
+                                    <Grid item xs={4} lg={3} >
                                         <Grid container justifyContent="flex-end">
                                             <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                 <MyIcon icon="text_rotation_none"></MyIcon>
@@ -252,22 +247,22 @@ export const ListPage = (props: ListProps) => {
                                     </Grid>
 
                                 </Grid>
-                            </MyPaperHeader>
+                            </>
                         }
 
 
                         {(filteredTodos.length === 1 && filterText.length > 0) && (
-                            <CardContent>
+                            <>
                                 <Typography variant="h6" component="h6">
                                     {filteredTodos[0].name}
                                 </Typography>
                                 <Typography variant="inherit" component="b" >
                                     Press Enter to check item
                                 </Typography>
-                            </CardContent>
+                            </>
                         )}
                         {filteredTodos.length === 0 && (
-                            <MyCard>
+                            <>
                                 <ListHeader
                                     header={"Checklist"}
                                     edit={false}
@@ -281,10 +276,12 @@ export const ListPage = (props: ListProps) => {
                                         type={props.listtype}
                                         groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
                                 </ListItem>
-                            </MyCard>)}
-                    </MyCard>
+                            </>
+                            )}
+                    
                 </Grid>
             </Grid>
+            </MyCardBlur>
 
             <Box sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
                 <Grid container spacing={2} alignItems="stretch" >
