@@ -1,7 +1,7 @@
 
 // import { styled } from '@material-ui/core/styles';
 import { styled } from '@mui/system';
-import { Card, CardHeader, Typography, ListItem, TextareaAutosize, Divider, Paper } from '@mui/material';
+import { Card, CardHeader, Typography, ListItem, TextareaAutosize, Divider, Paper, Box } from '@mui/material';
 import { lightBlue } from '@mui/material/colors/';
 
 export const MyCard = styled(Card)({
@@ -16,6 +16,14 @@ export const MyCard2 = styled(Card)({
   // background: '#2F3E45',
   // border: 0,
   borderRadius: 10,
+});
+
+export const MyCardBlur = styled(Box)({
+  backdropFilter: 'blur(10px);',
+  
+  // background: '#2F3E45',
+  // border: 0,
+  borderRadius: 0,
 });
 
 export const MyDivider = styled(Divider)({
@@ -61,15 +69,13 @@ export const TypographyEnabled = styled(Typography)({
 export const DashboardValue = styled(Typography)({
   fontSize:"1.9em",
   fontWeight:"10",
-  color: "#FFF",
-  fontWeight: "100"
+  color: "#FFF"
 });
 
 export const DashboardInfo = styled(Typography)({
   fontSize:"0.9em",
   fontWeight:"10",
-  color: "#AAA",
-  fontWeight: "100"
+  color: "#AAA"
 });
 
 export const MyListItemHeader = styled(ListItem)({

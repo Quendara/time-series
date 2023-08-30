@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, SyntheticEvent, KeyboardEvent } fro
 
 
 import { MyTextareaAutosize, MyTextareaRead } from "./StyledComponents"
-import { Calendar } from "../organisms/Calendar";
+import { Calendar } from "./Calendar";
 import { Button, Divider, IconButton, Stack, Tooltip } from "@mui/material";
 import { MyIcon } from "./MyIcon";
 import dayjs from "dayjs";

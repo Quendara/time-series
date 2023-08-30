@@ -31,7 +31,7 @@ import { TextEdit } from "../components/TextEdit";
 import { UpdateTodosInput } from "../API"
 import { ListGraphInternal } from "../pages/listGraphQL";
 import { TodoListType } from "../components/List"
-import { Calendar } from "../organisms/Calendar";
+import { Calendar } from "./Calendar";
 
 
 interface Props {
@@ -48,8 +48,8 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists, username,
     const item = useGetTodo(itemid);
     const todos = useGetTodos(item?.listid);
 
-    const location = useLocation();
-    const navigate = useNavigate();
+    // const location = useLocation();
+    // const navigate = useNavigate();
 
 
     return (
@@ -62,7 +62,6 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists, username,
             listtype={listtype}
             username={username} />
     )
-
 }
 
 interface PropsDetails {

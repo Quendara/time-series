@@ -24,7 +24,7 @@ import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGr
 import { MyIcon } from '../components/MyIcon';
 
 import { useTheme } from '@mui/material/styles';
-import { Calendar } from '../organisms/Calendar';
+import { Calendar } from '../components/Calendar';
 
 
 interface ListProps {

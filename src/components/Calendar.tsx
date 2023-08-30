@@ -52,7 +52,7 @@ export const Calendar = (props: Props) => {
         format={"YYYY-MM-DD"}
         value={date}
         onChange={handleDateChange}
-      // renderInput={(params: any) => <TextField fullWidth  {...params} />}
+        // textField={(params: any) => <TextField fullWidth  {...params} />}
       />
     </LocalizationProvider>
   </Stack>

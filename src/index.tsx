@@ -131,7 +131,7 @@ const App = () => {
 
         </Auth>
 
-        <Grid container pt={ matchesUpXs?2:0 } justifyContent="center" spacing={1} >
+        <Grid container pt={ matchesUpXs?0:0 } justifyContent="center" spacing={1} >
         
           <Grid item xs={12} lg={11}>
             {username.length > 0 &&

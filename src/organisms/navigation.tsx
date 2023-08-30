@@ -22,7 +22,7 @@ import { createEmptyTodoMainItem, TodoItem, TodoMainItem } from "../models/TodoI
 import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
 // import { GroupItem } from "../models/Definitions"
 
-import { MyCard, MyCardHeader } from "../components/StyledComponents";
+import { MyCard, MyCardBlur, MyCardHeader } from "../components/StyledComponents";
 import { FilterComponent } from "../components/FilterComponent";
 import { getTodosByGroupName, getTodosByName } from "../components/GraphQlFunctions";
 
@@ -30,7 +30,7 @@ import { cssClasses } from "../Styles"
 import { SearchResponse } from "./SearchResponse";
 
 import { bull } from "../components/helpers"
-import { Calendar } from "./Calendar";
+import { Calendar } from "../components/Calendar";
 
 type RenderMode = "navlink" | "main";
 
@@ -375,22 +375,18 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 </>
             ) : (
                 <>
-                    <Grid container alignItems="center" justifyContent="center" spacing={2} >    
-                        <Grid item xs={10} lg={6} >
-                            <MyCard>
-                                <CardContent>
+                    <MyCardBlur>
+                        <Box p={1}>
+                            <Grid container pl={2} alignItems="center" justifyContent="center" spacing={1} >
+                                <Grid item xs={7} lg={6} >
                                     <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
-                                </CardContent>
-                            </MyCard>
-                        </Grid>
-                        <Grid item xs={10} lg={6} >
-                            <MyCard>
-                                <CardContent>
+                                </Grid>
+                                <Grid item xs={5} lg={6} >
                                     <Calendar />
-                                </CardContent>
-                            </MyCard>
-                        </Grid>                        
-                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </MyCardBlur>
 
                     {(items !== undefined && groups.length > 0) &&
 

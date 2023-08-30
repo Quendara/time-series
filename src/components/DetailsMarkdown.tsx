@@ -7,10 +7,27 @@ import ReactMarkdown from "react-markdown";
 // import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Alert, AlertColor, Box, Card, CardContent, Checkbox, FormControlLabel, Grid } from "@mui/material";
+import { Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, FormControlLabel, Grid } from "@mui/material";
 import { extract } from "query-string/base";
 import { stringMap } from "aws-sdk/clients/backup";
 import { bool } from "aws-sdk/clients/signer";
+
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import typescript from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+import scss from 'react-syntax-highlighter/dist/cjs/languages/prism/scss';
+import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
+// import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
+import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
+
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('typescript', typescript);
+SyntaxHighlighter.registerLanguage('scss', scss);
+SyntaxHighlighter.registerLanguage('bash', bash);
+// SyntaxHighlighter.registerLanguage('markdown', markdown);
+SyntaxHighlighter.registerLanguage('json', json);
+
+
 // import  {remarkTypescript}  from 'remark-typescript'
 
 // import remarkMath from 'remark-math'
@@ -98,7 +115,36 @@ export const DetailsMarkdown = (props: Props) => {
 
     function isAlertColor(color: string): boolean {
         return ['success', 'info', 'warning', 'error'].includes(color);
-      }    
+    }
+
+    const checkOwnMarkup = (line: string, index: number) => {
+
+        type Component = "Alert" | "Image" | "Checkbox" | undefined
+        let type: Component = undefined
+        const trimmedLine = line.trim()
+
+        if (trimmedLine.startsWith("$$Alert")) { type = "Alert" }
+        if (trimmedLine.startsWith("$$Alert")) { type = "Image" }
+        if (trimmedLine.startsWith("$$ [")) { type = "Checkbox" }
+
+        switch (type) {
+            case "Alert":
+                return getAlertJSX(line)
+            case "Checkbox":
+                return getCheckboxJSX(line, index)
+            case "Image":
+                return getPhotoJSX(line)
+            default:
+                return (
+                    <Box mt={1} mb={1} >
+                        <Alert severity={"error"} >
+                            <AlertTitle>Typo in line {index} </AlertTitle>
+                            {line}</Alert>
+                    </Box>)
+
+        }
+
+    }
 
     const getAlertJSX = (line: string) => {
         let isAlert = false
@@ -106,26 +152,26 @@ export const DetailsMarkdown = (props: Props) => {
         if (line.trim().startsWith("$$Alert")) { isAlert = true }
 
         if (isAlert) {
-            
-            let extractedString = line.split(":").at(1)
-            let severity : AlertColor = "success" 
 
-            if( extractedString?.split("/").length === 2 ){
-                const arr = extractedString?.split("/")   
-                severity = isAlertColor( arr[0] ) ? arr[0] as AlertColor : "success"
+            let extractedString = line.split(":").at(1)
+            let severity: AlertColor = "success"
+
+            if (extractedString?.split("/").length === 2) {
+                const arr = extractedString?.split("/")
+                severity = isAlertColor(arr[0]) ? arr[0] as AlertColor : "success"
                 extractedString = arr[1]
             }
-            
+
             return (
                 <Box mt={1} mb={1} >
-                <Alert severity={severity}>{extractedString}</Alert>
+                    <Alert severity={severity}>{extractedString}</Alert>
                 </Box>
             )
         } else {
             console.log("Kein Übereinstimmung gefunden.");
             return (<></>)
         }
-    }    
+    }
 
     const getCheckboxJSX = (line: string, index: number) => {
 
@@ -133,17 +179,18 @@ export const DetailsMarkdown = (props: Props) => {
         let isChecked = false
         if (line.trim().startsWith("$$ []")) { isCheckbox = true }
         else if (line.trim().startsWith("$$ [x]")) { isCheckbox = true; isChecked = true }
-        var indent = line.indexOf( "$$" ); 
+
+        var indent = line.indexOf("$$");
 
         const handleCheck = (check: bool, label: string) => {
 
             const checkStr = check ? "[x]" : "[]"
             let whiteSpace = ""
 
-            for( let i=0; i<indent; ++i){
-                whiteSpace = whiteSpace+" "
+            for (let i = 0; i < indent; ++i) {
+                whiteSpace = whiteSpace + " "
             }
-            
+
             const replacedLine = `${whiteSpace}$$ ${checkStr} ${label.trim()}`
             const replacedContent = replaceLineInContent(index, replacedLine)
             props.updateFunction(replacedContent)
@@ -154,21 +201,21 @@ export const DetailsMarkdown = (props: Props) => {
             let label = labelFromLine ? labelFromLine : "label"
 
             return (
-                    <Box ml={2*indent} mr={2*indent}>
-                        <FormControlLabel control={
-                            <Checkbox
-                                defaultChecked={isChecked}
-                                onChange={() => handleCheck(!isChecked, label)}
-                            />} label={ label } />
-                    </Box>
-                
+                <Box ml={2 * indent} mr={2 * indent}>
+                    <FormControlLabel control={
+                        <Checkbox
+                            defaultChecked={isChecked}
+                            onChange={() => handleCheck(!isChecked, label)}
+                        />} label={label} />
+                </Box>
+
             )
         } else {
             return (<></>)
         }
     }
 
-    const markdownWithExtension = (linesStr: string, offset: number ) => {
+    const markdownWithExtension = (linesStr: string, offset: number) => {
 
         const lines = linesStr.split("\n")
         let content = ""
@@ -184,9 +231,9 @@ export const DetailsMarkdown = (props: Props) => {
                         <Grid item xs={12}>
                             <ReactMarkdown children={mdcontent} remarkPlugins={[remarkGfm]} />
                         </Grid>}
-                    {getPhotoJSX( currentLine)}
-                    {getAlertJSX( currentLine)}
-                    {getCheckboxJSX(currentLine, offset + index)}
+                    {/* {checkOwnMarkup( currentLine )}
+                    {getAlertJSX( currentLine )} */}
+                    {checkOwnMarkup(currentLine, offset + index)}
                 </>
                 )
             }
@@ -230,22 +277,22 @@ export const DetailsMarkdown = (props: Props) => {
                     {currentLine.startsWith("$$Grid") ?
                         <Grid item xs={width} >
                             <Box ml={2} mr={2}>
-                                {markdownWithExtension(mdcontent, offset )}
+                                {markdownWithExtension(mdcontent, offset)}
                             </Box>
                         </Grid> : <Grid item xs={width} >
                             <Card >
                                 <CardContent>
-                                    {markdownWithExtension(mdcontent, offset )}
+                                    {markdownWithExtension(mdcontent, offset)}
                                 </CardContent>
                             </Card>
                         </Grid>
                     }
                 </>
 
-                offset = index+1
+                offset = index + 1
 
                 return retJSX
-                
+
             }
             else {
                 content = content + currentLine + "\n"
@@ -253,21 +300,21 @@ export const DetailsMarkdown = (props: Props) => {
             }
         })
 
-        
+
         if (content.length > 0) {
             offset = 0
             contentJSX.push(
                 <Grid item xs={12} >
                     {/* <ReactMarkdown children={content} remarkPlugins={[remarkGfm]} /> */}
-                    {markdownWithExtension(content, offset )}
+                    {markdownWithExtension(content, offset)}
                 </Grid>
-                )
+            )
         }
 
         return contentJSX
     }
 
-    
+
 
     return (
         <>
