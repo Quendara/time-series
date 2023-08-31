@@ -19,7 +19,7 @@ import scss from 'react-syntax-highlighter/dist/cjs/languages/prism/scss';
 import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
 // import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
 import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
-import { getAlertJSX, getPhotoJSX } from "./MarkdownComponents";
+import { getAlertJSX, getPhotoJSX, getVideoJSX } from "./MarkdownComponents";
 import { DetailsById, DetailsLinkById } from "./Details";
 import { UpdateTodosInput } from "../API";
 import { MyIcon } from "./MyIcon";
@@ -82,7 +82,7 @@ interface Props {
 
 export const DetailsMarkdown = (props: Props) => {
 
-    
+
 
     const replaceLineInContent = (lineNumberToReplace: number, newLine: string) => {
 
@@ -116,7 +116,7 @@ export const DetailsMarkdown = (props: Props) => {
                         listtype={""}
                         lists={[]} username={""}
                         action={
-                           undefined
+                            undefined
                         }
                     />
                 </>
@@ -141,12 +141,13 @@ export const DetailsMarkdown = (props: Props) => {
 
     const checkOwnMarkup = (line: string, index: number) => {
 
-        type Component = "Alert" | "Photo" | "Checkbox" | "Todo" | "TodoInclude" | undefined
+        type Component = "Alert" | "Photo" | "Checkbox" | "Todo" | "Video" | "TodoInclude" | undefined
         let type: Component = undefined
         const trimmedLine = line.trim()
 
         if (trimmedLine.startsWith("$$Alert")) { type = "Alert" }
         if (trimmedLine.startsWith("$$Photo")) { type = "Photo" }
+        if (trimmedLine.startsWith("$$Video")) { type = "Video" }
         if (trimmedLine.startsWith("$$Todo")) { type = "Todo" }
         if (trimmedLine.startsWith("$$TodoInclude")) { type = "TodoInclude" }
         if (trimmedLine.startsWith("$$ [")) { type = "Checkbox" }
@@ -163,6 +164,9 @@ export const DetailsMarkdown = (props: Props) => {
                 return getTodoLinkJSX(line)
             case "TodoInclude":
                 return getTodoIncludeJSX(line)
+            case "Video":
+                return getVideoJSX(line)
+
             default:
                 return (
                     <Box mt={1} mb={1} >
