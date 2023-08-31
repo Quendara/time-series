@@ -7,12 +7,9 @@ import {
     useNavigate
 } from "react-router-dom";
 
+import { CardContent, Snackbar, Alert, Grid, Button, Avatar, IconButton, Stack, Dialog, DialogContent, Card } from '@mui/material';
 
-
-import { CardContent, Snackbar, Alert, Grid, Button, Avatar, IconButton, Stack } from '@mui/material';
-
-
-import { MyCardHeader, MyDivider, MyCard2 } from "./StyledComponents"
+import { MyCardHeader, MyDivider, MyCard2, MyDialogContentBlur } from "./StyledComponents"
 import { MyIcon } from "./MyIcon";
 
 import { DetailsMarkdown } from "./DetailsMarkdown"
@@ -37,7 +34,7 @@ import { Calendar } from "./Calendar";
 interface Props {
     itemid: string;
     listtype: string;
-    updateFunction: (input: UpdateTodosInput) => any;
+    updateFunction?: (input: UpdateTodosInput) => any;
     lists: TodoMainItem[];
     username: string;
     action: React.ReactNode;
@@ -47,10 +44,6 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists, username,
 
     const item = useGetTodo(itemid);
     const todos = useGetTodos(item?.listid);
-
-    // const location = useLocation();
-    // const navigate = useNavigate();
-
 
     return (
         <Details
@@ -64,9 +57,47 @@ export const DetailsById = ({ itemid, listtype, updateFunction, lists, username,
     )
 }
 
+export const DetailsLinkById = ({ itemid, listtype, updateFunction, lists, username, action }: Props) => {
+
+    const item = useGetTodo(itemid);
+    const todos = useGetTodos(item?.listid);
+
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <Dialog
+                open={open}
+                fullWidth={true}
+                maxWidth={"md"}
+                scroll={"paper"}
+                onClose={() => setOpen(false)}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                <MyDialogContentBlur>
+                    <DetailsHeadless
+                        selectedItem={item}
+                        todos={todos}
+                        updateFunction={updateFunction}
+                        lists={lists}
+                        action={action}
+                        listtype={listtype}
+                        username={username} />
+                </MyDialogContentBlur>
+            </Dialog>
+            <Button onClick={() => setOpen(true)}>{item?.name}</Button>
+        </>
+    )
+}
+
+
+
+
+
 interface PropsDetails {
     selectedItem: TodoItem | undefined;
-    updateFunction: (input: UpdateTodosInput) => any;
+    updateFunction?: (input: UpdateTodosInput) => any;
     listtype: string;
     todos: TodoItem[];
     lists: TodoMainItem[];
@@ -74,8 +105,16 @@ interface PropsDetails {
     action: React.ReactNode;
 }
 
-
 export const Details = (props: PropsDetails) => {
+    return (
+        <MyCard2>
+            <DetailsHeadless {...props} />
+        </MyCard2>
+    )
+}
+
+
+export const DetailsHeadless = ( props: PropsDetails) => {
 
     // const classes = useStyles();
 
@@ -113,7 +152,7 @@ export const Details = (props: PropsDetails) => {
                 description: selectedItemValue
             }
 
-            props.updateFunction(value)
+            props.updateFunction && props.updateFunction(value)
 
         }
 
@@ -138,9 +177,9 @@ export const Details = (props: PropsDetails) => {
             description: newDescription
         }
 
-        setSelectedValue( newDescription )
+        setSelectedValue(newDescription)
 
-        props.updateFunction(value)
+        props.updateFunction && props.updateFunction(value)
         setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
     }
@@ -156,25 +195,25 @@ export const Details = (props: PropsDetails) => {
             description: newItemValue
         }
 
-        props.updateFunction(value)
+        props.updateFunction && props.updateFunction(value)
         setSuccessSnackbarMessage("Saved !!! ")
         setEdit(false)
     }
 
-    const updateNameLinkHandle = (linkName: string, linkUrl: string, groupname: string) => {
+    // const updateNameLinkHandle = (linkName: string, linkUrl: string, groupname: string) => {
 
-        if (currentItem === undefined) return;
+    //     if (currentItem === undefined) return;
 
-        const value: UpdateTodosInput = {
-            id: currentItem.id,
-            link: linkUrl,
-            name: linkName,
-            group: groupname
-        }
+    //     const value: UpdateTodosInput = {
+    //         id: currentItem.id,
+    //         link: linkUrl,
+    //         name: linkName,
+    //         group: groupname
+    //     }
 
-        props.updateFunction(value)
-        setEdit(false)
-    }
+    //     props.updateFunction(value)
+    //     setEdit(false)
+    // }
 
 
     const updateMainList = (newListName: string) => {
@@ -188,7 +227,7 @@ export const Details = (props: PropsDetails) => {
                 id: props.selectedItem.id,
                 listid: foundList.listid
             }
-            props.updateFunction(value)
+            props.updateFunction && props.updateFunction(value)
         }
 
     }
@@ -202,7 +241,7 @@ export const Details = (props: PropsDetails) => {
                 id: props.selectedItem.id,
                 listid: selecedList.id
             }
-            props.updateFunction(value)
+            props.updateFunction && props.updateFunction(value)
         }
     }
 
@@ -229,11 +268,12 @@ export const Details = (props: PropsDetails) => {
                     {successSnackbarMessage}
                 </Alert>
             </Snackbar>
+
             {currentItem === undefined ? (
                 <h1> ... </h1>
             ) : (
                 <>
-                    <MyCard2 elevation={4}>
+                    
                         <MyCardHeader
                             avatar={
                                 <Avatar aria-label="recipe">
@@ -246,7 +286,8 @@ export const Details = (props: PropsDetails) => {
                             title={<TextEdit
                                 value={currentItem.name}
                                 label="Name"
-                                callback={(newName: string) => props.updateFunction({ id: currentItem.id, name: newName })} >
+                                readonly={props.updateFunction === undefined}
+                                callback={(newName: string) => props.updateFunction && props.updateFunction({ id: currentItem.id, name: newName })} >
                             </TextEdit>
                             }
                             subheader={
@@ -255,7 +296,8 @@ export const Details = (props: PropsDetails) => {
                                         value={currentItem.group}
                                         groups={findUnique(props.todos, "group", false)}
                                         label="Group"
-                                        callback={(group) => props.updateFunction({ id: currentItem.id, group: group })} >
+                                        readonly={props.updateFunction === undefined}
+                                        callback={(group) => props.updateFunction && props.updateFunction({ id: currentItem.id, group: group })} >
                                     </TextEdit>
                                     {bull}
                                     <TextEdit
@@ -268,15 +310,12 @@ export const Details = (props: PropsDetails) => {
                             }
                         />
 
-
                         <CardContent>
                             <Grid
                                 container
                                 direction="row"
                                 justifyContent="flex-start"
                                 alignItems="flex-start" >
-
-
 
                                 {edit ? (
                                     <>
@@ -289,20 +328,23 @@ export const Details = (props: PropsDetails) => {
                                     </>
                                 ) : (
                                     <>
-                                        <Grid item xs={12}>
-                                            <Stack direction={"row"} spacing={2}>
+                                        {props.updateFunction &&
 
-                                                <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>     
+                                            <Grid item xs={12}>
+                                                <Stack direction={"row"} spacing={2}>
 
-                                                {(localitems.length === 0) &&
-                                                    <Button
-                                                        variant="contained"
-                                                        startIcon={<MyIcon icon={"rule"} />}
-                                                        onClick={() => setAddTodos(true)}> Add Checklist
-                                                    </Button>
-                                                }
-                                            </Stack>
-                                        </Grid>
+                                                    <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>
+
+                                                    {(localitems.length === 0) &&
+                                                        <Button
+                                                            variant="contained"
+                                                            startIcon={<MyIcon icon={"rule"} />}
+                                                            onClick={() => setAddTodos(true)}> Add Checklist
+                                                        </Button>
+                                                    }
+                                                </Stack>
+                                            </Grid>
+                                        }
                                         {selectedItemValue.length > 0 &&
                                             <Grid item xs={12}>
                                                 <MyDivider />
@@ -339,8 +381,7 @@ export const Details = (props: PropsDetails) => {
                                 </Grid>
                             </>}
                         </CardContent>
-
-                    </MyCard2>
+                   
 
                 </>
             )

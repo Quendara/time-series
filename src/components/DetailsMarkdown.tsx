@@ -19,6 +19,9 @@ import scss from 'react-syntax-highlighter/dist/cjs/languages/prism/scss';
 import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
 // import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
 import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
+import { getAlertJSX, getPhotoJSX } from "./MarkdownComponents";
+import { DetailsById, DetailsLinkById } from "./Details";
+import { UpdateTodosInput } from "../API";
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -96,35 +99,48 @@ export const DetailsMarkdown = (props: Props) => {
     }
 
 
-    const getPhotoJSX = (line: string) => {
 
-        const regex = /\$\$Photo:"([^"]+)"/;
-        const matches = line.match(regex);
 
-        if (matches && matches.length >= 2) {
-            const extractedString = matches[1];
-            const filename = extractedString.split("/")
+    const getTodoIncludeJSX = (line: string) => {
+        let todoStrId = line.split(":").at(1)
+
+        if (todoStrId) {
+
             return (
-                <ImageFromPhotos folder={filename[0]} file={filename[1]} />
+                <>
+                    <DetailsById itemid={todoStrId}
+                        listtype={""}
+                        lists={[]} username={""} action={undefined} />
+                </>
             )
-        } else {
-            console.log("Kein Übereinstimmung gefunden.");
-            return (<></>)
         }
     }
 
-    function isAlertColor(color: string): boolean {
-        return ['success', 'info', 'warning', 'error'].includes(color);
-    }
+    const getTodoLinkJSX = (line: string) => {
+        let todoStrId = line.split(":").at(1)
+
+        if (todoStrId) {
+
+            return (
+                <>
+                    <DetailsLinkById itemid={todoStrId}
+                        listtype={""}
+                        lists={[]} username={""} action={undefined} />
+                </>
+            )
+        }
+    }    
 
     const checkOwnMarkup = (line: string, index: number) => {
 
-        type Component = "Alert" | "Image" | "Checkbox" | undefined
+        type Component = "Alert" | "Photo" | "Checkbox" | "Todo" | "TodoInclude" | undefined
         let type: Component = undefined
         const trimmedLine = line.trim()
 
         if (trimmedLine.startsWith("$$Alert")) { type = "Alert" }
-        if (trimmedLine.startsWith("$$Alert")) { type = "Image" }
+        if (trimmedLine.startsWith("$$Photo")) { type = "Photo" }
+        if (trimmedLine.startsWith("$$Todo")) { type = "Todo" }
+        if (trimmedLine.startsWith("$$TodoInclude")) { type = "TodoInclude" }
         if (trimmedLine.startsWith("$$ [")) { type = "Checkbox" }
 
         switch (type) {
@@ -132,8 +148,13 @@ export const DetailsMarkdown = (props: Props) => {
                 return getAlertJSX(line)
             case "Checkbox":
                 return getCheckboxJSX(line, index)
-            case "Image":
+
+            case "Photo":
                 return getPhotoJSX(line)
+            case "Todo":
+                return getTodoLinkJSX(line)
+            case "TodoInclude":
+                return getTodoIncludeJSX(line)
             default:
                 return (
                     <Box mt={1} mb={1} >
@@ -143,35 +164,9 @@ export const DetailsMarkdown = (props: Props) => {
                     </Box>)
 
         }
-
     }
 
-    const getAlertJSX = (line: string) => {
-        let isAlert = false
 
-        if (line.trim().startsWith("$$Alert")) { isAlert = true }
-
-        if (isAlert) {
-
-            let extractedString = line.split(":").at(1)
-            let severity: AlertColor = "success"
-
-            if (extractedString?.split("/").length === 2) {
-                const arr = extractedString?.split("/")
-                severity = isAlertColor(arr[0]) ? arr[0] as AlertColor : "success"
-                extractedString = arr[1]
-            }
-
-            return (
-                <Box mt={1} mb={1} >
-                    <Alert severity={severity}>{extractedString}</Alert>
-                </Box>
-            )
-        } else {
-            console.log("Kein Übereinstimmung gefunden.");
-            return (<></>)
-        }
-    }
 
     const getCheckboxJSX = (line: string, index: number) => {
 
@@ -208,7 +203,6 @@ export const DetailsMarkdown = (props: Props) => {
                             onChange={() => handleCheck(!isChecked, label)}
                         />} label={label} />
                 </Box>
-
             )
         } else {
             return (<></>)

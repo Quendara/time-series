@@ -62,25 +62,25 @@ export const ImageFromPhotos = (props: Props) => {
 
     return (
         <>
-        <Dialog
-                    open={edit}
-                    onClose={() => setEdit(false)}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                >
- <ImageOnDemand image={fakeImage}
-            className="responsive-img"
-            onClick={undefined}
-            fullRes={false}
-            token=""
-        />
-                </Dialog>
-        <ImageOnDemand image={fakeImage}
-            className="responsive-img"
-            onClick={ () => setEdit(true )}
-            fullRes={false}
-            token=""
-        />
+            <Dialog
+                open={edit}
+                onClose={() => setEdit(false)}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                <ImageOnDemand image={fakeImage}
+                    className="responsive-img"
+                    onClick={undefined}
+                    fullRes={false}
+                    token=""
+                />
+            </Dialog>
+            <ImageOnDemand image={fakeImage}
+                className="responsive-img"
+                onClick={() => setEdit(true)}
+                fullRes={false}
+                token=""
+            />
         </>
     )
 }

@@ -133,7 +133,7 @@ const App = () => {
 
         <Grid container pt={ matchesUpXs?0:0 } justifyContent="center" spacing={1} >
         
-          <Grid item xs={12} lg={11}>
+          <Grid item xs={12} lg={12}>
             {username.length > 0 &&
               (<>
                 {!amplifyInitilaized ? (<h1> Loading </h1>) :
@@ -146,6 +146,7 @@ const App = () => {
                       <Route path="/list/:listid/:listtype" element={
                         <ListGraphQL username={username} lists={todoMainItems} color={ colorArr[0]} horizontally={false} />
                       } />
+                                        
                       <Route path="/time/:id/:idx" element={
                         <TimeSeries username={username} token={jwtTocken} />
                       } >

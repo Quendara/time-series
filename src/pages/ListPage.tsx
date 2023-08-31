@@ -152,10 +152,10 @@ export const ListPage = (props: ListProps) => {
             <>
                 {groups && (
 
+
                     <HorizontallyGrid horizontally={stateHorizontally} >
                         {groups.map((item: GenericGroup<TodoItem>, index: number) => (
                             <HorizontallyItem key={"ListPage" + item.value} horizontally={stateHorizontally} >
-                            
                                 <MyCard>
                                     <ListQ
                                         key={"ListQ" + item.value}
@@ -283,7 +283,7 @@ export const ListPage = (props: ListProps) => {
             </Grid>
             </MyCardBlur>
 
-            <Box sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
+            <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
                 <Grid container spacing={2} alignItems="stretch" >
 
                     {props.listtype === TodoListType.TODO_SIMPLE ? (
@@ -328,7 +328,7 @@ export const ListPage = (props: ListProps) => {
             </Box>
 
 
-
+            
             <Box sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
 
                 <HorizontallyGrid horizontally={true}  >

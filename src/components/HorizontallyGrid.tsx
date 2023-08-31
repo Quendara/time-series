@@ -19,7 +19,7 @@ export const HorizontallyGrid = <Type extends object>(props: Props<Type>) => {
         <>
             {(props.horizontally && biggerThenXs) ? (
 
-                <Box key={"xxyjhgjhg"} p={2} sx={cssClasses.horizontalSnapContainer} >
+                <Box key={"xxyjhgjhg"} sx={cssClasses.horizontalSnapContainer} >
                     {props.children}
                 </Box>
             ) : (

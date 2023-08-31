@@ -1,7 +1,7 @@
 
 // import { styled } from '@material-ui/core/styles';
 import { styled } from '@mui/system';
-import { Card, CardHeader, Typography, ListItem, TextareaAutosize, Divider, Paper, Box } from '@mui/material';
+import { Card, CardHeader, Typography, ListItem, TextareaAutosize, Divider, Paper, Box, Dialog, DialogContent } from '@mui/material';
 import { lightBlue } from '@mui/material/colors/';
 
 export const MyCard = styled(Card)({
@@ -18,9 +18,15 @@ export const MyCard2 = styled(Card)({
   borderRadius: 10,
 });
 
+export const MyDialogContentBlur = styled(DialogContent)({
+  background: 'linear-gradient(45deg, #102027 3%, #2F3E45 90%)',
+  // background: '#2F3E45',
+  // border: 0,
+  borderRadius: 0,
+});
+
 export const MyCardBlur = styled(Box)({
   backdropFilter: 'blur(10px);',
-  
   // background: '#2F3E45',
   // border: 0,
   borderRadius: 0,
