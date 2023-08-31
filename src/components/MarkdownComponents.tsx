@@ -10,6 +10,7 @@ export const getPhotoJSX = (line: string) => {
     if (matches && matches.length >= 2) {
         const extractedString = matches[1];
         const filename = extractedString.split("/")
+
         return (
             <ImageFromPhotos folder={filename[0]} file={filename[1]} />
         )

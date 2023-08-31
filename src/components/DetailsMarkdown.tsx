@@ -277,12 +277,12 @@ export const DetailsMarkdown = (props: Props) => {
                 content = ""
                 const retJSX = <>
                     {currentLine.startsWith("$$Grid") ?
-                        <Grid item xs={width} >
+                        <Grid item xs={12} md={width} >
                             <Box ml={2} mr={2}>
                                 {markdownWithExtension(mdcontent, offset)}
                             </Box>
-                        </Grid> : <Grid item xs={width} >
-                            <Card >
+                        </Grid> : <Grid xs={12} md={width} p={1}>
+                            <Card>
                                 <CardContent>
                                     {markdownWithExtension(mdcontent, offset)}
                                 </CardContent>

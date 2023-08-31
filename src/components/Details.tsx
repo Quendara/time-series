@@ -17,7 +17,7 @@ import { TodoItem, TodoMainItem } from "../models/TodoItems"
 
 import { findUnique, getGlobalList } from "../components/helpers";
 
-import { removeItemById } from "../components/GraphQlFunctions"
+import { removeItemById, updateFunctionTodo } from "../components/GraphQlFunctions"
 
 import { useGetTodos } from "../hooks/useGetTodos"
 import { useGetTodo } from "../hooks/useGetTodo"
@@ -192,8 +192,9 @@ export const DetailsHeadless = (props: PropsDetails) => {
 
         setSelectedValue(newDescription)
 
-        props.updateFunction && props.updateFunction(value)
-        setSuccessSnackbarMessage("Saved !!! ")
+        // props.updateFunction && props.updateFunction(value)
+        updateFunctionTodo( value )
+        setSuccessSnackbarMessage("Saved " + currentItem.name + "!!! ")
         setEdit(false)
     }
 
@@ -208,8 +209,9 @@ export const DetailsHeadless = (props: PropsDetails) => {
             description: newItemValue
         }
 
-        props.updateFunction && props.updateFunction(value)
-        setSuccessSnackbarMessage("Saved !!! ")
+        // props.updateFunction && props.updateFunction(value)
+        updateFunctionTodo( value )
+        setSuccessSnackbarMessage("Saved " + currentItem.name + "!!! ")
         setEdit(false)
     }
 
@@ -240,7 +242,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 id: props.selectedItem.id,
                 listid: foundList.listid
             }
-            props.updateFunction && props.updateFunction(value)
+            // props.updateFunction && props.updateFunction(value)
+            updateFunctionTodo( value )
         }
 
     }
@@ -254,7 +257,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 id: props.selectedItem.id,
                 listid: selecedList.id
             }
-            props.updateFunction && props.updateFunction(value)
+            // props.updateFunction && props.updateFunction(value)
+            updateFunctionTodo( value )
         }
     }
 
@@ -276,7 +280,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 autoHideDuration={2000}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={() => setSuccessSnackbarMessage("")}
-                message="Saved" >
+                message={ "Saved " + currentItem?.name} >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
                 </Alert>
