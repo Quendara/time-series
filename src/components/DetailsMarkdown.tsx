@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 // import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, FormControlLabel, Grid } from "@mui/material";
+import { Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, FormControlLabel, Grid, IconButton } from "@mui/material";
 import { extract } from "query-string/base";
 import { stringMap } from "aws-sdk/clients/backup";
 import { bool } from "aws-sdk/clients/signer";
@@ -22,6 +22,8 @@ import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
 import { getAlertJSX, getPhotoJSX } from "./MarkdownComponents";
 import { DetailsById, DetailsLinkById } from "./Details";
 import { UpdateTodosInput } from "../API";
+import { MyIcon } from "./MyIcon";
+import { useNavigate } from "react-router-dom";
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -80,6 +82,8 @@ interface Props {
 
 export const DetailsMarkdown = (props: Props) => {
 
+    
+
     const replaceLineInContent = (lineNumberToReplace: number, newLine: string) => {
 
         const val = props.value
@@ -110,7 +114,11 @@ export const DetailsMarkdown = (props: Props) => {
                 <>
                     <DetailsById itemid={todoStrId}
                         listtype={""}
-                        lists={[]} username={""} action={undefined} />
+                        lists={[]} username={""}
+                        action={
+                           undefined
+                        }
+                    />
                 </>
             )
         }
@@ -129,7 +137,7 @@ export const DetailsMarkdown = (props: Props) => {
                 </>
             )
         }
-    }    
+    }
 
     const checkOwnMarkup = (line: string, index: number) => {
 

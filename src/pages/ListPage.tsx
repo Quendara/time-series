@@ -25,6 +25,7 @@ import { MyIcon } from '../components/MyIcon';
 
 import { useTheme } from '@mui/material/styles';
 import { Calendar } from '../components/Calendar';
+import { useNavigate } from 'react-router-dom';
 
 
 interface ListProps {
@@ -45,6 +46,8 @@ interface ListProps {
 }
 
 export const ListPage = (props: ListProps) => {
+
+    const navigate = useNavigate();
 
     // const [selectedItem, setSelectedItem] = useState(undefined);
     const [selectedItemId, setSelectedItemId] = useState("");
@@ -79,7 +82,10 @@ export const ListPage = (props: ListProps) => {
         // const currentItem = await getItem(id)
         //     // console.log( "selectHandle : ", id  )
         // console.log( "selectHandle : ", currentItem)
-        setSelectedItemId(id)
+        // setSelectedItemId(id)
+
+        navigate( "/" + [ "list", props.listid, "todo", id ].join("/") )
+
     }
 
 
@@ -291,8 +297,8 @@ export const ListPage = (props: ListProps) => {
                             {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                         </Grid>
                     ) : (
-                        <Grid item md={selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
-                            sm={selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
+                        <Grid item md={ selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
+                            sm={ selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
                             xs={11}  >
                             <div className={"my-container-content"} >
                                 {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}

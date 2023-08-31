@@ -40,29 +40,42 @@ interface Props {
     action: React.ReactNode;
 }
 
-export const DetailsById = ({ itemid, listtype, updateFunction, lists, username, action }: Props) => {
+export const DetailsById = (props: Props) => {
 
-    const item = useGetTodo(itemid);
+    const navigate = useNavigate();
+
+    const item = useGetTodo(props.itemid);
     const todos = useGetTodos(item?.listid);
+
+    const myaction = (<IconButton onClick={() => { navigate( "/" + [ "list", item?.listid, "todo", item?.id ].join("/") ) }} >
+        <MyIcon icon="open_in_full"></MyIcon>
+    </IconButton>)
 
     return (
         <Details
             selectedItem={item}
             todos={todos}
-            updateFunction={updateFunction}
-            lists={lists}
-            action={action}
-            listtype={listtype}
-            username={username} />
+            updateFunction={props.updateFunction}
+            lists={props.lists}
+            action={props.action ? props.action : myaction}
+            listtype={props.listtype}
+            username={props.username} />
     )
 }
 
-export const DetailsLinkById = ({ itemid, listtype, updateFunction, lists, username, action }: Props) => {
+export const DetailsLinkById = ( props : Props) => {
 
-    const item = useGetTodo(itemid);
+    const item = useGetTodo(props.itemid);
     const todos = useGetTodos(item?.listid);
 
     const [open, setOpen] = useState(false);
+
+    const navigate = useNavigate();
+
+
+    const myaction = (<IconButton onClick={() => { navigate( "/" + [ "list", item?.listid, "todo", item?.id ].join("/") ) }} >
+        <MyIcon icon="open_in_full"></MyIcon>
+    </IconButton>)    
 
     return (
         <>
@@ -79,11 +92,11 @@ export const DetailsLinkById = ({ itemid, listtype, updateFunction, lists, usern
                     <DetailsHeadless
                         selectedItem={item}
                         todos={todos}
-                        updateFunction={updateFunction}
-                        lists={lists}
-                        action={action}
-                        listtype={listtype}
-                        username={username} />
+                        updateFunction={props.updateFunction}
+                        lists={props.lists}
+                        action={props.action ? props.action : myaction}
+                        listtype={props.listtype}
+                        username={props.username}  />
                 </MyDialogContentBlur>
             </Dialog>
             <Button onClick={() => setOpen(true)}>{item?.name}</Button>
@@ -114,7 +127,7 @@ export const Details = (props: PropsDetails) => {
 }
 
 
-export const DetailsHeadless = ( props: PropsDetails) => {
+export const DetailsHeadless = (props: PropsDetails) => {
 
     // const classes = useStyles();
 
@@ -273,115 +286,116 @@ export const DetailsHeadless = ( props: PropsDetails) => {
                 <h1> ... </h1>
             ) : (
                 <>
-                    
-                        <MyCardHeader
-                            avatar={
-                                <Avatar aria-label="recipe">
-                                    {currentItem.name[0]}
-                                </Avatar>
-                            }
-                            action={
-                                props.action
-                            }
-                            title={<TextEdit
-                                value={currentItem.name}
-                                label="Name"
-                                readonly={props.updateFunction === undefined}
-                                callback={(newName: string) => props.updateFunction && props.updateFunction({ id: currentItem.id, name: newName })} >
-                            </TextEdit>
-                            }
-                            subheader={
+
+                    <MyCardHeader
+                        avatar={
+                            <Avatar aria-label="recipe">
+                                {currentItem.name[0]}
+                            </Avatar>
+                        }
+                        action={
+                            props.action
+                        }
+                        title={<TextEdit
+                            value={currentItem.name}
+                            label="Name"
+                            readonly={props.updateFunction === undefined}
+                            callback={(newName: string) => props.updateFunction && props.updateFunction({ id: currentItem.id, name: newName })} >
+                        </TextEdit>
+                        }
+                        subheader={
+                            <>
+                                <TextEdit
+                                    value={currentItem.group}
+                                    groups={findUnique(props.todos, "group", false)}
+                                    label="Group"
+                                    readonly={props.updateFunction === undefined}
+                                    callback={(group) => props.updateFunction && props.updateFunction({ id: currentItem.id, group: group })} >
+                                </TextEdit>
+                                {bull}
+                                <TextEdit
+                                    value={currentList ? currentList.name : "unknown"}
+                                    groups={props.lists.map((x) => { return { value: x.name } })}
+                                    label="Lists"
+                                    callback={(list) => updateMainList(list)} >
+                                </TextEdit>
+                            </>
+                        }
+                    />
+
+                    <CardContent>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="flex-start" >
+
+                            {edit ? (
                                 <>
-                                    <TextEdit
-                                        value={currentItem.group}
-                                        groups={findUnique(props.todos, "group", false)}
-                                        label="Group"
-                                        readonly={props.updateFunction === undefined}
-                                        callback={(group) => props.updateFunction && props.updateFunction({ id: currentItem.id, group: group })} >
-                                    </TextEdit>
-                                    {bull}
-                                    <TextEdit
-                                        value={currentList ? currentList.name : "unknown"}
-                                        groups={props.lists.map((x) => { return { value: x.name } })}
-                                        label="Lists"
-                                        callback={(list) => updateMainList(list)} >
-                                    </TextEdit>
+                                    <Grid item xs={12}>
+                                        <MarkdownTextareaAutosize
+                                            initValue={selectedItemValue}
+                                            onSave={updateHandle}
+                                        />
+                                    </Grid>
                                 </>
-                            }
-                        />
+                            ) : (
+                                <>
+                                    {props.updateFunction &&
 
-                        <CardContent>
-                            <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="flex-start" >
-
-                                {edit ? (
-                                    <>
                                         <Grid item xs={12}>
-                                            <MarkdownTextareaAutosize
-                                                initValue={selectedItemValue}
-                                                onSave={updateHandle}
-                                            />
+                                            <Stack direction={"row"} spacing={2}>
+
+                                                <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>
+
+                                                {(localitems.length === 0) &&
+                                                    <Button
+                                                        variant="contained"
+                                                        startIcon={<MyIcon icon={"rule"} />}
+                                                        onClick={() => setAddTodos(true)}> Add Checklist
+                                                    </Button>
+                                                }
+                                            </Stack>
+                                            <MyDivider />
                                         </Grid>
-                                    </>
-                                ) : (
-                                    <>
-                                        {props.updateFunction &&
+                                    }
+                                    {selectedItemValue.length > 0 &&
+                                        <Grid item xs={12}>
+                                            
 
-                                            <Grid item xs={12}>
-                                                <Stack direction={"row"} spacing={2}>
+                                            <div className="markdown" >
+                                                <DetailsMarkdown
+                                                    value={selectedItemValue}
+                                                    initValue="Add comments here ... "
+                                                    updateFunction={(val: string) => updateMarkdownHandle(val)}
+                                                />
+                                            </div>
+                                        </Grid>
+                                    }
+                                </>
+                            )}
+                        </Grid>
 
-                                                    <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>
 
-                                                    {(localitems.length === 0) &&
-                                                        <Button
-                                                            variant="contained"
-                                                            startIcon={<MyIcon icon={"rule"} />}
-                                                            onClick={() => setAddTodos(true)}> Add Checklist
-                                                        </Button>
-                                                    }
-                                                </Stack>
-                                            </Grid>
-                                        }
-                                        {selectedItemValue.length > 0 &&
-                                            <Grid item xs={12}>
-                                                <MyDivider />
+                        {(addTodos || localitems.length > 0) && <>
 
-                                                <div className="markdown" >
-                                                    <DetailsMarkdown
-                                                        value={selectedItemValue}
-                                                        initValue="Add comments here ... "
-                                                        updateFunction={(val: string) => updateMarkdownHandle(val)}
-                                                    />
-                                                </div>
-                                            </Grid>
-                                        }
-                                    </>
-                                )}
+                            <Grid item xs={12}>
+                                <MyDivider />
                             </Grid>
 
+                            <Grid item xs={12}>
+                                <ListGraphInternal
+                                    items={localitems}
+                                    lists={props.lists}
+                                    color={"#AAA"}
+                                    username={props.username}
+                                    horizontally={true}
+                                    listid={currentItem.id}
+                                    listtype={TodoListType.TODO_SIMPLE} />
+                            </Grid>
+                        </>}
+                    </CardContent>
 
-                            {(addTodos || localitems.length > 0) && <>
-
-                                <Grid item xs={12}>
-                                    <MyDivider />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <ListGraphInternal
-                                        items={localitems}
-                                        lists={props.lists}
-                                        color={"#AAA"}
-                                        username={props.username}
-                                        horizontally={true}
-                                        listid={currentItem.id}
-                                        listtype={TodoListType.TODO_SIMPLE} />
-                                </Grid>
-                            </>}
-                        </CardContent>
-                   
 
                 </>
             )
