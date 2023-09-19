@@ -1,9 +1,11 @@
 import { group } from 'console';
 // import { TodoMainItem, TodoMainUpdateItem } from "../models/TodoItems"
 import { UpdateTodoMainInput, TodoMain, CreateTodoMainInput } from "../API"
+import { TodoMainItem } from '../models/TodoItems';
 
 export enum TodoMainActionType {
     TOGGLE  = 'TOGGLE',
+    REPLACE_STATE  = 'REPLACE_STATE',
     UPDATE  = 'UPDATE',
     ADD     = 'ADD',
     DELETE  = 'DELETE',
@@ -21,6 +23,14 @@ export interface TodoMainActionTOGGLE extends TodoMainAction {
         id: string
     }
 }
+
+export interface TodoMainActionREPLACE_STATE extends TodoMainAction {
+    type: TodoMainActionType;
+    payload: {
+        items: TodoMainItem[]
+    }
+}
+
 
 export interface TodoMainActionDELETE extends TodoMainAction {
     type: TodoMainActionType;
@@ -43,6 +53,13 @@ export const AddItem = ( item: CreateTodoMainInput ) : TodoMainActionADD  => (
     {
         type: TodoMainActionType.ADD,
         payload: item
+    }
+)
+
+export const ReplaceState = ( items: TodoMainItem[] ) : TodoMainActionREPLACE_STATE  => (
+    {
+        type: TodoMainActionType.REPLACE_STATE,
+        payload: { items }
     }
 )
 

@@ -16,7 +16,7 @@ import { HorizontallyGrid, HorizontallyItem } from "../components/HorizontallyGr
 
 
 import { reducerTodoMain } from "../reducer/reducerTodoMain"
-import { ToggleItem, UpdateItem, AddItem } from "../reducer/dispatchFunctionsMainTodos"
+import { ToggleItem, UpdateItem, AddItem, ReplaceState } from "../reducer/dispatchFunctionsMainTodos"
 
 import { createEmptyTodoMainItem, TodoItem, TodoMainItem } from "../models/TodoItems"
 import { UpdateTodoMainInput, CreateTodoMainInput } from "../API"
@@ -167,7 +167,10 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
     const theme = useTheme();
     const matchesUpXs = useMediaQuery(theme.breakpoints.up('sm'));
 
-
+    useEffect(
+        () => {
+            dispatch( ReplaceState(items) )
+        }, [items])    
 
     const menuHandleClick = (event: any) => { // : 
         setAnchorEl(event.currentTarget);
@@ -270,8 +273,6 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
                             </Menu>
                         </Box>
 
-
-
                     </>
                 )}
 
@@ -296,13 +297,14 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
     // const [items, setItems] = useState(userConfig);
     const items = useGetMainTodos(props.username)
-
     const [filterText, setFilterText] = useState("");
-
     const [todos, setTodos] = useState<TodoItem[]>([]);
+    const [groups, setGroups] = useState<GenericGroup<TodoMainItem>[] >([]);
 
+    
     const callbackFilter = (text: string) => {
         setFilterText(text)
+        filterItems( items, text )
     }
 
     const callbackEnter = () => {
@@ -321,20 +323,27 @@ export const MainNavigation = (props: MainNavigationProps) => {
         console.log("callbackEnter : ", todos)
     }
 
-    const filterCompleted = (items: TodoMainItem[], filterText: string) => {
+    const filterItems = ( mainitems: TodoMainItem[], filterText: string) => {
 
-        let filteredItems = items
+        let filteredItems = mainitems
 
         const FILTER = filterText.toUpperCase()
 
+        console.log( "filterText : ",  FILTER )
+        console.log( "IN         : ",  mainitems )
+
         if (filterText.length !== 0) {
-            filteredItems = filteredItems.filter(item => {
+            filteredItems = mainitems.filter(item => {
                 const currentItem = item.name.toUpperCase()
                 return (currentItem.indexOf(FILTER) !== -1)
             })
         }
 
-        return filteredItems
+        console.log( "FILTERED  : "  , filteredItems )
+
+        // const filteredItems = filterItems(items, filterText)
+        const groups: GenericGroup<TodoMainItem>[] = findUnique(filteredItems, "group", false)
+        setGroups( groups ) 
     }
 
 
@@ -344,13 +353,13 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 props.handleSetConfig(items)
             }
 
+            filterItems( items, filterText )
+
             console.log("MainNavigation (items updated) ", items.length)
 
         }, [items])
 
 
-    const filteredItems = filterCompleted(items, filterText)
-    const groups: GenericGroup<TodoMainItem>[] = findUnique(filteredItems, "group", false)
 
     const colorArr = [
         "rgb(144, 202, 249)",
@@ -390,33 +399,37 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
                     {(items !== undefined && groups.length > 0) &&
 
-                        <HorizontallyGrid horizontally={props.horizontally} >
-                            {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
-                                <HorizontallyItem key={"MainNavTop" + index} horizontally={props.horizontally} >
-                                    {props.horizontally ?
-                                        (<MyCard>
-                                            <NavItemList
-                                                key={"MainNav" + index}
-                                                groupname={item.value}
-                                                items={item.listitems}
-                                                render={props.render}
-                                                username={props.username}
-                                                color={colorArr[index % (colorArr.length)]}
-                                            />
-                                        </MyCard>
-                                        ) : (
-                                            <NavItemList
-                                                key={"MainNav" + index}
-                                                groupname={item.value}
-                                                items={item.listitems}
-                                                render={props.render}
-                                                username={props.username}
-                                                color={colorArr[index % (colorArr.length)]}
-                                            />
-                                        )}
-                                </HorizontallyItem>
-                            ))}
-                        </HorizontallyGrid>
+                        <Box p={1} sx={{ paddingTop: "1em" }} >
+                            
+                            <HorizontallyGrid horizontally={props.horizontally} >
+                                {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
+                                    <HorizontallyItem key={"MainNavTop" + index} horizontally={props.horizontally} >
+                                        {props.horizontally ?
+                                            (<MyCard>
+                                                
+                                                <NavItemList
+                                                    key={"MainNav" + index}
+                                                    groupname={item.value}
+                                                    items={item.listitems}
+                                                    render={props.render}
+                                                    username={props.username}
+                                                    color={colorArr[index % (colorArr.length)]}
+                                                />
+                                            </MyCard>
+                                            ) : (
+                                                <NavItemList
+                                                    key={"MainNav" + index}
+                                                    groupname={item.value}
+                                                    items={item.listitems}
+                                                    render={props.render}
+                                                    username={props.username}
+                                                    color={colorArr[index % (colorArr.length)]}
+                                                />
+                                            )}
+                                    </HorizontallyItem>
+                                ))}
+                            </HorizontallyGrid>
+                        </Box>
                     }
 
                     <Grid container alignItems="center" justifyContent="center" spacing={2} >

@@ -2,7 +2,7 @@ import { updateFunctionTodoMain, createFunctionTodoMain } from "../components/Gr
 import { TodoMainItem } from "../models/TodoItems"
 
 // import { TodoMainAction } from "./reducerMainTodos"
-import { TodoMainAction, TodoMainActionType, TodoMainActionTOGGLE, TodoMainActionUPDATE, TodoMainActionADD } from "./dispatchFunctionsMainTodos"
+import { TodoMainAction, TodoMainActionType, TodoMainActionTOGGLE, TodoMainActionUPDATE, TodoMainActionADD, TodoMainActionREPLACE_STATE } from "./dispatchFunctionsMainTodos"
 import { UpdateTodoMainInput } from "../API"
 
 const AddItem = ( state: TodoMainItem[], action: TodoMainActionADD  ) => {
@@ -23,6 +23,12 @@ const AddItem = ( state: TodoMainItem[], action: TodoMainActionADD  ) => {
 
     createFunctionTodoMain( newEl )    
     return [ ...state,  newEl]
+}
+
+
+
+const ReducerReplaceState = ( state: TodoMainItem[], action: TodoMainActionREPLACE_STATE  ) => {
+    return action.payload.items
 }
 
 
@@ -66,13 +72,16 @@ const ReducerUpdateItem = ( state: TodoMainItem[], action: TodoMainActionUPDATE 
 } 
 
 // reducer Mapping
-export const reducerTodoMain = (state: TodoMainItem[], action: TodoMainAction ) => {
+export const reducerTodoMain = ( state: TodoMainItem[], action: TodoMainAction ) => {
 
     const { type, payload } = action;
 
     switch (action.type) {
         case TodoMainActionType.TOGGLE:
             return ReducerToggleItem( state, action );
+        case TodoMainActionType.REPLACE_STATE:
+            return ReducerReplaceState( state, action );
+    
         case TodoMainActionType.UPDATE:
             return ReducerUpdateItem( state, action );
         case TodoMainActionType.ADD:

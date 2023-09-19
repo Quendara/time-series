@@ -173,6 +173,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
             console.log("useEffect", props.selectedItem.description)
             setCurrentItem(props.selectedItem)
             setSelectedValue(props.selectedItem.description)
+
+            document.title = props.selectedItem.name
         }
 
         setAddTodos(false);
@@ -290,7 +292,6 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 <h1> ... </h1>
             ) : (
                 <>
-
                     <MyCardHeader
                         avatar={
                             <Avatar aria-label="recipe">
