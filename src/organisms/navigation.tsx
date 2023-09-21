@@ -169,8 +169,8 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
 
     useEffect(
         () => {
-            dispatch( ReplaceState(items) )
-        }, [items])    
+            dispatch(ReplaceState(items))
+        }, [items])
 
     const menuHandleClick = (event: any) => { // : 
         setAnchorEl(event.currentTarget);
@@ -201,15 +201,14 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
 
     const renderItems = (items: TodoMainItem[] | undefined) => {
 
-        if (items === undefined) { return (<></>) }
+        if (items === undefined) { return (<MenuItem />) }
 
-        return (
-            <>
-                {sortArrayBy(items, "name").map((item: TodoMainItem, index: number) => (
-                    <NavItem handleClose={handleClose} key={index} item={item} render={render} dispatch={dispatch} color={color} />
-                ))}
-            </>)
+        return sortArrayBy(items, "name").map((item: TodoMainItem, index: number) => (
+            <NavItem handleClose={handleClose} key={item.id} item={item} render={render} dispatch={dispatch} color={color} />
+        ))
     }
+
+
 
     const getIconFromName = (name: string) => {
         switch (name) {
@@ -261,15 +260,15 @@ const NavItemList = ({ items, render, groupname, username, color }: NavItemListP
                                 keepMounted
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
-
                             >
                                 {renderItems(groups.at(1)?.listitems)}
+                                {matchesUpXs &&  <Divider /> }
+                                {renderItems(matchesUpXs ? groups.at(0)?.listitems : undefined)}
 
-                                {matchesUpXs &&
-                                    <>
-                                        <Divider />
-                                        {renderItems(groups.at(0)?.listitems)}
-                                    </>}
+                                {/* {matchesUpXs &&        
+                                <Divider />
+                                       {renderItems( groups.at(0)?.listitems)}
+                                } */}
                             </Menu>
                         </Box>
 
@@ -299,12 +298,12 @@ export const MainNavigation = (props: MainNavigationProps) => {
     const items = useGetMainTodos(props.username)
     const [filterText, setFilterText] = useState("");
     const [todos, setTodos] = useState<TodoItem[]>([]);
-    const [groups, setGroups] = useState<GenericGroup<TodoMainItem>[] >([]);
+    const [groups, setGroups] = useState<GenericGroup<TodoMainItem>[]>([]);
 
-    
+
     const callbackFilter = (text: string) => {
         setFilterText(text)
-        filterItems( items, text )
+        filterItems(items, text)
     }
 
     const callbackEnter = () => {
@@ -323,14 +322,14 @@ export const MainNavigation = (props: MainNavigationProps) => {
         console.log("callbackEnter : ", todos)
     }
 
-    const filterItems = ( mainitems: TodoMainItem[], filterText: string) => {
+    const filterItems = (mainitems: TodoMainItem[], filterText: string) => {
 
         let filteredItems = mainitems
 
         const FILTER = filterText.toUpperCase()
 
-        console.log( "filterText : ",  FILTER )
-        console.log( "IN         : ",  mainitems )
+        console.log("filterText : ", FILTER)
+        console.log("IN         : ", mainitems)
 
         if (filterText.length !== 0) {
             filteredItems = mainitems.filter(item => {
@@ -339,11 +338,11 @@ export const MainNavigation = (props: MainNavigationProps) => {
             })
         }
 
-        console.log( "FILTERED  : "  , filteredItems )
+        console.log("FILTERED  : ", filteredItems)
 
         // const filteredItems = filterItems(items, filterText)
         const groups: GenericGroup<TodoMainItem>[] = findUnique(filteredItems, "group", false)
-        setGroups( groups ) 
+        setGroups(groups)
     }
 
 
@@ -353,7 +352,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 props.handleSetConfig(items)
             }
 
-            filterItems( items, filterText )
+            filterItems(items, filterText)
 
             console.log("MainNavigation (items updated) ", items.length)
 
@@ -400,15 +399,15 @@ export const MainNavigation = (props: MainNavigationProps) => {
                     {(items !== undefined && groups.length > 0) &&
 
                         <Box p={1} sx={{ paddingTop: "1em" }} >
-                            
+
                             <HorizontallyGrid horizontally={props.horizontally} >
                                 {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
-                                    <HorizontallyItem key={"MainNavTop" + index} horizontally={props.horizontally} >
+                                    <HorizontallyItem key={"MainNavTop" + item.value } horizontally={props.horizontally} >
                                         {props.horizontally ?
                                             (<MyCard>
-                                                
+
                                                 <NavItemList
-                                                    key={"MainNav" + index}
+                                                    key={ item.value }
                                                     groupname={item.value}
                                                     items={item.listitems}
                                                     render={props.render}
@@ -418,7 +417,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                                             </MyCard>
                                             ) : (
                                                 <NavItemList
-                                                    key={"MainNav" + index}
+                                                    key={ item.value }
                                                     groupname={item.value}
                                                     items={item.listitems}
                                                     render={props.render}

@@ -31,6 +31,8 @@ export const ListGraphQL = (props: ListProps) => {
 
     let { listid, listtype, itemid } = useParams<{ listid: string, listtype: TodoListType, itemid?: string }>();
 
+    console.log( "ListGraphQL : ", listid )
+
     const items = useGetTodos(listid);
 
     return (
@@ -67,7 +69,9 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
 
     useEffect(() => {
 
-        dispatch(UpdateState(items))
+        console.log( "useEffect ListGraphInternal", items )
+
+        dispatch(UpdateState(items)) 
 
     }, [items]);
 

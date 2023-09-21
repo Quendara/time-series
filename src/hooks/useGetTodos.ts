@@ -40,7 +40,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
 
   useEffect(() => {
 
-    setTodos( [] );  
+    // setTodos( [] );  
 
     if( listid !== undefined ){
       fetchTodos(listid)
@@ -50,8 +50,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
 
   useEffect(() => {
 
-    // TODO CURRENTLY ubscription ARE  REMOVED
-    
+    // TODO CURRENTLY subscription ARE  REMOVED
     // const test : Observable<object> = subscriptionCreateTodos
     
     const apiCreateTodos : any = API.graphql(
@@ -79,7 +78,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
         console.log("onCreateTodos... length : ", todos.length );
       },
       error: ( error : string )  => {
-        console.log("error : ", error);
+        console.log("error onCreateTodos : ", error);
       }
     })
 
@@ -92,12 +91,12 @@ export const useGetTodos = ( listid : string  | undefined ) => {
         // Do something with the data
         // console.log( x )          
         const item = x.value.data.onUpdateTodos
-        console.log("updated Item : ", item);
+        console.log("updated Item : ", item); 
         const updatedList = updateTodos(todos, item)
-        setTodos(updatedList)
+        // setTodos(updatedList)
       },
       error: ( error : string ) => {
-        console.log("error : ", error);
+        console.log("error onUpdateTodos : ", error);
       }
     })
 
@@ -115,7 +114,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
         setTodos(updatedList)
       },
       error: ( error : string ) => {
-        console.log("error : ", error);
+        console.log("error onDeleteTodos : ", error);
       }
     })
 
@@ -125,11 +124,13 @@ export const useGetTodos = ( listid : string  | undefined ) => {
       subscriptionCreateTodos.unsubscribe();
     };
 
-  })
+  },[])
 
   async function fetchTodos( listid : string )  {
 
     console.log("useGetTodos (listid) : ", listid);
+
+    if (listid === "current") {
 
     const listCurrentTodos = /* GraphQL */ `
         query MyQuery {
@@ -145,9 +146,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
               }
             }
           }
-        `
-
-    if (listid === "current") {
+        `      
       let response : any = await API.graphql(graphqlOperation( listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
       const items = response.data.listTodos.items
       console.log("useGetTodos  : ", items);
@@ -159,15 +158,11 @@ export const useGetTodos = ( listid : string  | undefined ) => {
       let response : any = await API.graphql(graphqlOperation( queryTodos, { listid: listid } ) );
       
       const items = response.data.queryTodos.items
-      console.log("useGetTodos  : ", items);
+      console.log( `useGetTodos  listid : ${listid} items: `, items);
       setTodos( items )
   
     }
-
-    
-    // return items
-
-    
+ 
   }
 
   return todos; // ? todos : [];

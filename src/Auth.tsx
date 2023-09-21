@@ -293,14 +293,11 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-
               <MenuItem>
                 <ListItemAvatar><Avatar>{username[0]}</Avatar></ListItemAvatar>
                 <ListItemText primary={username} />
               </MenuItem>
-
               <Divider />
-
               <MenuItem onClick={signOut}>
                 <ListItemAvatar><Avatar><MyIcon icon="exit_to_app" /></Avatar></ListItemAvatar>
                 <ListItemText primary="Logout" />

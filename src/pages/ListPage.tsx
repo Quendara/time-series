@@ -333,14 +333,14 @@ export const ListPage = (props: ListProps) => {
             <Box p={1} sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
 
                 <HorizontallyGrid horizontally={true}  >
-                    <HorizontallyItem key={"Lists"} horizontally={true} >
+                    <HorizontallyItem key={"Listsa"} horizontally={true} >
                         <Grid item xs={12}>
                             <div className={"my-container-content"} >
                                 {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                             </div>
                         </Grid>
                     </HorizontallyItem>
-                    <HorizontallyItem key={"Lists"} horizontally={true} >
+                    <HorizontallyItem key={"Listsb"} horizontally={true} >
                         {(selectedItemId) &&
                             <>
                                 <Grid item xs={12} >

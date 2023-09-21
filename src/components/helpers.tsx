@@ -51,7 +51,7 @@ export const sortArrayBy = <T,>( items : T[] , sortByKey : string = 'rating', as
 
     const output = sortArrayByJs(items, sortByKey, ascending); // .slice(0, 5);
 
-    console.log( "in/out", items, output ) 
+    // console.log( "in/out", items, output ) 
 
     return output
 }

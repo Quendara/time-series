@@ -45,7 +45,7 @@ export const DetailsById = (props: Props) => {
     const navigate = useNavigate();
 
     const item = useGetTodo(props.itemid);
-    const todos = useGetTodos(item?.listid);
+    const todos : TodoItem[] = [] // useGetTodos(item?.listid);
 
     const myaction = (<IconButton onClick={() => { navigate( "/" + [ "list", item?.listid, "todo", item?.id ].join("/") ) }} >
         <MyIcon icon="open_in_full"></MyIcon>
@@ -66,7 +66,7 @@ export const DetailsById = (props: Props) => {
 export const DetailsLinkById = ( props : Props) => {
 
     const item = useGetTodo(props.itemid);
-    const todos = useGetTodos(item?.listid);
+    const todos : TodoItem[] = [] // useGetTodos(item?.listid);
 
     const [open, setOpen] = useState(false);
 
@@ -135,7 +135,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
     // const history = useHistory();
     const navigate = useNavigate();
 
-    const localitems = useGetTodos(props.selectedItem?.id);
+    const localitems = useGetTodos(props.selectedItem?.id );
+    // const localitems : TodoItem[] = [] // useGetTodos(item?.listid);
 
     const [edit, setEdit] = useState(false);
     const [addTodos, setAddTodos] = useState(false);

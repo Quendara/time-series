@@ -19,7 +19,7 @@ export interface TodoAction {
 
 export interface TodoActionUPDATE_STATE extends TodoAction {
     type: TodoActionType;
-    payload: TodoItem[];
+    payload: { items: TodoItem[] };
 }
 
 export interface TodoActionTOGGLE extends TodoAction {
@@ -77,7 +77,7 @@ export const UpdateItem = ( item : UpdateTodosInput ) : TodoActionUPDATE => (
 export const UpdateState = ( items : TodoItem[] ) : TodoActionUPDATE_STATE => (
     {
         type: TodoActionType.UPDATE_STATE,
-        payload: items
+        payload: { items }
     }
 )
 

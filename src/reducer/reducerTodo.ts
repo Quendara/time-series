@@ -2,8 +2,9 @@ import { updateFunctionTodo, createFunctionTodo, removeItemById } from "../compo
 import { TodoItem } from "../models/TodoItems"
 
 // import { TodoAction } from "./reducerMainTodos"
-import { TodoAction, TodoActionType, TodoActionTOGGLE, TodoActionUPDATE, TodoActionADD, TodoActionDELETE } from "./dispatchFunctionsTodos"
+import { TodoAction, TodoActionType, TodoActionTOGGLE, TodoActionUPDATE, TodoActionADD, TodoActionDELETE, TodoActionUPDATE_STATE } from "./dispatchFunctionsTodos"
 import { CreateTodosInput, UpdateTodosInput } from "../API"
+import { TodoMainActionUPDATE } from "./dispatchFunctionsMainTodos"
 
 const AddItem = (state: TodoItem[], action: TodoActionADD) => {
 
@@ -87,6 +88,10 @@ const ReducerUpdateItem = (state: TodoItem[], action: TodoActionUPDATE) => {
     });
 }
 
+const ReducerReplaceState = ( state: TodoItem[], action: TodoActionUPDATE_STATE  ) => {
+    return action.payload.items
+}
+
 // reducer Mapping
 export const reducerTodo = ( state: TodoItem[], action: TodoAction ): TodoItem[] => {
 
@@ -101,7 +106,8 @@ export const reducerTodo = ( state: TodoItem[], action: TodoAction ): TodoItem[]
         case TodoActionType.DELETE:
             return ReducerDeleteItem(state, action);
         case TodoActionType.UPDATE_STATE:
-            return [...action.payload]
+            /// return [...action.payload]
+            return ReducerReplaceState( state, action )
 
         case TodoActionType.UPDATE:
             return ReducerUpdateItem(state, action);
