@@ -64,7 +64,7 @@ const TodoMainProvider = (props: Props) => {
         },
         findItem: ( id : string ) => {
             
-            const items = todosState.filter(todo => todo.id === id)
+            const items = todosState.filter(todo => todo.listid === id)
             return items.at(0)
             // if( items.length === 1 ){
                 
