@@ -38,6 +38,7 @@ import { SandboxH } from "./pages/SandboxH";
 import { Sandbox } from "./pages/sandbox";
 import { Details } from "./components/Details";
 import { UpdateTodosInput } from "./API";
+import { TodoMainProvider } from "./context/TodoMainProvider";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -52,7 +53,7 @@ const App = () => {
 
   // const [hackyNavId, sethackyNavId] = useState("");
 
-  const [ todoMainItems, setTodoMainItems] = useState<TodoMainItem[]>([]);
+  const [todoMainItems, setTodoMainItems] = useState<TodoMainItem[]>([]);
 
   const [apikey, setApi] = useState("");
   const [amplifyInitilaized, setAmplifyInitilaized] = useState(false);
@@ -76,7 +77,7 @@ const App = () => {
     console.log("username        : ", username);
     console.log("authSuccess     : ", token);
     console.log("apikey          : ", apikey);
-  
+
   };
 
 
@@ -103,92 +104,100 @@ const App = () => {
       }
     }, [apikey])
 
-    const colorArr = [
-      "rgb(144, 202, 249)",
-      "rgb(206, 147, 216)",
-      "rgb(255, 167, 38)"
-  ]    
+  const colorArr = [
+    "rgb(144, 202, 249)",
+    "rgb(206, 147, 216)",
+    "rgb(255, 167, 38)"
+  ]
 
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <TodoMainProvider>
+        <CssBaseline />
 
-      <Router>
+        <Router>
 
-        <Auth authSuccessCallback={authSuccessCallback} >
+          <Auth authSuccessCallback={authSuccessCallback} >
 
-          <NavLink key={"nl_" + 1332} to={"/"}  >
-            <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
-          </NavLink>
+            <NavLink key={"nl_" + 1332} to={"/"}  >
+              <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
+            </NavLink>
 
-          {amplifyInitilaized &&
-            <MainNavigation
-              horizontally={false}
-              render="navlink"
-              username={username}
-              handleSetConfig={handleSetConfig} />}
+            {amplifyInitilaized &&
 
-        </Auth>
+              <MainNavigation
+                horizontally={false}
+                render="navlink"
+                username={username}
+                handleSetConfig={handleSetConfig} />
 
-        <Grid container pt={ matchesUpXs?0:0 } justifyContent="center" spacing={1} >
-        
-          <Grid item xs={12} lg={12}>
-            {username.length > 0 &&
-              (<>
-                {!amplifyInitilaized ? (<h1> Loading </h1>) :
-                  (
-                    <Routes>
-                      <Route path="/list/:listid/:listtype/:itemid" element={
-                        <ListGraphQL username={username} lists={todoMainItems} color={ colorArr[0]} horizontally={false}
-                        />
-                      } />
-                      <Route path="/list/:listid/:listtype" element={
-                        <ListGraphQL username={username} lists={todoMainItems} color={ colorArr[0]} horizontally={false} />
-                      } />
-                                        
-                      <Route path="/time/:id/:idx" element={
-                        <TimeSeries username={username} token={jwtTocken} />
-                      } >
-                      </Route>
-                      <Route path="/diff" element={<CompareLists />}>
-                      </Route>
-                      <Route path="/replace" element={<ReplaceLists />}>
-                      </Route>
-                      <Route path="/sandboxH" element={<SandboxH />}>
-                      </Route>
-                      <Route path="/sandbox" element={<Sandbox />}>
-                      </Route>
+            }
 
-                      <Route path="/csvtools" element={<CsvToolsPage />}>
-                      </Route>
+          </Auth>
 
-                      <Route path="/" element={
-                            <MainNavigation
-                              horizontally={true}
-                              render="main"
-                              username={username}
-                              handleSetConfig={handleSetConfig} />
-                          
-                        
-                      } >
-                      </Route>
-                      <Route path="/demo" element={<StyleDemo />}></Route>
-                    </Routes>
-                  )}
-              </>)}
+          <Grid container pt={matchesUpXs ? 0 : 0} justifyContent="center" spacing={1} >
 
+            <Grid item xs={12} lg={12}>
+              {username.length > 0 &&
+                (<>
+                  {!amplifyInitilaized ? (<h1> Loading </h1>) :
+                    (
+                      <Routes>
+                        <Route path="/list/:listid/:listtype/:itemid" element={
+                          <ListGraphQL username={username} lists={todoMainItems} color={colorArr[0]} horizontally={false}
+                          />
+                        } />
+                        <Route path="/list/:listid/:listtype" element={
+                          <ListGraphQL username={username} lists={todoMainItems} color={colorArr[0]} horizontally={false} />
+                        } />
+
+                        <Route path="/time/:id/:idx" element={
+                          <TimeSeries username={username} token={jwtTocken} />
+                        } >
+                        </Route>
+                        <Route path="/diff" element={<CompareLists />}>
+                        </Route>
+                        <Route path="/replace" element={<ReplaceLists />}>
+                        </Route>
+                        <Route path="/sandboxH" element={<SandboxH />}>
+                        </Route>
+                        <Route path="/sandbox" element={<Sandbox />}>
+                        </Route>
+
+                        <Route path="/csvtools" element={<CsvToolsPage />}>
+                        </Route>
+
+                        <Route path="/" element={
+
+                          <MainNavigation
+                            horizontally={true}
+                            render="main"
+                            username={username}
+                            handleSetConfig={handleSetConfig} />
+
+
+
+                        } >
+                        </Route>
+                        <Route path="/demo" element={<StyleDemo />}></Route>
+                      </Routes>
+                    )}
+                </>)}
+
+            </Grid>
+            <Grid>
+              <Error errorMessages={errors} />
+            </Grid>
           </Grid>
-          <Grid>
-            <Error errorMessages={errors} />
-          </Grid>
-        </Grid>
-      </Router>
+        </Router>
 
-      <Grid item xs={12} md={6}>
-        <Box sx={{height:"90px"}} >
+        <Grid item xs={12} md={6}>
+          <Box sx={{ height: "90px" }} >
           </Box>
-      </Grid>
+        </Grid>
+
+      </TodoMainProvider>
 
 
     </ThemeProvider>

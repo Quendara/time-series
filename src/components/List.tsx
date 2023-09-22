@@ -271,10 +271,11 @@ const ListEl = (
                             </ListItemButton>}
 
                         {type === TodoListType.MESSAGE &&
-                            <ListItem button onClick={handleSelect} >
+                            <ListItemButton onClick={handleSelect} >
 
-                                <ListItemIcon >
-                                    <Icon>chevron_right</Icon>
+                                <ListItemIcon onClick={handleToggleFunction}  >
+                                    
+                                    {isChecked(checked) ? <Icon color="disabled" >favorite_border</Icon> : <Icon color="error" >favorite</Icon> }
                                 </ListItemIcon>
 
                                 <ListItemText
@@ -284,7 +285,7 @@ const ListEl = (
                                         : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
 
                                 />
-                            </ListItem>
+                            </ListItemButton>
                         }
                         {type === TodoListType.LINKS &&
                             <ListItem button>

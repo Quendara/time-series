@@ -34,14 +34,14 @@ export const ListGraphQL = (props: ListProps) => {
 
     console.log("ListGraphQL : ", listid)
 
-    const items = useGetTodos(listid);
+    // const items = useGetTodos(listid);
 
     return (
         <>
             <TodoProvider>
                 <ListGraphInternal
                     listid={listid ? listid : ""}
-                    items={items}
+                    // items={items}
                     listtype={listtype ? listtype : TodoListType.UNDEFINED}
                     horizontally={listtype === TodoListType.LINKS}
                     itemid={itemid}
@@ -56,7 +56,7 @@ export const ListGraphQL = (props: ListProps) => {
 interface ListPropsInternal {
 
     lists: TodoMainItem[];
-    items: TodoItem[];
+    // items: TodoItem[];
     username: string;
     listid: string;
     listtype: TodoListType;
@@ -66,7 +66,7 @@ interface ListPropsInternal {
 }
 
 
-export const ListGraphInternal = ({ items, lists, username, horizontally, listid, listtype, itemid, color }: ListPropsInternal) => {
+export const ListGraphInternal = ({ lists, username, horizontally, listid, listtype, itemid, color }: ListPropsInternal) => {
 
     // const [todos, dispatch] = useReducer(reducerTodo, items);
 

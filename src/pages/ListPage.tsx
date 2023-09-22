@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 
 import { Grid, CardContent, Typography, List, ListItem, Snackbar, Alert, IconButton, Hidden, Box, Stack, Card, ListItemText, Avatar, ListItemAvatar, useMediaQuery } from '@mui/material';
@@ -26,6 +26,7 @@ import { MyIcon } from '../components/MyIcon';
 import { useTheme } from '@mui/material/styles';
 import { Calendar } from '../components/Calendar';
 import { useNavigate } from 'react-router-dom';
+import { TodoMainContext } from '../context/TodoMainProvider';
 
 
 interface ListProps {
@@ -48,6 +49,7 @@ interface ListProps {
 export const ListPage = (props: ListProps) => {
 
     const navigate = useNavigate();
+    const context = useContext(TodoMainContext)
 
     // const [selectedItem, setSelectedItem] = useState(undefined);
     const [selectedItemId, setSelectedItemId] = useState("");
@@ -84,7 +86,10 @@ export const ListPage = (props: ListProps) => {
         // console.log( "selectHandle : ", currentItem)
         // setSelectedItemId(id)
 
-        navigate( "/" + [ "list", props.listid, "todo", id ].join("/") )
+        const todoMain = context.findItem( props.listid )
+        
+
+        navigate( "/" + [ "list", props.listid, todoMain?.render, id ].join("/") )
 
     }
 

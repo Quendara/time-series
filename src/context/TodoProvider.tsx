@@ -1,49 +1,15 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useState } from "react";
 import { TodoItem } from "../models/TodoItems";
 import { createFunctionTodo, removeItemById, updateFunctionTodo } from "../components/GraphQlFunctions";
 import { CreateTodosInput, UpdateTodosInput } from "../API";
 import { API, graphqlOperation } from "aws-amplify";
 import { queryTodos } from "../graphql/queries";
+import { updateTodos } from "../graphql/mutations";
+import { onCreateTodos, onUpdateTodos, onDeleteTodos } from "../graphql/subscriptions";
+import { fetchTodos, updateTodosFcn } from "./TodoProviderFcns";
 
 
-async function fetchTodos( listid : string )  {
-
-    console.log("useGetTodos.fetchTodos (listid) : ", listid);
-
-    if (listid === "current") {
-
-    const listCurrentTodos = /* GraphQL */ `
-        query MyQuery {
-            listTodos(filter: {group: {beginsWith: "Aktuell"}}, limit: 1000) {
-              nextToken
-              items {
-                id
-                name
-                owner
-                checked
-                group
-                listid
-              }
-            }
-          }
-        `      
-      let response : any = await API.graphql(graphqlOperation( listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
-      const items : TodoItem[] = response.data.listTodos.items
-      console.log("useGetTodos  : ", items);
-      return items
-
-    }
-    else {
-      // response = await API.graphql(graphqlOperation(queryTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
-      let response : any = await API.graphql(graphqlOperation( queryTodos, { listid: listid } ) );
-      
-      const items : TodoItem[] = response.data.queryTodos.items
-      console.log( `useGetTodos.fetchTodos  listid : ${listid} items: `, items);
-      return items
-  
-    }
-}
 
 export type TodoContent = {
     todos: TodoItem[]
@@ -78,6 +44,86 @@ type Props = {
 const TodoProvider = (props: Props) => {
 
     const [todosState, setTodos] = useState<TodoItem[]>([]);
+
+    useEffect(() => {
+
+        console.log( "useEffect.subscribe" ) 
+
+        // TODO CURRENTLY subscription ARE  REMOVED
+        // const test : Observable<object> = subscriptionCreateTodos
+        
+        const apiCreateTodos : any = API.graphql(
+          graphqlOperation(onCreateTodos)
+        )    
+    
+        const subscriptionCreateTodos : any = apiCreateTodos.subscribe({
+          next: (x : any ) => {
+            // Do something with the data
+            // console.log( x )          
+            const item = x.value.data.onCreateTodos
+    
+            // if ( String(item.listid) !== String(listid) ) {
+            //   console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
+            //   return;
+            // }
+    
+            setTodos([...todosState, item]); // push to the end
+            console.log("onCreateTodos... length : ", todosState.length );
+          },
+          error: ( error : string )  => {
+            console.log("error onCreateTodos : ", error);
+          }
+        })
+    
+        const apiUpdateTodos : any = API.graphql(
+          graphqlOperation(onUpdateTodos)
+        ); 
+        
+        const subscriptionUpdateTodos : any = apiUpdateTodos.subscribe({
+          next: (x : any ) => {
+            // Do something with the data
+            // console.log( x )          
+            const item = x.value.data.onUpdateTodos
+            console.log("updated Item : ", item, todosState.length); 
+            const updatedList = updateTodosFcn(todosState, item)
+    
+            // TODO: ERROR todos is EMPTY
+            setTodos(updatedList)
+          },
+          error: ( error : string ) => {
+            console.log("error onUpdateTodos : ", error);
+          }
+        })
+    
+        const apiDeleteTodos : any = API.graphql(
+          graphqlOperation(onDeleteTodos)
+        )
+        
+        const subscriptionDeleteTodos : any = apiDeleteTodos.subscribe({
+          next: (x : any ) => {
+            // Do something with the data          
+            const item = x.value.data.onDeleteTodos
+            // console.log("deleted Item x    : ", x);
+            console.log("deleted Item item : ", item);
+            // const updatedList = uiDeleteTodo(todosState, item.id)
+            // setTodos(updatedList)
+            // remove item with current id
+            setTodos([...todosState.filter(todo => todo.id !== item.id)])
+
+          },
+          error: ( error : string ) => {
+            console.log("error onDeleteTodos : ", error);
+          }
+        })
+    
+        return () => {
+            console.log( "useEffect.unsubscribe" ) 
+            // subscriptionCreateTodos.unsubscribe();
+            subscriptionUpdateTodos.unsubscribe();
+            subscriptionDeleteTodos.unsubscribe();
+        };
+    
+      },[todosState])    
 
     const heroContext = {
         todos: todosState,
@@ -167,6 +213,7 @@ const TodoProvider = (props: Props) => {
         
         deleteTodo: (id: string) => {
             removeItemById(id)
+            // remove item with current id
             setTodos([...todosState.filter(item => item.id !== id)])
         }
     };

@@ -391,7 +391,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
 
                             <Grid item xs={12}>
                                 <ListGraphInternal
-                                    items={localitems}
+                                    // items={localitems}
                                     lists={props.lists}
                                     color={"#AAA"}
                                     username={props.username}

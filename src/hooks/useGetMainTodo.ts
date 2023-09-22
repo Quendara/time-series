@@ -47,9 +47,6 @@ export const useGetMainTodos = (owner: string): TodoMainItem[] => {
 
     useEffect(() => {
         fetchTodos(owner)
-
-
-
     }, [owner])
 
     useEffect(() => { 

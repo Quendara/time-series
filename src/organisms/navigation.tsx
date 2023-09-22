@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import { Grid, List, ListItem, ListItemIcon, ListItemText, MenuItem, CardContent, Icon, ListItemButton, CardHeader, Divider, Menu, Box, useMediaQuery, useTheme } from '@mui/material';
 import { Avatar, ListItemAvatar, IconButton, ListItemSecondaryAction, Tooltip } from '@mui/material';
 
@@ -31,6 +31,7 @@ import { SearchResponse } from "./SearchResponse";
 
 import { bull } from "../components/helpers"
 import { Calendar } from "../components/Calendar";
+import { TodoMainContext } from "../context/TodoMainProvider";
 
 type RenderMode = "navlink" | "main";
 
@@ -295,15 +296,37 @@ interface MainNavigationProps {
 export const MainNavigation = (props: MainNavigationProps) => {
 
     // const [items, setItems] = useState(userConfig);
-    const items = useGetMainTodos(props.username)
+    // const items = useGetMainTodos(props.username)
+    const context = useContext(TodoMainContext)
+
     const [filterText, setFilterText] = useState("");
     const [todos, setTodos] = useState<TodoItem[]>([]);
     const [groups, setGroups] = useState<GenericGroup<TodoMainItem>[]>([]);
 
 
+    useEffect(
+        () => {
+            context.fetchTodosMain( props.username )
+
+        }, [props.username])
+
+        useEffect(
+            () => {
+           
+                if ( context.todos !== undefined) {
+                    props.handleSetConfig(context.todos)
+                }
+    
+                filterItems(context.todos, filterText)          
+    
+            }, [context.todos])        
+
+
+
+    
     const callbackFilter = (text: string) => {
         setFilterText(text)
-        filterItems(items, text)
+        filterItems(context.todos, text)
     }
 
     const callbackEnter = () => {
@@ -342,21 +365,12 @@ export const MainNavigation = (props: MainNavigationProps) => {
 
         // const filteredItems = filterItems(items, filterText)
         const groups: GenericGroup<TodoMainItem>[] = findUnique(filteredItems, "group", false)
+
+        console.log("FILTERED #Groups  : ", groups.length )
         setGroups(groups)
     }
 
 
-    useEffect(
-        () => {
-            if (items !== undefined) {
-                props.handleSetConfig(items)
-            }
-
-            filterItems(items, filterText)
-
-            console.log("MainNavigation (items updated) ", items.length)
-
-        }, [items])
 
 
 
@@ -383,6 +397,9 @@ export const MainNavigation = (props: MainNavigationProps) => {
                 </>
             ) : (
                 <>
+                {/* { "Groups " + groups.length} 
+                { ",todos " + context.todos.length}  */}
+                
                     <MyCardBlur>
                         <Box p={1}>
                             <Grid container pl={2} alignItems="center" justifyContent="center" spacing={1} >
@@ -396,9 +413,11 @@ export const MainNavigation = (props: MainNavigationProps) => {
                         </Box>
                     </MyCardBlur>
 
-                    {(items !== undefined && groups.length > 0) &&
+                    {(context.todos !== undefined && groups.length > 0) &&
 
                         <Box p={1} sx={{ paddingTop: "1em" }} >
+
+                            
 
                             <HorizontallyGrid horizontally={props.horizontally} >
                                 {groups.map((item: GenericGroup<TodoMainItem>, index: number) => (
@@ -440,7 +459,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                             )}
                         </Grid>
                         <Grid item xs={10} lg={8} >
-                            <SearchResponse mainTodos={items} searchResponse={todos} />
+                            <SearchResponse mainTodos={context.todos} searchResponse={todos} />
                         </Grid>
                     </Grid>
                 </>
