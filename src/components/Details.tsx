@@ -135,8 +135,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
     // const history = useHistory();
     const navigate = useNavigate();
 
-    const localitems = useGetTodos(props.selectedItem?.id );
-    // const localitems : TodoItem[] = [] // useGetTodos(item?.listid);
+    // const localitems = useGetTodos(props.selectedItem?.id );
+    const localitems : TodoItem[] = [] // useGetTodos(item?.listid);
 
     const [edit, setEdit] = useState(false);
     const [addTodos, setAddTodos] = useState(false);
@@ -171,7 +171,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
         }
 
         if (props.selectedItem) {
-            console.log("useEffect", props.selectedItem.description)
+            console.log("DetailsHeadless.useEffect", props.selectedItem.description)
             setCurrentItem(props.selectedItem)
             setSelectedValue(props.selectedItem.description)
 

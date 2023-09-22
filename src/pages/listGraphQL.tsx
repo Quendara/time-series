@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from 'react';
 import { useParams } from "react-router-dom";
 
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
@@ -19,6 +19,7 @@ import { UpdateTodosInput, CreateTodosInput } from "../API"
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
 import { TodoListType } from "../components/List"
 import { BooleanModel } from 'aws-sdk/clients/gamelift';
+import { TodoContext, TodoProvider } from '../context/TodoProvider';
 
 interface ListProps {
     lists: TodoMainItem[];
@@ -31,21 +32,23 @@ export const ListGraphQL = (props: ListProps) => {
 
     let { listid, listtype, itemid } = useParams<{ listid: string, listtype: TodoListType, itemid?: string }>();
 
-    console.log( "ListGraphQL : ", listid )
+    console.log("ListGraphQL : ", listid)
 
     const items = useGetTodos(listid);
 
     return (
         <>
-            <ListGraphInternal
-                listid={listid ? listid : ""}
-                items={items}
-                listtype={listtype ? listtype : TodoListType.UNDEFINED}
-                horizontally={ listtype === TodoListType.LINKS }
-                itemid={itemid}
-                color={props.color}
-                lists={props.lists}
-                username={props.username} />
+            <TodoProvider>
+                <ListGraphInternal
+                    listid={listid ? listid : ""}
+                    items={items}
+                    listtype={listtype ? listtype : TodoListType.UNDEFINED}
+                    horizontally={listtype === TodoListType.LINKS}
+                    itemid={itemid}
+                    color={props.color}
+                    lists={props.lists}
+                    username={props.username} />
+            </TodoProvider>
         </>
     )
 }
@@ -65,32 +68,39 @@ interface ListPropsInternal {
 
 export const ListGraphInternal = ({ items, lists, username, horizontally, listid, listtype, itemid, color }: ListPropsInternal) => {
 
-    const [todos, dispatch] = useReducer(reducerTodo, items);
+    // const [todos, dispatch] = useReducer(reducerTodo, items);
 
+    const context = useContext(TodoContext)
+    
     useEffect(() => {
 
-        console.log( "useEffect ListGraphInternal", items )
+        
+        // context.feedTodoes( items )
+        context.fetchTodos( listid )
+        console.log("useEffect.fetchTodos", listid)
 
-        dispatch(UpdateState(items)) 
+        // dispatch(UpdateState(items))
 
-    }, [items]);
+    }, [listid]);
 
     const isChecked = (checked: boolean) => {
         return checked
     }
 
     async function toggleFunction(todoid: string) {
-        dispatch(ToggleItem(todoid))
+        context.toggleTodo( todoid )
+        // dispatch(ToggleItem(todoid))
     }
 
     async function uncheckFunction(todoid: string) {
-
-        // TODO WRONG FUNCTION
-        dispatch(UncheckItem(todoid))
+        context.uncheckFunction( todoid )
+ 
+        // dispatch(UncheckItem(todoid))
     }
 
     async function updateFunction(inputObject: UpdateTodosInput) {
-        dispatch(UpdateItem(inputObject))
+        context.updateTodo( inputObject )
+        // dispatch(UpdateItem(inputObject))
     };
 
     // handles
@@ -98,10 +108,9 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
 
         const id = new Date().getTime();
 
-        const input: CreateTodosInput =
+        const input: TodoItem =
         {
             id: "" + id,
-            owner: username,
             group: group,
             link: link,
             listid: listid,
@@ -111,18 +120,22 @@ export const ListGraphInternal = ({ items, lists, username, horizontally, listid
             // datum: ""
         }
 
-        dispatch(AddItem(input))
+        context.appendTodo( input, username )
+
+        // dispatch(AddItem(input))
     }
 
     async function removeItemHandle(todoid: string) {
-        dispatch(DeleteItem(todoid))
+        // dispatch(DeleteItem(todoid))
+        context.deleteTodo( todoid )
+
         // await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid } }));
     };
 
 
     return (
         <ListPage
-            todos={todos}
+            todos={context.todos}
             listtype={listtype}
             listid={listid}
             addItemHandle={addItemHandle}

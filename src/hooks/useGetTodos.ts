@@ -41,6 +41,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
   useEffect(() => {
 
     // setTodos( [] );  
+    console.log(`useGetTodos.useEffect : ${listid}`, todos.length );
 
     if( listid !== undefined ){
       fetchTodos(listid)
@@ -91,8 +92,10 @@ export const useGetTodos = ( listid : string  | undefined ) => {
         // Do something with the data
         // console.log( x )          
         const item = x.value.data.onUpdateTodos
-        console.log("updated Item : ", item); 
+        console.log("updated Item : ", item, todos.length); 
         const updatedList = updateTodos(todos, item)
+
+        // TODO: ERROR todos is EMPTY
         // setTodos(updatedList)
       },
       error: ( error : string ) => {
@@ -128,7 +131,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
 
   async function fetchTodos( listid : string )  {
 
-    console.log("useGetTodos (listid) : ", listid);
+    console.log("useGetTodos.fetchTodos (listid) : ", listid);
 
     if (listid === "current") {
 
@@ -158,7 +161,7 @@ export const useGetTodos = ( listid : string  | undefined ) => {
       let response : any = await API.graphql(graphqlOperation( queryTodos, { listid: listid } ) );
       
       const items = response.data.queryTodos.items
-      console.log( `useGetTodos  listid : ${listid} items: `, items);
+      console.log( `useGetTodos.fetchTodos  listid : ${listid} items: `, items);
       setTodos( items )
   
     }
