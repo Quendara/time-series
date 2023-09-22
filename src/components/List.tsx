@@ -245,7 +245,9 @@ const ListEl = (
                         {(type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE) &&
                             <ListItemButton                                
                                 onClick={handleSelect}
-                                selected={ (selectedItemId===id) } >
+                                selected={ (selectedItemId===id) } 
+                                
+                                >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
                                     {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon> }
@@ -256,7 +258,7 @@ const ListEl = (
                                         <span>
                                             {
                                                 isChecked(checked) ?
-                                                    <TypographyDisabled onClick={handleSelect} {...longPressEvent}>{name}</TypographyDisabled>
+                                                    <TypographyDisabled onClick={handleSelect} {...longPressEvent}>{ name }</TypographyDisabled>
                                                     : <TypographyEnabled onClick={handleSelect}  {...longPressEvent}>{name}</TypographyEnabled>
                                             }
 
@@ -264,14 +266,16 @@ const ListEl = (
                                     }
                                 />
                                 <ListItemSecondaryAction>
-                                    <IconButton style={isChecked(checked) ? { color: "#AAA" } : {}} onClick={handleSelect} edge="end" aria-label="open">
+                                    <IconButton style={isChecked(checked) ? { color: "text.diabled" } : { }} onClick={handleSelect} edge="end" aria-label="open">
                                         <Icon>launch</Icon>
                                     </IconButton>
                                 </ListItemSecondaryAction>
                             </ListItemButton>}
 
                         {type === TodoListType.MESSAGE &&
-                            <ListItemButton onClick={handleSelect} >
+                            <ListItemButton onClick={handleSelect} 
+                            sx={{ backgroundColor: (selectedItemId===id)?"action.selected":"" }}
+                            >
 
                                 <ListItemIcon onClick={handleToggleFunction}  >
                                     
@@ -279,7 +283,6 @@ const ListEl = (
                                 </ListItemIcon>
 
                                 <ListItemText
-
                                     primary={isChecked(checked) ?
                                         <TypographyDisabled {...longPressEvent}>{name}</TypographyDisabled>
                                         : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
@@ -288,13 +291,13 @@ const ListEl = (
                             </ListItemButton>
                         }
                         {type === TodoListType.LINKS &&
-                            <ListItem button>
+                            <ListItemButton>
                                 <ListItemText
                                     {...longPressEventLink}
                                     primary={<Typography variant="h6" color="primary" >{name}</Typography>}
                                     secondary={<Typography variant="body2" color="textSecondary" noWrap >{link}</Typography>}
                                 />
-                            </ListItem>
+                            </ListItemButton>
                         }
 
                     </>
@@ -320,14 +323,7 @@ export const ListHeader = (props: PropsHeader) => {
                     <ListItemIcon>
                         {props.edit ? <MyIcon icon="arrow_drop_down" />  : <MyIcon icon="arrow_right" /> }
                     </ListItemIcon>
-
-                    {props.header}
-
-                    {/* {type === TodoListType.TODO &&
-                        <ListItemSecondaryAction>
-                            {printRemaining(filterCompleted(items).length, items.length)}
-                        </ListItemSecondaryAction>
-                    } */}
+                    <ListItemText>{props.header}</ListItemText>
                 </ListItem>
             </List>
         </MyPaperHeader>
@@ -418,9 +414,7 @@ export const ListQ = ( props: PropsQ) => {
                     </React.Fragment>
                 ))}
 
-                {/* { ((addItemHandle !== undefined) && editList) &&
-                <AddForm onClickFunction={ addItemHandle } group={ group } label={ "Add" } type={ type } />
-            } */}
+            
             </List>
 
         </>

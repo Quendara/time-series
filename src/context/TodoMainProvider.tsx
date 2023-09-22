@@ -17,7 +17,7 @@ export type TodoContent = {
     todos: TodoMainItem[]
     // feedTodos: ( items : TodoMainItem[] ) => void
     fetchTodosMain: ( owner : string ) => void
-    findItem: ( id : string ) => TodoMainItem | undefined
+    findItem: ( id? : string ) => TodoMainItem | undefined
     // appendTodo: (c: TodoMainItem, username: string) => void
     // updateTodo: (c: UpdateTodosInput) => void
     // toggleTodo: (id: string) => void
@@ -62,7 +62,8 @@ const TodoMainProvider = (props: Props) => {
             setTodos([... fetchedTodos]);
             // setTodos( fetchedTodos );
         },
-        findItem: ( id : string ) => {
+        findItem: ( id? : string ) => {
+            if( id === undefined ) return undefined;
             
             const items = todosState.filter(todo => todo.listid === id)
             return items.at(0)

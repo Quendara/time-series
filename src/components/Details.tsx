@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
     // IndexRoute,
@@ -29,6 +29,7 @@ import { UpdateTodosInput } from "../API"
 import { ListGraphInternal } from "../pages/listGraphQL";
 import { TodoListType } from "../components/List"
 import { Calendar } from "./Calendar";
+import { TodoMainContext } from "../context/TodoMainProvider";
 
 
 interface Props {
@@ -44,10 +45,14 @@ export const DetailsById = (props: Props) => {
 
     const navigate = useNavigate();
 
-    const item = useGetTodo(props.itemid);
-    const todos : TodoItem[] = [] // useGetTodos(item?.listid);
+    const context = useContext(TodoMainContext)
 
-    const myaction = (<IconButton onClick={() => { navigate( "/" + [ "list", item?.listid, "todo", item?.id ].join("/") ) }} >
+    const item = useGetTodo(props.itemid);
+    const todos : TodoItem[] = useGetTodos(item?.listid);
+
+    const mainItem = context.findItem( item?.listid )
+
+    const myaction = (<IconButton onClick={() => { navigate( "/" + [ "list", item?.listid, mainItem?.render, item?.id ].join("/") ) }} >
         <MyIcon icon="open_in_full"></MyIcon>
     </IconButton>)
 
@@ -66,7 +71,7 @@ export const DetailsById = (props: Props) => {
 export const DetailsLinkById = ( props : Props) => {
 
     const item = useGetTodo(props.itemid);
-    const todos : TodoItem[] = [] // useGetTodos(item?.listid);
+    const todos : TodoItem[] = useGetTodos(item?.listid);
 
     const [open, setOpen] = useState(false);
 
@@ -135,8 +140,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
     // const history = useHistory();
     const navigate = useNavigate();
 
-    // const localitems = useGetTodos(props.selectedItem?.id );
-    const localitems : TodoItem[] = [] // useGetTodos(item?.listid);
+    const localitems = useGetTodos(props.selectedItem?.id );
+    // const localitems : TodoItem[] = useGetTodos(item?.listid);
 
     const [edit, setEdit] = useState(false);
     const [addTodos, setAddTodos] = useState(false);

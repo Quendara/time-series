@@ -1,5 +1,5 @@
 import React, { useState, useEffect, KeyboardEvent } from "react";
-import { TextField, Grid, IconButton, Autocomplete } from '@mui/material';
+import { TextField, Grid, IconButton, Autocomplete, Box, Stack } from '@mui/material';
 import { GenericGroup } from "../components/helpers"
 
 import { MyIcon } from "./MyIcon";
@@ -42,11 +42,13 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
 
         if (event.key === "Enter") {
             // alert("Enter")
+            setHover(false);
             callCallback()
         }
         if (event.key === "Escape") {
             // alert("Enter")
             // callback(internalName)
+            setHover(false);
             setEdit(false)
         }
     }
@@ -86,34 +88,34 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
         return internalName.length > 0 ? internalName : "UNSPEC"
     }
 
-    return(
+    return (
         <>
-            
+
             {edit ? (
                 <>
                     {groups === undefined ? (
-                        <Grid
-                            container justifyContent="flex-start" spacing={2}
+                        <Stack
+                            direction={"row"}
+                            justifyContent="flex-start" spacing={1}
+                            sx={{width:"80%"}}
                         >
-                            <Grid item xs={9} >
-                                <TextField
-                                    value={internalName}
-                                    // error = { hasError(internalName) }
-                                    label={label}
-                                    size="small"
-                                    fullWidth={true}
-                                    variant="outlined"
-                                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
-                                    onChange={(e: any) => setInternalName(e.target.value)}
-                                />
 
-                            </Grid>
-                            <Grid item xs={1}   >
-                                <IconButton size="medium" color="primary" onClick={callCallback}>
-                                    <MyIcon icon="check" />
-                                </IconButton>
-                            </Grid>
-                        </Grid>
+                            <TextField
+                                value={internalName}
+                                // error = { hasError(internalName) }
+                                label={label}
+                                size="small"
+                                fullWidth={true}
+                                variant="outlined"
+                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
+                                onChange={(e: any) => setInternalName(e.target.value)}
+                            />
+
+                            <IconButton size="medium" color="primary" onClick={callCallback}>
+                                <MyIcon icon="check" />
+                            </IconButton>
+                        </Stack>
+
                     ) : (
                         <Autocomplete
                             id="combo-box-demo"
@@ -176,16 +178,24 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
                         <a style={{ "cursor": "pointer", "position": "relative" }}
                             onMouseOver={handleMouseIn} onMouseOut={handleMouseOut}
                             onClick={() => setEdit(true)}>
-                            {children ? children : getInternalName(internalName)}
-                            {hover && <div style={{ "position": "absolute", "right": "-28px", "top": "0px" }} ><MyIcon icon="edit"></MyIcon></div>
-                            }
+                            <Box sx={{ display: "inline", color: hover ? "primary.main" : undefined }}>
+                                {children ? children : getInternalName(internalName)}
+
+
+                                {hover &&
+                                    <div style={{ "position": "absolute", "right": "-28px", "top": "-5px" }} >
+                                        <MyIcon icon="edit"></MyIcon>
+                                    </div>
+                                }
+                            </Box>
+
                         </a>)
                     }
 
                 </>
             )
             }
-            </>
-        )
+        </>
+    )
 }
 
