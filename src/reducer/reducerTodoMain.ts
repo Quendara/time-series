@@ -55,6 +55,7 @@ const ReducerUpdateItem = ( state: TodoMainItem[], action: TodoMainActionUPDATE 
                     name: action.payload.name,
                     icon: action.payload.icon,                    
                     group: action.payload.group,
+                    render: action.payload.render,
                     listid: action.payload.listid
                    }) 
             let newItem = { ...todo } // clone
@@ -62,6 +63,7 @@ const ReducerUpdateItem = ( state: TodoMainItem[], action: TodoMainActionUPDATE 
             if( action.payload.name) newItem.name = action.payload.name;
             if( action.payload.group) newItem.group = action.payload.group;
             if( action.payload.icon ) newItem.icon = action.payload.icon;
+            if( action.payload.render ) newItem.render = action.payload.render;
             if( action.payload.listid ) newItem.listid = action.payload.listid;
             
             return newItem

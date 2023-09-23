@@ -112,7 +112,8 @@ export const DetailsMarkdown = (props: Props) => {
 
             return (
                 <>
-                    <DetailsById itemid={todoStrId}
+                    <DetailsById 
+                        itemid={todoStrId}
                         listtype={""}
                         lists={[]} username={""}
                         action={
@@ -282,7 +283,7 @@ export const DetailsMarkdown = (props: Props) => {
                 const retJSX = <>
                     {currentLine.startsWith("$$Grid") ?
                         <Grid item xs={12} md={width} >
-                            <Box ml={2} mr={2}>
+                            <Box>
                                 {markdownWithExtension(mdcontent, offset)}
                             </Box>
                         </Grid> : <Grid xs={12} md={width} p={1}>

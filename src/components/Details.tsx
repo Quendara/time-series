@@ -30,6 +30,7 @@ import { ListGraphInternal } from "../pages/listGraphQL";
 import { TodoListType } from "../components/List"
 import { Calendar } from "./Calendar";
 import { TodoMainContext } from "../context/TodoMainProvider";
+import { TodoProvider } from "../context/TodoProvider";
 
 
 interface Props {
@@ -48,11 +49,11 @@ export const DetailsById = (props: Props) => {
     const context = useContext(TodoMainContext)
 
     const item = useGetTodo(props.itemid);
-    const todos : TodoItem[] = useGetTodos(item?.listid);
+    const todos: TodoItem[] = useGetTodos(item?.listid);
 
-    const mainItem = context.findItem( item?.listid )
+    const mainItem = context.findItem(item?.listid)
 
-    const myaction = (<IconButton onClick={() => { navigate( "/" + [ "list", item?.listid, mainItem?.render, item?.id ].join("/") ) }} >
+    const myaction = (<IconButton onClick={() => { navigate("/" + ["list", item?.listid, mainItem?.render, item?.id].join("/")) }} >
         <MyIcon icon="open_in_full"></MyIcon>
     </IconButton>)
 
@@ -68,19 +69,19 @@ export const DetailsById = (props: Props) => {
     )
 }
 
-export const DetailsLinkById = ( props : Props) => {
+export const DetailsLinkById = (props: Props) => {
 
     const item = useGetTodo(props.itemid);
-    const todos : TodoItem[] = useGetTodos(item?.listid);
+    const todos: TodoItem[] = useGetTodos(item?.listid);
 
     const [open, setOpen] = useState(false);
 
     const navigate = useNavigate();
 
 
-    const myaction = (<IconButton onClick={() => { navigate( "/" + [ "list", item?.listid, "todo", item?.id ].join("/") ) }} >
+    const myaction = (<IconButton onClick={() => { navigate("/" + ["list", item?.listid, "todo", item?.id].join("/")) }} >
         <MyIcon icon="open_in_full"></MyIcon>
-    </IconButton>)    
+    </IconButton>)
 
     return (
         <>
@@ -101,7 +102,7 @@ export const DetailsLinkById = ( props : Props) => {
                         lists={props.lists}
                         action={props.action ? props.action : myaction}
                         listtype={props.listtype}
-                        username={props.username}  />
+                        username={props.username} />
                 </MyDialogContentBlur>
             </Dialog>
             <Button onClick={() => setOpen(true)}>{item?.name}</Button>
@@ -140,7 +141,9 @@ export const DetailsHeadless = (props: PropsDetails) => {
     // const history = useHistory();
     const navigate = useNavigate();
 
-    const localitems = useGetTodos(props.selectedItem?.id );
+    const contextMainTodo = useContext(TodoMainContext)
+
+    const localitems = useGetTodos(props.selectedItem?.id);
     // const localitems : TodoItem[] = useGetTodos(item?.listid);
 
     const [edit, setEdit] = useState(false);
@@ -201,7 +204,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
         setSelectedValue(newDescription)
 
         // props.updateFunction && props.updateFunction(value)
-        updateFunctionTodo( value )
+        updateFunctionTodo(value)
         setSuccessSnackbarMessage("Saved " + currentItem.name + "!!! ")
         setEdit(false)
     }
@@ -218,7 +221,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
         }
 
         // props.updateFunction && props.updateFunction(value)
-        updateFunctionTodo( value )
+        updateFunctionTodo(value)
         setSuccessSnackbarMessage("Saved " + currentItem.name + "!!! ")
         setEdit(false)
     }
@@ -251,7 +254,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 listid: foundList.listid
             }
             // props.updateFunction && props.updateFunction(value)
-            updateFunctionTodo( value )
+            updateFunctionTodo(value)
         }
 
     }
@@ -266,7 +269,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 listid: selecedList.id
             }
             // props.updateFunction && props.updateFunction(value)
-            updateFunctionTodo( value )
+            updateFunctionTodo(value)
         }
     }
 
@@ -278,7 +281,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
     }
 
     const bull = <span style={{ "margin": "5px" }}>•</span>;
-    const currentList = getGlobalList(props.lists, props.selectedItem?.listid)
+    const currentList = contextMainTodo.findItem(props.selectedItem?.listid)
 
 
     return (
@@ -288,7 +291,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 autoHideDuration={2000}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={() => setSuccessSnackbarMessage("")}
-                message={ "Saved " + currentItem?.name} >
+                message={"Saved " + currentItem?.name} >
                 <Alert onClose={handleClose} severity="success">
                     {successSnackbarMessage}
                 </Alert>
@@ -326,7 +329,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                                 {bull}
                                 <TextEdit
                                     value={currentList ? currentList.name : "unknown"}
-                                    groups={props.lists.map((x) => { return { value: x.name } })}
+                                    groups={contextMainTodo.todos.map((x) => { return { value: x.name } })}
                                     label="Lists"
                                     callback={(list) => updateMainList(list)} >
                                 </TextEdit>
@@ -372,7 +375,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                                     }
                                     {selectedItemValue.length > 0 &&
                                         <Grid item xs={12}>
-                                            
+
 
                                             <div className="markdown" >
                                                 <DetailsMarkdown
@@ -395,14 +398,16 @@ export const DetailsHeadless = (props: PropsDetails) => {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <ListGraphInternal
-                                    // items={localitems}
-                                    lists={props.lists}
-                                    color={"#AAA"}
-                                    username={props.username}
-                                    horizontally={true}
-                                    listid={currentItem.id}
-                                    listtype={TodoListType.TODO_SIMPLE} />
+                                <TodoProvider>
+                                    <ListGraphInternal
+                                        // items={localitems}
+                                        lists={props.lists}
+                                        color={"#AAA"}
+                                        username={props.username}
+                                        horizontally={true}
+                                        listid={currentItem.id}
+                                        listtype={TodoListType.TODO_SIMPLE} />
+                                </TodoProvider>
                             </Grid>
                         </>}
                     </CardContent>

@@ -221,7 +221,7 @@ const ListEl = (
             {(editList) ? (
                 <ListItem  >
                     <ListItemIcon onClick={handleToggleFunction} >
-                        {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon> }
+                        {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon>}
                     </ListItemIcon>
                     <AddForm
                         renderModal={false}
@@ -243,14 +243,14 @@ const ListEl = (
                 (
                     <>
                         {(type === TodoListType.TODO || type === TodoListType.TODO_SIMPLE) &&
-                            <ListItemButton                                
+                            <ListItemButton
                                 onClick={handleSelect}
-                                selected={ (selectedItemId===id) } 
-                                
-                                >
+                                selected={(selectedItemId === id)}
+
+                            >
 
                                 <ListItemIcon onClick={handleToggleFunction} >
-                                    {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon> }
+                                    {isChecked(checked) ? <Icon color="primary" >check_circle_outline</Icon> : <Icon color="primary" >radio_button_unchecked</Icon>}
                                 </ListItemIcon>
                                 <ListItemText
                                     onClick={handleSelect}
@@ -258,7 +258,7 @@ const ListEl = (
                                         <span>
                                             {
                                                 isChecked(checked) ?
-                                                    <TypographyDisabled onClick={handleSelect} {...longPressEvent}>{ name }</TypographyDisabled>
+                                                    <TypographyDisabled onClick={handleSelect} {...longPressEvent}>{name}</TypographyDisabled>
                                                     : <TypographyEnabled onClick={handleSelect}  {...longPressEvent}>{name}</TypographyEnabled>
                                             }
 
@@ -266,20 +266,20 @@ const ListEl = (
                                     }
                                 />
                                 <ListItemSecondaryAction>
-                                    <IconButton style={isChecked(checked) ? { color: "text.diabled" } : { }} onClick={handleSelect} edge="end" aria-label="open">
+                                    <IconButton style={isChecked(checked) ? { color: "text.diabled" } : {}} onClick={handleSelect} edge="end" aria-label="open">
                                         <Icon>launch</Icon>
                                     </IconButton>
                                 </ListItemSecondaryAction>
                             </ListItemButton>}
 
                         {type === TodoListType.MESSAGE &&
-                            <ListItemButton onClick={handleSelect} 
-                            sx={{ backgroundColor: (selectedItemId===id)?"action.selected":"" }}
+                            <ListItemButton onClick={handleSelect}
+                                sx={{ backgroundColor: (selectedItemId === id) ? "action.selected" : "" }}
                             >
 
                                 <ListItemIcon onClick={handleToggleFunction}  >
-                                    
-                                    {isChecked(checked) ? <Icon color="disabled" >favorite_border</Icon> : <Icon color="error" >favorite</Icon> }
+
+                                    {isChecked(checked) ? <Icon color="disabled" >favorite_border</Icon> : <Icon color="error" >favorite</Icon>}
                                 </ListItemIcon>
 
                                 <ListItemText
@@ -288,6 +288,11 @@ const ListEl = (
                                         : <TypographyEnabled  {...longPressEvent}>{name}</TypographyEnabled>}
 
                                 />
+                                <ListItemSecondaryAction>
+                                    <IconButton onClick={handleSelect} edge="end" aria-label="open">
+                                        <Icon color={isChecked(checked) ?  "disabled":undefined} >launch</Icon>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
                             </ListItemButton>
                         }
                         {type === TodoListType.LINKS &&
@@ -321,7 +326,7 @@ export const ListHeader = (props: PropsHeader) => {
             <List>
                 <ListItem>
                     <ListItemIcon>
-                        {props.edit ? <MyIcon icon="arrow_drop_down" />  : <MyIcon icon="arrow_right" /> }
+                        {props.edit ? <MyIcon icon="arrow_drop_down" /> : <MyIcon icon="arrow_right" />}
                     </ListItemIcon>
                     <ListItemText>{props.header}</ListItemText>
                 </ListItem>
@@ -347,7 +352,7 @@ interface PropsQ {
 };
 
 
-export const ListQ = ( props: PropsQ) => {
+export const ListQ = (props: PropsQ) => {
 
     const [edit, setEdit] = useState(false);
     const [name, setName] = useState("");
@@ -366,7 +371,7 @@ export const ListQ = ( props: PropsQ) => {
             <ListHeader
                 header={props.header}
                 edit={edit}
-                setEditCallback={ (e: boolean) => {
+                setEditCallback={(e: boolean) => {
                     return setEdit(e);
                 }}
             />
@@ -381,8 +386,8 @@ export const ListQ = ( props: PropsQ) => {
                             name={name}
                             group={props.group}
                             groups={mapGenericToStringGroup(props.groups)}
-                            onClickFunction={ onClickFunction }
-                            type={ props.type }
+                            onClickFunction={onClickFunction}
+                            type={props.type}
                             buttonName="Add"
                             showGroupsSelector={false}
                             handleDeleteClick={undefined} />
@@ -391,8 +396,8 @@ export const ListQ = ( props: PropsQ) => {
 
 
                 {props.items.map((item, index) => (
-                    <React.Fragment key={"hjk" + item.id } >
-                        
+                    <React.Fragment key={"hjk" + item.id} >
+
                         <ListEl
                             editList={props.editList}
                             key={index}
@@ -414,7 +419,7 @@ export const ListQ = ( props: PropsQ) => {
                     </React.Fragment>
                 ))}
 
-            
+
             </List>
 
         </>

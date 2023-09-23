@@ -84,23 +84,16 @@ const NavItem = (props: NavItemProps) => {
         props.dispatch(UpdateItem(element))
     };
 
-    // if (render === "navlink") {
-    //     return (
-    //         <NavLink to={"/" + [item.component, item.listid, item.render].join('/')}   >
-    //             <MenuItem>
-    //                 <ListItemAvatar >
-    //                     <Avatar onClick={handleComplete} style={item.navbar ? { backgroundColor: color } : {}} >
-    //                         <Icon sx={cssClasses.menuButton} >{item.icon} </Icon>
-    //                     </Avatar>
-    //                 </ListItemAvatar>
-    //                 <ListItemText
-    //                     sx={{ color: color, textDecoration: "none" }}
-    //                     primary={item.name}
-    //                 ></ListItemText>
-    //             </MenuItem>
-    //         </NavLink>)
-    // }
-    // else {
+    const handleEditRender = (value: string) => {
+        // dispatch({ type: "COMPLETE", id: item.id });
+        let element: UpdateTodoMainInput
+        element = {
+            id: props.item.id,
+            render: value
+        }
+        props.dispatch(UpdateItem(element))
+    };
+
 
 
     const handleClick = () => {
@@ -134,7 +127,10 @@ const NavItem = (props: NavItemProps) => {
                         {bull}
                         <TextEdit value={props.item.icon ? props.item.icon : "keine"} label="Icon" callback={handleEditIcon} />
                         {bull}
-                        {props.item.render}
+                        <TextEdit   value={props.item.render ? props.item.render : "keine"} 
+                                    groups={ [ {value:"message"}, {value:"todo"} ] }
+                                    label="Render" callback={handleEditRender} />
+                        
                     </>} />
             )}
             <ListItemSecondaryAction>

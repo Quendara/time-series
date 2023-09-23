@@ -86,10 +86,10 @@ export const ListPage = (props: ListProps) => {
         // console.log( "selectHandle : ", currentItem)
         // setSelectedItemId(id)
 
-        const todoMain = context.findItem( props.listid )
-        
+        const todoMain = context.findItem(props.listid)
 
-        navigate( "/" + [ "list", props.listid, todoMain?.render, id ].join("/") )
+
+        navigate("/" + ["list", props.listid, todoMain?.render, id].join("/"))
 
     }
 
@@ -134,7 +134,12 @@ export const ListPage = (props: ListProps) => {
                 const currentItem = item.name.toUpperCase()
                 return (currentItem.indexOf(FILTER) !== -1)
             })
+
+            // setSelectedItemId("")
         }
+
+        // if()
+        // 
 
         return filteredItems
     }
@@ -216,16 +221,16 @@ export const ListPage = (props: ListProps) => {
             </Snackbar>
 
             <MyCardBlur>
-            <Grid container alignItems="center" justifyContent="flex-start" >
-                  <Grid item md={6} xs={4} >
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar style={{ backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary={currentList?.name+ ""} secondary={currentList?.group} />
-                                </ListItem>
-                            </Grid>
-                <Grid item md={6} xs={8} >
+                <Grid container alignItems="center" justifyContent="flex-start" >
+                    <Grid item md={6} xs={4} >
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar style={{ backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={currentList?.name + ""} secondary={currentList?.group} />
+                        </ListItem>
+                    </Grid>
+                    <Grid item md={6} xs={8} >
                         {props.todos.length > 5 &&
                             < >
                                 <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
@@ -259,23 +264,37 @@ export const ListPage = (props: ListProps) => {
                         }
 
 
-                        {(filteredTodos.length === 1 && filterText.length > 0) && (
-                            <>
-                                <Typography variant="h6" component="h6">
+
+
+                    </Grid>
+                </Grid>
+            </MyCardBlur>
+
+            {(filteredTodos.length === 1 && filterText.length > 0) && (
+                <>
+                    <Grid container p={2} spacing={2} justifyContent="center">
+                        <Grid item xs={11} md={6}  >
+                            <MyCardBlur>
+                                <CardContent>
+                                <Typography variant="subtitle2" sx={{fontSize:"2em"}} >
                                     {filteredTodos[0].name}
                                 </Typography>
-                                <Typography variant="inherit" component="b" >
-                                    Press Enter to check item
+                                <Typography>
+                                    Press Enter to check item <MyIcon icon="task_alt" />
                                 </Typography>
-                            </>
-                        )}
-                        {filteredTodos.length === 0 && (
-                            <>
-                                <ListHeader
-                                    header={"Checklist"}
-                                    edit={false}
-                                    setEditCallback={(e: boolean) => { }} />
-                                <ListItem>
+                                </CardContent>
+                            </MyCardBlur>
+                        </Grid>
+                    </Grid>
+                </>
+            )}
+            {filteredTodos.length === 0 && (
+                <>
+                    <Grid container p={2} spacing={2} justifyContent="center">
+                        <Grid item xs={11} md={6}  >
+                            <MyCardBlur>
+                                <CardContent>
+                                    <Typography mb={2} variant='subtitle2' >Add new item</Typography>
                                     <AddForm
                                         renderModal={false}
                                         handleDeleteClick={undefined}
@@ -283,24 +302,28 @@ export const ListPage = (props: ListProps) => {
                                         onClickFunction={props.addItemHandle}
                                         type={props.listtype}
                                         groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
-                                </ListItem>
-                            </>
-                            )}
-                    
-                </Grid>
-            </Grid>
-            </MyCardBlur>
+                                </CardContent>
+                            </MyCardBlur>
+                        </Grid>
+                    </Grid>
+
+                </>
+            )}
 
             <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
-                <Grid container spacing={2} alignItems="stretch" >
+                <Grid container spacing={2} >
+
+
+
+
 
                     {props.listtype === TodoListType.TODO_SIMPLE ? (
                         <Grid item xs={12}  >
                             {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                         </Grid>
                     ) : (
-                        <Grid item md={ selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
-                            sm={ selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
+                        <Grid item md={selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
+                            sm={selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
                             xs={11}  >
                             <div className={"my-container-content"} >
                                 {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
@@ -334,7 +357,7 @@ export const ListPage = (props: ListProps) => {
                     }
                 </Grid >
             </Box>
-            
+
             <Box p={1} sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
 
                 <HorizontallyGrid horizontally={true}  >
