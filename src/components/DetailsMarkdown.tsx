@@ -106,33 +106,41 @@ export const DetailsMarkdown = (props: Props) => {
 
 
     const getTodoIncludeJSX = (line: string) => {
+        
         let todoStrId = line.split(":").at(1)
+        let color = line.split(":").at(2)
+
+        if( color === undefined) color= 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
 
         if (todoStrId) {
 
             return (
-                <>
+                <Box mb={2} >
                     <DetailsById 
                         itemid={todoStrId}
                         listtype={""}
+                        sx={{background:color}}
                         lists={[]} username={""}
                         action={
                             undefined
                         }
                     />
-                </>
+                </Box>
             )
         }
     }
 
     const getTodoLinkJSX = (line: string) => {
         let todoStrId = line.split(":").at(1)
+        
 
         if (todoStrId) {
 
             return (
                 <>
-                    <DetailsLinkById itemid={todoStrId}
+                    <DetailsLinkById 
+                        
+                        itemid={todoStrId}
                         listtype={""}
                         lists={[]} username={""} action={undefined} />
                 </>

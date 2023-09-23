@@ -58,7 +58,9 @@ export const MyCardHeaderAlt = styled(CardHeader)({
 
 export const MyCardHeader = styled(CardHeader)({
   color:"#FFF",
-  background: '#102027',
+  // background: '#102027',
+  background: 'linear-gradient( 45deg, rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.30))',
+  // filter: 'brightness(0.85)',
   textOverflow: "ellipsis",  
   overflow: "hidden",
   whiteSpace: "nowrap"

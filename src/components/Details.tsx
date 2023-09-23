@@ -36,6 +36,7 @@ import { TodoProvider } from "../context/TodoProvider";
 interface Props {
     itemid: string;
     listtype: string;
+    sx?: any;
     updateFunction?: (input: UpdateTodosInput) => any;
     lists: TodoMainItem[];
     username: string;
@@ -61,6 +62,7 @@ export const DetailsById = (props: Props) => {
         <Details
             selectedItem={item}
             todos={todos}
+            sx={ props.sx }
             updateFunction={props.updateFunction}
             lists={props.lists}
             action={props.action ? props.action : myaction}
@@ -118,6 +120,7 @@ interface PropsDetails {
     selectedItem: TodoItem | undefined;
     updateFunction?: (input: UpdateTodosInput) => any;
     listtype: string;
+    sx?: any;
     todos: TodoItem[];
     lists: TodoMainItem[];
     username: string;
@@ -126,7 +129,7 @@ interface PropsDetails {
 
 export const Details = (props: PropsDetails) => {
     return (
-        <MyCard2>
+        <MyCard2 sx={ props.sx } >
             <DetailsHeadless {...props} />
         </MyCard2>
     )
@@ -411,8 +414,6 @@ export const DetailsHeadless = (props: PropsDetails) => {
                             </Grid>
                         </>}
                     </CardContent>
-
-
                 </>
             )
             }
