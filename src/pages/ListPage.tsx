@@ -101,6 +101,8 @@ export const ListPage = (props: ListProps) => {
             setSuccessSnackbarMessage("Uncheck item " + filteredTodos[0].name);
 
             props.uncheckFunction(filteredTodos[0].id)
+
+            setSelectedItemId( filteredTodos[0].id )
             setFilterText("")
         }
     }
@@ -222,19 +224,21 @@ export const ListPage = (props: ListProps) => {
 
             <MyCardBlur>
                 <Grid container alignItems="center" justifyContent="flex-start" >
-                    <Grid item md={6} xs={4} >
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar style={{ backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
+                    <Grid item md={4} xs={2} >
+                        <ListItem >
+                            <ListItemAvatar >
+                                <Avatar style={{ marginTop:"10px",marginBottom:"10px", backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
                             </ListItemAvatar>
+                            <Hidden mdDown>
                             <ListItemText primary={currentList?.name + ""} secondary={currentList?.group} />
+                            </Hidden>
                         </ListItem>
                     </Grid>
-                    <Grid item md={6} xs={8} >
+                    <Grid item md={8} xs={10} >
                         {props.todos.length > 5 &&
                             < >
                                 <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
-                                    <Grid item xs={8} lg={9} >
+                                    <Grid item xs={9} >
                                         {edit ? (
                                             <AddForm
                                                 name=""
@@ -248,7 +252,7 @@ export const ListPage = (props: ListProps) => {
                                             <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
                                         )}
                                     </Grid>
-                                    <Grid item xs={4} lg={3} >
+                                    <Grid item xs={3}  >
                                         <Grid container justifyContent="flex-end">
                                             <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                 <MyIcon icon="text_rotation_none"></MyIcon>
@@ -279,7 +283,7 @@ export const ListPage = (props: ListProps) => {
                                 <Typography variant="subtitle2" sx={{fontSize:"2em"}} >
                                     {filteredTodos[0].name}
                                 </Typography>
-                                <Typography>
+                                <Typography>x
                                     Press Enter to check item <MyIcon icon="task_alt" />
                                 </Typography>
                                 </CardContent>
@@ -313,10 +317,6 @@ export const ListPage = (props: ListProps) => {
             <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
                 <Grid container spacing={2} >
 
-
-
-
-
                     {props.listtype === TodoListType.TODO_SIMPLE ? (
                         <Grid item xs={12}  >
                             {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
@@ -332,7 +332,7 @@ export const ListPage = (props: ListProps) => {
                     )
                     }
 
-                    {(selectedItemId) &&
+                    {(selectedItemId && filterText.length === 0) &&
                         <>
                             <Grid item md={stateHorizontally ? 4 : 8} sm={stateHorizontally ? 6 : 6} xs={12} >
 
@@ -369,7 +369,7 @@ export const ListPage = (props: ListProps) => {
                         </Grid>
                     </HorizontallyItem>
                     <HorizontallyItem key={"Listsb"} horizontally={true} >
-                        {(selectedItemId) &&
+                        {(selectedItemId && filterText.length === 0) &&
                             <>
                                 <Grid item xs={12} >
 
