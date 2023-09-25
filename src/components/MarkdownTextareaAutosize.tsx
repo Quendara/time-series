@@ -222,13 +222,46 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
         updateTextArea(insertedText, cursorPos + newText.length)
     }
 
+    const convertKnownData = (inputText: string) : string => {
+        
+        console.log( inputText.indexOf("https://youtu.be") )
+
+        if (inputText.indexOf("https://youtu.be") >= 0  ) {
+
+            // const url = "https://youtu.be/CiMippx--Jk?si=HCFQRCC20RPQ4oZU";
+            const regex = /youtu\.be\/([A-Za-z0-9_-]+)/;
+            const match = inputText.match(regex);
+
+            if (match) {
+                const videoId = match[1];
+                console.log(videoId); // This will print "CiMippx--Jk" to the console.
+                return "$$Video:" + videoId
+            } else {
+                console.log("No ID found in inputText");
+                return inputText
+            }
+
+            // https://youtu.be/CiMippx--Jk?si=HCFQRCC20RPQ4oZU
+            // $$Video:O7ge2UzqSSI
+
+        }
+        else {
+
+            return inputText
+        }
+
+
+
+
+    }
+
     return (
         <Stack direction="column" spacing={2}>
             <Stack direction={"row"} spacing={2} alignItems={"center"} justifyContent={"flex-start"}>
                 <Button
                     startIcon={<MyIcon icon={"save"} />} variant="contained" color={"primary"}
                     onClick={onSave} > Save </Button>
-                
+
 
 
                 <Tooltip title="Add list">
@@ -243,8 +276,18 @@ export const MarkdownTextareaAutosize = (props: PropMTA) => {
                     </IconButton>
                 </Tooltip>
 
+                <Tooltip title="Add from Clipboard">
+                    <IconButton onClick={
+                        () => navigator.clipboard.readText().then((cliptext) => insertTextToCurrentPosition( convertKnownData( cliptext ) ))
+                    } >
+                        <MyIcon icon={"content_paste_go"} />
+                    </IconButton>
+                </Tooltip>
+
+
+
                 <Tooltip title="Today">
-                    <IconButton onClick={() => insertTextToCurrentPosition( dayjs(new Date()).format("YYYY-MM-DD") ) } >
+                    <IconButton onClick={() => insertTextToCurrentPosition(dayjs(new Date()).format("YYYY-MM-DD"))} >
                         <MyIcon icon={"today"} />
                     </IconButton>
                 </Tooltip>

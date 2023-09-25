@@ -193,7 +193,10 @@ export const DetailsMarkdown = (props: Props) => {
 
         let isCheckbox = false
         let isChecked = false
-        if (line.trim().startsWith("$$ []")) { isCheckbox = true }
+        const trimmedLine = line.trim()
+
+        if (trimmedLine.startsWith("$$ []")) { isCheckbox = true }
+        if (trimmedLine.startsWith("$$ [ ]")) { isCheckbox = true }
         else if (line.trim().startsWith("$$ [x]")) { isCheckbox = true; isChecked = true }
 
         var indent = line.indexOf("$$");
@@ -226,7 +229,7 @@ export const DetailsMarkdown = (props: Props) => {
                 </Box>
             )
         } else {
-            return (<></>)
+            return (<>{line}</>)
         }
     }
 
@@ -286,6 +289,10 @@ export const DetailsMarkdown = (props: Props) => {
                     width = +splittetLine[1]
                 }
 
+                let color = splittetLine.at(2)
+
+                if( color === undefined) color= 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
+
                 const mdcontent = content
                 content = ""
                 const retJSX = <>
@@ -295,7 +302,7 @@ export const DetailsMarkdown = (props: Props) => {
                                 {markdownWithExtension(mdcontent, offset)}
                             </Box>
                         </Grid> : <Grid xs={12} md={width} p={1}>
-                            <Card>
+                            <Card sx={{background:color}}>
                                 <CardContent>
                                     {markdownWithExtension(mdcontent, offset)}
                                 </CardContent>

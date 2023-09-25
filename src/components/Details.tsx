@@ -307,7 +307,9 @@ export const DetailsHeadless = (props: PropsDetails) => {
                     <MyCardHeader
                         avatar={
                             <Avatar aria-label="recipe">
-                                {currentItem.name[0]}
+                                { currentList ? 
+                                <MyIcon icon={currentList.icon} /> : currentItem.name[0] }
+                                
                             </Avatar>
                         }
                         action={
