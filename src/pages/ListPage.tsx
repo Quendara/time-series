@@ -339,7 +339,8 @@ export const ListPage = (props: ListProps) => {
                                 <div className={"my-container-content"} >
                                     <DetailsById
                                         itemid={selectedItemId}
-                                        updateFunction={props.updateFunction}
+                                        readOnly={false}
+                                        
                                         lists={props.lists}
                                         listtype={props.listtype}
                                         action={
@@ -376,7 +377,7 @@ export const ListPage = (props: ListProps) => {
                                     <div className={"my-container-content details-xs"} style={{ position: "relative" }} >
                                         <DetailsById
                                             itemid={selectedItemId}
-                                            updateFunction={props.updateFunction}
+                                            readOnly={false}
                                             lists={props.lists}
                                             listtype={props.listtype}
                                             action={<></>}

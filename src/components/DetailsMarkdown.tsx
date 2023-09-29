@@ -4,33 +4,40 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 // import { remark } from 'remark'
-// import remarkParse from 'remark-parse'
+import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
+
+import remarkTypescript from 'remark-typescript'
+
+
+
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, FormControlLabel, Grid, IconButton } from "@mui/material";
-import { extract } from "query-string/base";
-import { stringMap } from "aws-sdk/clients/backup";
+import { Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, FormControlLabel, Grid, Icon, IconButton, TextField } from "@mui/material";
 import { bool } from "aws-sdk/clients/signer";
 
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
-import typescript from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
-import scss from 'react-syntax-highlighter/dist/cjs/languages/prism/scss';
-import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
-// import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
-import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
+// import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+// import typescript from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+// import scss from 'react-syntax-highlighter/dist/cjs/languages/prism/scss';
+// import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
+// // import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
+// import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
+
 import { getAlertJSX, getPhotoJSX, getVideoJSX } from "./MarkdownComponents";
 import { DetailsById, DetailsLinkById } from "./Details";
-import { UpdateTodosInput } from "../API";
+import { MyMarkdown } from "./MyMarkdown";
 import { MyIcon } from "./MyIcon";
-import { useNavigate } from "react-router-dom";
+import { TextEdit } from "./TextEdit";
 
-SyntaxHighlighter.registerLanguage('tsx', tsx);
-SyntaxHighlighter.registerLanguage('typescript', typescript);
-SyntaxHighlighter.registerLanguage('scss', scss);
-SyntaxHighlighter.registerLanguage('bash', bash);
-// SyntaxHighlighter.registerLanguage('markdown', markdown);
-SyntaxHighlighter.registerLanguage('json', json);
+
+
+
+// SyntaxHighlighter.registerLanguage('tsx', tsx);
+// SyntaxHighlighter.registerLanguage('typescript', typescript);
+// SyntaxHighlighter.registerLanguage('scss', scss);
+// SyntaxHighlighter.registerLanguage('bash', bash);
+// // SyntaxHighlighter.registerLanguage('markdown', markdown);
+// SyntaxHighlighter.registerLanguage('json', json);
 
 
 // import  {remarkTypescript}  from 'remark-typescript'
@@ -43,13 +50,6 @@ SyntaxHighlighter.registerLanguage('json', json);
 // import rehypeHighlight from 'rehype-highlight'
 // import { unified } from 'unified'
 
-// remarkPlugins={[remarkGfm]}
-// 
-
-// <ReactMarkdown>
-// {selectedItemValue ? selectedItemValue : "No Description"}
-//  <ReactMarkdown children={ selectedItemValue ? selectedItemValue : "No Description" }  remarkPlugins={ [remarkGfm] } >// </ReactMarkdown>
-// remarkGfm
 
 
 const markdown = `A paragraph with *emphasis* and **strong importance**.
@@ -70,7 +70,6 @@ $$
   
 `
 // import remarkGfm from 'remark-gfm'
-// <ReactMarkdown children={markdown} remarkPlugins={[remarkGfm]} />,
 
 // { value ? value : "No Description" } 
 
@@ -106,21 +105,23 @@ export const DetailsMarkdown = (props: Props) => {
 
 
     const getTodoIncludeJSX = (line: string) => {
-        
+
         let todoStrId = line.split(":").at(1)
         let color = line.split(":").at(2)
 
-        if( color === undefined) color= 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
+        if (color === undefined) color = 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
 
         if (todoStrId) {
 
             return (
                 <Box mb={2} >
-                    <DetailsById 
+                    <DetailsById
                         itemid={todoStrId}
                         listtype={""}
-                        sx={{background:color}}
-                        lists={[]} username={""}
+                        readOnly={false}
+                        sx={{ background: color }}
+                        lists={[]}
+                        username={""}
                         action={
                             undefined
                         }
@@ -132,14 +133,13 @@ export const DetailsMarkdown = (props: Props) => {
 
     const getTodoLinkJSX = (line: string) => {
         let todoStrId = line.split(":").at(1)
-        
 
         if (todoStrId) {
-
             return (
                 <>
-                    <DetailsLinkById 
-                        
+                    <DetailsLinkById
+                        readOnly={true}
+
                         itemid={todoStrId}
                         listtype={""}
                         lists={[]} username={""} action={undefined} />
@@ -193,11 +193,15 @@ export const DetailsMarkdown = (props: Props) => {
 
         let isCheckbox = false
         let isChecked = false
+        let isAdd = true
         const trimmedLine = line.trim()
+
 
         if (trimmedLine.startsWith("$$ []")) { isCheckbox = true }
         if (trimmedLine.startsWith("$$ [ ]")) { isCheckbox = true }
         else if (line.trim().startsWith("$$ [x]")) { isCheckbox = true; isChecked = true }
+
+        if (trimmedLine.startsWith("$$ [] add")) { isAdd = true; isCheckbox = false }
 
         var indent = line.indexOf("$$");
 
@@ -215,20 +219,48 @@ export const DetailsMarkdown = (props: Props) => {
             props.updateFunction(replacedContent)
         }
 
+        const handleAdd = () => {
+
+            const checkStr = "[]"
+            let whiteSpace = ""
+
+            for (let i = 0; i < indent; ++i) {
+                whiteSpace = whiteSpace + " "
+            }
+
+            const replacedLine = `${whiteSpace}$$ ${checkStr} New Item \n${whiteSpace}$$ [] add"`
+            const replacedContent = replaceLineInContent(index, replacedLine)
+            props.updateFunction(replacedContent)
+        }
+
         if (isCheckbox) {
             const labelFromLine = line.split("]").at(1)
             let label = labelFromLine ? labelFromLine : "label"
 
             return (
                 <Box ml={2 * indent} mr={2 * indent}>
-                    <FormControlLabel control={
-                        <Checkbox
-                            defaultChecked={isChecked}
-                            onChange={() => handleCheck(!isChecked, label)}
-                        />} label={label} />
+                     <IconButton onClick={() => handleCheck(!isChecked, label)} >
+                        <Icon  
+                        color={isChecked?"primary":undefined} >{isChecked?"check_box_outline":"check_box_outline_blank"}</Icon>
+                    </IconButton>
+                    <TextEdit value={label} callback={ (newL) =>  handleCheck(isChecked, newL) } />
+                              
+                    
+                    {/* <TextField sx={{width:"80%"}} variant="standard" value={label} ></TextField> */}
                 </Box>
             )
-        } else {
+        }
+        if (isAdd) {
+            return (
+                <Box ml={2 * indent} mr={2 * indent}>
+                    <IconButton onClick={handleAdd} >
+                        <MyIcon icon="add" />
+                    </IconButton>
+                    <TextField sx={{width:"80%"}} variant="standard" ></TextField>
+                </Box>
+            )
+        }
+        else {
             return (<>{line}</>)
         }
     }
@@ -247,7 +279,8 @@ export const DetailsMarkdown = (props: Props) => {
                 return (<>
                     {mdcontent.length > 0 &&
                         <Grid item xs={12}>
-                            <ReactMarkdown children={mdcontent} remarkPlugins={[remarkGfm]} />
+                            <MyMarkdown content={mdcontent} />
+                            {/* <ReactMarkdown children={mdcontent} remarkPlugins={[remarkGfm, remarkTypescript]} /> */}
                         </Grid>}
                     {/* {checkOwnMarkup( currentLine )}
                     {getAlertJSX( currentLine )} */}
@@ -264,7 +297,9 @@ export const DetailsMarkdown = (props: Props) => {
         if (content.length > 0) {
             contentJSX.push(
                 <Grid item xs={12} >
-                    <ReactMarkdown children={content} remarkPlugins={[remarkGfm]} />
+                    {/* <ReactMarkdown children={content} remarkPlugins={[remarkGfm]} /> */}
+                    <MyMarkdown content={content} ></MyMarkdown>
+
                 </Grid>)
         }
 
@@ -291,7 +326,7 @@ export const DetailsMarkdown = (props: Props) => {
 
                 let color = splittetLine.at(2)
 
-                if( color === undefined) color= 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
+                if (color === undefined) color = 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
 
                 const mdcontent = content
                 content = ""
@@ -302,7 +337,7 @@ export const DetailsMarkdown = (props: Props) => {
                                 {markdownWithExtension(mdcontent, offset)}
                             </Box>
                         </Grid> : <Grid xs={12} md={width} p={1}>
-                            <Card sx={{background:color}}>
+                            <Card sx={{ background: color }}>
                                 <CardContent>
                                     {markdownWithExtension(mdcontent, offset)}
                                 </CardContent>
@@ -312,9 +347,7 @@ export const DetailsMarkdown = (props: Props) => {
                 </>
 
                 offset = index + 1
-
                 return retJSX
-
             }
             else {
                 content = content + currentLine + "\n"

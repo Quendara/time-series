@@ -94,18 +94,17 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
             {edit ? (
                 <>
                     {groups === undefined ? (
-                        <Stack
-                            direction={"row"}
-                            justifyContent="flex-start" spacing={1}
-                            sx={{width:"80%"}}
+                        <Box
+                            sx={{position:"relative", display: "inline" }}
                         >
 
                             <TextField
                                 value={internalName}
+                                autoFocus={true}
                                 // error = { hasError(internalName) }
                                 label={label}
                                 size="small"
-                                fullWidth={true}
+                                fullWidth={false}
                                 variant="outlined"
                                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => checkEnter(e)}
                                 onChange={(e: any) => setInternalName(e.target.value)}
@@ -114,7 +113,7 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
                             <IconButton size="medium" color="primary" onClick={callCallback}>
                                 <MyIcon icon="check" />
                             </IconButton>
-                        </Stack>
+                        </Box>
 
                     ) : (
                         <Autocomplete
@@ -175,10 +174,11 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
                     {readonly ? (
                         <>{children ? children : getInternalName(internalName)}</>
                     ) : (
-                        <a style={{ "cursor": "pointer", "position": "relative" }}
+                        
+                            <Box sx={{ display: "inline", "cursor": "pointer", "position": "relative", color: hover ? "primary.main" : undefined }}
                             onMouseOver={handleMouseIn} onMouseOut={handleMouseOut}
-                            onClick={() => setEdit(true)}>
-                            <Box sx={{ display: "inline", color: hover ? "primary.main" : undefined }}>
+                            onClick={() => setEdit(true)} >
+                            
                                 {children ? children : getInternalName(internalName)}
 
 
@@ -189,7 +189,7 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
                                 }
                             </Box>
 
-                        </a>)
+                        )
                     }
 
                 </>

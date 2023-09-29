@@ -37,7 +37,8 @@ interface Props {
     itemid: string;
     listtype: string;
     sx?: any;
-    updateFunction?: (input: UpdateTodosInput) => any;
+    readOnly:boolean;
+    
     lists: TodoMainItem[];
     username: string;
     action: React.ReactNode;
@@ -63,7 +64,7 @@ export const DetailsById = (props: Props) => {
             selectedItem={item}
             todos={todos}
             sx={ props.sx }
-            updateFunction={props.updateFunction}
+            readOnly ={props.readOnly}
             lists={props.lists}
             action={props.action ? props.action : myaction}
             listtype={props.listtype}
@@ -100,7 +101,8 @@ export const DetailsLinkById = (props: Props) => {
                     <DetailsHeadless
                         selectedItem={item}
                         todos={todos}
-                        updateFunction={props.updateFunction}
+                        readOnly={false}
+                        
                         lists={props.lists}
                         action={props.action ? props.action : myaction}
                         listtype={props.listtype}
@@ -118,7 +120,8 @@ export const DetailsLinkById = (props: Props) => {
 
 interface PropsDetails {
     selectedItem: TodoItem | undefined;
-    updateFunction?: (input: UpdateTodosInput) => any;
+    // updateFunction?: (input: UpdateTodosInput) => any;
+    readOnly: boolean;
     listtype: string;
     sx?: any;
     todos: TodoItem[];
@@ -177,7 +180,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                 description: selectedItemValue
             }
 
-            props.updateFunction && props.updateFunction(value)
+            updateFunctionTodo(value)
 
         }
 
@@ -318,8 +321,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
                         title={<TextEdit
                             value={currentItem.name}
                             label="Name"
-                            readonly={props.updateFunction === undefined}
-                            callback={(newName: string) => props.updateFunction && props.updateFunction({ id: currentItem.id, name: newName })} >
+                            readonly={ props.readOnly }
+                            callback={(newName: string) => updateFunctionTodo({ id: currentItem.id, name: newName })} >
                         </TextEdit>
                         }
                         subheader={
@@ -328,8 +331,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
                                     value={currentItem.group}
                                     groups={findUnique(props.todos, "group", false)}
                                     label="Group"
-                                    readonly={props.updateFunction === undefined}
-                                    callback={(group) => props.updateFunction && props.updateFunction({ id: currentItem.id, group: group })} >
+                                    readonly={ props.readOnly }
+                                    callback={(group) => updateFunctionTodo({ id: currentItem.id, group: group })} >
                                 </TextEdit>
                                 {bull}
                                 <TextEdit
@@ -360,7 +363,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                                 </>
                             ) : (
                                 <>
-                                    {props.updateFunction &&
+                                    {!props.readOnly &&
 
                                         <Grid item xs={12}>
                                             <Stack direction={"row"} spacing={2}>
