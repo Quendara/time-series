@@ -31,6 +31,9 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
 
     useEffect(() => {
         setInternalName(value)
+        if( value.length === 0 ){
+            setEdit(true)
+        }
     }, [value]);
 
 
@@ -85,19 +88,18 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
     }
 
     const getInternalName = (internalName: string) => {
-        return internalName.length > 0 ? internalName : "UNSPEC"
+        return internalName.length > 0 ? internalName : ""
     }
 
     return (
         <>
 
-            {edit ? (
+            { ( edit ) ? (
                 <>
                     {groups === undefined ? (
                         <Box
                             sx={{position:"relative", display: "inline" }}
                         >
-
                             <TextField
                                 value={internalName}
                                 autoFocus={true}
@@ -133,7 +135,6 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
                                             newValue
                                         );
                                     }
-
                                 }
                                 console.error("onInputChange", newValue)
                             }}
@@ -180,7 +181,6 @@ export const TextEdit = ({ value, label, callback, groups, readonly = false, chi
                             onClick={() => setEdit(true)} >
                             
                                 {children ? children : getInternalName(internalName)}
-
 
                                 {hover &&
                                     <div style={{ "position": "absolute", "right": "-28px", "top": "-5px" }} >

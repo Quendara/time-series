@@ -219,7 +219,7 @@ export const DetailsMarkdown = (props: Props) => {
             props.updateFunction(replacedContent)
         }
 
-        const handleAdd = () => {
+        const handleAdd = ( label : string ) => {
 
             const checkStr = "[]"
             let whiteSpace = ""
@@ -228,7 +228,7 @@ export const DetailsMarkdown = (props: Props) => {
                 whiteSpace = whiteSpace + " "
             }
 
-            const replacedLine = `${whiteSpace}$$ ${checkStr} New Item \n${whiteSpace}$$ [] add"`
+            const replacedLine = `${whiteSpace}$$ ${checkStr} ${label} \n${whiteSpace}$$ [] add`
             const replacedContent = replaceLineInContent(index, replacedLine)
             props.updateFunction(replacedContent)
         }
@@ -253,10 +253,11 @@ export const DetailsMarkdown = (props: Props) => {
         if (isAdd) {
             return (
                 <Box ml={2 * indent} mr={2 * indent}>
-                    <IconButton onClick={handleAdd} >
+                    <IconButton>
                         <MyIcon icon="add" />
                     </IconButton>
-                    <TextField sx={{width:"80%"}} variant="standard" ></TextField>
+                    <TextEdit value="" callback={ (newL) =>  handleAdd( newL) } />
+                    
                 </Box>
             )
         }
