@@ -23,6 +23,8 @@ export async function restCallToBackendAsync(url:string, token:string, loggingMe
   return data;
 }
 
+
+
 export function addLeadingZeros(num: number, totalLength: number): string {
     return String(num).padStart(totalLength, '0');
   }

@@ -22,14 +22,13 @@ const poolData = {
 };
 
 interface Props {
-  authSuccessCallback: (username: string, token: string, apikey: string, apikeyTimetree: string) => void;
+  authSuccessCallback: (username: string, token: string, apikey: string, apikeyOpenAi: string) => void;
   children: React.ReactNode
 }
 
 
 
 const Auth = ({ authSuccessCallback, children }: Props) => {
-
 
 
   const [username, setUsername] = useState("");
@@ -81,14 +80,16 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
           console.log(decoded);
 
           const apikey = decoded["custom:APIKEY"];
-          const apikey_timetree = decoded["custom:TIMETREETOKEN"];
+          // const apikey_timetree = decoded["custom:TIMETREETOKEN"];
+          const apikey_openai = decoded["custom:OPENAITOKEN"];
 
-          console.log("apikey_timetree : ", apikey_timetree);
+          // console.log("apikey_timetree : ", apikey_timetree);
+          console.log("apikey_openai : ", apikey_openai);
 
           setCognitoUser(cognitoUser);
           setUsername(username);
           // callback to parent
-          authSuccessCallback(username, jwtToken, apikey, apikey_timetree);
+          authSuccessCallback(username, jwtToken, apikey, apikey_openai);
         });
       }
     }

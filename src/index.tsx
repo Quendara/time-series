@@ -39,6 +39,7 @@ import { Sandbox } from "./pages/sandbox";
 import { Details } from "./components/Details";
 import { UpdateTodosInput } from "./API";
 import { TodoMainProvider } from "./context/TodoMainProvider";
+import { SandboxGPT } from "./pages/SandboxGPT";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -57,7 +58,8 @@ const App = () => {
 
   const [apikey, setApi] = useState("");
   const [amplifyInitilaized, setAmplifyInitilaized] = useState(false);
-  const [apikeyTimetree, setApikeyTimetree] = useState("");
+  // const [apikeyTimetree, setApikeyTimetree] = useState("");
+  const [apikeyOpenAi, setApikeyOpenAi] = useState("");
 
   const theme2 = useTheme();
   const matchesUpXs = useMediaQuery(theme2.breakpoints.up('sm'));
@@ -67,16 +69,17 @@ const App = () => {
     setTodoMainItems(config)
   }
 
-  const authSuccessCallback = (username: string, token: string, apikey: string, apikeyTimetree: string) => {
+  const authSuccessCallback = (username: string, token: string, apikey: string, apikeyOpen_Ai: string) => {
     setUsername(username);
 
     setJwtToken(token);
     setApi(apikey);
-    setApikeyTimetree(apikeyTimetree)
+    setApikeyOpenAi(apikeyOpen_Ai)
 
     console.log("username        : ", username);
     console.log("authSuccess     : ", token);
     console.log("apikey          : ", apikey);
+    console.log("apikeyOpenAi          : ", apikeyOpen_Ai);
 
   };
 
@@ -162,6 +165,9 @@ const App = () => {
                         </Route>
                         <Route path="/sandboxH" element={<SandboxH />}>
                         </Route>
+                        <Route path="/SandboxGPT" element={<SandboxGPT apikey={apikeyOpenAi} />}>
+                        </Route>                        
+                        
                         <Route path="/sandbox" element={<Sandbox />}>
                         </Route>
 
@@ -175,9 +181,6 @@ const App = () => {
                             render="main"
                             username={username}
                             handleSetConfig={handleSetConfig} />
-
-
-
                         } >
                         </Route>
                         <Route path="/demo" element={<StyleDemo />}></Route>

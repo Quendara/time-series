@@ -58,20 +58,6 @@ export const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
  
-export async function restCallToBackendAsync(url, token, loggingMessage = "Generic Call")
-{
-    const options = {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: token // token.access
-        },
-    };
-
-  let response = await fetch(url, options)
-  let data = await response.json()
-  return data;
-}
 
 
 export const leadingZeros = (num, size=2) => {
