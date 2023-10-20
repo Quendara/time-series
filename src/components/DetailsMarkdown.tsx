@@ -12,7 +12,7 @@ import remarkTypescript from 'remark-typescript'
 
 
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, FormControlLabel, Grid, Icon, IconButton, TextField } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, Chip, FormControlLabel, Grid, Icon, IconButton, TextField, Typography } from "@mui/material";
 import { bool } from "aws-sdk/clients/signer";
 
 // import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -139,7 +139,6 @@ export const DetailsMarkdown = (props: Props) => {
                 <>
                     <DetailsLinkById
                         readOnly={true}
-
                         itemid={todoStrId}
                         listtype={""}
                         lists={[]} username={""} action={undefined} />
@@ -150,7 +149,7 @@ export const DetailsMarkdown = (props: Props) => {
 
     const checkOwnMarkup = (line: string, index: number) => {
 
-        type Component = "Alert" | "Photo" | "Checkbox" | "Todo" | "Video" | "TodoInclude" | undefined
+        type Component = "Alert" | "Photo" | "Checkbox" | "Todo" | "Video" | "TodoInclude" | "System" | undefined
         let type: Component = undefined
         const trimmedLine = line.trim()
 
@@ -158,15 +157,20 @@ export const DetailsMarkdown = (props: Props) => {
         if (trimmedLine.startsWith("$$Photo")) { type = "Photo" }
         if (trimmedLine.startsWith("$$Video")) { type = "Video" }
         if (trimmedLine.startsWith("$$Todo")) { type = "Todo" }
+        if (trimmedLine.startsWith("$$System")) { type = "System" }
         if (trimmedLine.startsWith("$$TodoInclude")) { type = "TodoInclude" }
         if (trimmedLine.startsWith("$$ [")) { type = "Checkbox" }
 
         switch (type) {
             case "Alert":
                 return getAlertJSX(line)
+            case "System":
+                return (
+                    <Chip label="System Command" variant="outlined" />
+                )
+    
             case "Checkbox":
                 return getCheckboxJSX(line, index)
-
             case "Photo":
                 return getPhotoJSX(line)
             case "Todo":
@@ -219,7 +223,7 @@ export const DetailsMarkdown = (props: Props) => {
             props.updateFunction(replacedContent)
         }
 
-        const handleAdd = ( label : string ) => {
+        const handleAdd = (label: string) => {
 
             const checkStr = "[]"
             let whiteSpace = ""
@@ -239,13 +243,13 @@ export const DetailsMarkdown = (props: Props) => {
 
             return (
                 <Box ml={2 * indent} mr={2 * indent}>
-                     <IconButton onClick={() => handleCheck(!isChecked, label)} >
-                        <Icon  
-                        color={isChecked?"primary":undefined} >{isChecked?"check_box_outline":"check_box_outline_blank"}</Icon>
+                    <IconButton onClick={() => handleCheck(!isChecked, label)} >
+                        <Icon
+                            color={isChecked ? "primary" : undefined} >{isChecked ? "check_box_outline" : "check_box_outline_blank"}</Icon>
                     </IconButton>
-                    <TextEdit value={label} callback={ (newL) =>  handleCheck(isChecked, newL) } />
-                              
-                    
+                    <TextEdit value={label} callback={(newL) => handleCheck(isChecked, newL)} />
+
+
                     {/* <TextField sx={{width:"80%"}} variant="standard" value={label} ></TextField> */}
                 </Box>
             )
@@ -256,8 +260,8 @@ export const DetailsMarkdown = (props: Props) => {
                     <IconButton>
                         <MyIcon icon="add" />
                     </IconButton>
-                    <TextEdit value="" callback={ (newL) =>  handleAdd( newL) } />
-                    
+                    <TextEdit value="" callback={(newL) => handleAdd(newL)} />
+
                 </Box>
             )
         }
@@ -317,7 +321,10 @@ export const DetailsMarkdown = (props: Props) => {
         const contentJSX = lines.map((currentLine, index: number) => {
 
             // Paragraph
-            if (currentLine.startsWith("$$Grid") || currentLine.startsWith("$$Card")) {
+            if (currentLine.startsWith("$$Grid") ||
+                currentLine.startsWith("$$Card") ||
+                currentLine.startsWith("$$Accordion")
+                ) {
 
                 let width = 6
                 const splittetLine = currentLine.split(":")
@@ -332,13 +339,35 @@ export const DetailsMarkdown = (props: Props) => {
                 const mdcontent = content
                 content = ""
                 const retJSX = <>
-                    {currentLine.startsWith("$$Grid") ?
+                    {currentLine.startsWith("$$Accordion") &&
                         <Grid item xs={12} md={width} >
+                            
+                            <Accordion sx={{ background: color }} >
+                                <AccordionSummary
+                                    expandIcon={<Icon>expand_more</Icon> }
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                    sx={{ background: color }}
+                                >
+                                    <Typography>more</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    {markdownWithExtension(mdcontent, offset)}
+                                </AccordionDetails>
+                            </Accordion>
+                            
+                        </Grid>
+                    }
+                    {currentLine.startsWith("$$Grid") &&
+                        <Grid item xs={12} md={width}  >
                             <Box>
                                 {markdownWithExtension(mdcontent, offset)}
                             </Box>
-                        </Grid> : <Grid xs={12} md={width} p={1}>
-                            <Card sx={{ background: color }}>
+                        </Grid>
+                    }
+                    {currentLine.startsWith("$$Card") &&
+                        <Grid xs={12} md={width} p={1}>
+                            <Card sx={{ background: color }} >
                                 <CardContent>
                                     {markdownWithExtension(mdcontent, offset)}
                                 </CardContent>

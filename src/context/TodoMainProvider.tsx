@@ -15,6 +15,8 @@ import { fetchTodosMainFcn } from "./TodoMainProviderFcns";
 
 export type TodoContent = {
     todos: TodoMainItem[]
+    openAiKey: string
+    setOpenAiKey: ( key : string ) => void
     // feedTodos: ( items : TodoMainItem[] ) => void
     fetchTodosMain: ( owner : string ) => void
     findItem: ( id? : string ) => TodoMainItem | undefined
@@ -28,6 +30,8 @@ export type TodoContent = {
 
 const defaultTodos: TodoContent = {
     todos: [],
+    openAiKey: "",
+    setOpenAiKey: () =>{},
     // feedTodos: () => {}
     fetchTodosMain: () => { },
     findItem: (  ) => { return undefined },
@@ -48,10 +52,16 @@ type Props = {
 const TodoMainProvider = (props: Props) => {
 
     const [todosState, setTodos] = useState<TodoMainItem[]>([]);
+    const [openAiKeyInt, setOpenAiKeyInt] = useState("");
 
     
     const heroContext = {
         todos: todosState,
+        openAiKey: openAiKeyInt,
+
+        setOpenAiKey:  ( key : string ) => {
+            setOpenAiKeyInt( key )
+        },
       
         fetchTodosMain: async ( owner : string ) => {
 

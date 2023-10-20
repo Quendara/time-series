@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton, Box, css, Icon, Menu, Avatar, ListItemIcon, MenuItem, ListItemText, ListItemAvatar, useMediaQuery } from '@mui/material';
 import { List, ListItem } from '@mui/material';
 import { Alert, AlertTitle } from '@mui/material';
@@ -9,6 +9,7 @@ import { MyIcon } from "./components/MyIcon";
 import { cssClasses } from "./Styles"
 
 import jwt_decode from "jwt-decode";
+import { TodoMainContext } from "./context/TodoMainProvider";
 
 // https://www.npmjs.com/package/amazon-cognito-identity-js
 
@@ -29,6 +30,8 @@ interface Props {
 
 
 const Auth = ({ authSuccessCallback, children }: Props) => {
+
+  const context = useContext(TodoMainContext)
 
 
   const [username, setUsername] = useState("");
@@ -82,6 +85,8 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
           const apikey = decoded["custom:APIKEY"];
           // const apikey_timetree = decoded["custom:TIMETREETOKEN"];
           const apikey_openai = decoded["custom:OPENAITOKEN"];
+
+          context.setOpenAiKey( apikey_openai )
 
           // console.log("apikey_timetree : ", apikey_timetree);
           console.log("apikey_openai : ", apikey_openai);

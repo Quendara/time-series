@@ -201,8 +201,6 @@ const App = () => {
         </Grid>
 
       </TodoMainProvider>
-
-
     </ThemeProvider>
   )
 

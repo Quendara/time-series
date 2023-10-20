@@ -7,7 +7,7 @@ import {
     useNavigate
 } from "react-router-dom";
 
-import { CardContent, Snackbar, Alert, Grid, Button, Avatar, IconButton, Stack, Dialog, DialogContent, Card } from '@mui/material';
+import { CardContent, Snackbar, Alert, Grid, Button, Avatar, IconButton, Stack, Dialog, DialogContent, Card, Box } from '@mui/material';
 
 import { MyCardHeader, MyDivider, MyCard2, MyDialogContentBlur } from "./StyledComponents"
 import { MyIcon } from "./MyIcon";
@@ -31,14 +31,15 @@ import { TodoListType } from "../components/List"
 import { Calendar } from "./Calendar";
 import { TodoMainContext } from "../context/TodoMainProvider";
 import { TodoProvider } from "../context/TodoProvider";
+import { GPTBox } from "../organisms/GptBox";
 
 
 interface Props {
     itemid: string;
     listtype: string;
     sx?: any;
-    readOnly:boolean;
-    
+    readOnly: boolean;
+
     lists: TodoMainItem[];
     username: string;
     action: React.ReactNode;
@@ -49,6 +50,8 @@ export const DetailsById = (props: Props) => {
     const navigate = useNavigate();
 
     const context = useContext(TodoMainContext)
+
+    
 
     const item = useGetTodo(props.itemid);
     const todos: TodoItem[] = useGetTodos(item?.listid);
@@ -63,8 +66,8 @@ export const DetailsById = (props: Props) => {
         <Details
             selectedItem={item}
             todos={todos}
-            sx={ props.sx }
-            readOnly ={props.readOnly}
+            sx={props.sx}
+            readOnly={props.readOnly}
             lists={props.lists}
             action={props.action ? props.action : myaction}
             listtype={props.listtype}
@@ -102,7 +105,7 @@ export const DetailsLinkById = (props: Props) => {
                         selectedItem={item}
                         todos={todos}
                         readOnly={false}
-                        
+
                         lists={props.lists}
                         action={props.action ? props.action : myaction}
                         listtype={props.listtype}
@@ -132,7 +135,7 @@ interface PropsDetails {
 
 export const Details = (props: PropsDetails) => {
     return (
-        <MyCard2 sx={ props.sx } >
+        <MyCard2 sx={props.sx} >
             <DetailsHeadless {...props} />
         </MyCard2>
     )
@@ -289,6 +292,22 @@ export const DetailsHeadless = (props: PropsDetails) => {
     const bull = <span style={{ "margin": "5px" }}>•</span>;
     const currentList = contextMainTodo.findItem(props.selectedItem?.listid)
 
+    const findSystemInstruction = ( inputString : string ) => {
+        // const inputString = "$$system:Hello World";
+
+        const regex = /\$\$System:(.+)/;
+        const match = inputString.match(regex);
+        
+        if (match && match.length > 1) {
+          const matchedString = match[1];
+          console.log(matchedString);
+          return matchedString
+        } else {
+          console.log("No match found.");
+          return ""
+        }        
+    }
+
 
     return (
         <>
@@ -310,9 +329,9 @@ export const DetailsHeadless = (props: PropsDetails) => {
                     <MyCardHeader
                         avatar={
                             <Avatar aria-label="recipe">
-                                { currentList ? 
-                                <MyIcon icon={currentList.icon} /> : currentItem.name[0] }
-                                
+                                {currentList ?
+                                    <MyIcon icon={currentList.icon} /> : currentItem.name[0]}
+
                             </Avatar>
                         }
                         action={
@@ -321,7 +340,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                         title={<TextEdit
                             value={currentItem.name}
                             label="Name"
-                            readonly={ props.readOnly }
+                            readonly={props.readOnly}
                             callback={(newName: string) => updateFunctionTodo({ id: currentItem.id, name: newName })} >
                         </TextEdit>
                         }
@@ -331,7 +350,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
                                     value={currentItem.group}
                                     groups={findUnique(props.todos, "group", false)}
                                     label="Group"
-                                    readonly={ props.readOnly }
+                                    readonly={props.readOnly}
                                     callback={(group) => updateFunctionTodo({ id: currentItem.id, group: group })} >
                                 </TextEdit>
                                 {bull}
@@ -366,25 +385,24 @@ export const DetailsHeadless = (props: PropsDetails) => {
                                     {!props.readOnly &&
 
                                         <Grid item xs={12}>
-                                            <Stack direction={"row"} spacing={2}>
+                                            <Box sx={{ position: "relative" }}>
+                                                <IconButton onClick={() => setEdit(true)} sx={{ position: "absolute", right: "2%", top: "-10px" }} >
+                                                    <MyIcon icon={"edit"} />
+                                                </IconButton>
 
-                                                <Button startIcon={<MyIcon icon={"edit"} />} variant="contained" onClick={() => setEdit(true)}>Edit </Button>
-
-                                                {(localitems.length === 0) &&
+                                                {/* {(localitems.length === 0) &&
                                                     <Button
                                                         variant="contained"
                                                         startIcon={<MyIcon icon={"rule"} />}
                                                         onClick={() => setAddTodos(true)}> Add Checklist
                                                     </Button>
-                                                }
-                                            </Stack>
-                                            <MyDivider />
+                                                } */}
+                                            </Box>
+                                            <MyDivider sx={{ width: "92%" }} />
                                         </Grid>
                                     }
                                     {selectedItemValue.length > 0 &&
                                         <Grid item xs={12}>
-
-
                                             <div className="markdown" >
                                                 <DetailsMarkdown
                                                     value={selectedItemValue}
@@ -396,6 +414,14 @@ export const DetailsHeadless = (props: PropsDetails) => {
                                     }
                                 </>
                             )}
+
+                            <Grid item xs={12}>
+                                <GPTBox 
+                                    apikey={contextMainTodo.openAiKey} 
+                                    systemMessage={findSystemInstruction( selectedItemValue )} >
+
+                                </GPTBox>
+                            </Grid>
                         </Grid>
 
 
