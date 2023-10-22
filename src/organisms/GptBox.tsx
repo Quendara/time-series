@@ -1,22 +1,60 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, Card, Divider, Stack, TextField } from "@mui/material"
+import { Box, Button, Card, Divider, Icon, IconButton, Stack, TextField } from "@mui/material"
 import { restCallToBackendAsync } from "../components/helpers";
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { MyMarkdown } from "../components/MyMarkdown";
+import { relative } from "path";
+
+
+interface ChatProps {
+    children?: React.ReactNode;
+    message: ChatCompletionMessageParam;
+
+}
+
+
+const ChatMessage = (props: ChatProps) => {
+
+    const clickHandle = () => {
+        if (props.message.content !== null) {
+            navigator.clipboard.writeText(props.message.content)
+        }
+    }
+
+    const getStyleFromMessage = (message: ChatCompletionMessageParam) => {
+
+        const common = { position: "relative", borderRadius: "5px", padding: "10px" }
+        switch (message.role) {
+            case "system":
+                return { ...common, ...{ width: "80%", marginLeft: "5%", backgroundColor: "#3B3B3B" } }
+            case "assistant":
+                return { ...common, ... { width: "80%", marginLeft: "0%", backgroundColor: "#0ea63c" } }
+            case "user":
+                return { ...common, ...{ width: "80%", marginLeft: "10%", backgroundColor: "#2C6BED" } }
+        }
+    }
+
+    return (
+        <>
+            {(props.message.content !== null && props.message.content.length > 0) &&
+                <Box m={1} sx={getStyleFromMessage(props.message)}>
+
+                    <IconButton sx={{ position: "absolute", right: "2%" }} onClick={clickHandle}><Icon>content_copy</Icon></IconButton>
+                    <Box sx={{ width: "95%" }}>
+                        <MyMarkdown content={props.message.content} />
+                    </Box>
+                </Box>
+            }
+        </>
+    )
+}
 
 interface Props {
     children?: React.ReactNode;
     systemMessage: string;
     apikey: string;
-
 }
-
-type MessageRole = "user" | "system" | "assistent"
-
-// interface Message {
-//     role:MessageRole
-//     content: string
-// }
 
 export const GPTBox = (props: Props) => {
 
@@ -73,10 +111,6 @@ export const GPTBox = (props: Props) => {
         let mgs: ChatCompletionMessageParam[] = []
         mgs = [...messages]
 
-
-
-        // 
-
         // mgs.push({ role: "system", content: "What's you favorite color?" })
         mgs.push({ role: "user", content: current })
         setCurrent("")
@@ -104,28 +138,14 @@ export const GPTBox = (props: Props) => {
         }
     }
 
-    const getStyleFromMessage = (message: ChatCompletionMessageParam) => {
 
-        const common = { borderRadius: "5px", padding: "10px" }
-        switch (message.role) {
-            case "system":
-                return { ...common, ...{ width: "80%", marginLeft: "5%", backgroundColor: "#3B3B3B" } }
-            case "assistant":
-                return { ...common, ... { width: "80%", marginLeft: "0%", backgroundColor: "#0ea63c" } }
-            case "user":
-                return { ...common, ...{ width: "80%", marginLeft: "10%", backgroundColor: "#2C6BED" } }
-
-        }
-    }
 
 
     return (
         <>
             <Box m={3} sx={{ color: "#FFF" }} >
                 {messages.map(message => (
-                    <Box m={1} sx={getStyleFromMessage(message)}>
-                        {message.content}
-                    </Box>
+                    <ChatMessage message={message} />
                 )
 
                 )}
