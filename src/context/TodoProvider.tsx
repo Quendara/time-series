@@ -66,9 +66,16 @@ const TodoProvider = (props: Props) => {
             //   console.log("subscriptionUpdateTodos (item.listid is not from this list) ", item.listid, listid)
             //   return;
             // }
+
+            const hasId = todosState.filter( (todo) => todo.id === item.id )
+            if( hasId.length > 0 ){
+                console.log("onCreateTodos... ALREADY on LIST length : ", todosState.length );    
+            }
+            else{
+                setTodos([...todosState, item]); // push to the end
+                console.log("onCreateTodos... added length : ", todosState.length );    
+            }
     
-            setTodos([...todosState, item]); // push to the end
-            console.log("onCreateTodos... length : ", todosState.length );
           },
           error: ( error : string )  => {
             console.log("error onCreateTodos : ", error);
