@@ -125,9 +125,9 @@ const TodoProvider = (props: Props) => {
     
         return () => {
             console.log( "useEffect.unsubscribe" ) 
-            // subscriptionCreateTodos.unsubscribe();
-            subscriptionUpdateTodos.unsubscribe();
+            subscriptionCreateTodos.unsubscribe();
             subscriptionDeleteTodos.unsubscribe();
+            subscriptionUpdateTodos.unsubscribe();  
         };
     
       },[todosState])    

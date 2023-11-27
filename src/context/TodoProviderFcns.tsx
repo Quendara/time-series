@@ -4,7 +4,7 @@ import { TodoItem } from "../models/TodoItems"
 
 export async function fetchTodos( listid : string )  {
 
-    console.log("useGetTodos.fetchTodos (listid) : ", listid);
+    console.log("fetchTodos (listid) : ", listid);
 
     if (listid === "current") {
 
@@ -25,7 +25,7 @@ export async function fetchTodos( listid : string )  {
         `      
       let response : any = await API.graphql(graphqlOperation( listCurrentTodos, { filter: { listid: { eq: "" + listid } }, limit: 1000 }));
       const items : TodoItem[] = response.data.listTodos.items
-      console.log("useGetTodos  : ", items);
+      console.log("fetched itemns  : ", items);
       return items
 
     }
@@ -34,7 +34,7 @@ export async function fetchTodos( listid : string )  {
       let response : any = await API.graphql(graphqlOperation( queryTodos, { listid: listid } ) );
       
       const items : TodoItem[] = response.data.queryTodos.items
-      console.log( `useGetTodos.fetchTodos  listid : ${listid} items: `, items);
+      console.log( `fetchTodos  listid : ${listid} items: `, items);
       return items
   
     }
