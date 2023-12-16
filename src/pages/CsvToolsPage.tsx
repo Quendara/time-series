@@ -55,7 +55,8 @@ export const CsvToolsPage = ({ }) => {
             <Grid item xs={6}   >
                 <Stepper nonLinear activeStep={activeStep}>
                     <Step><StepButton color="inherit" onClick={handleStep(0)}>Data Input</StepButton></Step>
-                    <Step><StepButton color="inherit" onClick={handleStep(1)}>Output</StepButton></Step>
+                    <Step><StepButton color="inherit" onClick={handleStep(1)}>Configuration</StepButton></Step>
+                    <Step><StepButton color="inherit" onClick={handleStep(2)}>Output</StepButton></Step>
                 </Stepper>
             </Grid>
         </Grid>
@@ -92,10 +93,18 @@ export const CsvToolsPage = ({ }) => {
                         skippedLinesCallback={(x: string[]) => setSkippedLines(x)}
                         headerCallback={(x: string[]) => setHeaderStringArr(x)}
                     />
-
                 </Grid>
-
             }
+            {activeStep === 2 &&
+                <Grid item xs={12} >
+                    <CsvTools
+                        csvInput={inputData}
+                        configuation={config}
+                        skippedLinesCallback={(x: string[]) => setSkippedLines(x)}
+                        headerCallback={(x: string[]) => setHeaderStringArr(x)}
+                    />
+                </Grid>
+            }            
 
 
         </Grid>

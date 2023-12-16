@@ -221,7 +221,7 @@ export const CsvTools = (props: PropsCsvTools) => {
 
                             <Grid item xs={getColunmWidth(columnWidth)} >
                                 <MyCard>
-                                    <MyCardHeader title={(sumArray(group.listitems, sumField))} subheader={group.value} />
+                                    <MyCardHeader subheader={(sumArray(group.listitems, sumField))} title={group.value} />
 
                                     {subgroupname.length === 0 ? (
                                         <>
@@ -238,7 +238,7 @@ export const CsvTools = (props: PropsCsvTools) => {
                                         <>
                                             {findUnique(group.listitems, subgroupname, false).map((subgroup: any) => (
                                                 <>
-                                                    <MySubCardHeader subheader={subgroup.value} title={[(sumArray(subgroup.listitems, sumField))]} />
+                                                    <MySubCardHeader title={subgroup.value} subheader={[(sumArray(subgroup.listitems, sumField))]} />
 
                                                     {subgroup.listitems.map((line: any) => (<>
 

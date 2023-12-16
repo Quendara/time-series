@@ -63,6 +63,12 @@ export const CsvToolsConfiguration = (props: Props) => {
         console.log(state)
     };
 
+    // useEffect(() => {
+
+    //     setJsonConfig( props.configuation )
+
+    // }, [props.configuation]);    
+
     useEffect(() => {
 
         props.configCallback(createJsonConfig())
@@ -71,7 +77,13 @@ export const CsvToolsConfiguration = (props: Props) => {
 
 
 
-    const createJsonConfig = () => {
+    const createJsonConfig = ( config? : string ) => {
+
+        if( config !== undefined ){
+            setJsonConfig( config )
+            return config
+        }
+        
 
         const json = {
             "groupname": groupname,
@@ -111,7 +123,7 @@ export const CsvToolsConfiguration = (props: Props) => {
                     <MyCard>
                         <Box style={{ background: blue, padding: "5px" }} >Config </Box>
                         <MyTextareaAutosize
-                            value={configData ? configData : createJsonConfig()}
+                            value={ configData ? configData : createJsonConfig( props.configuation )}
                             minRows={20}
                             onChange={e => setJsonConfig(e.target.value)} />
 
@@ -129,7 +141,7 @@ export const CsvToolsConfiguration = (props: Props) => {
                             <ConfigItem header="Seperator" >
                                 <TextEdit
                                     value={seperator}
-                                    label="Primary"
+                                    label="Seperator"
                                     groups={[{ value: "\t", key: "Tab" }, { value: ",", key: "Komma" }, { value: ";", key: "Semikolon" }]}
                                     callback={(s) => { handleChange("seperator", s) }}
                                 />
@@ -139,12 +151,12 @@ export const CsvToolsConfiguration = (props: Props) => {
                             <ConfigItem header="Sum Field" >
                                 <TextEdit
                                     value={sumField}
-                                    label="Primary"
+                                    label="Sum Field"
                                     groups={getOptions(props.header)}
                                     callback={(s) => { setSumField(s) }}
                                 />
                             </ConfigItem>
-                        </Grid>                        
+                        </Grid>
 
                         <Grid item xs={6} >
                             <ConfigItem header="Group" >
@@ -166,9 +178,9 @@ export const CsvToolsConfiguration = (props: Props) => {
                                 />
                             </ConfigItem>
                         </Grid>
-                       
+
                         {/* <Grid item xs={6} >
-                            <ConfigItem header="Width" >
+                            <ConfigItem header="Column Width" >
                                 <TextEdit
                                     value={columnWidth}
                                     label="Primary"
@@ -180,42 +192,45 @@ export const CsvToolsConfiguration = (props: Props) => {
 
                         <Grid item xs={12} >
                             <ConfigItem header="Specify your Layout " >
-                                <ListItemText
-                                    primary={
+
+                                <Grid container justifyContent="flex-start" spacing={2} >
+                                    <Grid item xs={12} >
                                         <TextEdit
                                             value={state.primary}
                                             label="Primary"
                                             groups={getOptions(props.header)}
                                             callback={(s) => { handleChange("primary", s) }}
                                         />
-                                    }
-                                    secondary={
-                                        <>
-                                            <TextEdit
-                                                value={state.secondaryA}
-                                                label="SecondaryA"
-                                                groups={getOptions(props.header)}
-                                                callback={(s) => { handleChange("secondaryA", s) }}
+                                    </Grid>
+                                    <Grid item xs={5} >
+                                        <TextEdit
+                                            value={state.secondaryA}
+                                            label="SecondaryA"
+                                            groups={getOptions(props.header)}
+                                            callback={(s) => { handleChange("secondaryA", s) }}
 
-                                            />
-                                            {bull}
-                                            <TextEdit
-                                                value={state.secondaryB}
-                                                label="SecondaryB"
-                                                groups={getOptions(props.header)}
-                                                callback={(s) => { handleChange("secondaryB", s) }}
-                                            />
-                                        </>
-                                    }
-                                />
+                                        />
+                                    </Grid>
+                                    <Grid item xs={1} >
+                                        {bull}
+                                    </Grid>
+                                    <Grid item xs={6} >
+                                        <TextEdit
+                                            value={state.secondaryB}
+                                            label="SecondaryB"
+                                            groups={getOptions(props.header)}
+                                            callback={(s) => { handleChange("secondaryB", s) }}
+                                        />
+                                    </Grid>
+                                </Grid>
 
                             </ConfigItem>
                         </Grid>
                     </Grid>
-                    </Grid>
-                    </Grid>
+                </Grid>
+            </Grid>
 
-                </>
+        </>
 
-                )
+    )
 }
