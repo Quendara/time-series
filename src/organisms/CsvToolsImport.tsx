@@ -54,7 +54,7 @@ export const CsvToolsImport = (props: Props) => {
         <>
 
             <MyTextareaAutosize
-                sx={{ whiteSpace: "nowrap", minHeight: "50vh" }}
+                sx={{ whiteSpace: "nowrap", minHeight: "40vh" }}
                 value={ inputData }
                 onChange={e => props.onChange(e.target.value)} />
 

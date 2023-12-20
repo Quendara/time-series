@@ -59,7 +59,7 @@ export const CsvToolsPage = ({ }) => {
                     <Grid item xs={12} p={3}  >
                         <MyCard sx={{ margin: "10px" }}>
 
-                            <Box style={{ background: blue, padding: "5px" }} >Config </Box>
+                            <Box style={{ background: blue, padding: "5px" }} >Input Data </Box>
                             <CardContent>
 
                                 <CsvToolsImport 

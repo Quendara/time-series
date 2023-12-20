@@ -159,8 +159,8 @@ export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {
         if( properties.length !== result.headers.length ){
 
             result.skippedLines.push( <ListItemText 
-                    primary={str}
-                    secondary={ "line length !== headers length : "  +  properties.length +" != " +  result.headers.length }
+                    primary={str.length === 0 ?"<EMPTY>":str}
+                    secondary={ i + " ) line length !== headers length : "  +  properties.length +" != " +  result.headers.length }
                  />
                  )
             

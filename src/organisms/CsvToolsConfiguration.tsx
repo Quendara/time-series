@@ -87,15 +87,12 @@ export const CsvToolsConfiguration = (props: Props) => {
                     <MyCard>
                         <Box style={{ background: blue, padding: "5px" }} >Config </Box>
                         <MyTextareaAutosize
+                            
                             value={createJsonConfig()}
-                            minRows={20} />
+                            minRows={15} />
                         {/* onChange={e => setJsonConfig(e.target.value)} /> */}
 
-                        <Divider></Divider>
-                        <ListItemText
-                            primary="groupname"
-                            secondary={myContext.groupname}
-                        />
+                        
                     </MyCard>
                 </Grid>
 
