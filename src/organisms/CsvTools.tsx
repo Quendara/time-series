@@ -2,14 +2,14 @@ import React, { Component, useState, useEffect, useContext } from "react";
 
 
 
-import { AlertTitle, Alert, Toolbar, Box, Button, TextField, Grid, Chip, Card, CardContent, FormGroup, Paper, ListItem, ListItemText, Divider, Stepper, Step, StepButton } from '@mui/material';
+import { AlertTitle, Alert, Toolbar, Box, Button, TextField, Grid, Chip, Card, CardContent, FormGroup, Paper, ListItem, ListItemText, Divider, Stepper, Step, StepButton, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { MyCard, MyCardHeader, MySubCardHeader, MyTextareaAutosize } from "../components/StyledComponents"
 
 import { TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 import { findUnique, csvToJson, sumArray } from "../components/helpers";
 import { CsvContext } from "../context/CsvProvider";
-
+import { MyIcon } from "../components/MyIcon";
 
 
 
@@ -101,7 +101,7 @@ const ListCsvItem = (props: Props) => {
 interface PropsCsvTools {
     csvInput: string;
     // configuation: string;
-    skippedLinesCallback: (x: string[]) => void
+    skippedLinesCallback: (x: JSX.Element[]) => void
     headerCallback: (x: string[]) => void;
 }
 
@@ -115,15 +115,11 @@ export const CsvTools = (props: PropsCsvTools) => {
     const [data, setData] = useState<any>([]);
     const [skippedLines, setSkippedLines] = useState<any>([]);
 
-   const myContext =  useContext(CsvContext)
-
-
-
+    const myContext = useContext(CsvContext)
 
     useEffect(() => {
         performHandle()
 
-        // setJsonConfig(props.configuation)
 
         const output = csvToJson(props.csvInput, myContext.seperator)
 
@@ -134,7 +130,7 @@ export const CsvTools = (props: PropsCsvTools) => {
         props.headerCallback(output.headers)
 
 
-    }, [props.csvInput ]);
+    }, [props.csvInput]);
 
     function performHandle() {
 
@@ -148,11 +144,11 @@ export const CsvTools = (props: PropsCsvTools) => {
             if (line.length === 0)
                 continue;
 
-            const lineArr = lines[i].split( myContext.seperator);
+            const lineArr = lines[i].split(myContext.seperator);
 
             // so long header array is 0 
             if (localHeaderStringArr.length === 0) {
-                localHeaderStringArr = lines[i].split( myContext.seperator);
+                localHeaderStringArr = lines[i].split(myContext.seperator);
             }
         }
 
@@ -172,42 +168,28 @@ export const CsvTools = (props: PropsCsvTools) => {
         }
     }
 
-    // const handleChange = (key: string, value: string) => {
-    //     setState({ ...state, [key]: value });
-    //     // console.log(state)
-    // };
-
-
-    // // TODO remove setJsonConfig
-    // const setJsonConfig = (data: string) => {
-
-    //     const jsonObj: any = JSON.parse(data);
-
-    //     console.log("groupname", jsonObj.hasOwnProperty('groupname'))
-
-    //     jsonObj.hasOwnProperty('groupname') ? setGroupname(jsonObj['groupname']) : ""
-    //     jsonObj.hasOwnProperty('subgroupname') ? setSubGroupname(jsonObj['subgroupname']) : ""
-    //     jsonObj.hasOwnProperty('sumField') ? setSumField(jsonObj['sumField']) : ""
-    //     jsonObj.hasOwnProperty('seperator') ? setSeperator(jsonObj['seperator']) : ""
-
-    //     jsonObj.hasOwnProperty('columnWidth') ? setColumnWidth(jsonObj['columnWidth']) : ""
-    //     jsonObj.hasOwnProperty('format.primary') ? handleChange("primary", jsonObj['format.primary']) : ""
-    //     jsonObj.hasOwnProperty('format.secondaryA') ? handleChange("secondaryA", jsonObj['format.secondaryA']) : ""
-    //     jsonObj.hasOwnProperty('format.secondaryB') ? handleChange("secondaryB", jsonObj['format.secondaryB']) : ""
-    // }
-
     return (
 
         <Grid container justifyContent="flex-start" spacing={1} >
             <Grid item xs={12} >
-                <MyCard>
-                    <MyCardHeader title="Skipped Lines" subheader={"Count #" + skippedLines.length } />
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<MyIcon icon="expand_more" /> }
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                         { skippedLines.length === 0 ? "No Skipped Lines " : <Alert severity="warning">Skipped Lines : {skippedLines.length}</Alert> }
+                    </AccordionSummary>
+                    <AccordionDetails>
+
+
                     {skippedLines.map((line: any) => (
                         <p>
-                            {/* {line} */}
+                            {line} 
                         </p>
                     ))}
-                </MyCard>
+                     </AccordionDetails>
+                </Accordion>
             </Grid>
             {/* <Grid item xs={12} >
                 {data.map((line: any) => (
@@ -223,11 +205,11 @@ export const CsvTools = (props: PropsCsvTools) => {
                     {
                         groups.map((group, index) => (
 
-                            <Grid item xs={getColunmWidth( myContext.columnWidth)} >
+                            <Grid item xs={getColunmWidth(myContext.columnWidth)} >
                                 <MyCard>
                                     <MyCardHeader subheader={(sumArray(group.listitems, myContext.sumField))} title={group.value} />
 
-                                    { myContext.subgroupname.length === 0 ? (
+                                    {myContext.subgroupname.length === 0 ? (
                                         <>
                                             {group.listitems.map((line: any) => (<>
 
@@ -242,7 +224,7 @@ export const CsvTools = (props: PropsCsvTools) => {
                                         <>
                                             {findUnique(group.listitems, myContext.subgroupname, false).map((subgroup: any) => (
                                                 <>
-                                                    <MySubCardHeader title={subgroup.value} subheader={[(sumArray(subgroup.listitems, myContext.sumField ))]} />
+                                                    <MySubCardHeader title={subgroup.value} subheader={[(sumArray(subgroup.listitems, myContext.sumField))]} />
 
                                                     {subgroup.listitems.map((line: any) => (<>
 

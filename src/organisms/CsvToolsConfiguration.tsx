@@ -39,8 +39,8 @@ interface Props {
 export const CsvToolsConfiguration = (props: Props) => {
 
     // const [headerStringArr, setHeaderStringArr] = useState<string[]>([]);
-    const myContext =  useContext(CsvContext)
-    
+    const myContext = useContext(CsvContext)
+
     const getOptions = (headerStringArr: string[]) => {
         let arr: any = headerStringArr.map(x => { return { value: x } })
         arr.push({ key: "EMPTY", value: "" })
@@ -50,7 +50,7 @@ export const CsvToolsConfiguration = (props: Props) => {
 
     const handleChange = (key: string, value: string) => {
         myContext.setFormat({ ...myContext.format, [key]: value });
-        console.log( "handleChange" , myContext.format)
+        console.log("handleChange", myContext.format)
     };
 
 
@@ -58,12 +58,12 @@ export const CsvToolsConfiguration = (props: Props) => {
 
         // props.configCallback(createJsonConfig())
 
-    }, [ myContext.groupname, myContext.subgroupname, myContext.seperator, myContext.sumField, myContext.columnWidth ]);
+    }, [myContext.groupname, myContext.subgroupname, myContext.seperator, myContext.sumField, myContext.columnWidth]);
 
 
 
-    const createJsonConfig = ( ) => {
-    
+    const createJsonConfig = () => {
+
         const json = {
             "groupname": myContext.groupname,
             "subgroupname": myContext.subgroupname,
@@ -78,22 +78,7 @@ export const CsvToolsConfiguration = (props: Props) => {
         return JSON.stringify(json, null, 2)
     }
 
-    // const setJsonConfig = (data: string) => {
-    //     setConfigData(data)
-    //     const jsonObj: any = JSON.parse(data);
 
-    //     console.log("groupname", jsonObj.hasOwnProperty('groupname'))
-
-    //     jsonObj.hasOwnProperty('groupname') ? setGroupname(jsonObj['groupname']) : ""
-    //     jsonObj.hasOwnProperty('subgroupname') ? setSubGroupname(jsonObj['subgroupname']) : ""
-    //     jsonObj.hasOwnProperty('sumField') ? setSumField(jsonObj['sumField']) : ""
-    //     jsonObj.hasOwnProperty('seperator') ? setSeperator(jsonObj['seperator']) : ""
-
-    //     jsonObj.hasOwnProperty('columnWidth') ? setColumnWidth(jsonObj['columnWidth']) : ""
-    //     jsonObj.hasOwnProperty('format.primary') ? handleChange("primary", jsonObj['format.primary']) : ""
-    //     jsonObj.hasOwnProperty('format.secondaryA') ? handleChange("secondaryA", jsonObj['format.secondaryA']) : ""
-    //     jsonObj.hasOwnProperty('format.secondaryB') ? handleChange("secondaryB", jsonObj['format.secondaryB']) : ""
-    // }
 
     return (
         <>
@@ -102,63 +87,66 @@ export const CsvToolsConfiguration = (props: Props) => {
                     <MyCard>
                         <Box style={{ background: blue, padding: "5px" }} >Config </Box>
                         <MyTextareaAutosize
-                            value={ createJsonConfig() }
+                            value={createJsonConfig()}
                             minRows={20} />
-                            {/* onChange={e => setJsonConfig(e.target.value)} /> */}
+                        {/* onChange={e => setJsonConfig(e.target.value)} /> */}
 
                         <Divider></Divider>
                         <ListItemText
                             primary="groupname"
-                            secondary={ myContext.groupname}
+                            secondary={myContext.groupname}
                         />
                     </MyCard>
                 </Grid>
 
-                <Grid item xs={6}   >
-                    <Grid container justifyContent="flex-start" spacing={1} >
-                        <Grid item xs={6} >
-                            <ConfigItem header="Seperator" >
+                <Grid item xs={6} >
+                    <Grid container justifyContent="flex-start" spacing={1} p="10px">
+                    <Grid item xs={12} >
+                        <ConfigItem header="Settings" >
+                        <Grid container justifyContent="flex-start" spacing={4} p="10px" >
+                            <Grid item xs={6} >
+                                    <TextEdit
+                                        value={myContext.seperator}
+                                        label="Seperator"
+                                        groups={[{ value: "\t", key: "Tab" }, { value: ",", key: "Komma" }, { value: ";", key: "Semikolon" }]}
+                                        callback={(s) => { myContext.setSeperator( s ) }}
+                                    />
+                            </Grid>
+                            <Grid item xs={6} >
+
                                 <TextEdit
-                                    value={ myContext.seperator}
-                                    label="Seperator"
-                                    groups={[{ value: "\t", key: "Tab" }, { value: ",", key: "Komma" }, { value: ";", key: "Semikolon" }]}
-                                    callback={(s) => { handleChange("seperator", s) }}
-                                />
-                            </ConfigItem>
-                        </Grid>
-                        <Grid item xs={6} >
-                            <ConfigItem header="Sum Field" >
-                                <TextEdit
-                                    value={ myContext.sumField}
+                                    value={myContext.sumField}
                                     label="Sum Field"
                                     groups={getOptions(props.header)}
                                     callback={(s) => { myContext.setSumField(s) }}
                                 />
-                            </ConfigItem>
-                        </Grid>
 
-                        <Grid item xs={6} >
-                            <ConfigItem header="Group" >
+                            </Grid>
+
+                            <Grid item xs={6} >
+
                                 <TextEdit
                                     value={myContext.groupname}
-                                    label="Primary"
+                                    label="Group"
                                     groups={getOptions(props.header)}
                                     callback={(s) => { myContext.setGroupname(s) }}
                                 />
-                            </ConfigItem>
-                        </Grid>
-                        <Grid item xs={6} >
-                            <ConfigItem header="SubGroup" >
+
+                            </Grid>
+                            <Grid item xs={6} >
+
                                 <TextEdit
-                                    value={ myContext.subgroupname}
-                                    label="Primary"
+                                    value={myContext.subgroupname}
+                                    label="SubGroup"
                                     groups={getOptions(props.header)}
                                     callback={(s) => { myContext.setSubGroupname(s) }}
                                 />
-                            </ConfigItem>
-                        </Grid>
+                            </Grid>
+                            </Grid>
+                        </ConfigItem>
+                    </Grid>
 
-                        {/* <Grid item xs={6} >
+                    {/* <Grid item xs={6} >
                             <ConfigItem header="Column Width" >
                                 <TextEdit
                                     value={columnWidth}
@@ -169,42 +157,42 @@ export const CsvToolsConfiguration = (props: Props) => {
                             </ConfigItem>
                         </Grid> */}
 
-                        <Grid item xs={12} >
-                            <ConfigItem header="Specify your Layout " >
-
-                                <Grid container justifyContent="flex-start" spacing={2} >
-                                    <Grid item xs={12} >
-                                        <TextEdit
-                                            value={myContext.format.primary}
-                                            label="Primary"
-                                            groups={getOptions(props.header)}
-                                            callback={(s) => { handleChange("primary", s) }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={5} >
-                                        <TextEdit
-                                            value={myContext.format.secondaryA}
-                                            label="SecondaryA"
-                                            groups={getOptions(props.header)}
-                                            callback={(s) => { handleChange("secondaryA", s) }}
-
-                                        />
-                                    </Grid>
-                                    <Grid item xs={1} >
-                                        {bull}
-                                    </Grid>
-                                    <Grid item xs={6} >
-                                        <TextEdit
-                                            value={ myContext.format.secondaryB}
-                                            label="SecondaryB"
-                                            groups={getOptions(props.header)}
-                                            callback={(s) => { handleChange("secondaryB", s) }}
-                                        />
-                                    </Grid>
+                    <Grid item xs={12} >
+                        <ConfigItem header="Specify your Layout " >
+                            <Grid container justifyContent="flex-start" spacing={2} >
+                                <Grid item xs={12} >
+                                    <TextEdit
+                                        value={myContext.format.primary}
+                                        label="Primary"
+                                        groups={getOptions(props.header)}
+                                        callback={(s) => { handleChange("primary", s) }}
+                                    />
                                 </Grid>
+                                <Grid item xs={5} >
+                                    <TextEdit
+                                        value={myContext.format.secondaryA}
+                                        label="SecondaryA"
+                                        groups={getOptions(props.header)}
+                                        callback={(s) => { handleChange("secondaryA", s) }}
 
-                            </ConfigItem>
-                        </Grid>
+                                    />
+                                </Grid>
+                                <Grid item xs={1} >
+                                    {bull}
+                                </Grid>
+                                <Grid item xs={6} >
+                                    <TextEdit
+                                        value={myContext.format.secondaryB}
+                                        label="SecondaryB"
+                                        groups={getOptions(props.header)}
+                                        callback={(s) => { handleChange("secondaryB", s) }}
+                                    />
+                                </Grid>
+                            </Grid>
+
+                        </ConfigItem>
+
+                    </Grid>
                     </Grid>
                 </Grid>
             </Grid>

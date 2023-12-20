@@ -4,6 +4,7 @@ import { findUniqueJs  } from "./helper"
 import { sortArrayByJs  } from "./helper"
 import { TodoMainItem } from "../models/TodoItems";
 
+import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, CardContent, IconButton, Box, css, Icon, Menu, Avatar, ListItemIcon, MenuItem, ListItemText, ListItemAvatar, useMediaQuery } from '@mui/material';
 
 export const bull = <span style={{ "margin": "5px" }}>•</span>;
 
@@ -80,7 +81,7 @@ export function mapGenericToStringGroup<T>( group: GenericGroup<T>[] | undefined
 
 export interface CsvReturn{
     json: any[], 
-    skippedLines: string[],
+    skippedLines: JSX.Element[],
     headers: string[]
 }
 
@@ -157,8 +158,13 @@ export const csvToJson = (csv: string, seperator : string ) : CsvReturn => {
 
         if( properties.length !== result.headers.length ){
 
-            result.skippedLines.push( "line length !== headers length : "  +  properties.length +" != " +  result.headers.length )
-            result.skippedLines.push( str )
+            result.skippedLines.push( <ListItemText 
+                    primary={str}
+                    secondary={ "line length !== headers length : "  +  properties.length +" != " +  result.headers.length }
+                 />
+                 )
+            
+            
             continue
         }
 

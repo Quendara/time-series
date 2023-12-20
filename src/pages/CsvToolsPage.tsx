@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
-import { Grid, Stepper, Step, StepButton, Box, CardHeader, CardContent } from '@mui/material';
+import { Grid, Stepper, Step, StepButton, Box, CardHeader, CardContent, Button } from '@mui/material';
 
 
 import { CsvToolsConfiguration } from '../organisms/CsvToolsConfiguration';
 import { CsvTools } from "../organisms/CsvTools";
 import { MyCard, MyTextareaAutosize } from "../components/StyledComponents";
 import { CsvProvider } from "../context/CsvProvider";
+import { CsvToolsImport } from "../organisms/CsvToolsImport";
 
 const blue = "#02735E"
 const bull: any = <span style={{ "margin": "5px" }}>•</span>;
@@ -22,30 +23,24 @@ const data = `Jahr; Ausgaben; Kategorie
 2021; 100; Coal
 `
 
-const staticconfig = `
-{
-    "groupname": "Jahr",
-    "subgroupname": "",
-    "sumField": "",
-    "seperator": ";",
-    "columnWidth": "3",
-    "format.primary": "Ausgaben",
-    "format.secondaryA": "Kategorie",
-    "format.secondaryB": ""
-  }`
 
+ 
 
 
 export const CsvToolsPage = ({ }) => {
 
+    
     const [inputData, setInputData] = useState(data);
+
     const [activeStep, setActiveStep] = React.useState(0);
-    const [skippedLines, setSkippedLines] = useState<string[]>([]);
+    const [skippedLines, setSkippedLines] = useState<JSX.Element[]>([]);
     const [headerStringArr, setHeaderStringArr] = useState<string[]>([]);
 
     const handleStep = (step: number) => () => {
         setActiveStep(step);
     };
+
+ 
 
     return (
         <CsvProvider>
@@ -66,29 +61,30 @@ export const CsvToolsPage = ({ }) => {
 
                             <Box style={{ background: blue, padding: "5px" }} >Config </Box>
                             <CardContent>
-                                <MyTextareaAutosize
 
-                                    value={inputData ? inputData : ""}
-                                    //rowsMin={20}
-                                    onChange={e => setInputData(e.target.value)} />
+                                <CsvToolsImport 
+                                    data={inputData}
+                                    onChange={(data)=>setInputData(data)}
+                                    />
+                  
+
+                                <CsvTools
+                                    csvInput={inputData}
+                                    skippedLinesCallback={(x) => setSkippedLines(x)}
+                                    headerCallback={(x: string[]) => setHeaderStringArr(x)}
+                                />
                             </CardContent>
                         </MyCard>
-
-
-
                     </Grid>
                 }
                 {activeStep === 1 &&
                     <Grid item xs={12} >
                         <CsvToolsConfiguration
                             header={headerStringArr}
-                        
-                            
                         />
                         <CsvTools
                             csvInput={inputData}
-                            
-                            skippedLinesCallback={(x: string[]) => setSkippedLines(x)}
+                            skippedLinesCallback={(x) => setSkippedLines(x)}
                             headerCallback={(x: string[]) => setHeaderStringArr(x)}
                         />
                     </Grid>
@@ -97,8 +93,8 @@ export const CsvToolsPage = ({ }) => {
                     <Grid item xs={12} >
                         <CsvTools
                             csvInput={inputData}
-                            
-                            skippedLinesCallback={(x: string[]) => setSkippedLines(x)}
+
+                            skippedLinesCallback={( x ) => setSkippedLines(x)}
                             headerCallback={(x: string[]) => setHeaderStringArr(x)}
                         />
                     </Grid>

@@ -19,12 +19,13 @@ export type CsvContent = {
     sumField: string
     columnWidth: string
     format: Format
-    setSeperator: ( v : string ) => void
-    setGroupname: ( v : string ) => void
-    setSubGroupname: ( v : string ) => void
-    setSumField: ( v : string ) => void
-    setColumnWidth: ( v : string ) => void
-    setFormat: ( v : Format ) => void
+    setSeperator: (v: string) => void
+    setGroupname: (v: string) => void
+    setSubGroupname: (v: string) => void
+    setSumField: (v: string) => void
+    setColumnWidth: (v: string) => void
+    setFormat: (v: Format) => void
+    setJsonConfig: (v: string) => void
 }
 
 const defaultTodos: CsvContent = {
@@ -33,13 +34,14 @@ const defaultTodos: CsvContent = {
     subgroupname: "",
     sumField: "",
     columnWidth: "",
-    format:   {primary:"", secondaryA:"", secondaryB:""},
-    setSeperator: () =>{},
-    setGroupname: () =>{},
-    setSubGroupname: () =>{},
-    setSumField: () =>{},
-    setColumnWidth: () =>{},
-    setFormat: () =>{},
+    format: { primary: "", secondaryA: "", secondaryB: "" },
+    setSeperator: () => { },
+    setGroupname: () => { },
+    setSubGroupname: () => { },
+    setSumField: () => { },
+    setColumnWidth: () => { },
+    setFormat: () => { },
+    setJsonConfig: () => { },
 }
 
 const CsvContext = React.createContext<CsvContent>(defaultTodos);
@@ -59,10 +61,15 @@ const CsvProvider = (props: Props) => {
     const [sumField, setSumField] = useState<string>("");
     const [columnWidth, setColumnWidth] = useState<string>("3");
     const [format, setFormat] = React.useState<Format>(
-        {primary:"", secondaryA:"", secondaryB:""}
-    );    
+        { primary: "", secondaryA: "", secondaryB: "" }
+    );
 
-    
+    const handleChange = (key: string, value: string) => {
+        setFormat({ ...format, [key]: value });
+        console.log( "handleChange" , format)
+    };    
+
+
     const heroContext = {
         seperator: seperator,
         groupname: groupname,
@@ -70,24 +77,40 @@ const CsvProvider = (props: Props) => {
         sumField: sumField,
         columnWidth: columnWidth,
         format: format,
-        setSeperator: ( x : string ) =>{
+        setSeperator: (x: string) => {
             setSeperator(x)
         },
-        setGroupname: ( x : string ) =>{
+        setGroupname: (x: string) => {
             setGroupname(x)
         },
-        setSubGroupname:  ( x : string ) =>{
+        setSubGroupname: (x: string) => {
             setSubGroupname(x)
         },
-        setSumField:  ( x : string ) =>{
+        setSumField: (x: string) => {
             setSumField(x)
         },
-        setColumnWidth:  ( x : string ) =>{
+        setColumnWidth: (x: string) => {
             setColumnWidth(x)
         },
-        setFormat: ( x : Format ) =>{
+        setFormat: (x: Format) => {
             setFormat(x)
         },
+        setJsonConfig : (data: string) => {
+            // setConfigData(data)
+            const jsonObj: any = JSON.parse(data);
+
+            console.log("groupname", jsonObj.hasOwnProperty('groupname'))
+
+            jsonObj.hasOwnProperty('groupname') ? setGroupname(jsonObj['groupname']) : ""
+            jsonObj.hasOwnProperty('subgroupname') ? setSubGroupname(jsonObj['subgroupname']) : ""
+            jsonObj.hasOwnProperty('sumField') ? setSumField(jsonObj['sumField']) : ""
+            jsonObj.hasOwnProperty('seperator') ? setSeperator(jsonObj['seperator']) : ""
+
+            jsonObj.hasOwnProperty('columnWidth') ? setColumnWidth(jsonObj['columnWidth']) : ""
+            jsonObj.hasOwnProperty('format.primary') ? handleChange("primary", jsonObj['format.primary']) : ""
+            jsonObj.hasOwnProperty('format.secondaryA') ? handleChange("secondaryA", jsonObj['format.secondaryA']) : ""
+            jsonObj.hasOwnProperty('format.secondaryB') ? handleChange("secondaryB", jsonObj['format.secondaryB']) : ""
+        }
     };
 
     return (
