@@ -1,24 +1,16 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react';
-import { useParams } from "react-router-dom";
+import React, { useEffect, useContext } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
 
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
-import { listTodos, getTodos } from '../graphql/queries';
-import { onUpdateTodos, onCreateTodos, onDeleteTodos } from '../graphql/subscriptions';
 // import { updateTodos, deleteTodos, createTodos } from '../graphql/mutations';
 
-import { DetailsById } from "../components/Details"
 import { ListPage } from './ListPage';
 
-import { useGetTodos } from "../hooks/useGetTodos"
 // import { useGetTodo } from "../hooks/useGetTodo"
 
-import { reducerTodo } from "../reducer/reducerTodo"
-import { AddItem, ToggleItem, UncheckItem, UpdateItem, DeleteItem, UpdateState } from "../reducer/dispatchFunctionsTodos"
-import { UpdateTodosInput, CreateTodosInput } from "../API"
+import { UpdateTodosInput } from "../API"
 
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
 import { TodoListType } from "../components/List"
-import { BooleanModel } from 'aws-sdk/clients/gamelift';
 import { TodoContext, TodoProvider } from '../context/TodoProvider';
 
 interface ListProps {
@@ -71,6 +63,8 @@ export const ListGraphInternal = ({ lists, username, horizontally, listid, listt
     // const [todos, dispatch] = useReducer(reducerTodo, items);
 
     const context = useContext(TodoContext)
+
+    const navigate = useNavigate();
     
     useEffect(() => {
 
@@ -128,6 +122,9 @@ export const ListGraphInternal = ({ lists, username, horizontally, listid, listt
     async function removeItemHandle(todoid: string) {
         // dispatch(DeleteItem(todoid))
         context.deleteTodo( todoid )
+
+        
+        
 
         // await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid } }));
     };

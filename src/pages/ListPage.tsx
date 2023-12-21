@@ -27,6 +27,7 @@ import { useTheme } from '@mui/material/styles';
 import { Calendar } from '../components/Calendar';
 import { useNavigate } from 'react-router-dom';
 import { TodoMainContext } from '../context/TodoMainProvider';
+import { removeMainTodoItemById } from '../context/TodoMainProviderFcns';
 
 
 interface ListProps {
@@ -102,7 +103,7 @@ export const ListPage = (props: ListProps) => {
 
             props.uncheckFunction(filteredTodos[0].id)
 
-            setSelectedItemId( filteredTodos[0].id )
+            setSelectedItemId(filteredTodos[0].id)
             setFilterText("")
         }
     }
@@ -210,9 +211,14 @@ export const ListPage = (props: ListProps) => {
 
     const currentList = getGlobalList(props.lists, props.listid)
 
+    const removeCurrentMain = () => {
+        console.log( "removeCurrentMain : ", props.listid )
+        removeMainTodoItemById(props.listid)
+        navigate("/")
+    }
+
     return (
         <>
-
             <Snackbar
                 open={successSnackbarMessage.length > 0}
                 autoHideDuration={2000}
@@ -227,14 +233,22 @@ export const ListPage = (props: ListProps) => {
                     <Grid item md={4} xs={2} >
                         <ListItem >
                             <ListItemAvatar >
-                                <Avatar style={{ marginTop:"10px",marginBottom:"10px", backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
+                                <Avatar style={{ marginTop: "10px", marginBottom: "10px", backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
                             </ListItemAvatar>
                             <Hidden mdDown>
-                            <ListItemText primary={currentList?.name + ""} secondary={currentList?.group} />
+                                <ListItemText primary={currentList?.name + ""} secondary={currentList?.group} />
                             </Hidden>
                         </ListItem>
                     </Grid>
                     <Grid item md={8} xs={10} >
+                        {props.todos.length === 0 &&
+                            <Grid container justifyContent="flex-end">
+                                <IconButton color={(props.todos.length === 0) ? "error" : "error"} onClick={removeCurrentMain} >
+                                    <MyIcon icon="delete"></MyIcon>
+                                </IconButton>
+                            </Grid>
+                        }
+
                         {props.todos.length > 5 &&
                             < >
                                 <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
@@ -254,6 +268,7 @@ export const ListPage = (props: ListProps) => {
                                     </Grid>
                                     <Grid item xs={3}  >
                                         <Grid container justifyContent="flex-end">
+
                                             <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                 <MyIcon icon="text_rotation_none"></MyIcon>
                                             </IconButton>
@@ -280,12 +295,12 @@ export const ListPage = (props: ListProps) => {
                         <Grid item xs={11} md={6}  >
                             <MyCardBlur>
                                 <CardContent>
-                                <Typography variant="subtitle2" sx={{fontSize:"2em"}} >
-                                    {filteredTodos[0].name}
-                                </Typography>
-                                <Typography>x
-                                    Press Enter to check item <MyIcon icon="task_alt" />
-                                </Typography>
+                                    <Typography variant="subtitle2" sx={{ fontSize: "2em" }} >
+                                        {filteredTodos[0].name}
+                                    </Typography>
+                                    <Typography>x
+                                        Press Enter to check item <MyIcon icon="task_alt" />
+                                    </Typography>
                                 </CardContent>
                             </MyCardBlur>
                         </Grid>
@@ -340,7 +355,7 @@ export const ListPage = (props: ListProps) => {
                                     <DetailsById
                                         itemid={selectedItemId}
                                         readOnly={false}
-                                        
+
                                         lists={props.lists}
                                         listtype={props.listtype}
                                         action={
