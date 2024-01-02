@@ -168,7 +168,7 @@ export const DetailsMarkdown = (props: Props) => {
                 return (
                     <Chip label="System Command" variant="outlined" />
                 )
-    
+
             case "Checkbox":
                 return getCheckboxJSX(line, index)
             case "Photo":
@@ -249,7 +249,6 @@ export const DetailsMarkdown = (props: Props) => {
                     </IconButton>
                     <TextEdit value={label} callback={(newL) => handleCheck(isChecked, newL)} />
 
-
                     {/* <TextField sx={{width:"80%"}} variant="standard" value={label} ></TextField> */}
                 </Box>
             )
@@ -261,7 +260,6 @@ export const DetailsMarkdown = (props: Props) => {
                         <MyIcon icon="add" />
                     </IconButton>
                     <TextEdit value="" callback={(newL) => handleAdd(newL)} />
-
                 </Box>
             )
         }
@@ -269,6 +267,29 @@ export const DetailsMarkdown = (props: Props) => {
             return (<>{line}</>)
         }
     }
+
+    const checkFirstLine = (linesStr: string, returnFirstLine: bool) : string => {
+
+        const lines = linesStr.trim().split("\n")
+
+        if (returnFirstLine) {
+            if (lines.length >= 2 ) {
+                const line = lines.at(0)
+                return line?line:"more";
+            }
+        }
+        else {
+            if (lines.length >= 2 ) {
+                lines.shift();
+                return lines.join("\n")
+            }
+        }
+
+        return "undefined"
+
+    }
+
+
 
     const markdownWithExtension = (linesStr: string, offset: number) => {
 
@@ -324,7 +345,7 @@ export const DetailsMarkdown = (props: Props) => {
             if (currentLine.startsWith("$$Grid") ||
                 currentLine.startsWith("$$Card") ||
                 currentLine.startsWith("$$Accordion")
-                ) {
+            ) {
 
                 let width = 6
                 const splittetLine = currentLine.split(":")
@@ -341,21 +362,24 @@ export const DetailsMarkdown = (props: Props) => {
                 const retJSX = <>
                     {currentLine.startsWith("$$Accordion") &&
                         <Grid item xs={12} md={width} >
-                            
                             <Accordion sx={{ background: color }} >
                                 <AccordionSummary
-                                    expandIcon={<Icon>expand_more</Icon> }
+                                    expandIcon={<Icon>expand_more</Icon>}
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                     sx={{ background: color }}
                                 >
-                                    <Typography>more</Typography>
+                                    { checkFirstLine(mdcontent, true) }
+
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    {markdownWithExtension(mdcontent, offset)}
+                                    {markdownWithExtension(
+                                        checkFirstLine(mdcontent, false), 
+                                        offset
+                                    )}
                                 </AccordionDetails>
                             </Accordion>
-                            
+
                         </Grid>
                     }
                     {currentLine.startsWith("$$Grid") &&
