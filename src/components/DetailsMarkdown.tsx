@@ -12,7 +12,7 @@ import remarkTypescript from 'remark-typescript'
 
 
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Accordion, AccordionDetails, AccordionSummary, Alert, AlertColor, AlertTitle, Box, Card, CardContent, Checkbox, Chip, FormControlLabel, Grid, Icon, IconButton, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Alert, AlertColor, AlertTitle, Box, Card, CardContent, CardHeader, Checkbox, Chip, FormControlLabel, Grid, Icon, IconButton, TextField, Typography } from "@mui/material";
 import { bool } from "aws-sdk/clients/signer";
 
 // import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -268,18 +268,18 @@ export const DetailsMarkdown = (props: Props) => {
         }
     }
 
-    const checkFirstLine = (linesStr: string, returnFirstLine: bool) : string => {
+    const checkFirstLine = (linesStr: string, returnFirstLine: bool): string => {
 
         const lines = linesStr.trim().split("\n")
 
         if (returnFirstLine) {
-            if (lines.length >= 2 ) {
+            if (lines.length >= 2) {
                 const line = lines.at(0)
-                return line?line:"more";
+                return line ? line : "more";
             }
         }
         else {
-            if (lines.length >= 2 ) {
+            if (lines.length >= 2) {
                 lines.shift();
                 return lines.join("\n")
             }
@@ -344,6 +344,7 @@ export const DetailsMarkdown = (props: Props) => {
             // Paragraph
             if (currentLine.startsWith("$$Grid") ||
                 currentLine.startsWith("$$Card") ||
+                currentLine.startsWith("$$Paper") ||
                 currentLine.startsWith("$$Accordion")
             ) {
 
@@ -355,7 +356,9 @@ export const DetailsMarkdown = (props: Props) => {
 
                 let color = splittetLine.at(2)
 
-                if (color === undefined) color = 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
+                // if (color === undefined) color = 'linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.20))'
+                if (color === undefined) color = 'rgba(0, 0, 0, 0.30)'
+                const dark = 'rgba(0, 0, 0, 0.30)'
 
                 const mdcontent = content
                 content = ""
@@ -367,19 +370,45 @@ export const DetailsMarkdown = (props: Props) => {
                                     expandIcon={<Icon>expand_more</Icon>}
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
-                                    sx={{ background: color }}
+                                    sx={{ background: dark }}
                                 >
-                                    { checkFirstLine(mdcontent, true) }
-
+                                    {checkFirstLine(mdcontent, true)}
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     {markdownWithExtension(
-                                        checkFirstLine(mdcontent, false), 
-                                        offset
+                                        checkFirstLine(mdcontent, false),
+                                        offset+1
                                     )}
                                 </AccordionDetails>
                             </Accordion>
-
+                        </Grid>
+                    }
+                    {currentLine.startsWith("$$Card") &&
+                        <Grid xs={12} md={width} p={1}>
+                            <Card sx={{ background: color }} >
+                                <CardContent 
+                                    sx={{ background: dark }} 
+                                >
+                                   {checkFirstLine(mdcontent, true)}
+                                    
+                                </CardContent>
+                                <CardContent
+                                    sx={{paddingTop:"2px"}}>
+                                    {markdownWithExtension(
+                                        checkFirstLine(mdcontent, false),
+                                        offset+1
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    }
+                    {currentLine.startsWith("$$Paper") &&
+                        <Grid xs={12} md={width} p={1}>
+                            <Card sx={{ background: color }} >
+                                <CardContent>
+                                    {markdownWithExtension(mdcontent, offset)}
+                                </CardContent>
+                            </Card>
                         </Grid>
                     }
                     {currentLine.startsWith("$$Grid") &&
@@ -389,15 +418,7 @@ export const DetailsMarkdown = (props: Props) => {
                             </Box>
                         </Grid>
                     }
-                    {currentLine.startsWith("$$Card") &&
-                        <Grid xs={12} md={width} p={1}>
-                            <Card sx={{ background: color }} >
-                                <CardContent>
-                                    {markdownWithExtension(mdcontent, offset)}
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    }
+
                 </>
 
                 offset = index + 1
