@@ -28,6 +28,7 @@ import { ReplaceLists } from "./pages/ReplaceLists";
 import { CsvToolsPage } from "./pages/CsvToolsPage";
 
 
+
 import { TodoMainItem } from "./models/TodoItems"
 
 import { StyleDemo } from "./StyleDemo";
@@ -40,6 +41,7 @@ import { Details } from "./components/Details";
 import { UpdateTodosInput } from "./API";
 import { TodoMainProvider } from "./context/TodoMainProvider";
 import { SandboxGPT } from "./pages/SandboxGPT";
+import { Piano, PianoSong } from "./pages/Piano";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -159,6 +161,8 @@ const App = () => {
                           <TimeSeries username={username} token={jwtTocken} />
                         } >
                         </Route>
+                        <Route path="/piano" element={<PianoSong play={""} />}>
+                        </Route>                        
                         <Route path="/diff" element={<CompareLists />}>
                         </Route>
                         <Route path="/replace" element={<ReplaceLists />}>
