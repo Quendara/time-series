@@ -123,9 +123,6 @@ export const ListGraphInternal = ({ lists, username, horizontally, listid, listt
         // dispatch(DeleteItem(todoid))
         context.deleteTodo( todoid )
 
-        
-        
-
         // await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid } }));
     };
 

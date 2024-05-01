@@ -39,7 +39,7 @@ export const createPianoClasses = () => {
 
         },
         piano: {
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: "1fr 1fr 1fr",
             display: "grid",
             backgroundColor: "#111",
             borderRadius: "10px",
@@ -99,6 +99,7 @@ export const PianoSong = (props: Props) => {
                 value={play}
                 // error={trySend}
                 // fullWidth
+                defaultValue={props.play}
                 multiline
                 sx={{ m: 8, width:"50vw" }}
                 variant="outlined"
@@ -109,12 +110,10 @@ export const PianoSong = (props: Props) => {
 
             <Grid container spacing={4} >
                 {  parts.map( part => (
-                    <Grid item xs={4} ><PianoPart play={ part } /></Grid>
+                    <Grid item xs={6} ><PianoPart play={ part } /></Grid>
                 ))
                 }
             </Grid>
-
-
         </Paper>
     )
 }
@@ -160,9 +159,14 @@ export const PianoPart = (props: Props) => {
 
         for (let i = 0; i < noteSequence.length; i++) {
             let currentNote = noteSequence[i];
+            const nextChar = noteSequence.at(i + 1)
+
             if (currentNote === "^" || currentNote === "_") {
                 currentNote += noteSequence[i + 1];
                 i++;
+            }
+            if( nextChar && nextChar === "," ){
+                currentNote += nextChar
             }
             noteArray.push(currentNote);
         }
@@ -220,6 +224,22 @@ export const Piano = (props: PianoProps) => {
                 <h3>{props.title} </h3>
                 {props.play}</Box>
             <Box sx={pianoClasses.piano}>
+            <Box sx={pianoClasses.keyOctav}>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('C,') }} onClick={() => playNote('c6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('D,') }} onClick={() => playNote('d6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('E,') }} onClick={() => playNote('e6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('F,') }} onClick={() => playNote('f6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('G,') }} onClick={() => playNote('g6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('A,') }} onClick={() => playNote('a6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('B,') }} onClick={() => playNote('b6')} ></Box>
+
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(0), ...isPlayed('^C,') }} onClick={() => playNote('cs6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(1), ...isPlayed('^D,') }} onClick={() => playNote('ds6')} ></Box>
+
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(3), ...isPlayed('^F,',) }} onClick={() => playNote('fs6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('^G,') }} onClick={() => playNote('gs6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('^A,') }} onClick={() => playNote('as6')} ></Box>
+                </Box>                
                 <Box sx={pianoClasses.keyOctav}>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('C') }} onClick={() => playNote('c6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('D') }} onClick={() => playNote('d6')} ></Box>

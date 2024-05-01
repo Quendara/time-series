@@ -81,7 +81,7 @@ const App = () => {
     console.log("username        : ", username);
     console.log("authSuccess     : ", token);
     console.log("apikey          : ", apikey);
-    console.log("apikeyOpenAi          : ", apikeyOpen_Ai);
+    console.log("apikeyOpenAi    : ", apikeyOpen_Ai);
 
   };
 
@@ -161,7 +161,7 @@ const App = () => {
                           <TimeSeries username={username} token={jwtTocken} />
                         } >
                         </Route>
-                        <Route path="/piano" element={<PianoSong play={""} />}>
+                        <Route path="/piano" element={<PianoSong play={"C "} />}>
                         </Route>                        
                         <Route path="/diff" element={<CompareLists />}>
                         </Route>
