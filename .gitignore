@@ -1,5 +1,8 @@
 node_modules
 
+.venv/
+.venv
+
 #amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -15,3 +18,4 @@ amplifyconfiguration.json
 amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
+

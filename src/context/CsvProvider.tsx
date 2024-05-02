@@ -11,7 +11,6 @@ export interface Format {
 }
 
 
-
 export type CsvContent = {
     seperator: string
     groupname: string
