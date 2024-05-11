@@ -60,6 +60,8 @@ export const ListPage = (props: ListProps) => {
     const [hideCompleted, setHideCompleted] = useState(false);
     const [stateHorizontally, setHorizontally] = useState(props.horizontally);
 
+    const [showElementOnly, setShowElementOnly] = useState(true);
+
 
     const { scrollX, scrollY } = useWindowScrollPositions()
 
@@ -212,7 +214,7 @@ export const ListPage = (props: ListProps) => {
     const currentList = getGlobalList(props.lists, props.listid)
 
     const removeCurrentMain = () => {
-        console.log( "removeCurrentMain : ", props.listid )
+        console.log("removeCurrentMain : ", props.listid)
         removeMainTodoItemById(props.listid)
         navigate("/")
     }
@@ -268,6 +270,9 @@ export const ListPage = (props: ListProps) => {
                                     </Grid>
                                     <Grid item xs={3}  >
                                         <Grid container justifyContent="flex-end">
+                                            <IconButton onClick={() => setShowElementOnly(!showElementOnly)} >
+                                                <MyIcon icon={ showElementOnly?"close_fullscreen":"open_in_full" }></MyIcon>
+                                            </IconButton>
 
                                             <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                 <MyIcon icon="text_rotation_none"></MyIcon>
@@ -288,6 +293,25 @@ export const ListPage = (props: ListProps) => {
                     </Grid>
                 </Grid>
             </MyCardBlur>
+
+            {(showElementOnly && selectedItemId) &&
+                <div className={"my-container-content"} >
+                    <DetailsById
+                        itemid={selectedItemId}
+                        readOnly={false}
+
+                        lists={props.lists}
+                        listtype={props.listtype}
+                        action={
+                            <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
+                                <MyIcon icon="close" />
+                            </IconButton>
+                        }
+                        username={props.username}
+                    />
+
+                </div>
+            }
 
             {(filteredTodos.length === 1 && filterText.length > 0) && (
                 <>

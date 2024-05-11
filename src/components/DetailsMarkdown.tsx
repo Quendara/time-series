@@ -28,6 +28,7 @@ import { DetailsById, DetailsLinkById } from "./Details";
 import { MyMarkdown } from "./MyMarkdown";
 import { MyIcon } from "./MyIcon";
 import { TextEdit } from "./TextEdit";
+import { Piano, PianoPart, PianoSong } from "../pages/Piano";
 
 
 
@@ -344,6 +345,7 @@ export const DetailsMarkdown = (props: Props) => {
             // Paragraph
             if (currentLine.startsWith("$$Grid") ||
                 currentLine.startsWith("$$Card") ||
+                currentLine.startsWith("$$Keys") ||
                 currentLine.startsWith("$$Paper") ||
                 currentLine.startsWith("$$Accordion")
             ) {
@@ -377,7 +379,7 @@ export const DetailsMarkdown = (props: Props) => {
                                 <AccordionDetails>
                                     {markdownWithExtension(
                                         checkFirstLine(mdcontent, false),
-                                        offset+1
+                                        offset + 1
                                     )}
                                 </AccordionDetails>
                             </Accordion>
@@ -386,17 +388,17 @@ export const DetailsMarkdown = (props: Props) => {
                     {currentLine.startsWith("$$Card") &&
                         <Grid xs={12} md={width} p={1}>
                             <Card sx={{ background: color }} >
-                                <CardContent 
-                                    sx={{ background: dark }} 
+                                <CardContent
+                                    sx={{ background: dark }}
                                 >
-                                   {checkFirstLine(mdcontent, true)}
-                                    
+                                    {checkFirstLine(mdcontent, true)}
+
                                 </CardContent>
                                 <CardContent
-                                    sx={{paddingTop:"2px"}}>
+                                    sx={{ paddingTop: "2px" }}>
                                     {markdownWithExtension(
                                         checkFirstLine(mdcontent, false),
-                                        offset+1
+                                        offset + 1
                                     )}
                                 </CardContent>
                             </Card>
@@ -415,6 +417,13 @@ export const DetailsMarkdown = (props: Props) => {
                         <Grid item xs={12} md={width}  >
                             <Box>
                                 {markdownWithExtension(mdcontent, offset)}
+                            </Box>
+                        </Grid>
+                    }
+                    {currentLine.startsWith("$$Keys") &&
+                        <Grid item xs={12} md={12}  >
+                            <Box>
+                                <PianoSong play={mdcontent} showNodes={false} />
                             </Box>
                         </Grid>
                     }

@@ -161,8 +161,13 @@ const App = () => {
                           <TimeSeries username={username} token={jwtTocken} />
                         } >
                         </Route>
-                        <Route path="/piano" element={<PianoSong play={"C "} />}>
-                        </Route>                        
+
+                        <Route path="/piano" element={
+                          <Paper sx={{ m: 5, p: 2, backgroundColor: "#333" }}>
+                            <PianoSong play="" showNodes={true} showTextinput={true} />
+                          </Paper>
+                        }>
+                        </Route>
                         <Route path="/diff" element={<CompareLists />}>
                         </Route>
                         <Route path="/replace" element={<ReplaceLists />}>
@@ -170,8 +175,8 @@ const App = () => {
                         <Route path="/sandboxH" element={<SandboxH />}>
                         </Route>
                         <Route path="/SandboxGPT" element={<SandboxGPT apikey={apikeyOpenAi} />}>
-                        </Route>                        
-                        
+                        </Route>
+
                         <Route path="/sandbox" element={<Sandbox />}>
                         </Route>
 

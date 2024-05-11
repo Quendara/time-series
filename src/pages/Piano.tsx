@@ -1,20 +1,26 @@
 import { Box, Grid, Paper, TextField } from "@mui/material";
 import { grid } from "@mui/system";
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { useParams } from "react-router-dom";
 
-interface Props {
+import abcjs from "abcjs";
+
+interface SongProps {
     play: string
+    showNodes: boolean
+    showTextinput?: boolean
 }
 
 interface PianoProps {
     play: string[]
     title: string
+    showNodes: boolean
 }
 
-export const createPianoClasses = () => {
+export const createPianoClasses = (showNodes: boolean) => {
 
 
-    const keyDistance = 30
+    const keyDistance = 25
     const height = 3 * keyDistance
 
     const blackKeyOffset = keyDistance / 2 + 5
@@ -28,24 +34,23 @@ export const createPianoClasses = () => {
         layout: {
             display: "grid",
             gridTemplateColumns: "1fr",
-            gridTemplateRows: "auto",
-            placeItems: "center",
+//            gridTemplateRows: "auto",
+//            placeItems: "center",
         },
         header: {
-            display: "relative",
-            gridTemplateColumns: "1fr",
-            gridTemplateRows: "auto",
-            textAlign: "center"
-
+            // display: "relative",
+            // gridTemplateColumns: "1fr",
+            // gridTemplateRows: "auto",
+            // textAlign: "center"
         },
         piano: {
-            gridTemplateColumns: "1fr 1fr 1fr",
+            // show 100px for the noted than 3 time one ovtave
+            gridTemplateColumns: showNodes ? "100px repeat(7, " + keyDistance * 7 + "px)" : "repeat(7, " + keyDistance * 7 + "px)",
             display: "grid",
-            backgroundColor: "#111",
+            // backgroundColor: "#111",
             borderRadius: "10px",
             position: "relative",
         },
-
         "keyOctav": {
             display: "grid",
             gridTemplateColumns: "repeat(7, " + keyDistance + "px)", // width of one key
@@ -82,46 +87,52 @@ export const createPianoClasses = () => {
     }
 }
 
-export const PianoSong = (props: Props) => {
+export const PianoSong = (props: SongProps) => {
+
+
+    // let { abcnotes } = useParams<{ abcnotes: string }>();
 
     const [play, setPlay] = useState(props.play);
 
-    // "Strophe - C" ceg | "e" Beg | "a" cea | "F" cfa'
+    // "Strophe - C" Cceg | "e" B,Beg | "a" A, cea | "F" F, cfa'
     // "Bridge - Gadd9" ABg | "Am7" Acg | "F" Acf 
     // "Refrain - C" C  CEc | "G" Bdb | "a" cea |  "F "cfa 
 
-    const parts = play.split("\n")
+    // "C" C G ce | "G/B" B,GBd  |  "A#" ^A, F^Ac |
+
+    // "C7" CEG^A c | "Cmaj7" CEGB c 
+
+    const parts = play ? play.split("\n") : []
 
 
     return (
-        <Paper sx={{ m: 9, p: 2, backgroundColor: "#333" }}>
-   <TextField
+        <>
+            { props.showTextinput && 
+            <TextField
                 value={play}
                 // error={trySend}
                 // fullWidth
-                defaultValue={props.play}
+                defaultValue={play}
                 multiline
-                sx={{ m: 8, width:"50vw" }}
+                sx={{ m: 8, width: "50vw" }}
                 variant="outlined"
                 // className={getInputClass(username)}
                 label="Name"
                 onChange={e => setPlay(e.target.value)}
-            />            
+            />
+            }
 
             <Grid container spacing={4} >
-                {  parts.map( part => (
-                    <Grid item xs={6} ><PianoPart play={ part } /></Grid>
+                {parts.map(part => (
+                    <Grid item xs={12} md={6} ><PianoPart play={part} showNodes={props.showNodes} /></Grid>
                 ))
                 }
             </Grid>
-        </Paper>
+        </>
     )
 }
 
-export const PianoPart = (props: Props) => {
-
-
-    
+export const PianoPart = (props: SongProps) => {
 
     const ticks = props.play.split("|")
 
@@ -159,14 +170,18 @@ export const PianoPart = (props: Props) => {
 
         for (let i = 0; i < noteSequence.length; i++) {
             let currentNote = noteSequence[i];
-            const nextChar = noteSequence.at(i + 1)
+            // if( currentNote === undefined )
+            let nextChar = noteSequence.at(i + 1)
 
             if (currentNote === "^" || currentNote === "_") {
                 currentNote += noteSequence[i + 1];
                 i++;
+
+                nextChar = noteSequence.at(i + 1)
             }
-            if( nextChar && nextChar === "," ){
+            if (nextChar && nextChar === ",") {
                 currentNote += nextChar
+                i++;
             }
             noteArray.push(currentNote);
         }
@@ -176,8 +191,8 @@ export const PianoPart = (props: Props) => {
 
     return (
         <>
-         
-            <Box sx={{ height: "80vh", overflowY: "scroll" }}>
+
+            <Box sx={{ maxHeight: "80vh", mb:4, overflowY: "scroll" }}>
 
                 {ticks.map(tick => {
 
@@ -188,9 +203,13 @@ export const PianoPart = (props: Props) => {
 
 
                     return (
-                        <Grid item xs={12} >
-                            <Piano title={header} play={parseNoteSequence(notes)} />
-                        </Grid>)
+                        <>
+                            {notes.length !== 0 &&
+                                <Grid item xs={12} >
+                                    <Piano title={header} play={parseNoteSequence(notes)} showNodes={props.showNodes} />
+                                </Grid>
+                            }
+                        </>)
                 })}
 
 
@@ -216,15 +235,35 @@ export const Piano = (props: PianoProps) => {
         }
     }
 
-    const pianoClasses = createPianoClasses()
+    const playabc = "K:C\n [ " + props.play.join("") + "]\n"
+
+    useEffect(() => {
+
+
+        abcjs.renderAbc("notepaper" + playabc, playabc)// "X:1\nK:D\nDD AA|BBA2|\n");
+        console.log(playabc)
+
+    }, [props.play]);
+
+    const pianoClasses = createPianoClasses(props.showNodes)
+
+
 
     return (<>
         <Box sx={pianoClasses.layout}>
+
             <Box sx={pianoClasses.header}>
                 <h3>{props.title} </h3>
-                {props.play}</Box>
+                {/* {props.play} */}
+            </Box>
             <Box sx={pianoClasses.piano}>
-            <Box sx={pianoClasses.keyOctav}>
+                {props.showNodes &&
+                    <div id={"notepaper" + playabc} >
+                        -
+                    </div>
+                }
+
+                <Box sx={pianoClasses.keyOctav}>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('C,') }} onClick={() => playNote('c6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('D,') }} onClick={() => playNote('d6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('E,') }} onClick={() => playNote('e6')} ></Box>
@@ -239,7 +278,7 @@ export const Piano = (props: PianoProps) => {
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(3), ...isPlayed('^F,',) }} onClick={() => playNote('fs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('^G,') }} onClick={() => playNote('gs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('^A,') }} onClick={() => playNote('as6')} ></Box>
-                </Box>                
+                </Box>
                 <Box sx={pianoClasses.keyOctav}>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('C') }} onClick={() => playNote('c6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('D') }} onClick={() => playNote('d6')} ></Box>
@@ -272,22 +311,7 @@ export const Piano = (props: PianoProps) => {
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('^g') }} onClick={() => playNote('gs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('^a') }} onClick={() => playNote('as6')} ></Box>
                 </Box>
-                {/* <Box sx={pianoClasses.keyOctav}>
-                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('x') }} ></Box>
-                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('x') }} ></Box>
-                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('x') }} ></Box>
-                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('x') }} ></Box>
-                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('x') }} ></Box>
-                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('x') }} ></Box>
-                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('x') }} ></Box>
-
-                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(0), ...isPlayed('x') }} onClick={() => playNote('cs6')} ></Box>
-                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(1), ...isPlayed('x') }} onClick={() => playNote('ds6')} ></Box>
-
-                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(3), ...isPlayed('x') }} onClick={() => playNote('fs6')} ></Box>
-                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('x') }} onClick={() => playNote('gs6')} ></Box>
-                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('x') }} onClick={() => playNote('as6')} ></Box>
-                </Box> */}
+              
             </Box>
         </Box>
     </>)
