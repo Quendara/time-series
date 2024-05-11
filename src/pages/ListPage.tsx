@@ -271,7 +271,7 @@ export const ListPage = (props: ListProps) => {
                                     <Grid item xs={3}  >
                                         <Grid container justifyContent="flex-end">
                                             <IconButton onClick={() => setShowElementOnly(!showElementOnly)} >
-                                                <MyIcon icon={ showElementOnly?"close_fullscreen":"open_in_full" }></MyIcon>
+                                                <MyIcon icon={showElementOnly ? "close_fullscreen" : "open_in_full"}></MyIcon>
                                             </IconButton>
 
                                             <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
@@ -287,31 +287,11 @@ export const ListPage = (props: ListProps) => {
                             </>
                         }
 
-
-
-
                     </Grid>
                 </Grid>
             </MyCardBlur>
 
-            {(showElementOnly && selectedItemId) &&
-                <div className={"my-container-content"} >
-                    <DetailsById
-                        itemid={selectedItemId}
-                        readOnly={false}
 
-                        lists={props.lists}
-                        listtype={props.listtype}
-                        action={
-                            <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
-                                <MyIcon icon="close" />
-                            </IconButton>
-                        }
-                        username={props.username}
-                    />
-
-                </div>
-            }
 
             {(filteredTodos.length === 1 && filterText.length > 0) && (
                 <>
@@ -352,6 +332,25 @@ export const ListPage = (props: ListProps) => {
 
                 </>
             )}
+
+            {(showElementOnly && selectedItemId) &&
+                <div className={"my-container-content"} >
+                    <DetailsById
+                        itemid={selectedItemId}
+                        readOnly={false}
+
+                        lists={props.lists}
+                        listtype={props.listtype}
+                        action={
+                            <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
+                                <MyIcon icon="close" />
+                            </IconButton>
+                        }
+                        username={props.username}
+                    />
+
+                </div>
+            }
 
             <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
                 <Grid container spacing={2} >
