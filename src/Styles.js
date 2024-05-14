@@ -1,22 +1,9 @@
-import { createTheme } from '@mui/material/styles'; 
+
  
 import { purple, lightGreen, pink, lightBlue, red, green } from '@mui/material/colors/';
+import { List, ListItemButton, ListItemAvatar, Avatar, Icon, ListItemText, ListItemSecondaryAction, IconButton, useTheme } from "@mui/material"
 
 
-// export const theme = createTheme({
-//   palette: {
-//     type: "dark",
-//     primary: lightBlue,
-//     secondary: pink,
-//     danger: red
-//   }
-// });
-
-export const theme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
 
 export const cssClasses = {
      horizontalSnapContainer: {
@@ -32,11 +19,11 @@ export const cssClasses = {
         background: 'rgba(10, 10, 10, 0.3)'
       },
       "&::-webkit-resizer":{
-        background: theme.palette.mode === 'dark' ? 'rgb(22, 11, 11)' : 'rgb(253, 237, 237)',
+        // background: theme.palette.mode === 'dark' ? 'rgb(22, 11, 11)' : 'rgb(253, 237, 237)',
       },
       '&::-webkit-scrollbar-thumb': {
         width: "0.5px",
-        backgroundColor: theme.palette.grey[900],
+        // backgroundColor: theme.palette.grey[900],
         borderRadius: "5px"      
       },          
 
@@ -82,9 +69,7 @@ export const cssClasses = {
       color: "#FFFF00",
     },
     appBar: {
-      backgroundColor: theme.palette.primary.dark,
-            
-      
+      // backgroundColor: theme.palette.primary.dark,
       top: 'auto',
       bottom: 0,
     },
@@ -93,7 +78,7 @@ export const cssClasses = {
       justifyContent: 'left',
       flexWrap: 'wrap',
       '& > *': {
-        margin: theme.spacing(0.5),
+        // margin: theme.spacing(0.5),
       },
     },
     green: {

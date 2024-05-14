@@ -4,11 +4,14 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
 
 import abcjs from "abcjs";
+import 'abcjs/abcjs-audio.css';
+import { getUniqueId } from "../components/helpers";
 
 interface SongProps {
     play: string
     showNodes: boolean
     showTextinput?: boolean
+    showAbcOnly?: boolean
 }
 
 interface PianoProps {
@@ -34,8 +37,8 @@ export const createPianoClasses = (showNodes: boolean) => {
         layout: {
             display: "grid",
             gridTemplateColumns: "1fr",
-//            gridTemplateRows: "auto",
-//            placeItems: "center",
+            //            gridTemplateRows: "auto",
+            //            placeItems: "center",
         },
         header: {
             // display: "relative",
@@ -89,45 +92,49 @@ export const createPianoClasses = (showNodes: boolean) => {
 
 export const PianoSong = (props: SongProps) => {
 
-
-    // let { abcnotes } = useParams<{ abcnotes: string }>();
-
     const [play, setPlay] = useState(props.play);
-
-    // "Strophe - C" Cceg | "e" B,Beg | "a" A, cea | "F" F, cfa'
-    // "Bridge - Gadd9" ABg | "Am7" Acg | "F" Acf 
-    // "Refrain - C" C  CEc | "G" Bdb | "a" cea |  "F "cfa 
-
-    // "C" C G ce | "G/B" B,GBd  |  "A#" ^A, F^Ac |
-
-    // "C7" CEG^A c | "Cmaj7" CEGB c 
-
     const parts = play ? play.split("\n") : []
+
+    const paperId = getUniqueId()
+
+    useEffect(() => {
+
+        abcjs.renderAbc("songPaper" + paperId, play)// "X:1\nK:D\nDD AA|BBA2|\n");
+
+    }, [play]);
 
 
     return (
         <>
-            { props.showTextinput && 
-            <TextField
-                value={play}
-                // error={trySend}
-                // fullWidth
-                defaultValue={play}
-                multiline
-                sx={{ m: 8, width: "50vw" }}
-                variant="outlined"
-                // className={getInputClass(username)}
-                label="Name"
-                onChange={e => setPlay(e.target.value)}
-            />
+            {props.showTextinput &&
+                <div className="no-print" >
+                <TextField
+                    value={play}
+                    // error={trySend}
+                    // fullWidth
+                    defaultValue={play}
+                    multiline
+                    sx={{ m: 8, width: "50vw" }}
+                    variant="outlined"
+                    // className={getInputClass(username)}
+                    label="Name"
+                    onChange={e => setPlay(e.target.value)}
+                />
+                </div>
             }
 
-            <Grid container spacing={4} >
-                {parts.map(part => (
-                    <Grid item xs={12} md={6} ><PianoPart play={part} showNodes={props.showNodes} /></Grid>
-                ))
-                }
-            </Grid>
+            {props.showAbcOnly ? <>
+                <div id={"songPaper" + paperId} />
+            </> :
+
+                <Grid container spacing={4} >
+                    {parts.map(part => (
+                        <Grid item xs={12} md={6} >
+                            <PianoPart play={part} showNodes={props.showNodes} />
+                        </Grid>
+                    ))
+                    }
+                </Grid>}
         </>
     )
 }
@@ -192,7 +199,7 @@ export const PianoPart = (props: SongProps) => {
     return (
         <>
 
-            <Box sx={{ maxHeight: "80vh", mb:4, overflowY: "scroll" }}>
+            <Box sx={{ maxHeight: "80vh", mb: 4, overflowY: "scroll" }}>
 
                 {ticks.map(tick => {
 
@@ -235,7 +242,7 @@ export const Piano = (props: PianoProps) => {
         }
     }
 
-    const playabc = "K:C\n [ " + props.play.join("") + "]\n"
+    const playabc = "K:C\nL:1/4\n [ " + props.play.join("") + "]\n"
 
     useEffect(() => {
 
@@ -311,7 +318,7 @@ export const Piano = (props: PianoProps) => {
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('^g') }} onClick={() => playNote('gs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('^a') }} onClick={() => playNote('as6')} ></Box>
                 </Box>
-              
+
             </Box>
         </Box>
     </>)

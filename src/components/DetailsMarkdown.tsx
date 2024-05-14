@@ -346,6 +346,7 @@ export const DetailsMarkdown = (props: Props) => {
             if (currentLine.startsWith("$$Grid") ||
                 currentLine.startsWith("$$Card") ||
                 currentLine.startsWith("$$Keys") ||
+                currentLine.startsWith("$$Abc") ||
                 currentLine.startsWith("$$Paper") ||
                 currentLine.startsWith("$$Accordion")
             ) {
@@ -427,6 +428,13 @@ export const DetailsMarkdown = (props: Props) => {
                             </Box>
                         </Grid>
                     }
+                    {currentLine.startsWith("$$Abc") &&
+                        <Grid item xs={12} md={12}  >
+                            <Box>
+                                <PianoSong play={mdcontent} showNodes={false} showAbcOnly={true} />
+                            </Box>
+                        </Grid>
+                    }                           
 
                 </>
 

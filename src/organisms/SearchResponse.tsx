@@ -1,4 +1,4 @@
-import { List, ListItemButton, ListItemAvatar, Avatar, Icon, ListItemText, ListItemSecondaryAction, IconButton } from "@mui/material"
+import { List, ListItemButton, ListItemAvatar, Avatar, Icon, ListItemText, ListItemSecondaryAction, IconButton, useTheme } from "@mui/material"
 import React from "react"
 import { NavLink } from "react-router-dom"
 import { MyIcon } from "../components/MyIcon"
@@ -8,7 +8,7 @@ import { createEmptyTodoMainItem, TodoItem, TodoMainItem } from "../models/TodoI
 import { bull } from "../components/helpers"
 import { getTodosFcn } from "../components/GraphQlFunctions"
 import { useGetTodo } from "../hooks/useGetTodo"
-import { theme } from "../Styles"
+
 
 interface Props {
     mainTodos: TodoMainItem[];
@@ -23,6 +23,8 @@ interface SingleProps extends Props {
 
 
 export const SingleSearchResponse = (props: SingleProps) => {
+
+    const theme = useTheme()
 
     const getMainListItem = (listid: string): TodoMainItem | undefined => {
 
