@@ -43,6 +43,7 @@ import { UpdateTodosInput } from "./API";
 import { TodoMainProvider } from "./context/TodoMainProvider";
 import { SandboxGPT } from "./pages/SandboxGPT";
 import { Piano, PianoSong } from "./pages/Piano";
+import { Mails } from "./pages/Mails";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -223,6 +224,9 @@ const App = () => {
 
                         <Route path="/csvtools" element={<CsvToolsPage />}>
                         </Route>
+
+                        <Route path="/mails" element={<Mails  token={jwtTocken} />}>
+                        </Route>                        
 
                         <Route path="/" element={
 
