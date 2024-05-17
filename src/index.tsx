@@ -157,7 +157,9 @@ const App = () => {
             <NavLink key={"nl_" + 1332} to={"/"}  >
               <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
             </NavLink>
-
+            <NavLink key={"nl_" + 98978} to={"/mails"}  >
+              <IconButton sx={cssClasses.title}><Icon  >mail</Icon></IconButton>
+            </NavLink>
 
 
             {amplifyInitilaized &&
