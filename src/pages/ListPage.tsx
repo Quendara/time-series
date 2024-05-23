@@ -60,6 +60,8 @@ export const ListPage = (props: ListProps) => {
     const [hideCompleted, setHideCompleted] = useState(false);
     const [stateHorizontally, setHorizontally] = useState(props.horizontally);
 
+    const [showElementOnly, setShowElementOnly] = useState(true);
+
 
     const { scrollX, scrollY } = useWindowScrollPositions()
 
@@ -212,7 +214,7 @@ export const ListPage = (props: ListProps) => {
     const currentList = getGlobalList(props.lists, props.listid)
 
     const removeCurrentMain = () => {
-        console.log( "removeCurrentMain : ", props.listid )
+        console.log("removeCurrentMain : ", props.listid)
         removeMainTodoItemById(props.listid)
         navigate("/")
     }
@@ -268,6 +270,9 @@ export const ListPage = (props: ListProps) => {
                                     </Grid>
                                     <Grid item xs={3}  >
                                         <Grid container justifyContent="flex-end">
+                                            <IconButton onClick={() => setShowElementOnly(!showElementOnly)} >
+                                                <MyIcon icon={showElementOnly ? "close_fullscreen" : "open_in_full"}></MyIcon>
+                                            </IconButton>
 
                                             <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                 <MyIcon icon="text_rotation_none"></MyIcon>
@@ -281,9 +286,6 @@ export const ListPage = (props: ListProps) => {
                                 </Grid>
                             </>
                         }
-
-
-
 
                     </Grid>
                 </Grid>
@@ -329,85 +331,106 @@ export const ListPage = (props: ListProps) => {
                 </>
             )}
 
-            <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
+            {(showElementOnly && selectedItemId) ?
                 <Grid container spacing={2} >
+                    <Grid item xs={12}  >
+                        <DetailsById
+                            itemid={selectedItemId}
+                            readOnly={false}
+                            lists={props.lists}
+                            listtype={props.listtype}
+                            action={
+                                <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
+                                    <MyIcon icon="close" />
+                                </IconButton>
+                            }
+                            username={props.username}
+                        />
+                    </Grid>
+                </Grid>
+                :
+                <>
+                    <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
+                        <Grid container spacing={2} >
 
-                    {props.listtype === TodoListType.TODO_SIMPLE ? (
-                        <Grid item xs={12}  >
-                            {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                        </Grid>
-                    ) : (
-                        <Grid item md={selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
-                            sm={selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
-                            xs={11}  >
-                            <div className={"my-container-content"} >
-                                {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                            </div>
-                        </Grid>
-                    )
-                    }
-
-                    {(selectedItemId && filterText.length === 0) &&
-                        <>
-                            <Grid item md={stateHorizontally ? 4 : 8} sm={stateHorizontally ? 6 : 6} xs={12} >
-
-                                <div className={"my-container-content"} >
-                                    <DetailsById
-                                        itemid={selectedItemId}
-                                        readOnly={false}
-
-                                        lists={props.lists}
-                                        listtype={props.listtype}
-                                        action={
-                                            <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
-                                                <MyIcon icon="close" />
-                                            </IconButton>
-                                        }
-                                        username={props.username}
-                                    />
-
-                                </div>
-                                <div>Scroll position is ({scrollX}, {scrollY})</div>
-                            </Grid>
-                        </>
-                    }
-                </Grid >
-            </Box>
-
-            <Box p={1} sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
-
-                <HorizontallyGrid horizontally={true}  >
-                    <HorizontallyItem key={"Listsa"} horizontally={true} >
-                        <Grid item xs={12}>
-                            <div className={"my-container-content"} >
-                                {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                            </div>
-                        </Grid>
-                    </HorizontallyItem>
-                    <HorizontallyItem key={"Listsb"} horizontally={true} >
-                        {(selectedItemId && filterText.length === 0) &&
-                            <>
-                                <Grid item xs={12} >
-
-                                    <div className={"my-container-content details-xs"} style={{ position: "relative" }} >
-                                        <DetailsById
-                                            itemid={selectedItemId}
-                                            readOnly={false}
-                                            lists={props.lists}
-                                            listtype={props.listtype}
-                                            action={<></>}
-                                            username={props.username}
-                                        />
-
-                                    </div>
-                                    <div>Scroll position is ({scrollX}, {scrollY})</div>
+                            {props.listtype === TodoListType.TODO_SIMPLE ? (
+                                <Grid item xs={12}  >
+                                    {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
                                 </Grid>
-                            </>
-                        }
-                    </HorizontallyItem>
-                </HorizontallyGrid>
+                            ) : (
+                                <Grid item md={selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
+                                    sm={selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
+                                    xs={11}  >
+                                    <div className={"my-container-content"} >
+                                        {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                                    </div>
+                                </Grid>
+                            )
+                            }
 
-            </Box>
+                            {(selectedItemId && filterText.length === 0) &&
+                                <>
+                                    <Grid item md={stateHorizontally ? 4 : 8} sm={stateHorizontally ? 6 : 6} xs={12} >
+
+                                        <div className={"my-container-content"} >
+                                            <DetailsById
+                                                itemid={selectedItemId}
+                                                readOnly={false}
+
+                                                lists={props.lists}
+                                                listtype={props.listtype}
+                                                action={
+                                                    <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
+                                                        <MyIcon icon="close" />
+                                                    </IconButton>
+                                                }
+                                                username={props.username}
+                                            />
+
+                                        </div>
+                                        <div>Scroll position is ({scrollX}, {scrollY})</div>
+                                    </Grid>
+                                </>
+                            }
+                        </Grid >
+                    </Box>
+
+                    <Box p={1} sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
+
+                        <HorizontallyGrid horizontally={true}  >
+                            <HorizontallyItem key={"Listsa"} horizontally={true} >
+                                <Grid item xs={12}>
+                                    <div className={"my-container-content"} >
+                                        {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                                    </div>
+                                </Grid>
+                            </HorizontallyItem>
+                            <HorizontallyItem key={"Listsb"} horizontally={true} >
+                                {(selectedItemId && filterText.length === 0) &&
+                                    <>
+                                        <Grid item xs={12} >
+
+                                            <div className={"my-container-content details-xs"} style={{ position: "relative" }} >
+                                                <DetailsById
+                                                    itemid={selectedItemId}
+                                                    readOnly={false}
+                                                    lists={props.lists}
+                                                    listtype={props.listtype}
+                                                    action={<></>}
+                                                    username={props.username}
+                                                />
+
+                                            </div>
+                                            <div>Scroll position is ({scrollX}, {scrollY})</div>
+                                        </Grid>
+                                    </>
+                                }
+                            </HorizontallyItem>
+                        </HorizontallyGrid>
+
+                    </Box>
+                </>
+            }
 
         </>
     )

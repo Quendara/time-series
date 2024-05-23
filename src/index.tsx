@@ -10,9 +10,10 @@ import {
 } from "react-router-dom";
 
 
-import { cssClasses, theme } from "./Styles"
+import { cssClasses } from "./Styles"
 
 import { ThemeProvider, Grid, CssBaseline, Paper, Menu, MenuItem, ListItemIcon, IconButton, Divider, Avatar, Tooltip, Box, Icon, useMediaQuery, useTheme } from "@mui/material";
+import { createTheme } from '@mui/material/styles';
 
 // import { ListTodo } from './listTodo';
 import { Error } from "./components/Error"
@@ -42,13 +43,18 @@ import { UpdateTodosInput } from "./API";
 import { TodoMainProvider } from "./context/TodoMainProvider";
 import { SandboxGPT } from "./pages/SandboxGPT";
 import { Piano, PianoSong } from "./pages/Piano";
+import { Mails } from "./pages/Mails";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
 
 
-
 const App = () => {
+
+  type MyPaletteMode = 'light' | 'dark';
+
+
+  const [mode, setMode] = React.useState<MyPaletteMode>('dark'); // PaletteMode
 
   const [username, setUsername] = useState("");
   const [jwtTocken, setJwtToken] = useState("");
@@ -65,6 +71,29 @@ const App = () => {
 
   const theme2 = useTheme();
   const matchesUpXs = useMediaQuery(theme2.breakpoints.up('sm'));
+
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          // primary:{
+          //   // main: options?options.primary.main:inittheme.palette.primary.main
+          // },
+          // secondary:{
+          //   // main: options?options.secondary.main:inittheme.palette.secondary.main
+          // },          
+          // primary: options?options.primary:undefined,
+          mode
+        }
+      }),
+    [mode],
+  );
+
+  const toggleColorMode = () => {
+    const newMode = mode === 'light' ? 'dark' : 'light'
+    setMode(newMode);
+    // window.localStorage.setItem( localStorageKeyForTheme, newMode )
+  }
 
 
   const handleSetConfig = (config: TodoMainItem[]) => {
@@ -128,6 +157,10 @@ const App = () => {
             <NavLink key={"nl_" + 1332} to={"/"}  >
               <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
             </NavLink>
+            <NavLink key={"nl_" + 98978} to={"/mails"}  >
+              <IconButton sx={cssClasses.title}><Icon  >mail</Icon></IconButton>
+            </NavLink>
+
 
             {amplifyInitilaized &&
 
@@ -138,6 +171,10 @@ const App = () => {
                 handleSetConfig={handleSetConfig} />
 
             }
+
+            <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+              {theme.palette.mode === 'dark' ? <Icon>dark_mode</Icon> : <Icon>light_mode</Icon>}
+            </IconButton>
 
           </Auth>
 
@@ -161,8 +198,20 @@ const App = () => {
                           <TimeSeries username={username} token={jwtTocken} />
                         } >
                         </Route>
-                        <Route path="/piano" element={<PianoSong play={"C "} />}>
-                        </Route>                        
+
+                        <Route path="/piano" element={
+                          <Paper sx={{ m: 5, p: 2 }}>
+                            <PianoSong play="" showNodes={true} showTextinput={true} />
+                          </Paper>
+                        }>
+                        </Route>
+                        <Route path="/abc" element={
+                          <Paper sx={{ m: 5, p: 2 }}>
+                            <PianoSong play="" showNodes={true} showTextinput={true} showAbcOnly={true} />
+                          </Paper>
+                        }>
+                        </Route>
+
                         <Route path="/diff" element={<CompareLists />}>
                         </Route>
                         <Route path="/replace" element={<ReplaceLists />}>
@@ -170,13 +219,16 @@ const App = () => {
                         <Route path="/sandboxH" element={<SandboxH />}>
                         </Route>
                         <Route path="/SandboxGPT" element={<SandboxGPT apikey={apikeyOpenAi} />}>
-                        </Route>                        
-                        
+                        </Route>
+
                         <Route path="/sandbox" element={<Sandbox />}>
                         </Route>
 
                         <Route path="/csvtools" element={<CsvToolsPage />}>
                         </Route>
+
+                        <Route path="/mails" element={<Mails  token={jwtTocken} />}>
+                        </Route>                        
 
                         <Route path="/" element={
 

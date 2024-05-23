@@ -8,6 +8,9 @@ import { AppBar, Toolbar, Button, TextField, Grid, Card, Typography, Divider, Ca
 
 export const bull = <span style={{ "margin": "5px" }}>•</span>;
 
+export function getUniqueId() {
+    return Math.floor(Math.random() * 1000000);
+  }
 
 export async function restCallToBackendAsync(url:string, token:string, loggingMessage = "Generic Call")
 {
