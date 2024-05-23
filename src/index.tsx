@@ -44,6 +44,7 @@ import { TodoMainProvider } from "./context/TodoMainProvider";
 import { SandboxGPT } from "./pages/SandboxGPT";
 import { Piano, PianoSong } from "./pages/Piano";
 import { Mails } from "./pages/Mails";
+import { PageJoplin } from "./Joplin/PageJoplin";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -158,7 +159,7 @@ const App = () => {
               <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
             </NavLink>
             <NavLink key={"nl_" + 98978} to={"/mails"}  >
-              <IconButton sx={cssClasses.title}><Icon  >mail</Icon></IconButton>
+              <IconButton sx={cssClasses.title}><Mails  token={jwtTocken} renderAs="icon" /></IconButton>
             </NavLink>
 
 
@@ -216,6 +217,13 @@ const App = () => {
                         </Route>
                         <Route path="/replace" element={<ReplaceLists />}>
                         </Route>
+
+                        {/* <Route path="/joplin" element={<PageJoplin toggleColorMode={ toggleColorMode } />}>
+                        </Route> */}
+                        <Route path="/joplin/:context" element={ <PageJoplin toggleColorMode={ toggleColorMode } /> } ></Route>
+                        <Route path="/joplin/:context/:query" element={ <PageJoplin toggleColorMode={ toggleColorMode } /> } ></Route>
+
+                        
                         <Route path="/sandboxH" element={<SandboxH />}>
                         </Route>
                         <Route path="/SandboxGPT" element={<SandboxGPT apikey={apikeyOpenAi} />}>
@@ -227,11 +235,10 @@ const App = () => {
                         <Route path="/csvtools" element={<CsvToolsPage />}>
                         </Route>
 
-                        <Route path="/mails" element={<Mails  token={jwtTocken} />}>
+                        <Route path="/mails" element={<Mails  token={jwtTocken} renderAs="table" />}>
                         </Route>                        
 
                         <Route path="/" element={
-
                           <MainNavigation
                             horizontally={true}
                             render="main"

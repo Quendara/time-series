@@ -1,4 +1,4 @@
-import { Avatar, Box, ListItem, ListItemAvatar, ListItemText, Paper, Stack, Typography } from "@mui/material"
+import { Avatar, Badge, Box, Icon, ListItem, ListItemAvatar, ListItemText, Paper, Stack, Typography } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import Settings from "../Settings";
 import { bool } from "aws-sdk/clients/signer";
@@ -6,8 +6,11 @@ import { findUnique, sortArrayBy } from '../components/helpers'
 
 import { red, purple, blue, green } from '@mui/material/colors';
 
+type RenderAs = "icon" | "table"
+
 interface Props {
     token: string
+    renderAs : RenderAs
 }
 
 interface Mail {
@@ -92,12 +95,19 @@ export const Mails = (props: Props) => {
 
     const colorArr = [ red[500], purple[900], blue[600], green[800]]
 
-    return (
+    const renderAsIcon = () => (
+        <Badge badgeContent={mails.length} color="primary" >
+        <Icon>mail</Icon>
+        </Badge>
+    )
 
-        <Paper  >
+    return props.renderAs === "icon" ? renderAsIcon() : (
+
+        <Paper>
 
             <h1>Mails</h1>
 
+  
             {groupedMails.map((group, index) => (
                 <>
                     
