@@ -16,9 +16,21 @@ interface ChatProps {
 
 const ChatMessage = (props: ChatProps) => {
 
+    const isUndefined = ( probe : any ) => {
+        return ( probe !== undefined || props.message.content !== null  )
+    }
+
     const clickHandle = () => {
-        if (props.message.content !== null) {
-            navigator.clipboard.writeText(props.message.content)
+
+        
+        if (props.message.content ) {
+            if( typeof props.message.content === 'string' ){
+                navigator.clipboard.writeText(props.message.content)
+            }
+            else{
+                alert( "No string" )
+            }
+             
         }
     }
 
@@ -37,7 +49,7 @@ const ChatMessage = (props: ChatProps) => {
 
     return (
         <>
-            {(props.message.content !== null && props.message.content.length > 0) &&
+            {(props.message.content) &&
                 <Box m={1} sx={getStyleFromMessage(props.message)}>
 
                     <IconButton sx={{ position: "absolute", right: "2%" }} onClick={clickHandle}><Icon>content_copy</Icon></IconButton>
@@ -66,36 +78,46 @@ export const GPTBox = (props: Props) => {
 
     const checkEnter = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
+            if (e.shiftKey ){
+                callGPT()
+            }
             // alert("Enter")
-            callGPT()
+            
         }
     }
 
 
     useEffect(() => {
 
-        let mgs: ChatCompletionMessageParam[] = []
-
-        if (messages.length > 0) {
-            // check if the first message is a system, replace content
-            if (messages.at(0)?.role === "system") {
-                mgs = [...messages]
-                mgs[0].content = props.systemMessage
-            }
-            else {
-                mgs = [{ role: "system", content: props.systemMessage }, ...messages]
-            }
-        }
-        else {
-            // add system to the beginning
-            mgs = [{ role: "system", content: props.systemMessage }, ...messages]
-
-        }
-
-
-        setMessages(mgs)
+        initChat()
 
     }, [props.systemMessage]);
+
+    const initChat = () => {
+        let mgs: ChatCompletionMessageParam[] = []
+
+        // const 
+
+        // if (messages.length > 0) {
+        //     // check if the first message is a system, replace content
+        //     if (messages.at(0)?.role === "system") {
+        //         mgs = [...messages]
+        //         mgs[0].content = props.systemMessage
+        //     }
+        //     else {
+        //         mgs = [{ role: "system", content: props.systemMessage }, ...messages]
+        //     }
+        // }
+        // else {
+        //     // add system to the beginning
+        //     mgs = [{ role: "system", content: props.systemMessage }, ...messages]
+
+        // }
+
+        mgs = [{ role: "system", content: props.systemMessage }]
+
+        setMessages(mgs)
+    }
 
 
     const callGPT = async () => {
@@ -118,7 +140,8 @@ export const GPTBox = (props: Props) => {
 
 
         const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+            // model: "gpt-3.5-turbo",
+            model: "gpt-4o",
             messages: mgs,
             temperature: 1,
             max_tokens: 256,
@@ -131,7 +154,7 @@ export const GPTBox = (props: Props) => {
 
         const assistant = response.choices.at(0)?.message.content
 
-        if (assistant !== undefined && assistant !== null) {
+        if (assistant ) {
             const mgs2 = [...mgs]
             mgs2.push({ role: "assistant", content: assistant })
             setMessages(mgs2)
@@ -158,6 +181,7 @@ export const GPTBox = (props: Props) => {
                     value={current}
                     label="Input GPT"
                     size="small"
+                    multiline
                     fullWidth
                     variant="outlined"
                     onKeyDown={e => checkEnter(e)}
@@ -165,6 +189,7 @@ export const GPTBox = (props: Props) => {
                 />
 
                 <Button variant="contained" onClick={callGPT} >Go</Button>
+                <Button variant="contained" color="error" onClick={initChat} ><Icon>delete</Icon></Button>
             </Stack>
 
         </>
