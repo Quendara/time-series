@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Theme, makeStyles, useTheme } from '@mui/material/styles';
-import { AppBar, Box, CssBaseline, Divider, Drawer, Grid, IconButton, Link, TextField, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Link, List, TextField, Toolbar, Typography } from "@mui/material";
 import Icon from '@mui/material/Icon';
 // import { id } from "date-fns/locale";
 
@@ -30,16 +30,21 @@ const getStyles = (theme: Theme) => {
     return {
         content: {
             height: "100vw",
-            background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100],
+            // width: "80%",
+            // background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100],
             padding: theme.spacing(3)
         },
         root: {
             display: "flex"
         },
         drawer: {
+            zIndex: 10,
             width: drawerWidth,
             flexShrink: 0,
-            zIndex: 10,
+            '& .MuiDrawer-paper': {
+                width: drawerWidth,
+                boxSizing: 'border-box',
+            },
 
         },
         drawerPaper: {
@@ -59,16 +64,6 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
     const navigate = useNavigate()
 
     const styles = getStyles(theme)
-    // const cssClasses = makeStyles((theme: Theme) => (
-    //     {
-    //         drawerPaper: {
-    //             width: 300,
-    //             backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.grey[100]
-    //         }
-    //     }  
-    //     ))
-    
-    
 
     // all folders and notes
     const [folders, setFolders] = useState<JoplinData[]>([]);
@@ -198,9 +193,6 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                 anchor="left"
                 variant={"permanent"}
                 sx={styles.drawer}
-                classes={{
-                    paper: "width:300px"
-                }}
 
                 ModalProps={{
                     keepMounted: true // Better open performance on mobile.
@@ -211,9 +203,39 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                 {context === "all" &&
 
                     <>
-                        {/* <Atoms
-                            atom={{ "type": "Button", "value": folderNameFromId(folders, currentParentID as string), "color": "primary", "startIcon": "arrow_back" }}
-                            callback={(x) => { selectParentFolderByParentId(currentParentID as string); }} />
+                        <Button
+                            startIcon={<Icon>arrow_back</Icon>}
+                            onClick={() => selectParentFolderByParentId(currentParentID as string)}
+                        >{folderNameFromId(folders, currentParentID as string)}
+                        </Button>
+
+                        <Typography variant="h6" m={1} >Folder</Typography>
+                        <List>
+                            {currentFolders.map((item: JoplinData) => (
+                                <JolinNote
+                                    data={item}
+                                    folders={folders}
+                                    defaultIcon="folder"
+                                    xs={12}
+                                    selectedId={selectedItem?.id}
+                                    renderAs="list"
+                                    selectCallback={(x) => selectFolderByParentId(x)} />
+                            ))}
+                        </List>
+                        
+                        <Typography variant="h6" m={1} >Notes</Typography>
+                        <List>
+                            {currentNotes.map((item: JoplinData) => (
+                                <JolinNote
+                                    data={item}
+                                    folders={folders}
+                                    xs={12}
+                                    selectedId={selectedItem?.id}
+                                    renderAs="list"
+                                    selectCallback={(x) => selectNote(x)} />
+                            ))}
+                        </List>                        
+                        {/*                        
 
 
                         <Molecules molecules={currentFolders.map((item: any) => { return { "type": "ListItem", "value": item.title, "startIcon": "folder", "id": item.id } })}

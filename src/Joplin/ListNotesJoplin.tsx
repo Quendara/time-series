@@ -97,13 +97,12 @@ export const ListNotesJoplin = (props: NotesProps) => {
                             <JolinNote
                                 data={item.note}
                                 folders={props.folders}
-                                xs={12}
-                                
+                                xs={12}                                
                                 selectedId={props.selectedNoteId}
                                 renderAs="list"
                                 selectCallback={props.selectCallback} />
                         )}
-                    </List>)
+                    </List> )
 
 
         }

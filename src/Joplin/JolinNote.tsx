@@ -23,9 +23,11 @@ export interface JoplinData {
 
 interface NoteProps {
     data: JoplinData
-    folders: JoplinData[]    
+    folders: JoplinData[]
     xs: number;
-    renderAs: NoteStlye
+    renderAs: NoteStlye;
+    defaultIcon?: string;
+    
     selectedId?: string;
     selectCallback: (id: string) => void;
 }
@@ -34,40 +36,40 @@ export const getPaperColor = (theme: Theme, color: muiColor): any => {
 
     let sx = {}
     let fix = { width: "100%" }
-  
-    switch ( color ) {
-      // case "primary": return {  backgroundColor: theme['palette']['primary'][theme.mode] }
-      case "error":
-        sx = {
-          backgroundColor: theme.palette.mode === 'dark' ? 'rgb(22, 11, 11)' : 'rgb(253, 237, 237)',
-          color: theme.palette.mode === 'dark' ? theme.palette.error.light : theme.palette.error.dark,
-        }
-        break;
-      case "success":
-        sx = {
-          backgroundColor: theme.palette.mode === 'dark' ? 'rgb(12, 19, 13)' : 'rgb(237, 247, 237)',
-          color: theme.palette.mode === 'dark' ? theme.palette.success.light : theme.palette.success.dark
-        }
-        break;
-      case "info":
-      case "primary":
-        sx = {
-          backgroundColor: theme.palette.mode === 'dark' ? 'rgb(7, 19, 24)' : 'rgb(229, 246, 253)',
-          color: theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark
-        }
-        break;
-      case "warning":
-        sx = {
-          backgroundColor: theme.palette.mode === 'dark' ? 'rgb(25, 18, 7)' : 'rgb(255, 244, 229)',
-          //color: theme.palette.mode === 'dark' ? theme.palette.success.dark : theme.palette.success.light
-        }
-        break;
-      default: return fix;
+
+    switch (color) {
+        // case "primary": return {  backgroundColor: theme['palette']['primary'][theme.mode] }
+        case "error":
+            sx = {
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(22, 11, 11)' : 'rgb(253, 237, 237)',
+                color: theme.palette.mode === 'dark' ? theme.palette.error.light : theme.palette.error.dark,
+            }
+            break;
+        case "success":
+            sx = {
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(12, 19, 13)' : 'rgb(237, 247, 237)',
+                color: theme.palette.mode === 'dark' ? theme.palette.success.light : theme.palette.success.dark
+            }
+            break;
+        case "info":
+        case "primary":
+            sx = {
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(7, 19, 24)' : 'rgb(229, 246, 253)',
+                color: theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.dark
+            }
+            break;
+        case "warning":
+            sx = {
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(25, 18, 7)' : 'rgb(255, 244, 229)',
+                //color: theme.palette.mode === 'dark' ? theme.palette.success.dark : theme.palette.success.light
+            }
+            break;
+        default: return fix;
     }
-  
+
     const ret = { ...sx, ...fix }
     return ret
-  };
+};
 
 export const folderNameFromId = (folders: JoplinData[], id: string) => {
     const filteredFolders = folders.filter((folder: any) => { return id === folder.id })
@@ -87,11 +89,13 @@ export const getNotePriority = (note: JoplinData) => {
 
     let prio: NotePriority = '2-normal'
 
-    if (note.body.trim() === "keine") {
-        return '3-done'
-    }
-    if (note.body.includes("urgent")) {
-        return '1-urgent'
+    if ( note.body !== undefined ) {
+        if (note.body.trim() === "keine") {
+            return '3-done'
+        }
+        if (note.body.includes("urgent")) {
+            return '1-urgent'
+        }
     }
     return prio
 
@@ -112,7 +116,7 @@ export const JolinNote = (props: NoteProps) => {
     }
 
     let myColor: muiColor = undefined
-    let myIcon: string = "text_snippet"
+    let myIcon: string = props.defaultIcon?props.defaultIcon: "text_snippet"
 
     const notePri = getNotePriority(props.data)
 
@@ -131,7 +135,7 @@ export const JolinNote = (props: NoteProps) => {
         return date.toISOString().split('T')[0]
     }
 
-    const hasMore = props.data.body.trim().split("\n").length > 1
+    const hasMore = props.data.body && props.data.body.trim().split("\n").length > 1
 
 
     const renderHeaderLine = (line: string) => {
@@ -159,7 +163,7 @@ export const JolinNote = (props: NoteProps) => {
                         spacing={2}>
 
                         <Box>
-                            { props.data.body.trim().split("\n").map(line => {
+                            {props.data.body.trim().split("\n").map(line => {
 
                                 if (line.startsWith("### ")) {
                                     return (<Typography sx={{ fontSize: "1.1em", fontWeight: 700 }} component="p">{renderHeaderLine(line)} </Typography>)
@@ -172,7 +176,7 @@ export const JolinNote = (props: NoteProps) => {
                                 }
 
                                 return (<Typography sx={{ fontSize: "1.1em", fontWeight: 400 }} component="pre">{line} </Typography>)
-                            })} 
+                            })}
                         </Box>
 
                     </Stack>

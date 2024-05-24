@@ -16,10 +16,6 @@ interface ChatProps {
 
 const ChatMessage = (props: ChatProps) => {
 
-    const isUndefined = ( probe : any ) => {
-        return ( probe !== undefined || props.message.content !== null  )
-    }
-
     const clickHandle = () => {
 
         
