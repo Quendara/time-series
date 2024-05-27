@@ -5,29 +5,64 @@ import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { MyMarkdown } from "../components/MyMarkdown";
 import { relative } from "path";
+import { Buffer } from "buffer";
 
 
 interface ChatProps {
     children?: React.ReactNode;
     message: ChatCompletionMessageParam;
-
+    apikey: string;
 }
+
+async function text2Speech(apiKey: string, text: string) {
+
+    console.log("text2Speech : " + text)
+    console.log("apiKey : " + apiKey)
+
+    const openai = new OpenAI({
+        apiKey: apiKey, dangerouslyAllowBrowser: true
+    });
+
+    const mp3 = await openai.audio.speech.create({
+        model: "tts-1",
+        voice: "shimmer",
+        input: text // "Today is a wonderful day to build something people love!",
+    });
+    // console.log(speechFile);
+    const buffer = Buffer.from(await mp3.arrayBuffer());
+
+    // Convert the buffer to a Blob
+    const blob = new Blob([buffer], { type: 'audio/mp3' });
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+    // Set the URL as the audio source
+    return url
+    // setAudioSrc(url);
+    // await fs.promises.writeFile(speechFile, buffer);
+}
+
 
 
 const ChatMessage = (props: ChatProps) => {
 
-    const clickHandle = () => {
+    const [audioSrc, setAudioSrc] = useState<string | null>(null);
+    const copyToClipboardHandle = () => {
 
-        
-        if (props.message.content ) {
-            if( typeof props.message.content === 'string' ){
+        if (props.message.content) {
+            if (typeof props.message.content === 'string') {
                 navigator.clipboard.writeText(props.message.content)
             }
-            else{
-                alert( "No string" )
+            else {
+                alert("No string")
             }
-             
+
         }
+    }
+
+    const text2SpeechHandle = async () => {
+        // console.log("text2SpeechHandle" + props.message.content)
+        const url = await text2Speech(props.apikey, props.message.content as string)
+        setAudioSrc(url)
     }
 
     const getStyleFromMessage = (message: ChatCompletionMessageParam) => {
@@ -43,13 +78,22 @@ const ChatMessage = (props: ChatProps) => {
         }
     }
 
+
+    
     return (
         <>
             {(props.message.content) &&
                 <Box m={1} sx={getStyleFromMessage(props.message)}>
 
-                    <IconButton sx={{ position: "absolute", right: "2%" }} onClick={clickHandle}><Icon>content_copy</Icon></IconButton>
+                    <IconButton sx={{ position: "absolute", right: "10px" }} onClick={copyToClipboardHandle}><Icon>content_copy</Icon></IconButton>
+                    <IconButton sx={{ position: "absolute", right: "50px" }} onClick={text2SpeechHandle}><Icon>play_circle</Icon></IconButton>
                     <Box sx={{ width: "95%" }}>
+                        {audioSrc && (
+                            <audio autoPlay>
+                                <source src={audioSrc} type="audio/mp3" />
+                                Your browser does not support the audio element.
+                            </audio>
+                        )}
                         <MyMarkdown content={props.message.content} />
                     </Box>
                 </Box>
@@ -72,13 +116,15 @@ export const GPTBox = (props: Props) => {
     const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
     const [current, setCurrent] = useState("");
 
+
+
     const checkEnter = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            if (e.shiftKey ){
+            if (e.shiftKey) {
                 callGPT()
             }
             // alert("Enter")
-            
+
         }
     }
 
@@ -91,27 +137,7 @@ export const GPTBox = (props: Props) => {
 
     const initChat = () => {
         let mgs: ChatCompletionMessageParam[] = []
-
-        // const 
-
-        // if (messages.length > 0) {
-        //     // check if the first message is a system, replace content
-        //     if (messages.at(0)?.role === "system") {
-        //         mgs = [...messages]
-        //         mgs[0].content = props.systemMessage
-        //     }
-        //     else {
-        //         mgs = [{ role: "system", content: props.systemMessage }, ...messages]
-        //     }
-        // }
-        // else {
-        //     // add system to the beginning
-        //     mgs = [{ role: "system", content: props.systemMessage }, ...messages]
-
-        // }
-
         mgs = [{ role: "system", content: props.systemMessage }]
-
         setMessages(mgs)
     }
 
@@ -150,7 +176,7 @@ export const GPTBox = (props: Props) => {
 
         const assistant = response.choices.at(0)?.message.content
 
-        if (assistant ) {
+        if (assistant) {
             const mgs2 = [...mgs]
             mgs2.push({ role: "assistant", content: assistant })
             setMessages(mgs2)
@@ -160,11 +186,13 @@ export const GPTBox = (props: Props) => {
 
 
 
+
+
     return (
         <>
             <Box m={3} sx={{ color: "#FFF" }} >
                 {messages.map(message => (
-                    <ChatMessage message={message} />
+                    <ChatMessage message={message} apikey={props.apikey} />
                 )
 
                 )}
@@ -184,7 +212,9 @@ export const GPTBox = (props: Props) => {
                     onChange={e => setCurrent(e.target.value)}
                 />
 
-                <Button variant="contained" onClick={callGPT} >Go</Button>
+
+
+                <Button variant="contained" onClick={callGPT} >ASK</Button>
                 <Button variant="contained" color="error" onClick={initChat} ><Icon>delete</Icon></Button>
             </Stack>
 
