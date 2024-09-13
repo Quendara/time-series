@@ -3,6 +3,7 @@ import { Grid, Card, CardContent, Stack, ListItemButton, ListItemIcon, Icon, Lis
 import { Theme, useTheme } from '@mui/material/styles';
 
 import React, { useState } from "react";
+import { JolinNoteLink, JolinResource } from "./JolinResource";
 // import { muiColor, getPaperColor } from "../Atoms/Atoms";
 
 
@@ -21,13 +22,14 @@ export interface JoplinData {
     id: string;
 }
 
+
 interface NoteProps {
     data: JoplinData
     folders: JoplinData[]
     xs: number;
     renderAs: NoteStlye;
     defaultIcon?: string;
-    
+
     selectedId?: string;
     selectCallback: (id: string) => void;
 }
@@ -89,7 +91,7 @@ export const getNotePriority = (note: JoplinData) => {
 
     let prio: NotePriority = '2-normal'
 
-    if ( note.body !== undefined ) {
+    if (note.body !== undefined) {
         if (note.body.trim() === "keine") {
             return '3-done'
         }
@@ -116,7 +118,7 @@ export const JolinNote = (props: NoteProps) => {
     }
 
     let myColor: muiColor = undefined
-    let myIcon: string = props.defaultIcon?props.defaultIcon: "text_snippet"
+    let myIcon: string = props.defaultIcon ? props.defaultIcon : "text_snippet"
 
     const notePri = getNotePriority(props.data)
 
@@ -148,13 +150,56 @@ export const JolinNote = (props: NoteProps) => {
                 {match?.at(2)}
             </>
         )
-
     }
+
+    const parseLine = ( line: string) => {
+
+        if( line.trim().length === 0 ){
+            return( <br/> )
+        }
+
+        // check header
+        if (line.startsWith("### ")) {
+            return (<Typography sx={{ fontSize: "1.1em", fontWeight: 700 }} component="p">{renderHeaderLine(line)} </Typography>)
+        }
+        if (line.startsWith("## ")) {
+            return (<Typography sx={{ fontSize: "1.3em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
+        }
+        if (line.startsWith("# ")) {
+            return (<Typography sx={{ fontSize: "1.5em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
+        }
+        // check if link is resource / image
+        // - [Abteilung](:/504e6b5cbd5e4d268c0f81bdd4b281fc)
+
+        // const str = "[Name](:/504e6b5cbd5e4d268c0f81bdd4b281fc)";
+        // const regex = /\[([^\]]+)\]\(:\/([a-zA-Z0-9]+)\)/;
+        // const regex = /\[([^\]]+)\]\((:?\/?([a-zA-Z0-9]+))\)/;
+        // const regex = /\[([^\]]+)\]\s*\(([a-zA-Z0-9]+)\)/;
+        // const regex = /\[([\w\ ]+)\]\s*\(:\/(.+?)\)/;
+        const regex = /\[([^\]]+)\]\s*\(:\/(.+?)\)/;
+        // const regex = /\[([^\]]+)\]\s*\(:\/(.+?)\)/;
+        const match = line.match(regex);
+
+        if (match ) {
+            // const id = match[1];
+            const name = match[1]; // Der Name innerhalb der eckigen Klammern
+            const id = match[2];   // Die ID nach `(:/` und vor `)`
+
+            return (
+            <>
+                <JolinResource id={ id }  />
+                <JolinNoteLink id={ id } name={name} selectCallback={props.selectCallback} />
+            
+            </>)
+        } else {
+            return (<Typography sx={{ fontSize: "1.1em", fontWeight: 400 }} >{line} </Typography>)
+        }
+    }
+
 
     const renderBody = () => {
         return (
             <>
-
                 <Typography variant="body1" >
                     <Stack
                         direction="row"
@@ -163,19 +208,8 @@ export const JolinNote = (props: NoteProps) => {
                         spacing={2}>
 
                         <Box>
-                            {props.data.body.trim().split("\n").map(line => {
-
-                                if (line.startsWith("### ")) {
-                                    return (<Typography sx={{ fontSize: "1.1em", fontWeight: 700 }} component="p">{renderHeaderLine(line)} </Typography>)
-                                }
-                                if (line.startsWith("## ")) {
-                                    return (<Typography sx={{ fontSize: "1.3em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
-                                }
-                                if (line.startsWith("# ")) {
-                                    return (<Typography sx={{ fontSize: "1.5em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
-                                }
-
-                                return (<Typography sx={{ fontSize: "1.1em", fontWeight: 400 }} component="pre">{line} </Typography>)
+                            {props.data.body.trim().split("\n").map(line => {                            
+                                return ( parseLine( line ) )
                             })}
                         </Box>
 

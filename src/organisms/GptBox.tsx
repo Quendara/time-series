@@ -128,11 +128,8 @@ export const GPTBox = (props: Props) => {
         }
     }
 
-
     useEffect(() => {
-
         initChat()
-
     }, [props.systemMessage]);
 
     const initChat = () => {

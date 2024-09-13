@@ -55,6 +55,7 @@ const getStyles = (theme: Theme) => {
 }
 
 
+
 export const PageJoplin = ({ toggleColorMode }: Props) => {
 
     let { context, query } = useParams<{ context?: string, query?: string }>();
