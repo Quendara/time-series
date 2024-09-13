@@ -1,4 +1,4 @@
-import { Grid, Card, CardContent, Stack, ListItemButton, ListItemIcon, Icon, ListItemText, Typography, IconButton, CardActions, Button, Box, CardHeader, Tab } from "@mui/material";
+import { Grid, Card, CardContent, Stack, ListItemButton, ListItemIcon, Icon, ListItemText, Typography, IconButton, CardActions, Button, Box, CardHeader, Tab, Tooltip } from "@mui/material";
 // import { useTheme } from "@mui/styles";
 import { Theme, useTheme } from '@mui/material/styles';
 
@@ -152,10 +152,26 @@ export const JolinNote = (props: NoteProps) => {
         )
     }
 
-    const parseLine = ( line: string) => {
+    function extractMarkdownLinks(text: string): { name: string; link: string }[] {
+        const regex = /\[([^\]]+)\]\s*\(([^)]+)\)/g;
+        const matches = [];
+        let match;
 
-        if( line.trim().length === 0 ){
-            return( <br/> )
+        while ((match = regex.exec(text)) !== null) {
+            matches.push({ name: match[1], link: match[2] });
+        }
+
+        return matches;
+    }
+
+    const openInNewTab = (url?: string) => {
+        window.open(url, "_blank", "noreferrer");
+    };
+
+    const parseLine = (line: string) => {
+
+        if (line.trim().length === 0) {
+            return (<br />)
         }
 
         // check header
@@ -171,28 +187,42 @@ export const JolinNote = (props: NoteProps) => {
         // check if link is resource / image
         // - [Abteilung](:/504e6b5cbd5e4d268c0f81bdd4b281fc)
 
-        // const str = "[Name](:/504e6b5cbd5e4d268c0f81bdd4b281fc)";
-        // const regex = /\[([^\]]+)\]\(:\/([a-zA-Z0-9]+)\)/;
-        // const regex = /\[([^\]]+)\]\((:?\/?([a-zA-Z0-9]+))\)/;
-        // const regex = /\[([^\]]+)\]\s*\(([a-zA-Z0-9]+)\)/;
-        // const regex = /\[([\w\ ]+)\]\s*\(:\/(.+?)\)/;
-        const regex = /\[([^\]]+)\]\s*\(:\/(.+?)\)/;
-        // const regex = /\[([^\]]+)\]\s*\(:\/(.+?)\)/;
-        const match = line.match(regex);
+        const matches = extractMarkdownLinks(line)
 
-        if (match ) {
+        if (matches.length > 0) {
             // const id = match[1];
-            const name = match[1]; // Der Name innerhalb der eckigen Klammern
-            const id = match[2];   // Die ID nach `(:/` und vor `)`
+            const match = matches.at(0)
+            const name = match?.name; // Der Name innerhalb der eckigen Klammern
+            let id = match?.link;   // Die ID nach `(:/` und vor `)`
 
-            return (
-            <>
-                <JolinResource id={ id }  />
-                <JolinNoteLink id={ id } name={name} selectCallback={props.selectCallback} />
-            
-            </>)
+            let isJolpinLink = false
+
+            if (id?.startsWith(":/")) {
+
+                isJolpinLink = true
+                id = id.split(":/").at(1)
+            }
+
+
+            if (name !== undefined && id !== undefined) {
+                return (
+                    <>
+                        {isJolpinLink ? <>
+                            <JolinResource id={id} />
+                            <JolinNoteLink id={id} name={name} selectCallback={props.selectCallback} />
+                        </> :
+                            <Tooltip title={"link to " + id}>
+                                {/* <a target='_blank'  href={id} > {name} </a> */}
+                                <Button variant="contained" onClick={() => openInNewTab(id)}>{name} </Button>
+                            </Tooltip>
+                        }
+                    </>)
+            }
+            else {
+                return (<>SOMETHING MISSING</>)
+            }
         } else {
-            return (<Typography sx={{ fontSize: "1.1em", fontWeight: 400 }} >{line} </Typography>)
+            return (<Typography component="pre" sx={{ fontSize: "1.1em", fontWeight: 400 }} >{line} </Typography>)
         }
     }
 
@@ -208,8 +238,8 @@ export const JolinNote = (props: NoteProps) => {
                         spacing={2}>
 
                         <Box>
-                            {props.data.body.trim().split("\n").map(line => {                            
-                                return ( parseLine( line ) )
+                            {props.data.body.trim().split("\n").map(line => {
+                                return (parseLine(line))
                             })}
                         </Box>
 
@@ -278,8 +308,10 @@ export const JolinNote = (props: NoteProps) => {
                 </Icon>
             </ListItemIcon>
             <ListItemText
-                // secondary={folderTitle}
-                primary={props.data.title.split("-").at(0)} />
+                secondary={props.data.title.split("-").at(1) }
+                primary={props.data.title.split("-").at(0)} 
+                // primary={props.data.title } 
+                />
 
         </ListItemButton>
     )
@@ -294,11 +326,7 @@ export const JolinNote = (props: NoteProps) => {
             sx={(props.data.id === props.selectedId) ?
                 { borderBottom: "3px solid", borderColor: theme.palette.primary.main }
                 : {}}
-            //
-            // disabled={props.data.id === props.selectedId}
-            // disabled={true}
-            //label={renderAsList()}
-            label={props.data.title.split("-").at(0)}
+            label={props.data.title }
         />
     )
 
