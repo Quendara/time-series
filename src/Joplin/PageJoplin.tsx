@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { Theme, makeStyles, useTheme } from '@mui/material/styles';
-import { AppBar, Box, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Link, List, TextField, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Toolbar, Typography } from "@mui/material";
 import Icon from '@mui/material/Icon';
 // import { id } from "date-fns/locale";
 
 import { JolinNote, JoplinData, NotePriority, folderNameFromId } from "./JolinNote";
+import { FolderNav } from "./FolderNav";
 import { useParams, useNavigate } from "react-router-dom";
 
 // import { useStyles } from "../Styles";
@@ -30,7 +31,7 @@ const getStyles = (theme: Theme) => {
     return {
         content: {
             height: "100vw",
-            // width: "80%",
+            width: "80%",
             // background: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100],
             padding: theme.spacing(3)
         },
@@ -122,6 +123,25 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
         setCurrentNotes(filteredNotes)
     }, [currentParentID]);
 
+    useEffect(() => {
+
+        if (context === "folder") {
+            if (query !== undefined) {
+                const filteredFolders = folders.filter((item: any) => { return item.name === query })
+                // const filteredNotes = notes.filter((item: any) => { return item.parent_id === currentParentID })
+
+                const pid = filteredFolders.at(0)?.parent_id
+                setParentID(pid)
+
+                // # const currentItems = currentFolders.concat(currentNotes)
+                // setCurrentFolders(filteredFolders)
+                // setCurrentNotes(filteredNotes)
+            }
+        }
+
+
+    }, [context, query]);
+
     const selectFolderByParentId = (id: string) => {
         console.log("selectFolder " + id)
         setParentID(id)
@@ -165,9 +185,11 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                     <Typography variant="h6" >
                         Joplin
                     </Typography>
-                    <Link m={1} color="grey.50" href="/joplin/all">Alle</Link>
+                    <Link m={1} color="grey.50" href="/joplin/folder">Alle</Link>
                     <Link m={1} color="grey.50" href="/joplin/todos">Todos</Link>
                     <Link m={1} color="grey.50" href="/joplin/recently">Recently</Link>
+
+
 
                     <Box sx={{ "flexGrow": 1 }} />
                     <TextField
@@ -201,51 +223,67 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             >
                 <Toolbar />
 
-                {context === "all" &&
-
+                {context === "folder" &&
                     <>
-                        <Button
+                        {/* <Button
                             startIcon={<Icon>arrow_back</Icon>}
                             onClick={() => selectParentFolderByParentId(currentParentID as string)}
                         >{folderNameFromId(folders, currentParentID as string)}
-                        </Button>
-
-                        <Typography variant="h6" m={1} >Folder</Typography>
+                        </Button> */}
                         <List>
-                            {currentFolders.map((item: JoplinData) => (
-                                <JolinNote
-                                    data={item}
-                                    folders={folders}
-                                    defaultIcon="folder"
-                                    xs={12}
-                                    selectedId={selectedItem?.id}
-                                    renderAs="list"
-                                    selectCallback={(x) => selectFolderByParentId(x)} />
-                            ))}
+
+
                         </List>
-                        
-                        <Typography variant="h6" m={1} >Notes</Typography>
-                        <List>
-                            {currentNotes.map((item: JoplinData) => (
-                                <JolinNote
-                                    data={item}
-                                    folders={folders}
-                                    xs={12}
-                                    selectedId={selectedItem?.id}
-                                    renderAs="list"
-                                    selectCallback={(x) => selectNote(x)} />
-                            ))}
-                        </List>                        
-                        {/*                        
 
 
-                        <Molecules molecules={currentFolders.map((item: any) => { return { "type": "ListItem", "value": item.title, "startIcon": "folder", "id": item.id } })}
-                            callback={(x) => selectFolderByParentId(x)}
-                        />
-                        <Divider />
-                        <Molecules molecules={currentNotes.map((item: any) => { return { "type": "ListItem", "color": "info", "value": item.title, "startIcon": "text_snippet", "id": item.id } })}
-                            callback={(x ) => selectNote(x)}
-                        /> */}
+                        <>
+                            <Typography variant="h6" m={1} >Folders</Typography>
+                            <List>
+                                <ListItemButton
+                                    onClick={() => selectParentFolderByParentId(currentParentID as string)}
+                                >
+                                    {/* <ListItemIcon >
+                                    <Icon>arrow_back</Icon>
+                                </ListItemIcon> */}
+                                    <ListItemText
+
+                                        primary={folderNameFromId(folders, currentParentID as string)}
+                                    // primary={props.data.title } 
+                                    />
+
+                                </ListItemButton>
+
+                                {currentFolders.map((item: JoplinData) => (
+                                    <JolinNote
+                                        data={item}
+                                        folders={folders}
+                                        defaultIcon="folder"
+                                        xs={12}
+                                        selectedId={selectedItem?.id}
+                                        renderAs="list"
+                                        selectCallback={(x) => selectFolderByParentId(x)} />
+                                ))}
+                            </List>
+                        </>
+
+
+                        {currentNotes.length > 0 &&
+                            <>
+                                <Typography variant="h6" m={1} >Notes</Typography>
+                                <List>
+                                    {currentNotes.map((item: JoplinData) => (
+                                        <JolinNote
+                                            data={item}
+                                            folders={folders}
+                                            xs={12}
+                                            selectedId={selectedItem?.id}
+                                            renderAs="list"
+                                            selectCallback={(x) => selectNote(x)} />
+                                    ))}
+                                </List>
+                            </>
+                        }
+
                         <Divider />
                     </>
                 }
@@ -288,6 +326,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                             folders={folders} selectCallback={(id) => selectNote(id)} />
                     </>
                 }
+
                 {context === "search" &&
                     <>
                         <Typography variant="h6" m={1} >search {query} </Typography>
@@ -306,17 +345,28 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             </Drawer>
 
             <Box sx={styles.content}>
-                <Toolbar />
+
+
 
                 {selectedItem ?
                     <>
-                        <JolinNote
-                            data={selectedItem}
-                            folders={folders}
-                            xs={12}
-                            renderAs="card"
-                            selectCallback={(id) => selectNote(id)}
-                        />
+                        <Paper sx={{ p: 1, mb: 1 }}>
+                            <FolderNav
+                                data={selectedItem}
+                                folders={folders}
+                                selectCallback={(x) => selectFolderByParentId(x)}
+
+                            />
+                        </Paper>
+                        <Grid container >
+                            <JolinNote
+                                data={selectedItem}
+                                folders={folders}
+                                xs={12}
+                                renderAs="card"
+                                selectCallback={(id) => selectNote(id)}
+                            />
+                        </Grid>
                     </> :
                     <>
                         {context === "todos" &&

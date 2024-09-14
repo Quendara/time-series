@@ -100,8 +100,9 @@ export const getNotePriority = (note: JoplinData) => {
         }
     }
     return prio
-
 }
+
+
 
 export const JolinNote = (props: NoteProps) => {
     const theme = useTheme();
@@ -170,7 +171,8 @@ export const JolinNote = (props: NoteProps) => {
 
     const parseLine = (line: string) => {
 
-        if (line.trim().length === 0) {
+        const trimmedLine = line.trim()
+        if (trimmedLine.length === 0) {
             return (<br />)
         }
 
@@ -222,7 +224,7 @@ export const JolinNote = (props: NoteProps) => {
                 return (<>SOMETHING MISSING</>)
             }
         } else {
-            return (<Typography component="pre" sx={{ fontSize: "1.1em", fontWeight: 400 }} >{line} </Typography>)
+            return (<Typography component="p" sx={{ fontSize: "1.1em", fontWeight: 400 }} >{line} </Typography>)
         }
     }
 
@@ -303,15 +305,15 @@ export const JolinNote = (props: NoteProps) => {
             selected={props.data.id === props.selectedId}
         >
             <ListItemIcon >
-                <Icon color={myColor}>
+                <Icon color={myColor} >
                     {myIcon}
                 </Icon>
             </ListItemIcon>
             <ListItemText
-                secondary={props.data.title.split("-").at(1) }
-                primary={props.data.title.split("-").at(0)} 
-                // primary={props.data.title } 
-                />
+                secondary={props.data.title.split("-").at(1)}
+                primary={props.data.title.split("-").at(0)}
+            // primary={props.data.title } 
+            />
 
         </ListItemButton>
     )
@@ -326,7 +328,7 @@ export const JolinNote = (props: NoteProps) => {
             sx={(props.data.id === props.selectedId) ?
                 { borderBottom: "3px solid", borderColor: theme.palette.primary.main }
                 : {}}
-            label={props.data.title }
+            label={props.data.title}
         />
     )
 
