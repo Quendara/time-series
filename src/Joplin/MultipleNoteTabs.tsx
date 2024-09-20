@@ -26,7 +26,7 @@ export const MultipleNotesJoplin = (props: NotesProps) => {
             return
         }
 
-        const fields = "fields=id,title,updated_time,body,parent_id&"
+        let fields = "fields=id,title,updated_time,body,parent_id&"
         const url = "http://localhost:41184/notes/" + node_id + "?" + fields + settings.token
 
         fetch(url).then(response => {

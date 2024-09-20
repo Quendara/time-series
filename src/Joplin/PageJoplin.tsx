@@ -142,18 +142,49 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
     }, [context, query]);
 
+
+
     const selectFolderByParentId = (id: string) => {
-        console.log("selectFolder " + id)
+        console.log("selectFolderByParentId " + id)
         setParentID(id)
     }
 
-    const selectParentFolderByParentId = (id: string) => {
-        console.log("selectParentFolder " + id)
+    const getNotesByFolderID = (id: string) => {
+
+        setParentID(id)
+
+        if (id.length === 0) return
+
+        const urlNotes = "http://localhost:41184/folders/" + id + "/notes?" + settings.token
+        // const urlNotes = "http://localhost:41184" + query + order + settings.token
+
+        fetch(urlNotes).then(response => {
+            console.log("response", response)
+            return response.json();
+        }).then(jsonResp => {
+            console.log("getNotesByFolderID --- Notes : ", jsonResp)
+            if (jsonResp) {
+                setCurrentNotes(jsonResp["items"])
+            }
+        })
+    }
+
+
+    const getParentId = (id: string) => {
+
+        console.log("getParentId " + id)
         const parentFolder = folders.filter((item: any) => { return item.id === id })
         if (parentFolder.length === 1) {
             const c: any = parentFolder[0]
-            setParentID(c.parent_id)
+
+            console.log(" - return  " + c.parent_id)
+
+            return c.parent_id
         }
+
+        console.error("getParentId not found " + id)
+
+        return ""
     }
 
 
@@ -189,8 +220,6 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                     <Link m={1} color="grey.50" href="/joplin/todos">Todos</Link>
                     <Link m={1} color="grey.50" href="/joplin/recently">Recently</Link>
 
-
-
                     <Box sx={{ "flexGrow": 1 }} />
                     <TextField
                         sx={{ input: { color: "#FAFAFA" } }}
@@ -202,9 +231,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                         variant="outlined"
                         onChange={(e: any) => navigate('/joplin/search/' + e.target.value)}
                     />
-
                     <Box sx={{ width: "50px" }} />
-
 
                     <IconButton sx={{ ml: 1 }} onClick={() => toggleColorMode()} color="inherit">
                         {theme.palette.mode === 'dark' ? <Icon>dark_mode</Icon> : <Icon>light_mode</Icon>}
@@ -225,28 +252,13 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
                 {context === "folder" &&
                     <>
-                        {/* <Button
-                            startIcon={<Icon>arrow_back</Icon>}
-                            onClick={() => selectParentFolderByParentId(currentParentID as string)}
-                        >{folderNameFromId(folders, currentParentID as string)}
-                        </Button> */}
-                        <List>
-
-
-                        </List>
-
-
                         <>
                             <Typography variant="h6" m={1} >Folders</Typography>
                             <List>
                                 <ListItemButton
-                                    onClick={() => selectParentFolderByParentId(currentParentID as string)}
+                                    onClick={() => getNotesByFolderID(getParentId(currentParentID as string))}
                                 >
-                                    {/* <ListItemIcon >
-                                    <Icon>arrow_back</Icon>
-                                </ListItemIcon> */}
                                     <ListItemText
-
                                         primary={folderNameFromId(folders, currentParentID as string)}
                                     // primary={props.data.title } 
                                     />
@@ -261,7 +273,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                                         xs={12}
                                         selectedId={selectedItem?.id}
                                         renderAs="list"
-                                        selectCallback={(x) => selectFolderByParentId(x)} />
+                                        selectCallback={(x) => getNotesByFolderID(x)} />
                                 ))}
                             </List>
                         </>
@@ -346,8 +358,6 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
             <Box sx={styles.content}>
 
-
-
                 {selectedItem ?
                     <>
                         <Paper sx={{ p: 1, mb: 1 }}>
@@ -395,6 +405,13 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                                         order="prio"
                                         autoSelect={true}
                                         selectCallback={(id) => selectNote(id)} />
+                                </Grid>
+                            </Grid>
+                        }
+                        {context === "folder" &&
+                            <Grid container spacing={4}>
+                                <Grid item xs={6}>
+
                                 </Grid>
                             </Grid>
                         }

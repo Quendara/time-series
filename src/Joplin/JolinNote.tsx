@@ -240,7 +240,7 @@ export const JolinNote = (props: NoteProps) => {
                         spacing={2}>
 
                         <Box>
-                            {props.data.body.trim().split("\n").map(line => {
+                            { props.data.body && props.data.body.trim().split("\n").map(line => {
                                 return (parseLine(line))
                             })}
                         </Box>
