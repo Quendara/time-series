@@ -28,11 +28,9 @@ export const ListNotesJoplin = (props: NotesProps) => {
         const query = props.query;
         let fields = "fields=id,title,updated_time,body,parent_id&";
         
-        if( query.indexOf("folder")){
-            fields = "fields=id,title,updated_time,parent_id&";
-        }
-
-
+        // if( query.indexOf("folder") ){
+        //     fields = "fields=id,title,updated_time,parent_id&";
+        // }
 
         let order = "order_by=updated_time&order_dir=DESC&";
 
@@ -63,7 +61,7 @@ export const ListNotesJoplin = (props: NotesProps) => {
             setTodos(prep);
             if (prep.length > 0) {
                 if (props.autoSelect) {
-                    // props.selectCallback(prep[0].note.id);
+                    props.selectCallback(prep[0].note.id);
                 }
             }
         });

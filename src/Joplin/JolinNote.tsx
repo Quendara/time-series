@@ -126,12 +126,13 @@ export const JolinNote = (props: NoteProps) => {
     if (notePri === "3-done") {
         myColor = "success"
         myIcon = "task_alt"
-
     }
     if (notePri === "1-urgent") {
         myColor = "error"
         myIcon = "report"
     }
+
+    console.log( "check why color is missing", props.renderAs, myColor )
 
     const timestampToDate = (timestamp: string) => {
         const date = new Date(timestamp)

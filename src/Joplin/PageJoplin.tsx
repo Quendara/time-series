@@ -155,7 +155,9 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
         if (id.length === 0) return
 
-        const urlNotes = "http://localhost:41184/folders/" + id + "/notes?" + settings.token
+        let order = "order_by=updated_time&order_dir=DESC&";
+
+        const urlNotes = "http://localhost:41184/folders/" + id + "/notes?" + order + settings.token
         // const urlNotes = "http://localhost:41184" + query + order + settings.token
 
         fetch(urlNotes).then(response => {
@@ -411,7 +413,16 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                         {context === "folder" &&
                             <Grid container spacing={4}>
                                 <Grid item xs={6}>
-
+                                    {/* {currentFolders.map((item: JoplinData) => (
+                                        <JolinNote
+                                            data={item}
+                                            folders={folders}
+                                            defaultIcon="folder"
+                                            xs={12}
+                                            selectedId={undefined}
+                                            renderAs="card"
+                                            selectCallback={(x) => getNotesByFolderID(x)} />
+                                    ))} */}
                                 </Grid>
                             </Grid>
                         }
