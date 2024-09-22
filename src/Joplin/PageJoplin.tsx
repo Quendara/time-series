@@ -93,18 +93,18 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             setFolders(jsonResp["items"])
 
             console.log("context : '" + context + "'")
-            
+
 
             if (context === "folder") {
                 if (query !== undefined) {
-                    console.log( "SET INITIAL FOLDER : ", query )
+                    console.log("SET INITIAL FOLDER : ", query)
                     setParentID(query)
                 }
-                else{
-                    console.log( "SET INITIAL FOLDER to ROOT" )
-                    setParentID("")                    
+                else {
+                    console.log("SET INITIAL FOLDER to ROOT")
+                    setParentID("")
                 }
-            }              
+            }
         })
 
         // const order = "order_by=updated_time&order_dir=DESC&"
@@ -121,7 +121,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             setNotes(jsonResp["items"])
         })
 
-         
+
 
         return () => {
             console.log("PageJoplin unmounted")
@@ -142,9 +142,9 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
         if (context === "folder") {
             if (query !== undefined) {
-                setParentID(query)              
+                setParentID(query)
             }
-            else{
+            else {
                 setParentID("")
             }
         }
@@ -227,13 +227,18 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                         Joplin
                     </Typography>
                     <NavLink key={"nl_" + 1331} to={"/joplin/folder"}  >
-                        <Button color={"inherit"} >folder</Button>                        
+                        <Button sx={{color:"white"}} >folder</Button>
                     </NavLink>
-                    <NavLink   key={"nl_" + 1332} to={"/joplin/todos"}  >
-                        <Button color={"inherit"} >Todos</Button>
+                    <NavLink key={"nl_" + 1331} to={"/joplin/folder/9f10f4510b144fbf9dd186d17c95e44a"}  >
+                        <Button sx={{color:"white"}} >Projekte</Button>
+                    </NavLink>
+
+                    
+                    <NavLink key={"nl_" + 1332} to={"/joplin/todos"}  >
+                        <Button sx={{color:"white"}} >Todos</Button>
                     </NavLink>
                     <NavLink key={"nl_" + 1333} to={"/joplin/recently"}  >
-                        <Button color={"inherit"} >recently</Button>
+                        <Button sx={{color:"white"}} >recently</Button>
                     </NavLink>
 
                     <Box sx={{ "flexGrow": 1 }} />
