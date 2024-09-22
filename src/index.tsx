@@ -102,14 +102,14 @@ const App = () => {
   }
 
   const authSuccessCallback = (username: string, token: string, apikey: string, apikeyOpen_Ai: string) => {
-    setUsername(username);
 
+    setUsername(username);
     setJwtToken(token);
     setApi(apikey);
     setApikeyOpenAi(apikeyOpen_Ai)
 
     console.log("username        : ", username);
-    console.log("authSuccess     : ", token);
+    // console.log("authSuccess     : ", token);
     console.log("apikey          : ", apikey);
     console.log("apikeyOpenAi    : ", apikeyOpen_Ai);
 
@@ -151,15 +151,15 @@ const App = () => {
       <TodoMainProvider>
         <CssBaseline />
 
-        <Router>
 
-          <Auth authSuccessCallback={authSuccessCallback} >
+        <Router>
+          <Auth jwtTocken={jwtTocken} authSuccessCallback={authSuccessCallback} >
 
             <NavLink key={"nl_" + 1332} to={"/"}  >
               <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
             </NavLink>
             <NavLink key={"nl_" + 98978} to={"/mails"}  >
-              <IconButton sx={cssClasses.title}><Mails  token={jwtTocken} renderAs="icon" /></IconButton>
+              <IconButton sx={cssClasses.title}><Mails token={jwtTocken} renderAs="icon" /></IconButton>
             </NavLink>
 
 
@@ -220,10 +220,10 @@ const App = () => {
 
                         {/* <Route path="/joplin" element={<PageJoplin toggleColorMode={ toggleColorMode } />}>
                         </Route> */}
-                        <Route path="/joplin/:context" element={ <PageJoplin toggleColorMode={ toggleColorMode } /> } ></Route>
-                        <Route path="/joplin/:context/:query" element={ <PageJoplin toggleColorMode={ toggleColorMode } /> } ></Route>
+                        <Route path="/joplin/:context" element={<PageJoplin toggleColorMode={toggleColorMode} />} ></Route>
+                        <Route path="/joplin/:context/:query" element={<PageJoplin toggleColorMode={toggleColorMode} />} ></Route>
 
-                        
+
                         <Route path="/sandboxH" element={<SandboxH />}>
                         </Route>
                         <Route path="/SandboxGPT" element={<SandboxGPT apikey={apikeyOpenAi} />}>
@@ -235,8 +235,8 @@ const App = () => {
                         <Route path="/csvtools" element={<CsvToolsPage />}>
                         </Route>
 
-                        <Route path="/mails" element={<Mails  token={jwtTocken} renderAs="table" />}>
-                        </Route>                        
+                        <Route path="/mails" element={<Mails token={jwtTocken} renderAs="table" />}>
+                        </Route>
 
                         <Route path="/" element={
                           <MainNavigation
@@ -266,8 +266,6 @@ const App = () => {
       </TodoMainProvider>
     </ThemeProvider>
   )
-
-
 
 };
 

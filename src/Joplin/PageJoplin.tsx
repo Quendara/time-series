@@ -7,7 +7,7 @@ import Icon from '@mui/material/Icon';
 
 import { JolinNote, JoplinData, NotePriority, folderNameFromId } from "./JolinNote";
 import { FolderNav } from "./FolderNav";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 
 // import { useStyles } from "../Styles";
 import { ListNotesJoplin } from "./ListNotesJoplin";
@@ -89,16 +89,29 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             console.log("response", response)
             return response.json();
         }).then(jsonResp => {
-            console.log("Folders : ", jsonResp)
+            // console.log("Folders : ", jsonResp)
             setFolders(jsonResp["items"])
-            setParentID("")
+
+            console.log("context : '" + context + "'")
+            
+
+            if (context === "folder") {
+                if (query !== undefined) {
+                    console.log( "SET INITIAL FOLDER : ", query )
+                    setParentID(query)
+                }
+                else{
+                    console.log( "SET INITIAL FOLDER to ROOT" )
+                    setParentID("")                    
+                }
+            }              
         })
 
         // const order = "order_by=updated_time&order_dir=DESC&"
 
-        const query = "/search?query=-tag:generated&type=note&"
+        const local_query = "/search?query=-tag:generated&type=note&"
         // const urlNotes = "http://localhost:41184/notes?" + order + token
-        const urlNotes = "http://localhost:41184" + query + order + settings.token
+        const urlNotes = "http://localhost:41184" + local_query + order + settings.token
 
         fetch(urlNotes).then(response => {
             console.log("response", response)
@@ -107,6 +120,8 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             console.log("Notes : ", jsonResp)
             setNotes(jsonResp["items"])
         })
+
+         
 
         return () => {
             console.log("PageJoplin unmounted")
@@ -121,26 +136,19 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
         // # const currentItems = currentFolders.concat(currentNotes)
         setCurrentFolders(filteredFolders)
         setCurrentNotes(filteredNotes)
-    }, [currentParentID]);
+    }, [folders, currentParentID]);
 
     useEffect(() => {
 
         if (context === "folder") {
             if (query !== undefined) {
-                const filteredFolders = folders.filter((item: any) => { return item.name === query })
-                // const filteredNotes = notes.filter((item: any) => { return item.parent_id === currentParentID })
-
-                const pid = filteredFolders.at(0)?.parent_id
-                setParentID(pid)
-
-                // # const currentItems = currentFolders.concat(currentNotes)
-                // setCurrentFolders(filteredFolders)
-                // setCurrentNotes(filteredNotes)
+                setParentID(query)              
+            }
+            else{
+                setParentID("")
             }
         }
-
-
-    }, [context, query]);
+    }, [query]);
 
 
 
@@ -174,7 +182,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
     const getParentId = (id: string) => {
 
-        console.log("getParentId " + id)
+        console.log("getParentId '" + id + "'")
         const parentFolder = folders.filter((item: any) => { return item.id === id })
         if (parentFolder.length === 1) {
             const c: any = parentFolder[0]
@@ -215,12 +223,18 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             <CssBaseline />
             <AppBar position="fixed"  >
                 <Toolbar>
-                    <Typography variant="h6" >
+                    <Typography variant="h6" pr={4} >
                         Joplin
                     </Typography>
-                    <Link m={1} color="grey.50" href="/joplin/folder">Alle</Link>
-                    <Link m={1} color="grey.50" href="/joplin/todos">Todos</Link>
-                    <Link m={1} color="grey.50" href="/joplin/recently">Recently</Link>
+                    <NavLink key={"nl_" + 1331} to={"/joplin/folder"}  >
+                        <Button color={"inherit"} >folder</Button>                        
+                    </NavLink>
+                    <NavLink   key={"nl_" + 1332} to={"/joplin/todos"}  >
+                        <Button color={"inherit"} >Todos</Button>
+                    </NavLink>
+                    <NavLink key={"nl_" + 1333} to={"/joplin/recently"}  >
+                        <Button color={"inherit"} >recently</Button>
+                    </NavLink>
 
                     <Box sx={{ "flexGrow": 1 }} />
                     <TextField
@@ -332,7 +346,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                         <Typography variant="h6" m={1} >recently updated </Typography>
                         <Divider sx={{ m: 1 }}></Divider>
                         <ListNotesJoplin
-                            query="/search?query=updated:day-2 -tag:generated&type=note&"
+                            query="/search?query=updated:day-4 -tag:generated&type=note&"
                             order="date"
                             renderAs="vertical"
                             selectedNoteId={selectedItem?.id}

@@ -23,13 +23,14 @@ const poolData = {
 };
 
 interface Props {
+  jwtTocken: string,
   authSuccessCallback: (username: string, token: string, apikey: string, apikeyOpenAi: string) => void;
   children: React.ReactNode
 }
 
 
 
-const Auth = ({ authSuccessCallback, children }: Props) => {
+const Auth = ( props : Props) => {
 
   const context = useContext(TodoMainContext)
 
@@ -57,6 +58,9 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
   };
 
   useEffect(() => {
+
+    console.log( "username" , username )
+
     // check if user is already logged in
     if (cognitoUser === null) {
       // Update the document title using the browser API
@@ -86,7 +90,7 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
           // const apikey_timetree = decoded["custom:TIMETREETOKEN"];
           const apikey_openai = decoded["custom:OPENAITOKEN"];
 
-          context.setOpenAiKey( apikey_openai )
+          context.setOpenAiKey(apikey_openai)
 
           // console.log("apikey_timetree : ", apikey_timetree);
           console.log("apikey_openai : ", apikey_openai);
@@ -94,11 +98,11 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
           setCognitoUser(cognitoUser);
           setUsername(username);
           // callback to parent
-          authSuccessCallback(username, jwtToken, apikey, apikey_openai);
+          props.authSuccessCallback(username, jwtToken, apikey, apikey_openai);
         });
       }
     }
-  }, [authSuccessCallback]);
+  }, []);
 
   const signIn = (event: any) => {
     // event.preventDefault();
@@ -106,12 +110,9 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
     console.log("password ", password);
 
     if (username.length > 0 && password.length > 0) {
-      // send ONLY when it's filled out
-      // authSuccessCallback(token);
 
       setTrySend(true);
-
-      authImpl( username.trim() , password.trim() );
+      authImpl(username.trim(), password.trim());
     } else {
     }
   };
@@ -128,7 +129,7 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
 
       cognitoUser.signOut();
 
-      authSuccessCallback("", "", "", "");
+      props.authSuccessCallback("", "", "", "");
     }
   };
 
@@ -176,7 +177,7 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
         let apikey = decoded["custom:APIKEY"];
 
         // callback to parent
-        authSuccessCallback(username, idToken, apikey, "");
+        props.authSuccessCallback(username, idToken, apikey, "");
 
         setAuthError("");
         setCognitoUser(cognitoUser);
@@ -211,7 +212,7 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
       <>
         <Grid
           container
-          sx={{height:"100vh"}}
+          sx={{ height: "100vh" }}
           justifyContent="center"
           alignItems="center"  >
 
@@ -252,11 +253,11 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
                   </ListItem>
                   <ListItem>
                     <Button
-                      disabled={password.length === 0 || username.length < 5 }  
-                        color="primary" 
-                        variant="contained" 
-                        onClick={signIn} 
-                        style={{ margin: 8 }} >
+                      disabled={password.length === 0 || username.length < 5}
+                      color="primary"
+                      variant="contained"
+                      onClick={signIn}
+                      style={{ margin: 8 }} >
                       {trySend ? "Loading" : "Sign-In"}
                       <MyIcon icon={"chevron_right"}></MyIcon>
                     </Button>
@@ -280,10 +281,10 @@ const Auth = ({ authSuccessCallback, children }: Props) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar sx={cssClasses.appBar} position={ matchesUpXs? "static": "fixed"}  >
+        <AppBar sx={cssClasses.appBar} position={matchesUpXs ? "static" : "fixed"}  >
           <Toolbar>
 
-            {children}
+            {props.children}
 
             <Box>
               <IconButton

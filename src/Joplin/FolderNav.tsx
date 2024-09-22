@@ -1,6 +1,7 @@
 import { Typography, Breadcrumbs, Link, Icon } from "@mui/material";
 import React from "react";
 import { JoplinData, folderNameFromId } from "./JolinNote";
+import { NavLink } from "react-router-dom";
 
 export interface FolderNavProps {
     data: JoplinData
@@ -21,30 +22,41 @@ export const FolderNav = (props: FolderNavProps) => {
     const parent_lv3 = getParentEl(parent_lv2).at(0);
 
     const createLink = (cur: JoplinData) => {
+        
+        const foldername = folderNameFromId(props.folders, cur.id)
+        
         return (
-            <Link underline="hover" color="inherit"
-                // href={"/joplin/folder/" + parent_lv2?.title}
-                onClick={() => props.selectCallback(cur.id)}
+            // <Link underline="hover" color="inherit"
+            //     // href={"/joplin/folder/" + parent_lv2?.title}
+            //     onClick={() => props.selectCallback(cur.id)}
+            // >
+            //     {folderNameFromId(props.folders, cur.id)}
+            // </Link>
+            <NavLink color="inherit"
+                to={"/joplin/folder/" + cur.id }
+                // onClick={() => props.selectCallback(cur.id)}
             >
-                {folderNameFromId(props.folders, cur.id)}
-            </Link>
+                
+                <Typography variant="h6" sx={{ color: 'grey', textDecoration: "none"  }}>{foldername}</Typography>
+            </NavLink>
         )
     }
 
     const renderNav = (cur: JoplinData) => {
         return (
             <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit"
-                    onClick={() => props.selectCallback("")}
-                >
-                    {/* <Icon fontSize="small">home</Icon>  */}
-                    Root
-                </Link>
+                <NavLink color="inherit"
+                    // onClick={() => props.selectCallback("")}
+                    to={"/joplin/folder/" }
+                >                    
+                    
+                    <Typography variant="h6" sx={{ color: 'text.primary' }}>Root</Typography>
+                </NavLink>
                 {parent_lv3 && createLink(parent_lv3)}
                 {parent_lv2 && createLink(parent_lv2)}
                 {parent_lv1 && createLink(parent_lv1)}
 
-                <Typography sx={{ color: 'text.primary' }}>{cur.title}</Typography>
+                <Typography variant="h6" sx={{ color: 'text.primary' }}>{cur.title}</Typography>
 
             </Breadcrumbs>
         );
