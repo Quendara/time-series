@@ -31,7 +31,7 @@ import { TodoListType } from "../components/List"
 import { Calendar } from "./Calendar";
 import { TodoMainContext } from "../context/TodoMainProvider";
 import { TodoProvider } from "../context/TodoProvider";
-import { GPTBox } from "../organisms/GptBox";
+import { GPTBox, Tuple } from "../organisms/GptBox";
 
 
 interface Props {
@@ -294,6 +294,7 @@ export const DetailsHeadless = (props: PropsDetails) => {
 
     const findSystemInstruction = ( inputString : string ) => {
         // const inputString = "$$system:Hello World";
+        let gpt : Tuple[] = [] 
 
         const regex = /\$\$System:(.+)/;
         const match = inputString.match(regex);
@@ -301,11 +302,20 @@ export const DetailsHeadless = (props: PropsDetails) => {
         if (match && match.length > 1) {
           const matchedString = match[1];
           console.log(matchedString);
-          return matchedString
+
+          gpt.push( { button:"Ask", systemPrompt: matchedString } )
+          
         } else {
           console.log("No match found.");
-          return ""
+
+          gpt.push( { button:"Sum", systemPrompt: "Summarize content you are provided with for a second-grade student." } )
+          gpt.push( { button:"Meeting Notes", systemPrompt: "Ich gebe dir rohe Meeting notes. Kannst Du die Notizen etwas erweitern." } )
+      
+          
+          return gpt
         }        
+
+        return gpt    
     }
 
 
@@ -417,8 +427,8 @@ export const DetailsHeadless = (props: PropsDetails) => {
 
                             <Grid item xs={12}>
                                 <GPTBox 
-                                    apikey={contextMainTodo.openAiKey} 
-                                    systemMessage={findSystemInstruction( selectedItemValue )} >
+                                    initialUserMessage={selectedItemValue}
+                                    systemMessages= {findSystemInstruction( selectedItemValue ) } >
 
                                 </GPTBox>
                             </Grid>

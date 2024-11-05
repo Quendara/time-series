@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Box, Button, Card, Divider, Icon, IconButton, Stack, TextField } from "@mui/material"
 import { restCallToBackendAsync } from "../components/helpers";
 import OpenAI from "openai";
@@ -6,6 +6,7 @@ import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { MyMarkdown } from "../components/MyMarkdown";
 import { relative } from "path";
 import { Buffer } from "buffer";
+import { TodoMainContext } from "../context/TodoMainProvider";
 
 
 interface ChatProps {
@@ -15,6 +16,7 @@ interface ChatProps {
 }
 
 async function text2Speech(apiKey: string, text: string) {
+
 
     console.log("text2Speech : " + text)
     console.log("apiKey : " + apiKey)
@@ -79,7 +81,7 @@ const ChatMessage = (props: ChatProps) => {
     }
 
 
-    
+
     return (
         <>
             {(props.message.content) &&
@@ -102,26 +104,34 @@ const ChatMessage = (props: ChatProps) => {
     )
 }
 
+export interface Tuple {
+    button: string,
+    systemPrompt: string
+}
+
 interface Props {
     children?: React.ReactNode;
-    systemMessage: string;
-    apikey: string;
+    initialUserMessage?: string;
+    systemMessages: Tuple[]
+
 }
 
 export const GPTBox = (props: Props) => {
 
     // restCallToBackendAsync
 
+    const context = useContext(TodoMainContext)
 
+
+
+    // const [systemMessage, setSystemMessage] = useState("");
     const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
     const [current, setCurrent] = useState("");
-
-
 
     const checkEnter = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
             if (e.shiftKey) {
-                callGPT()
+                askGPT()
             }
             // alert("Enter")
 
@@ -129,34 +139,30 @@ export const GPTBox = (props: Props) => {
     }
 
     useEffect(() => {
-        initChat()
-    }, [props.systemMessage]);
+        setMessages([])
+    }, [props.initialUserMessage]);
 
-    const initChat = () => {
-        let mgs: ChatCompletionMessageParam[] = []
-        mgs = [{ role: "system", content: props.systemMessage }]
-        setMessages(mgs)
-    }
+    // const initChat = ( sysPrompt : string  ) => {
+    //     let mgs: ChatCompletionMessageParam[] = []
+    //     mgs = [
+    //         { role: "system", content: systemMessage }
+    //     ]
 
+    //     if (props.initialUserMessage) {
+    //         mgs.push({ role: "user", content: props.initialUserMessage })
+    //     }
 
-    const callGPT = async () => {
+    //     setMessages(mgs)
 
-        // const key = apikey
+    // }
+
+    const callGPT = async (mgs: ChatCompletionMessageParam[]) => {
+        // const key = props.apikey
+        const key = context.openAiKey
 
         const openai = new OpenAI({
-            apiKey: props.apikey, dangerouslyAllowBrowser: true
+            apiKey: key, dangerouslyAllowBrowser: true
         });
-
-        // const url = "https://api.openai.com/v1/chat/completions"
-
-        let mgs: ChatCompletionMessageParam[] = []
-        mgs = [...messages]
-
-        // mgs.push({ role: "system", content: "What's you favorite color?" })
-        mgs.push({ role: "user", content: current })
-        setCurrent("")
-        setMessages(mgs)
-
 
         const response = await openai.chat.completions.create({
             // model: "gpt-3.5-turbo",
@@ -182,38 +188,72 @@ export const GPTBox = (props: Props) => {
 
 
 
+    const askGPTwithSystem = (sysPrompt: string) => {
+        let mgs: ChatCompletionMessageParam[] = []
+        mgs = [
+            { role: "system", content: sysPrompt }
+        ]
 
+        if (props.initialUserMessage) {
+            mgs.push({ role: "user", content: props.initialUserMessage })
+        }
 
+        setMessages(mgs)
+        callGPT(mgs)
+    }
+
+    const askGPT = async () => {
+        let mgs: ChatCompletionMessageParam[] = []
+        mgs = [...messages]
+
+        // mgs.push({ role: "system", content: "What's you favorite color?" })
+        mgs.push({ role: "user", content: current })
+        setCurrent("")
+
+        setMessages(mgs)
+        callGPT(mgs)
+    }
 
     return (
         <>
-            <Box m={3} sx={{ color: "#FFF" }} >
-                {messages.map(message => (
-                    <ChatMessage message={message} apikey={props.apikey} />
-                )
+            {
+                (messages.length == 0) ?
+                    <>
+                        {props.systemMessages.map(system => (
+                            <Button sx={{ mr: 2 }} startIcon={<Icon>auto_awesome</Icon>} variant="outlined" onClick={() => askGPTwithSystem(system.systemPrompt)} >
+                                {system.button}
+                            </Button>
+                        ))}
+                    </>
+                    :
+                    <>
+                        <Box m={3} sx={{ color: "#FFF" }} >
+                            {messages.map(message => (
+                                <ChatMessage message={message} apikey={context.openAiKey} />
+                            )
 
-                )}
-                <Divider />
-            </Box>
+                            )}
+                            <Divider />
+                        </Box>
 
-            <Stack direction={"row"} spacing={2}>
+                        <Stack direction={"row"} spacing={2}>
 
-                <TextField
-                    value={current}
-                    label="Input GPT"
-                    size="small"
-                    multiline
-                    fullWidth
-                    variant="outlined"
-                    onKeyDown={e => checkEnter(e)}
-                    onChange={e => setCurrent(e.target.value)}
-                />
+                            <TextField
+                                value={current}
+                                label="Input GPT"
+                                size="small"
+                                multiline
+                                fullWidth
+                                variant="outlined"
+                                onKeyDown={e => checkEnter(e)}
+                                onChange={e => setCurrent(e.target.value)}
+                            />
 
-
-
-                <Button variant="contained" onClick={callGPT} >ASK</Button>
-                <Button variant="contained" color="error" onClick={initChat} ><Icon>delete</Icon></Button>
-            </Stack>
+                            <Button variant="contained" onClick={askGPT} >ASK</Button>
+                            <Button variant="contained" color="error" onClick={ () => setMessages([])} ><Icon>clear</Icon></Button>
+                        </Stack>
+                    </>
+            }
 
         </>
 

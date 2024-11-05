@@ -4,6 +4,8 @@ import { Theme, useTheme } from '@mui/material/styles';
 
 import React, { useState } from "react";
 import { JolinNoteLink, JolinResource } from "./JolinResource";
+import JoplinNoteCard from "./JolinNoteCard";
+import { grey } from "@mui/material/colors";
 // import { muiColor, getPaperColor } from "../Atoms/Atoms";
 
 
@@ -73,6 +75,18 @@ export const getPaperColor = (theme: Theme, color: muiColor): any => {
     return ret
 };
 
+function extractMarkdownLinks(text: string): { name: string; link: string }[] {
+    const regex = /\[([^\]]+)\]\s*\(([^)]+)\)/g;
+    const matches = [];
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+        matches.push({ name: match[1], link: match[2] });
+    }
+
+    return matches;
+}
+
 export const folderNameFromId = (folders: JoplinData[], id: string) => {
     const filteredFolders = folders.filter((folder: any) => { return id === folder.id })
 
@@ -85,7 +99,115 @@ export const folderNameFromId = (folders: JoplinData[], id: string) => {
     return folderTitle
 }
 
+const parseLine = (line: string, selectCallback: (id: string) => void ) => {
 
+    const trimmedLine = line.trim()
+    if (trimmedLine.length === 0) {
+        return (<br />)
+    }
+
+    // check header
+    if (line.startsWith("### ")) {
+        return (<Typography sx={{ fontSize: "1.1em", fontWeight: 700 }} component="p">{renderHeaderLine(line)} </Typography>)
+    }
+    if (line.startsWith("## ")) {
+        return (<Typography sx={{ fontSize: "1.3em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
+    }
+    if (line.startsWith("# ")) {
+        return (<Typography sx={{ fontSize: "1.5em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
+    }
+
+    if (trimmedLine.startsWith("*")) {
+        const bulletIndex = line.indexOf("*")
+        return (<Typography pl={bulletIndex} sx={{ fontSize: "1.1em", fontWeight: 400 }} component="p"> {line} </Typography>)
+    }
+    if (trimmedLine.startsWith("-")) {
+        const bulletIndex = line.indexOf("-")
+        return (<Typography pl={bulletIndex} sx={{ fontSize: "1.1em", fontWeight: 400 }} component="p"> {line} </Typography>)
+    }
+
+
+    const matches = extractMarkdownLinks(line)
+
+    if (matches.length > 0) {
+        // const id = match[1];
+        const match = matches.at(0)
+        const name = match?.name; // Der Name innerhalb der eckigen Klammern
+        let id = match?.link;   // Die ID nach `(:/` und vor `)`
+
+        let isJolpinLink = false
+
+        if (id?.startsWith(":/")) {
+
+            isJolpinLink = true
+            id = id.split(":/").at(1)
+        }
+
+
+        if (name !== undefined && id !== undefined) {
+            return (
+                <>
+                    {isJolpinLink ? <>
+                        <JolinResource id={id} />
+                        <JolinNoteLink id={id} name={name} selectCallback={selectCallback} />
+                    </> :
+                        <Tooltip title={"link to " + id}>
+                            {/* <a target='_blank'  href={id} > {name} </a> */}
+                            <Button variant="contained" onClick={() => openInNewTab(id)}>{name} </Button>
+                        </Tooltip>
+                    }
+                </>)
+        }
+        else {
+            return (<>SOMETHING MISSING</>)
+        }
+    } else {
+        return (<Typography component="p" sx={{ fontSize: "1.1em", fontWeight: 400 }} >{line} </Typography>)
+    }
+}
+
+const renderHeaderLine = (line: string) => {
+    const regex = /^(#+)\s+(.+)$/gm;
+    const match = regex.exec(line)
+
+    return (
+        <>
+            <Box sx={{ color: grey[500], float: "left", mr: 1 }} >{match?.at(1)}</Box>
+            {match?.at(2)}
+        </>
+    )
+}
+
+export const openInNewTab = (url?: string) => {
+    window.open(url, "_blank", "noreferrer");
+};
+
+
+export const renderBody = (data: string, selectCallback: (id: string) => void ) => {
+    return (
+        <>
+            <Typography variant="body1" >
+                <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                    spacing={2}>
+
+                    <Box>
+                        {data && data.trim().split("\n").map(line => {
+                            return (parseLine(line, selectCallback))
+                        })}
+                    </Box>
+
+                </Stack>
+            </Typography>
+        </>)
+}
+
+export const timestampToDate = (timestamp: string) => {
+    const date = new Date(timestamp)
+    return date.toISOString().split('T')[0]
+}
 
 export const getNotePriority = (note: JoplinData) => {
 
@@ -102,6 +224,17 @@ export const getNotePriority = (note: JoplinData) => {
     return prio
 }
 
+export const renderActions = ( id : string ) => (
+    <Button onClick={() => openNoteInJoplin( id )} >Open in app</Button>
+)
+
+const openNoteInJoplin = (node_id: string) => {
+    // # alert("openNoteInJoplin " + node_id )
+
+    const url = "joplin://x-callback-url/openNote?id=" + node_id
+    window.open(url, "_blank")
+    //note id>
+}
 
 
 export const JolinNote = (props: NoteProps) => {
@@ -109,14 +242,6 @@ export const JolinNote = (props: NoteProps) => {
     // const [showMore, setShowMore] = useState(!props.collapsed);
 
     const folderTitle = folderNameFromId(props.folders, props.data.parent_id)
-
-    const openNoteInJoplin = (node_id: string) => {
-        // # alert("openNoteInJoplin " + node_id )
-
-        const url = "joplin://x-callback-url/openNote?id=" + node_id
-        window.open(url, "_blank")
-        //note id>
-    }
 
     let myColor: muiColor = undefined
     let myIcon: string = props.defaultIcon ? props.defaultIcon : "text_snippet"
@@ -132,171 +257,9 @@ export const JolinNote = (props: NoteProps) => {
         myIcon = "report"
     }
 
-    console.log( "check why color is missing", props.renderAs, myColor )
-
-    const timestampToDate = (timestamp: string) => {
-        const date = new Date(timestamp)
-        return date.toISOString().split('T')[0]
-    }
+    console.log("check why color is missing", props.renderAs, myColor)
 
     const hasMore = props.data.body && props.data.body.trim().split("\n").length > 1
-
-
-    const renderHeaderLine = (line: string) => {
-        const regex = /^(#+)\s+(.+)$/gm;
-        const match = regex.exec(line)
-
-        return (
-            <>
-                <Box sx={{ color: theme.palette.grey[500], float: "left", mr: 1 }} >{match?.at(1)}</Box>
-                {match?.at(2)}
-            </>
-        )
-    }
-
-    function extractMarkdownLinks(text: string): { name: string; link: string }[] {
-        const regex = /\[([^\]]+)\]\s*\(([^)]+)\)/g;
-        const matches = [];
-        let match;
-
-        while ((match = regex.exec(text)) !== null) {
-            matches.push({ name: match[1], link: match[2] });
-        }
-
-        return matches;
-    }
-
-    const openInNewTab = (url?: string) => {
-        window.open(url, "_blank", "noreferrer");
-    };
-
-    const parseLine = (line: string) => {
-
-        const trimmedLine = line.trim()
-        if (trimmedLine.length === 0) {
-            return (<br />)
-        }
-
-        // check header
-        if (line.startsWith("### ")) {
-            return (<Typography sx={{ fontSize: "1.1em", fontWeight: 700 }} component="p">{renderHeaderLine(line)} </Typography>)
-        }
-        if (line.startsWith("## ")) {
-            return (<Typography sx={{ fontSize: "1.3em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
-        }
-        if (line.startsWith("# ")) {
-            return (<Typography sx={{ fontSize: "1.5em", fontWeight: 700, mb: 0.5 }} component="p">{renderHeaderLine(line)} </Typography>)
-        }
-        // check if link is resource / image
-        // - [Abteilung](:/504e6b5cbd5e4d268c0f81bdd4b281fc)
-
-        const matches = extractMarkdownLinks(line)
-
-        if (matches.length > 0) {
-            // const id = match[1];
-            const match = matches.at(0)
-            const name = match?.name; // Der Name innerhalb der eckigen Klammern
-            let id = match?.link;   // Die ID nach `(:/` und vor `)`
-
-            let isJolpinLink = false
-
-            if (id?.startsWith(":/")) {
-
-                isJolpinLink = true
-                id = id.split(":/").at(1)
-            }
-
-
-            if (name !== undefined && id !== undefined) {
-                return (
-                    <>
-                        {isJolpinLink ? <>
-                            <JolinResource id={id} />
-                            <JolinNoteLink id={id} name={name} selectCallback={props.selectCallback} />
-                        </> :
-                            <Tooltip title={"link to " + id}>
-                                {/* <a target='_blank'  href={id} > {name} </a> */}
-                                <Button variant="contained" onClick={() => openInNewTab(id)}>{name} </Button>
-                            </Tooltip>
-                        }
-                    </>)
-            }
-            else {
-                return (<>SOMETHING MISSING</>)
-            }
-        } else {
-            return (<Typography component="p" sx={{ fontSize: "1.1em", fontWeight: 400 }} >{line} </Typography>)
-        }
-    }
-
-
-    const renderBody = () => {
-        return (
-            <>
-                <Typography variant="body1" >
-                    <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="flex-start"
-                        spacing={2}>
-
-                        <Box>
-                            { props.data.body && props.data.body.trim().split("\n").map(line => {
-                                return (parseLine(line))
-                            })}
-                        </Box>
-
-                    </Stack>
-                </Typography>
-            </>)
-    }
-
-    const renderActions = () => (
-        <Button onClick={() => openNoteInJoplin(props.data.id)} >Open in app</Button>
-    )
-
-    // openNoteInJoplin(props.data.id)
-    const renderAsCard = () => (
-        <Grid item xs={props.xs}>
-            <Card sx={getPaperColor(theme, myColor)} >
-                <CardContent sx={{ borderBottom: "1px solid #ddd" }} >
-                    <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        spacing={0}>
-
-                        <ListItemButton onClick={() => props.selectCallback(props.data.id)} color={myColor}>
-                            <ListItemIcon >
-                                <Icon color={myColor}>
-                                    {myIcon}
-                                </Icon>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={props.data.title}
-                                secondary={folderTitle} />
-
-                        </ListItemButton>
-                        <Typography color="text.secondary">
-                            {timestampToDate(props.data.updated_time)}
-                        </Typography>
-                    </Stack>
-                </CardContent>
-                <CardContent >
-
-                    {renderBody()}
-                </CardContent>
-                <CardContent >
-
-                </CardContent>
-
-                <CardActions>
-                    {renderActions()}
-                </CardActions>
-
-            </Card>
-        </Grid>
-    )
 
     const renderAsList = () => (
         <ListItemButton
@@ -311,8 +274,8 @@ export const JolinNote = (props: NoteProps) => {
                 </Icon>
             </ListItemIcon>
             <ListItemText
-                secondary={props.data.title.split("-").at(1)}
-                primary={props.data.title.split("-").at(0)}
+                secondary={props.data.title.split(" - ").at(1)}
+                primary={props.data.title.split(" - ").at(0)}
             // primary={props.data.title } 
             />
 
@@ -334,16 +297,22 @@ export const JolinNote = (props: NoteProps) => {
     )
 
     if (props.renderAs === "card") {
-        return renderAsCard()
+        return <JoplinNoteCard
+            data={props.data}
+            folderTitle={ folderTitle }
+            xs={0}
+            icon={myIcon}
+            cardColor={myColor}
+            selectCallback={ props.selectCallback } />
     }
     else if (props.renderAs === "body") {
-        return renderBody()
+        return renderBody(props.data.body, props.selectCallback )
     }
     else if (props.renderAs === "list") {
         return renderAsList()
     }
     else if (props.renderAs === "actions") {
-        return renderActions()
+        return renderActions( props.data.id )
     }
     else {
         return renderAsTab()

@@ -60,7 +60,7 @@ export const ListPage = (props: ListProps) => {
     const [hideCompleted, setHideCompleted] = useState(false);
     const [stateHorizontally, setHorizontally] = useState(props.horizontally);
 
-    const [showElementOnly, setShowElementOnly] = useState(true);
+    const [showElementOnly, setShowElementOnly] = useState(false);
 
 
     const { scrollX, scrollY } = useWindowScrollPositions()
