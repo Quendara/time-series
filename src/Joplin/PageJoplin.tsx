@@ -217,6 +217,13 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
         })
     }
 
+    const projects = [
+        { name: "Projects", id: "9f10f4510b144fbf9dd186d17c95e44a" },
+        { name: "AEF",      id: "245fa5e3f28c423db5d45287db654619" },
+        { name: "AgIN",      id: "853c391ce8cc49428a6cdb745a2b74bd" },
+        { name: "SDC",      id: "6e178ae70c904b8f82e3e732004e131d" }
+    ]
+
 
     return (
         <Box sx={styles.root}>
@@ -226,19 +233,22 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                     <Typography variant="h6" pr={4} >
                         Joplin
                     </Typography>
-                    <NavLink key={"nl_" + 1331} to={"/joplin/folder"}  >
-                        <Button sx={{color:"white"}} >folder</Button>
-                    </NavLink>
-                    <NavLink key={"nl_" + 1331} to={"/joplin/folder/9f10f4510b144fbf9dd186d17c95e44a"}  >
-                        <Button sx={{color:"white"}} >Projekte</Button>
+                    <NavLink key={"nl_" + 1331} to={"/joplin/folder"} >
+                        <Button sx={{mr:6, color: "white" }} startIcon={<Icon>folder</Icon>} >folder</Button>
                     </NavLink>
 
-                    
+                    {projects.map( project => (
+                        <NavLink key={"nl_" + 1331} to={"/joplin/folder/" + project.id}  >
+                            <Button sx={{ color: "#AAA" }} >{project.name}</Button>
+                        </NavLink>
+                    ))}
+
+
                     <NavLink key={"nl_" + 1332} to={"/joplin/todos"}  >
-                        <Button sx={{color:"white"}} >Todos</Button>
+                        <Button sx={{ ml:6, color: "white" }} startIcon={<Icon>check</Icon>}  >Todos</Button>
                     </NavLink>
                     <NavLink key={"nl_" + 1333} to={"/joplin/recently"}  >
-                        <Button sx={{color:"white"}} >recently</Button>
+                        <Button sx={{ color: "white" }} startIcon={<Icon>history</Icon>} >recently</Button>
                     </NavLink>
 
                     <Box sx={{ "flexGrow": 1 }} />

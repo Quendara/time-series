@@ -47,6 +47,10 @@ async function text2Speech(apiKey: string, text: string) {
 
 const ChatMessage = (props: ChatProps) => {
 
+    if( props.message.role === "system" ){
+        return (<></>)
+    }
+
     const [audioSrc, setAudioSrc] = useState<string | null>(null);
     const copyToClipboardHandle = () => {
 
@@ -206,7 +210,14 @@ export const GPTBox = (props: Props) => {
         let mgs: ChatCompletionMessageParam[] = []
         mgs = [...messages]
 
-        // mgs.push({ role: "system", content: "What's you favorite color?" })
+        if( mgs.length === 0 ){
+            const systemMsg = props.systemMessages.at(0) 
+            if(systemMsg){
+                mgs.push({ role: "system", content: systemMsg.systemPrompt })    
+            }
+        }
+
+        // 
         mgs.push({ role: "user", content: current })
         setCurrent("")
 
@@ -217,7 +228,7 @@ export const GPTBox = (props: Props) => {
     return (
         <>
             {
-                (messages.length == 0) ?
+                (messages.length == 0 && props.initialUserMessage?.length === 0) ?
                     <>
                         {props.systemMessages.map(system => (
                             <Button sx={{ mr: 2 }} startIcon={<Icon>auto_awesome</Icon>} variant="outlined" onClick={() => askGPTwithSystem(system.systemPrompt)} >
@@ -240,7 +251,7 @@ export const GPTBox = (props: Props) => {
 
                             <TextField
                                 value={current}
-                                label="Input GPT"
+                                label="Message"
                                 size="small"
                                 multiline
                                 fullWidth
