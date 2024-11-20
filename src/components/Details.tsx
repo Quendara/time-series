@@ -303,17 +303,11 @@ export const DetailsHeadless = (props: PropsDetails) => {
           const matchedString = match[1];
           console.log(matchedString);
 
-          gpt.push( { button:"Ask", systemPrompt: matchedString } )
-          
-        } else {
-          console.log("No match found.");
+          gpt.push( { button:"Ask", systemPrompt: matchedString } )          
+        } 
 
-          gpt.push( { button:"Sum", systemPrompt: "Summarize content you are provided with for a second-grade student." } )
-          gpt.push( { button:"Meeting Notes", systemPrompt: "Ich gebe dir rohe Meeting notes. Kannst Du die Notizen etwas erweitern." } )
-      
-          
-          return gpt
-        }        
+        gpt.push( { button:"Sum", systemPrompt: "Summarize content you are provided with for a second-grade student. Return a summary and action items when identified." } )
+        gpt.push( { button:"Meeting Notes", systemPrompt: "Ich gebe dir rohe Meeting notes. Kannst Du die Notizen etwas erweitern." } )
 
         return gpt    
     }

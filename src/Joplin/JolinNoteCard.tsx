@@ -1,6 +1,6 @@
 // JoplinNoteCard.tsx
 import React from 'react';
-import { Grid, Card, CardContent, Stack, ListItemButton, ListItemIcon, Icon, ListItemText, Typography, CardActions, useTheme } from '@mui/material';
+import { Grid, Card, CardContent, Stack, ListItemButton, ListItemIcon, Icon, ListItemText, Typography, CardActions, useTheme, Divider } from '@mui/material';
 import { JoplinData, NoteStlye, getPaperColor, muiColor, renderActions, renderBody, timestampToDate } from './JolinNote';
 import { GPTBox, Tuple } from '../organisms/GptBox';
 
@@ -55,6 +55,8 @@ const JoplinNoteCard = (props: NoteProps) => {
                     {renderBody(props.data.body, props.selectCallback)}
                 </CardContent>
                 <CardContent >
+                    <Divider></Divider>
+                    <br/>
                     <GPTBox
                         systemMessages ={ gpt }
                         initialUserMessage={props.data.body} />

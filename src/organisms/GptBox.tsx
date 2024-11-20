@@ -47,11 +47,17 @@ async function text2Speech(apiKey: string, text: string) {
 
 const ChatMessage = (props: ChatProps) => {
 
-    if( props.message.role === "system" ){
-        return (<></>)
-    }
-
     const [audioSrc, setAudioSrc] = useState<string | null>(null);
+    const [collapse, setCollapse] = useState(false);
+
+    useEffect(
+        () => {
+            setCollapse( props.message.role === "system" )
+        },
+        [ props.message.role ]
+
+    ) 
+
     const copyToClipboardHandle = () => {
 
         if (props.message.content) {
@@ -90,9 +96,15 @@ const ChatMessage = (props: ChatProps) => {
         <>
             {(props.message.content) &&
                 <Box m={1} sx={getStyleFromMessage(props.message)}>
-
+                    <Box sx={{ width: "95%", height: "40px", pl:1 }}>
                     <IconButton sx={{ position: "absolute", right: "10px" }} onClick={copyToClipboardHandle}><Icon>content_copy</Icon></IconButton>
-                    <IconButton sx={{ position: "absolute", right: "50px" }} onClick={text2SpeechHandle}><Icon>play_circle</Icon></IconButton>
+                            <IconButton sx={{ position: "absolute", right: "50px" }} onClick={text2SpeechHandle}><Icon>play_circle</Icon></IconButton>
+
+                        <Box onClick={() => setCollapse(!collapse)}>
+                        <IconButton onClick={() => setCollapse(!collapse)}><Icon>{collapse ? "expand_less" : "expand_more"}</Icon></IconButton>
+                        <b>{ props.message.role }</b>
+                        </Box>
+                    </Box>
                     <Box sx={{ width: "95%" }}>
                         {audioSrc && (
                             <audio autoPlay>
@@ -100,7 +112,8 @@ const ChatMessage = (props: ChatProps) => {
                                 Your browser does not support the audio element.
                             </audio>
                         )}
-                        <MyMarkdown content={props.message.content} />
+                        {!collapse && <MyMarkdown content={props.message.content} />}
+
                     </Box>
                 </Box>
             }
@@ -210,10 +223,10 @@ export const GPTBox = (props: Props) => {
         let mgs: ChatCompletionMessageParam[] = []
         mgs = [...messages]
 
-        if( mgs.length === 0 ){
-            const systemMsg = props.systemMessages.at(0) 
-            if(systemMsg){
-                mgs.push({ role: "system", content: systemMsg.systemPrompt })    
+        if (mgs.length === 0) {
+            const systemMsg = props.systemMessages.at(0)
+            if (systemMsg) {
+                mgs.push({ role: "system", content: systemMsg.systemPrompt })
             }
         }
 
@@ -228,7 +241,7 @@ export const GPTBox = (props: Props) => {
     return (
         <>
             {
-                (messages.length == 0 && props.initialUserMessage?.length === 0) ?
+                (messages.length == 0 && props.initialUserMessage?.length !== 0) ?
                     <>
                         {props.systemMessages.map(system => (
                             <Button sx={{ mr: 2 }} startIcon={<Icon>auto_awesome</Icon>} variant="outlined" onClick={() => askGPTwithSystem(system.systemPrompt)} >
@@ -260,8 +273,8 @@ export const GPTBox = (props: Props) => {
                                 onChange={e => setCurrent(e.target.value)}
                             />
 
-                            <Button variant="contained" onClick={askGPT} >ASK</Button>
-                            <Button variant="contained" color="error" onClick={ () => setMessages([])} ><Icon>clear</Icon></Button>
+                            <Button variant="contained" color="primary" onClick={askGPT} >ASK</Button>
+                            <Button variant="outlined" onClick={() => setMessages([])} ><Icon>clear</Icon></Button>
                         </Stack>
                     </>
             }
