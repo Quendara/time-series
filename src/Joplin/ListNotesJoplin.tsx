@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { useEffect, useState } from "react";
 import { List, Stack, Stepper, Tab, Tabs, useTheme } from "@mui/material";
 import { JolinNote, JoplinData, NoteOrder, getNotePriority } from "./JolinNote";
 import { NotedToSort } from "./PageJoplin";
 import { settings } from "./JoplinCommon";
+import { TodoMainContext } from "../context/TodoMainProvider";
 
 type NoteAlignment = 'vertical' | 'horizontal'
 
@@ -22,23 +23,22 @@ export interface NotesProps {
 export const ListNotesJoplin = (props: NotesProps) => {
     const theme = useTheme();
     const [todos, setTodos] = useState<NotedToSort[]>([]);
+    const context = useContext(TodoMainContext)
+    
 
     // const loadTodos = () => {
     useEffect(() => {
         const query = props.query;
         let fields = "fields=id,title,updated_time,body,parent_id&";
-        
-        // if( query.indexOf("folder") ){
-        //     fields = "fields=id,title,updated_time,parent_id&";
-        // }
-
         let order = "order_by=updated_time&order_dir=DESC&";
 
         if (props.order === "title") {
             order = "order_by=title&order_dir=ASC&";
         }
 
-        const urlTodos = "http://localhost:41184" + query + order + fields + settings.token;
+        const urlTodos = "http://localhost:41184" + query + order + fields + "token=" + context.joplinToken
+
+        console.log( "ListNotesJoplin", urlTodos  )
         fetch(urlTodos).then(response => {
             console.log("response", response);
             return response.json();

@@ -1,21 +1,24 @@
 import { useTheme } from '@mui/material/styles';
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { settings } from './JoplinCommon';
 import { Button } from '@mui/material';
+import { TodoMainContext } from '../context/TodoMainProvider';
 
 export interface JoplinResource {
     id: string;
 }
 
-export interface JoplinLInk {
+export interface JoplinLink {
     id: string;
     name: string;
     selectCallback: (id: string) => void;
 }
 
 
-export const JolinNoteLink = (props: JoplinLInk) => {
+export const JolinNoteLink = (props: JoplinLink) => {
 
+    const context = useContext(TodoMainContext)
+    
     const [currentID, setID] = useState<string | undefined>(undefined);
 
     // set ID when request was successful
@@ -29,7 +32,7 @@ export const JolinNoteLink = (props: JoplinLInk) => {
         setID(undefined)
 
         const fields = "fields=id,title,updated_time,body,parent_id&"
-        const url = "http://localhost:41184/notes/" + node_id + "?" + fields + settings.token
+        const url = "http://localhost:41184/notes/" + node_id + "?" + fields + "token=" + context.joplinToken
 
         fetch(url).then(response => {
             return response.json();
@@ -58,6 +61,7 @@ export const JolinNoteLink = (props: JoplinLInk) => {
 export const JolinResource = (props: JoplinResource) => {
 
     const theme = useTheme();
+    const context = useContext(TodoMainContext)
 
     const [currentID, setID] = useState<string | undefined>(undefined);
 
@@ -70,7 +74,7 @@ export const JolinResource = (props: JoplinResource) => {
         console.log("selectNote " + node_id)
 
         setID(undefined)
-        const url = "http://localhost:41184/resources/" + node_id+ "?" + settings.token;
+        const url = "http://localhost:41184/resources/" + node_id+ "?" + "token=" + context.joplinToken
 
         fetch(url).then(response => {
             return response.json();
@@ -87,7 +91,7 @@ export const JolinResource = (props: JoplinResource) => {
 
     return (
         <>  { currentID && 
-            <img src={"http://localhost:41184/resources/" + currentID + "/file?" + settings.token } style={{ width: "50%" }} />
+            <img src={"http://localhost:41184/resources/" + currentID + "/file?" + "token=" + context.joplinToken } style={{ width: "50%" }} />
          } 
         </>
 

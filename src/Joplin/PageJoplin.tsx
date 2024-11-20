@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Theme, makeStyles, useTheme } from '@mui/material/styles';
 import { AppBar, Box, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Toolbar, Typography } from "@mui/material";
@@ -16,6 +16,7 @@ import { settings } from "./JoplinCommon";
 import React from "react";
 
 import { cssClasses } from "../Styles"
+import { TodoMainContext } from "../context/TodoMainProvider";
 
 interface Props {
     toggleColorMode: () => void
@@ -60,6 +61,9 @@ const getStyles = (theme: Theme) => {
 export const PageJoplin = ({ toggleColorMode }: Props) => {
 
     let { context, query } = useParams<{ context?: string, query?: string }>();
+    
+    const mainContext = useContext(TodoMainContext)
+
 
     const theme = useTheme();
     // const history = useHistory();
@@ -71,6 +75,8 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
     const [folders, setFolders] = useState<JoplinData[]>([]);
     const [notes, setNotes] = useState<JoplinData[]>([]);
 
+    const [tokenToken, setJoplinToken] = useState<String | null>(null);
+
 
     const [currentParentID, setParentID] = useState<String | undefined>(undefined);
 
@@ -80,10 +86,28 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
     const [selectedItem, setSelectedItem] = useState<JoplinData | undefined>(undefined);
 
     useEffect(() => {
+
+        const token = localStorage.getItem('joplinToken');
+        if( token != null ){
+            setJoplinToken( token )
+            mainContext.setJoplinToken( token )
+        }      
+    }, []);    
+
+    const setJoplinTokenToLocalStorage = (token: string) => {
+        localStorage.setItem('joplinToken', token );
+        setJoplinToken( token )        
+    }    
+
+    useEffect(() => {
+
+        if( tokenToken === null ) return
+
+
         console.log("PageJoplin mounted")
         const order = "order_by=title&order_dir=ASC&"
 
-        const url = "http://localhost:41184/folders?" + order + settings.token
+        const url = "http://localhost:41184/folders?" + order + "token=" + tokenToken
 
         fetch(url).then(response => {
             console.log("response", response)
@@ -111,7 +135,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
         const local_query = "/search?query=-tag:generated&type=note&"
         // const urlNotes = "http://localhost:41184/notes?" + order + token
-        const urlNotes = "http://localhost:41184" + local_query + order + settings.token
+        const urlNotes = "http://localhost:41184" + local_query + order + "token=" + tokenToken
 
         fetch(urlNotes).then(response => {
             console.log("response", response)
@@ -126,7 +150,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
         return () => {
             console.log("PageJoplin unmounted")
         }
-    }, []);
+    }, [tokenToken]);
 
     useEffect(() => {
 
@@ -142,13 +166,17 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
         if (context === "folder") {
             if (query !== undefined) {
+                getNotesByFolderID( query )
                 setParentID(query)
+
             }
             else {
                 setParentID("")
             }
         }
     }, [query]);
+
+
 
 
 
@@ -165,7 +193,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
         let order = "order_by=updated_time&order_dir=DESC&";
 
-        const urlNotes = "http://localhost:41184/folders/" + id + "/notes?" + order + settings.token
+        const urlNotes = "http://localhost:41184/folders/" + id + "/notes?" + order + "token=" + tokenToken
         // const urlNotes = "http://localhost:41184" + query + order + settings.token
 
         fetch(urlNotes).then(response => {
@@ -191,9 +219,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
 
             return c.parent_id
         }
-
         console.error("getParentId not found " + id)
-
         return ""
     }
 
@@ -207,7 +233,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
         }
 
         const fields = "fields=id,title,updated_time,body,parent_id&"
-        const url = "http://localhost:41184/notes/" + node_id + "?" + fields + settings.token
+        const url = "http://localhost:41184/notes/" + node_id + "?" + fields + "token=" + tokenToken
 
         fetch(url).then(response => {
             return response.json();
@@ -223,7 +249,6 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
         { name: "AgIN",      id: "853c391ce8cc49428a6cdb745a2b74bd" },
         { name: "SDC",      id: "6e178ae70c904b8f82e3e732004e131d" }
     ]
-
 
     return (
         <Box sx={styles.root}>
@@ -280,6 +305,7 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
                 }}
             >
                 <Toolbar />
+
 
                 {context === "folder" &&
                     <>
@@ -388,6 +414,21 @@ export const PageJoplin = ({ toggleColorMode }: Props) => {
             </Drawer>
 
             <Box sx={styles.content}>
+
+
+            { tokenToken === null && <>
+                <Paper sx={{ p: 2, mb: 1 }}>
+                    <Box sx={{ pt: 2, mb: 1 }}>Here you can add your Joplin Token</Box>
+                <TextField
+                      value={""}                      
+                      fullWidth
+                      
+                      variant="outlined"                      
+                      label="Joplin Token"
+                      onChange={e => setJoplinTokenToLocalStorage(e.target.value)}
+                    />
+                    </Paper>
+                </>}
 
                 {selectedItem ?
                     <>

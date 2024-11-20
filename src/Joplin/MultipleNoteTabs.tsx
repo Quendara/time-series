@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { JolinNote, JoplinData, NoteOrder } from "./JolinNote";
 import { settings } from "./JoplinCommon";
 import { ListNotesJoplin } from "./ListNotesJoplin";
 import { Box, Grid, Paper } from "@mui/material";
 import React from "react";
+import { TodoMainContext } from "../context/TodoMainProvider";
 
 
 export interface NotesProps {
@@ -17,6 +18,8 @@ export interface NotesProps {
 export const MultipleNotesJoplin = (props: NotesProps) => {
 
     const [selectedItem, setSelectedItem] = useState<JoplinData | undefined>(undefined);
+    
+    const context = useContext(TodoMainContext)
 
     const selectNote = (node_id: string | undefined) => {
         console.log("selectNote " + node_id)
@@ -27,7 +30,7 @@ export const MultipleNotesJoplin = (props: NotesProps) => {
         }
 
         let fields = "fields=id,title,updated_time,body,parent_id&"
-        const url = "http://localhost:41184/notes/" + node_id + "?" + fields + settings.token
+        const url = "http://localhost:41184/notes/" + node_id + "?" + fields + "token=" + context.joplinToken
 
         fetch(url).then(response => {
             return response.json();

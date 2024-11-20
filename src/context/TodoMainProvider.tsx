@@ -11,27 +11,22 @@ import { fetchTodos, updateTodosFcn } from "./TodoProviderFcns";
 import { TodoMainItem } from "../models/TodoItems";
 import { fetchTodosMainFcn } from "./TodoMainProviderFcns";
 
-
-
 export type TodoContent = {
     todos: TodoMainItem[]
     openAiKey: string
+    joplinToken: string
     setOpenAiKey: ( key : string ) => void
-    // feedTodos: ( items : TodoMainItem[] ) => void
+    setJoplinToken: ( key : string ) => void    
     fetchTodosMain: ( owner : string ) => void
     findItem: ( id? : string ) => TodoMainItem | undefined
-    // appendTodo: (c: TodoMainItem, username: string) => void
-    // updateTodo: (c: UpdateTodosInput) => void
-    // toggleTodo: (id: string) => void
-    // uncheckFunction: (id: string) => void
-    // deleteTodo: (id: string) => void
-
 }
 
 const defaultTodos: TodoContent = {
     todos: [],
     openAiKey: "",
+    joplinToken: "",
     setOpenAiKey: () =>{},
+    setJoplinToken: () => {},
     // feedTodos: () => {}
     fetchTodosMain: () => { },
     findItem: (  ) => { return undefined },
@@ -53,15 +48,20 @@ const TodoMainProvider = (props: Props) => {
 
     const [todosState, setTodos] = useState<TodoMainItem[]>([]);
     const [openAiKeyInt, setOpenAiKeyInt] = useState("");
+    const [joplinTokenInt, setJoplinTokenInt] = useState<string>("");
 
     
     const heroContext = {
         todos: todosState,
         openAiKey: openAiKeyInt,
+        joplinToken: joplinTokenInt,
 
         setOpenAiKey:  ( key : string ) => {
             setOpenAiKeyInt( key )
         },
+        setJoplinToken:  ( key : string ) => {
+            setJoplinTokenInt( key )
+        },        
       
         fetchTodosMain: async ( owner : string ) => {
 
