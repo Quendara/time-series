@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, TextField } from "@mui/material";
+import { Box, Button, Grid, Paper, TextField } from "@mui/material";
 import { grid } from "@mui/system";
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
@@ -99,10 +99,40 @@ export const PianoSong = (props: SongProps) => {
 
     useEffect(() => {
 
-        abcjs.renderAbc("songPaper" + paperId, play)// "X:1\nK:D\nDD AA|BBA2|\n");
+        const tunes = abcjs.renderAbc("songPaper" + paperId, play)// "X:1\nK:D\nDD AA|BBA2|\n");
+        if (abcjs.synth.supportsAudio()) {
+            // const visualObj = abcjs.renderAbc("songPaper" + paperId, play);
+
+
+            const synth = new abcjs.synth.CreateSynth();
+            const controlOptions = {
+                displayRestart: true,
+                displayPlay: true,
+                displayProgress: true,
+                displayClock: true,
+            };
+    
+            const synthControl = new abcjs.synth.SynthController();
+            synthControl.load("#audio" + paperId, null, controlOptions);
+    
+            synth
+                .init({
+                    visualObj: tunes[0],
+                })
+                .then(() => {
+                    synthControl.setTune(tunes[0], true).then(() => {
+                        console.log("Synthesizer ready, playing tune...");
+                        synthControl.restart();
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error initializing the synthesizer:", error);
+                });
+        } else {
+            console.log("Audio is not supported on this browser");
+        }        
 
     }, [play]);
-
 
     return (
         <>
@@ -125,6 +155,8 @@ export const PianoSong = (props: SongProps) => {
 
             {props.showAbcOnly ? <>
                 <div id={"songPaper" + paperId} />
+                {/* <Button onClick={ activate }>Play</Button> */}
+                <div id={"audio" + paperId}></div> 
             </> :
 
                 <Grid container spacing={4} >
@@ -244,6 +276,8 @@ export const Piano = (props: PianoProps) => {
 
     const playabc = "K:C\nL:1/4\n [ " + props.play.join("") + "]\n"
 
+    
+
     useEffect(() => {
 
 
@@ -253,6 +287,8 @@ export const Piano = (props: PianoProps) => {
     }, [props.play]);
 
     const pianoClasses = createPianoClasses(props.showNodes)
+
+
 
 
 
