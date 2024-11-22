@@ -28,7 +28,8 @@ import { DetailsById, DetailsLinkById } from "./Details";
 import { MyMarkdown } from "./MyMarkdown";
 import { MyIcon } from "./MyIcon";
 import { TextEdit } from "./TextEdit";
-import { Piano, PianoPart, PianoSong } from "../pages/Piano";
+import { PianoSong } from "../pages/PianoSong";
+import { SongLearn } from "../pages/SongLearn";
 
 
 
@@ -347,6 +348,7 @@ export const DetailsMarkdown = (props: Props) => {
                 currentLine.startsWith("$$Card") ||
                 currentLine.startsWith("$$Keys") ||
                 currentLine.startsWith("$$Abc") ||
+                currentLine.startsWith("$$SongLearn") ||
                 currentLine.startsWith("$$Paper") ||
                 currentLine.startsWith("$$Accordion")
             ) {
@@ -434,7 +436,14 @@ export const DetailsMarkdown = (props: Props) => {
                                 <PianoSong play={mdcontent} showNodes={false} showAbcOnly={true} />
                             </Box>
                         </Grid>
-                    }                           
+                    }
+                    {currentLine.startsWith("$$SongLearn") &&
+                        <Grid item xs={12} md={12}  >
+                            <Box>
+                                <SongLearn play={mdcontent} showNodes={false} showAbcOnly={true} />
+                            </Box>
+                        </Grid>
+                    }
 
                 </>
 

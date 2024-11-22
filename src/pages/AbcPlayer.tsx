@@ -95,10 +95,11 @@ export const AbcPlayer = (props: Props) => {
 
             const synthControl = new abcjs.synth.SynthController();
             synthControl.load("#audio" + paperId, cursorControl, controlOptions);
+            synthControl.disable(true);
 
-            synth
-                .init({
-                    visualObj: tunes[0],
+            synth.init({
+                    visualObj: tunes[0],                                        
+                    options: { chordsOff: false },
                     // audioContext: new (window.AudioContext || window.webkitAudioContext)(),
                     audioContext: new (window.AudioContext)()
                 })

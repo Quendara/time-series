@@ -6,12 +6,6 @@ import { useParams } from "react-router-dom";
 
 import { AbcPlayer } from "./AbcPlayer"
 
-interface SongProps {
-    play: string
-    showNodes: boolean
-    showTextinput?: boolean
-    showAbcOnly?: boolean
-}
 
 interface PianoProps {
     play: string[]
@@ -88,50 +82,16 @@ export const createPianoClasses = (showNodes: boolean) => {
     }
 }
 
-export const PianoSong = (props: SongProps) => {
 
-    const [play, setPlay] = useState(props.play);
-    const parts = play ? play.split("\n") : []
-
-
-
-
-    return (
-        <>
-            {props.showTextinput &&
-                <div className="no-print" >
-                    <TextField
-                        value={play}
-                        // error={trySend}
-                        // fullWidth
-                        defaultValue={play}
-                        multiline
-                        sx={{ m: 8, width: "50vw" }}
-                        variant="outlined"
-                        // className={getInputClass(username)}
-                        label="Name"
-                        onChange={e => setPlay(e.target.value)}
-                    />
-                </div>
-            }
-
-            {props.showAbcOnly ? <>
-                <AbcPlayer play={ play } />
-            </> :
-
-                <Grid container spacing={4} >
-                    {parts.map(part => (
-                        <Grid item xs={12} md={6} >
-                            <PianoPart play={part} showNodes={props.showNodes} />
-                        </Grid>
-                    ))
-                    }
-                </Grid>}
-        </>
-    )
+interface PartProps {
+    play: string
+    showNodes: boolean
+    showTextinput?: boolean
+    showAbcOnly?: boolean
 }
 
-export const PianoPart = (props: SongProps) => {
+
+export const PianoPart = (props: PartProps) => {
 
     const ticks = props.play.split("|")
 
@@ -190,10 +150,12 @@ export const PianoPart = (props: SongProps) => {
 
     return (
         <>
-
             <Box sx={{ maxHeight: "80vh", mb: 4, overflowY: "scroll" }}>
 
                 {ticks.map(tick => {
+
+                    if( tick.trim().length === 0 )
+                        return ( <></>)
 
                     const result = extractStringInQuotes(tick)
 
@@ -210,11 +172,7 @@ export const PianoPart = (props: SongProps) => {
                             }
                         </>)
                 })}
-
-
             </Box>
-
-
         </>
     )
 
@@ -239,7 +197,7 @@ export const Piano = (props: PianoProps) => {
 
         // abcjs.renderAbc("notepaper" + playabc, playabc)// "X:1\nK:D\nDD AA|BBA2|\n");
         <AbcPlayer play={playabc} />
-        console.log(playabc)
+        // console.log(playabc)
 
     }, [props.play]);
 

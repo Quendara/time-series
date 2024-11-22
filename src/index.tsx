@@ -42,7 +42,7 @@ import { Details } from "./components/Details";
 import { UpdateTodosInput } from "./API";
 import { TodoMainProvider } from "./context/TodoMainProvider";
 import { SandboxGPT } from "./pages/SandboxGPT";
-import { Piano, PianoSong } from "./pages/Piano";
+import { PianoSong } from "./pages/PianoSong";
 import { Mails } from "./pages/Mails";
 import { PageJoplin } from "./Joplin/PageJoplin";
 
