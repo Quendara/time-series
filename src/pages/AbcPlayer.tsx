@@ -1,11 +1,126 @@
 import React, { useRef, useEffect } from "react";
 import { getUniqueId } from "../components/helpers";
-import abcjs from "abcjs";
+import abcjs, { NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
 import "abcjs/abcjs-audio.css";
 
 interface Props {
     play: string;
 }
+
+// Typdefinitionen
+interface Note {
+    pitches: string[]; // Liste der Notennamen
+    duration: number; // Notendauer
+    lyrics?: string; // Zugehöriger Text
+}
+
+export interface Measure {
+    notes: Note[]; // Noten im Takt
+    voice: string; // Stimme (RH oder LH)
+}
+
+interface AnalysisResult {
+    measures_v1: Measure[]; // Alle Takte, voice 1
+    measures_v2: Measure[]; // Alle Takte, voice 2
+    title: string; // Titel des Stücks
+    meter: string; // Taktart
+    key: string; // Tonart
+    tempo: number; // Tempo (QPM)
+}
+
+
+export const myParseAbc = (abcNotaion: string): TuneObject => {
+    const tunes: TuneObject[] = abcjs.parseOnly(abcNotaion)
+    return tunes[0]
+}
+
+// Funktion zur Gruppierung der Noten pro Takt
+export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
+
+    // const tune = tunes[0]; // Nimm die erste TuneObject
+    const measures_v1: Measure[] = []; // voice 1
+    const measures_v2: Measure[] = []; // voice 2
+
+
+    // Metadaten des Stücks
+    const title = tune.metaText.title || "Unbekannt";
+    const meter = tune.getMeter().value?.map(fraction => `${fraction.num}/${fraction.den}`).join(", ") || "Unbekannt";
+    const key = tune.getKeySignature().root + (tune.getKeySignature().acc || "") + " " + tune.getKeySignature().mode;
+    const tempo = tune.getBpm();
+
+    // Gruppiere Noten nach Stimme und Takt
+    tune.lines.forEach((line) => {
+        if (line.staff) {
+            line.staff.forEach((staff, staffIndex) => {
+                const voiceLabel = `Voice ${staffIndex + 1}`;
+
+                if (staff.voices === undefined) return
+                const voice = staff.voices[0]; // Erste Stimme
+                let currentMeasureNotes: Note[] = [];
+
+                voice.forEach((item: VoiceItem) => {
+
+                    if (item.el_type === 'clef') {
+
+                    }
+                    if (item.el_type === 'bar') {
+                        // Beende den aktuellen Takt und speichere ihn
+                        if (currentMeasureNotes.length > 0) {
+                            if( staffIndex === 0 ){
+                                measures_v1.push({
+                                    notes: currentMeasureNotes,
+                                    voice: voiceLabel,
+                                });
+                            }
+                            else {
+                            // if( staffIndex === 0 ){
+                                measures_v2.push({
+                                    notes: currentMeasureNotes,
+                                    voice: voiceLabel,
+                                });
+                            }  
+                            currentMeasureNotes = [];
+                        }
+                    } else if (item.el_type === 'note') {
+                        // Füge eine Note hinzu
+                        currentMeasureNotes.push({
+                            pitches: item.pitches?.map((p: any) => p.name) || [],
+                            duration: item.duration || 0,
+                        });
+                    }
+                });
+
+                // Speichere den letzten Takt
+                if (currentMeasureNotes.length > 0) {
+                    if( staffIndex === 0 ){
+                        measures_v1.push({
+                            notes: currentMeasureNotes,
+                            voice: voiceLabel,
+                        });
+                    }
+                    else {
+                    // if( staffIndex === 0 ){
+                        measures_v2.push({
+                            notes: currentMeasureNotes,
+                            voice: voiceLabel,
+                        });
+                    }                    
+                 
+                }
+            });
+        }
+    });
+
+    // let groups = groupBy(measures, "voice");
+    
+
+    // const measures = groupNotesByMeasure(tunes[0]);
+    console.log("Taktspezifische voice 1:", measures_v1);
+    console.log("Taktspezifische voice 1:", measures_v2);
+    
+
+    return { measures_v1, measures_v2, title, meter, key, tempo };
+};
 
 export const AbcPlayer = (props: Props) => {
     const paperId = getUniqueId();
@@ -27,12 +142,24 @@ export const AbcPlayer = (props: Props) => {
             svg?.appendChild(cursorRef.current);
         };
 
-        const onEvent = (event: any) => {
+        const onEvent = (event: NoteTimingEvent) => {
+
+            // console.log(" - pitches ", event.midiPitches)
+            // // Aktuell gespielte Note
+            // console.log(`Aktuelle Note: ${event.note[0]?.name || "Keine Note"}`);
+
+            // // Noten des aktuellen Takts (falls verfügbar)
+            // if (event.measureStart !== undefined && event.elements) {
+            //     const taktNoten = event.elements.map((element) => element.abcelem.notes.map((note) => note.name));
+            //     console.log("Noten im aktuellen Takt:", taktNoten.flat());
+            // }
+
+            // console.log(event)
             if (cursorRef.current) {
-                cursorRef.current.setAttribute("x1", `${event.left - 2}`);
-                cursorRef.current.setAttribute("x2", `${event.left - 2}`);
-                cursorRef.current.setAttribute("y1", `${event.top}`);
-                cursorRef.current.setAttribute("y2", `${event.top + event.height}`);
+                cursorRef.current.setAttribute("x1", `${event.left !== undefined ? event.left - 2 : 0}`);
+                cursorRef.current.setAttribute("x2", `${event.left !== undefined ? event.left - 2 : 0}`);
+                cursorRef.current.setAttribute("y1", `${event.top !== undefined ? event.top : 0}`);
+                cursorRef.current.setAttribute("y2", `${event.top !== undefined && event.height !== undefined ? event.top + event.height : 0}`);
             }
         };
 
@@ -55,6 +182,15 @@ export const AbcPlayer = (props: Props) => {
                 selectionColor: "", // Optionale Anpassung
             }
         );
+
+
+
+
+
+
+
+
+
 
         if (abcjs.synth.supportsAudio()) {
             const synth = new abcjs.synth.CreateSynth();
@@ -79,7 +215,7 @@ export const AbcPlayer = (props: Props) => {
                     });
                 })
                 .catch((error) => {
-                    alert( "Error initializing the synthesizer:"+ error )
+                    alert("Error initializing the synthesizer:" + error)
                     console.error("Error initializing the synthesizer:", error);
                 });
         } else {
@@ -94,3 +230,7 @@ export const AbcPlayer = (props: Props) => {
         </>
     );
 };
+
+function groupBy(measures: Measure[], arg1: string) {
+    throw new Error("Function not implemented.");
+}

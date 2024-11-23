@@ -1,8 +1,11 @@
 import React, { useEffect } from "react"
-import { TextField, Grid, Slider, Button, ButtonGroup } from "@mui/material"
+import { TextField, Grid, Slider, Button, ButtonGroup, Divider } from "@mui/material"
 import { useState } from "react"
-import { AbcPlayer } from "./AbcPlayer"
+import { AbcPlayer, groupNotesByMeasure, Measure, myParseAbc } from "./AbcPlayer"
 import { PianoPart } from "./Piano"
+
+import abcjs, { NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
+import { integer } from "aws-sdk/clients/cloudfront"
 
 
 interface SongProps {
@@ -12,87 +15,164 @@ interface SongProps {
     showAbcOnly?: boolean
 }
 
+
+
+
 export const SongLearn = (props: SongProps) => {
 
     const [parts, setParts] = useState<string[]>([]);
     const [songHeader, setSongHeader] = useState("");
 
-    const parseSong = (song: string) => {
-
-        const lines = song.split("\n")
-
-        let ticks: string[] = []
-
-        let header = ""
-        let notes = false
+    const [measures_v1, setVoice1] = useState<Measure[]>([]);
+    const [measures_v2, setVoice2] = useState<Measure[]>([]);
 
 
-        lines.map(((line, index) => {
 
-            let trimmedLine = line.trim()
-            if (trimmedLine.endsWith("|")) {
-                trimmedLine = trimmedLine.slice(0, trimmedLine.length - 1)
-            }
-            if (trimmedLine.startsWith("|")) {
-                trimmedLine = trimmedLine.slice(1, trimmedLine.length )
-            }            
+    // const parseSong = (song: string) => {
 
-            const parts = trimmedLine.split("|")
-            if (line.startsWith("w:")) {
-                return
-            }
+    //     const lines = song.split("\n")
+
+    //     let ticks: string[] = []
+
+    //     let header = ""
+    //     let notes = false
 
 
-            if (parts.length > 1) {
-                notes = true
-                // console.log( "### ", index, parts.length, line )
-                ticks = [...ticks, ...parts]
-            }
-            else if (!notes) {
-                header += line + "\n"
+    //     lines.map(((line, index) => {
 
-            }
-        }))
+    //         let trimmedLine = line.trim()
+    //         if (trimmedLine.endsWith("|")) {
+    //             trimmedLine = trimmedLine.slice(0, trimmedLine.length - 1)
+    //         }
+    //         if (trimmedLine.startsWith("|")) {
+    //             trimmedLine = trimmedLine.slice(1, trimmedLine.length)
+    //         }
 
-        return { header, ticks }
+    //         const parts = trimmedLine.split("|")
+    //         if (line.startsWith("w:")) {
+    //             return
+    //         }
+
+
+    //         if (parts.length > 1) {
+    //             notes = true
+    //             // console.log( "### ", index, parts.length, line )
+    //             ticks = [...ticks, ...parts]
+    //         }
+    //         else if (!notes) {
+    //             header += line + "\n"
+
+    //         }
+    //     }))
+
+    //     return { header, ticks }
+    // }
+
+    // const getSong = (headless: boolean, startIntervall: number, numberOfIntervalls: number) => {
+    //     // console.log( "### HEADER: ", songHeader )
+    //     // console.log( "### PARTS:", parts.join( " | " ) )
+    //     const stopIntervall = startIntervall + numberOfIntervalls
+    //     let val = ""
+    //     if (!headless) {
+    //         val += songHeader
+    //     }
+
+    //     const increment = (numberOfIntervalls >= 4) ? 4 : numberOfIntervalls
+
+
+    //     for (let i = startIntervall; i < stopIntervall; i += increment) {
+    //         val += "|"
+    //         val += parts.slice(i, i + increment).join(" | ")
+    //         val += "|\n"
+
+    //         if (!headless) {
+    //             val += "w:"
+    //             for (let j = i; j < stopIntervall; j += 1) {
+    //                 val += (j + 1) + "|"
+    //             }
+    //             val += "\n"
+    //         }
+    //     }
+
+
+    //     // val += ":| \n"
+    //     //val += "w:" + (startIntervall+1)
+    //     return val
+    // }
+
+    const measureToAbc = (measures: Measure[], startIntervall: number, numberOfIntervalls: number) => {
+        return measures.map((m, mindex) => {
+
+            if (mindex < startIntervall) return ""
+            if (mindex >= (startIntervall + numberOfIntervalls)) return ""
+
+            return m.notes.map((n, nindex) => {
+
+                const nodeDuration = (n.duration / 0.125) as integer
+
+                if (n.pitches.length === 0) {
+                    return "z"
+                }
+
+
+                return "" + n.pitches.at(0) + nodeDuration
+            }).join("")
+        }).join("|")
     }
 
     const getSong = (headless: boolean, startIntervall: number, numberOfIntervalls: number) => {
-        // console.log( "### HEADER: ", songHeader )
-        // console.log( "### PARTS:", parts.join( " | " ) )
-        const stopIntervall = startIntervall + numberOfIntervalls
+
+        
         let val = ""
-        if (!headless) {
+
+        if( !headless ){
             val += songHeader
+            val += "V:RH\n"
         }
 
-        const increment = (numberOfIntervalls >= 4) ? 4 : numberOfIntervalls
+        // val += "///"
+        val += measureToAbc(measures_v1, startIntervall, numberOfIntervalls)
 
-
-        for (let i = startIntervall; i < stopIntervall; i += increment) {
-            val += "|"
-            val += parts.slice(i, i + increment).join(" | ")
-            val += "|\n"
-            
-            if (!headless) {
-                val += "w:"
-                for (let j = i; j < stopIntervall; j += 1) {
-                    val += (j + 1) + "|"
-                }
-                val += "\n"
-            }
+        if( !headless ){
+            val += "\n"
+            val += "V:LH\n"
         }
-
-
-        // val += ":| \n"
-        //val += "w:" + (startIntervall+1)
+        val += measureToAbc(measures_v2, startIntervall, numberOfIntervalls)
         return val
     }
 
     useEffect(() => {
-        const { header, ticks } = parseSong(props.play)
-        setSongHeader(header);
-        setParts(ticks);
+        // const { header, ticks } = parseSong(props.play)
+        // setSongHeader(header);
+        // setParts(ticks);
+
+        const myTune = myParseAbc(props.play)
+        const { measures_v1, measures_v2, title, meter, key, tempo } = groupNotesByMeasure(myTune)
+
+        setVoice1(measures_v1)
+        setVoice2(measures_v2)
+
+        // T: Set fire to the rain
+        // M: 4/4
+        // L: 1/8
+        // K: Dm
+        // V:RH clef=treble
+        // V:LH clef=bass
+        // Q:120      
+        let header = "T:" + title + "\n"
+        header += "K:" + key + "\n"
+        header += "M:" + meter + "\n"
+        header += "Q:" + tempo + "\n"
+        header += "V:RH clef=treble\n"
+        header += "V:LH clef=bass\n"
+
+
+        setSongHeader(header)
+
+
+
+        // const song = getFirstTwoBars( props.play )
+        // setSongHeader(song);
 
     }, [props.play])
 
@@ -122,7 +202,7 @@ export const SongLearn = (props: SongProps) => {
                         onChange={handleStartIntervallChange}
                         valueLabelDisplay="auto"
                         min={0}
-                        max={parts.length}
+                        max={measures_v1.length}
                     />
                     <ButtonGroup variant="text" aria-label="Basic button group">
                         <Button onClick={() => {
@@ -144,9 +224,9 @@ export const SongLearn = (props: SongProps) => {
                         max={12}
                     />
                     <ButtonGroup variant="text" aria-label="Basic button group">
-                        { [1,2,4,8].map( (value) => (
-                            <Button variant={ (numberOfIntervalls===value)?"contained":"text" } onClick={() => { setNumberOfIntervalls( value ) }} >{value}</Button>
-                        )) }
+                        {[1, 2, 4, 8].map((value) => (
+                            <Button variant={(numberOfIntervalls === value) ? "contained" : "text"} onClick={() => { setNumberOfIntervalls(value) }} >{value}</Button>
+                        ))}
                     </ButtonGroup>
                 </Grid>
             </Grid>
@@ -154,10 +234,13 @@ export const SongLearn = (props: SongProps) => {
             <AbcPlayer play={getSong(false, startIntervall, numberOfIntervalls)} />
 
             <Grid item xs={12} md={6} >
-                <PianoPart play={getSong(true, startIntervall, numberOfIntervalls)} showNodes={props.showNodes} />
+                <PianoPart play={getSong(true, startIntervall, 1)} showNodes={props.showNodes} />
             </Grid>
             <pre>
-                {getSong(true, startIntervall, numberOfIntervalls)}
+
+                {getSong(true, startIntervall, 1)}
+                <Divider />
+                {getSong(false, startIntervall, 1)}
             </pre>
         </>
     )
