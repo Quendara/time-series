@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { TextField, Grid, Slider, Button, ButtonGroup, Divider } from "@mui/material"
+import { TextField, Grid, Slider, Button, ButtonGroup, Divider, IconButton, Icon } from "@mui/material"
 import { useState } from "react"
 import { AbcPlayer, groupNotesByMeasure, Measure, myParseAbc } from "./AbcPlayer"
 import { PianoPart } from "./Piano"
@@ -101,14 +101,16 @@ export const SongLearn = (props: SongProps) => {
     // }
 
     const measureToAbc = (measures: Measure[], startIntervall: number, numberOfIntervalls: number) => {
-        return measures.map((m, mindex) => {
 
-            if (mindex < startIntervall) return ""
-            if (mindex >= (startIntervall + numberOfIntervalls)) return ""
+        const measures_out : string[] = []
 
-            let returnStr = "|"
 
-            returnStr += m.notes.map((n, nindex) => {
+        if( startIntervall >= measures.length) return ""
+
+        for( let i=startIntervall; i<(startIntervall+numberOfIntervalls); ++i ){
+            const m = measures.at(i)
+            if( m === undefined ) break;
+            measures_out.push(  m.notes.map((n, nindex) => {
 
                 const nodeDuration = (n.duration / 0.125) as integer
 
@@ -117,10 +119,33 @@ export const SongLearn = (props: SongProps) => {
                 }
                 return "" + n.pitches.at(0) + nodeDuration
             }
-            ).join("")
-            return returnStr
+            ).join("") )
+        }
 
-        }).join("")
+        return measures_out.join("|")
+            
+        
+
+        // return measures.map((m, mindex) => {
+
+        //     if (mindex < startIntervall) return ""
+        //     if (mindex >= (startIntervall + numberOfIntervalls)) return ""
+
+        //     let returnStr = "|"
+
+        //     returnStr += m.notes.map((n, nindex) => {
+
+        //         const nodeDuration = (n.duration / 0.125) as integer
+
+        //         if (n.pitches.length === 0) {
+        //             return "z"
+        //         }
+        //         return "" + n.pitches.at(0) + nodeDuration
+        //     }
+        //     ).join("")
+        //     return returnStr
+
+        // }).join("")
     }
 
     const getSong = (headless: boolean, startIntervall: number, numberOfIntervalls: number) => {
@@ -205,16 +230,18 @@ export const SongLearn = (props: SongProps) => {
                 <Grid item xs={12} >
                     <AbcPlayer play={getSong(false, startIntervall, numberOfIntervalls)} />
                 </Grid>
-                <Grid item xs={12} md={6} >
+                <Grid item xs={3}  >
                     <ButtonGroup variant="text" aria-label="Basic button group">
-                        <Button onClick={() => {
+                        <IconButton onClick={() => {
                             const newStartIntervall = startIntervall - numberOfIntervalls
                             setStartIntervall((newStartIntervall < 0) ? 0 : newStartIntervall)
-                        }}>-</Button>
-                        <Button onClick={() => {
+                        }}><Icon>navigate_before</Icon></IconButton>
+                        <IconButton onClick={() => {
                             setStartIntervall(startIntervall + numberOfIntervalls)
-                        }}>+</Button>
+                        }}><Icon>navigate_next</Icon></IconButton>
                     </ButtonGroup>
+                </Grid>
+                <Grid item xs={3}  >                    
                     <Slider
                         value={startIntervall}
                         onChange={handleStartIntervallChange}
@@ -223,13 +250,16 @@ export const SongLearn = (props: SongProps) => {
                         max={measures_v1.length}
                     />
                     Start : {startIntervall + 1}
+                
                 </Grid>
-                <Grid item xs={12} md={6} >
+                <Grid item xs={3}>
                     <ButtonGroup variant="text" aria-label="Basic button group">
                         {[1, 2, 4, 8].map((value) => (
                             <Button variant={(numberOfIntervalls === value) ? "contained" : "text"} onClick={() => { setNumberOfIntervalls(value) }} >{value}</Button>
                         ))}
                     </ButtonGroup>
+                    </Grid>
+                    <Grid item xs={3}  >                      
                     <Slider
                         value={numberOfIntervalls}
                         onChange={handleNumberOfIntervallChange}
@@ -238,17 +268,18 @@ export const SongLearn = (props: SongProps) => {
                         max={12}
                     />
                     Intervalsize : {numberOfIntervalls}
+                
                 </Grid>
             </Grid>
 
             <Grid item xs={12} md={6} >
-                <PianoPart play={getSong(true, startIntervall, 1)} showNodes={props.showNodes} />
+                <PianoPart play={getSong(true, startIntervall, numberOfIntervalls)} showNodes={props.showNodes} />
             </Grid>
             <pre>
 
-                {getSong(true, startIntervall, 1)}
+                {getSong(true, startIntervall, numberOfIntervalls)}
                 <Divider />
-                {getSong(false, startIntervall, 1)}
+                {getSong(false, startIntervall, numberOfIntervalls)}
             </pre>
         </>
     )

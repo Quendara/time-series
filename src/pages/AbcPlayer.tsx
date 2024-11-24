@@ -1,7 +1,8 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { getUniqueId } from "../components/helpers";
-import abcjs, { NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
+import abcjs, { MidiBuffer, NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
 import "abcjs/abcjs-audio.css";
+import { Grid, Icon, IconButton } from "@mui/material";
 
 interface Props {
     play: string;
@@ -66,19 +67,19 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                     if (item.el_type === 'bar') {
                         // Beende den aktuellen Takt und speichere ihn
                         if (currentMeasureNotes.length > 0) {
-                            if( staffIndex === 0 ){
+                            if (staffIndex === 0) {
                                 measures_v1.push({
                                     notes: currentMeasureNotes,
                                     voice: voiceLabel,
                                 });
                             }
                             else {
-                            // if( staffIndex === 0 ){
+                                // if( staffIndex === 0 ){
                                 measures_v2.push({
                                     notes: currentMeasureNotes,
                                     voice: voiceLabel,
                                 });
-                            }  
+                            }
                             currentMeasureNotes = [];
                         }
                     } else if (item.el_type === 'note') {
@@ -92,32 +93,32 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
 
                 // Speichere den letzten Takt
                 if (currentMeasureNotes.length > 0) {
-                    if( staffIndex === 0 ){
+                    if (staffIndex === 0) {
                         measures_v1.push({
                             notes: currentMeasureNotes,
                             voice: voiceLabel,
                         });
                     }
                     else {
-                    // if( staffIndex === 0 ){
+                        // if( staffIndex === 0 ){
                         measures_v2.push({
                             notes: currentMeasureNotes,
                             voice: voiceLabel,
                         });
-                    }                    
-                 
+                    }
+
                 }
             });
         }
     });
 
     // let groups = groupBy(measures, "voice");
-    
+
 
     // const measures = groupNotesByMeasure(tunes[0]);
     console.log("Taktspezifische voice 1:", measures_v1);
     console.log("Taktspezifische voice 1:", measures_v2);
-    
+
 
     return { measures_v1, measures_v2, title, meter, key, tempo };
 };
@@ -126,6 +127,9 @@ export const AbcPlayer = (props: Props) => {
     const paperId = getUniqueId();
     const paperRef = useRef<HTMLDivElement | null>(null);
     const cursorRef = useRef<SVGLineElement | null>(null);
+    const [synth, setSynth] = useState<MidiBuffer | null>(null);
+    const [playing, setPlay] = useState(false);
+
 
     const CursorControl = () => {
         const onStart = () => {
@@ -183,28 +187,21 @@ export const AbcPlayer = (props: Props) => {
             }
         );
 
-
-
-
-
-
-
-
-
-
         if (abcjs.synth.supportsAudio()) {
-            const synth = new abcjs.synth.CreateSynth();
+            const localsynth: MidiBuffer = new abcjs.synth.CreateSynth();
+
+            setSynth(localsynth)
             const cursorControl = CursorControl();
             const synthControl = new abcjs.synth.SynthController();
 
             synthControl.load("#audio" + paperId, cursorControl, {
-                displayRestart: true,
+                displayRestart: false,
                 displayPlay: true,
-                displayProgress: true,
+                displayProgress: false,
                 // displayClock: true,
             });
 
-            synth.init({
+            localsynth.init({
                 visualObj: tunes[0],
                 options: { chordsOff: true }, // Akkorde deaktiviert
                 audioContext: new window.AudioContext(),
@@ -223,11 +220,32 @@ export const AbcPlayer = (props: Props) => {
         }
     }, [props.play]);
 
+    async function playMusic() {
+        if (playing) {
+            synth?.stop()
+            setPlay(false)
+        }
+        else {
+            await synth?.prime();
+            synth?.start();
+            setPlay(true)
+        }
+    }
+
     return (
-        <>
-            <div id={"songPaper" + paperId} ref={paperRef}></div>
-            <div id={"audio" + paperId}></div>
-        </>
+        <Grid container spacing={1} >
+            <Grid item xs={4} >
+                <div id={"audio" + paperId}></div>
+            </Grid>
+            <Grid item xs={6} >
+                <IconButton
+                    onClick={playMusic} ><Icon>{playing ? "stop" : "play_arrow"} </Icon></IconButton>
+
+            </Grid>
+            <Grid item xs={12} >
+                <div id={"songPaper" + paperId} ref={paperRef}></div>
+            </Grid>
+        </Grid>
     );
 };
 
