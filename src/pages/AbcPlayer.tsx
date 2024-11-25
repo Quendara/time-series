@@ -48,6 +48,10 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
     const meter = tune.getMeter().value?.map(fraction => `${fraction.num}/${fraction.den}`).join(", ") || "Unbekannt";
     const key = tune.getKeySignature().root + (tune.getKeySignature().acc || "") + " " + tune.getKeySignature().mode;
     const tempo = tune.getBpm();
+    tune.getBarLength()
+
+    tune.getMeterFraction()
+    
 
     // Gruppiere Noten nach Stimme und Takt
     tune.lines.forEach((line) => {
