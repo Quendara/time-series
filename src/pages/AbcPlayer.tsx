@@ -6,6 +6,7 @@ import { Grid, Icon, IconButton } from "@mui/material";
 
 interface Props {
     play: string;
+    callback_current_Measure: ( m : number ) => void
 }
 
 // Typdefinitionen
@@ -152,7 +153,8 @@ export const AbcPlayer = (props: Props) => {
 
         const onEvent = (event: NoteTimingEvent) => {
 
-            // console.log(" - pitches ", event.midiPitches)
+            console.log(" - pitches ", event.measureNumber )
+            props.callback_current_Measure(  event.measureNumber?event.measureNumber:0 )
             // // Aktuell gespielte Note
             // console.log(`Aktuelle Note: ${event.note[0]?.name || "Keine Note"}`);
 
@@ -199,8 +201,10 @@ export const AbcPlayer = (props: Props) => {
             const synthControl = new abcjs.synth.SynthController();
 
             synthControl.load("#audio" + paperId, cursorControl, {
-                displayRestart: false,
+                displayRestart: true,
                 displayPlay: true,
+                // displayLoop: true,
+                displayWarp:false,
                 displayProgress: false,
                 // displayClock: true,
             });
@@ -238,16 +242,16 @@ export const AbcPlayer = (props: Props) => {
 
     return (
         <Grid container spacing={1} >
+                <Grid item xs={12} >
+                    <div id={"songPaper" + paperId} ref={paperRef}></div>
+                </Grid>
             <Grid item xs={4} >
                 <div id={"audio" + paperId}></div>
             </Grid>
             <Grid item xs={6} >
-                <IconButton
-                    onClick={playMusic} ><Icon>{playing ? "stop" : "play_arrow"} </Icon></IconButton>
+                {/* <IconButton
+                    onClick={playMusic} ><Icon>{playing ? "stop" : "play_arrow"} </Icon></IconButton> */}
 
-            </Grid>
-            <Grid item xs={12} >
-                <div id={"songPaper" + paperId} ref={paperRef}></div>
             </Grid>
         </Grid>
     );

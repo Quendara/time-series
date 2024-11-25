@@ -196,7 +196,7 @@ export const Piano = (props: PianoProps) => {
     useEffect(() => {
 
         // abcjs.renderAbc("notepaper" + playabc, playabc)// "X:1\nK:D\nDD AA|BBA2|\n");
-        <AbcPlayer play={playabc} />
+        <AbcPlayer play={playabc} callback_current_Measure={ (m)=>{} } />
         // console.log(playabc)
 
     }, [props.play]);
