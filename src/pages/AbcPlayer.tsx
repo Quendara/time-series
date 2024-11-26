@@ -6,7 +6,7 @@ import { Grid, Icon, IconButton } from "@mui/material";
 
 interface Props {
     play: string;
-    callback_current_Measure: ( m : number ) => void
+    callback_current_Measure: (m: number) => void
 }
 
 // Typdefinitionen
@@ -23,6 +23,11 @@ export interface Measure {
     voice: string; // Stimme (RH oder LH)
 }
 
+export interface PartRange {
+    name: string;
+    start: number;
+}
+
 interface AnalysisResult {
     measures_v1: Measure[]; // Alle Takte, voice 1
     measures_v2: Measure[]; // Alle Takte, voice 2
@@ -30,6 +35,8 @@ interface AnalysisResult {
     meter: string; // Taktart
     key: string; // Tonart
     tempo: number; // Tempo (QPM)
+    // sections: { [section: string]: Measure[][] };
+    sections_range: PartRange[] 
 }
 
 
@@ -41,7 +48,11 @@ export const myParseAbc = (abcNotaion: string): TuneObject => {
 // Funktion zur Gruppierung der Noten pro Takt
 export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
     // Use an array to hold measures for each voice
-    const voice_arr: Measure[][] = []; 
+    const voice_arr: Measure[][] = [];
+    // const sections: { [section: string]: Measure[][] } = {}; // To store measures by section
+    const sections_range: PartRange[]  = []; // To store measures by section
+
+    let currentSection = "Part A"; // Default section
 
     // Metadaten des Stücks
     const title = tune.metaText.title || "Unbekannt";
@@ -49,9 +60,28 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
     const key = tune.getKeySignature().root + (tune.getKeySignature().acc || "") + " " + tune.getKeySignature().mode;
     const tempo = tune.getBpm();
 
+    voice_arr[0] = [];
+    
+
     // Gruppiere Noten nach Stimme und Takt
-    tune.lines.forEach((line) => {
+    tune.lines.forEach((line, index ) => {
+
+        //         
+        if (line.text) {
+            console.log(  "text : ", line.text )
+            currentSection = "" + line.text.text  // .replace("%%text", "").trim();
+            // currentSection = "aaa" + index + line.text.text
+            // if (!sections[currentSection]) {
+            //     sections[currentSection] = [];
+            // }
+               
+            const range : PartRange = { name: currentSection, start: voice_arr[0].length }
+            sections_range.push(range)            
+        }
+
         if (line.staff) {
+            
+
             line.staff.forEach((staff, staffIndex) => {
                 // Ensure an array exists for the current voice
                 if (!voice_arr[staffIndex]) {
@@ -63,14 +93,29 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                 const voice = staff.voices[0]; // Erste Stimme
                 let currentMeasureNotes: Note[] = [];
 
+                
+
                 voice.forEach((item: VoiceItem) => {
+                    // Detect section changes
+
                     if (item.el_type === 'bar') {
+
                         // Beende den aktuellen Takt und speichere ihn
                         if (currentMeasureNotes.length > 0) {
-                            voice_arr[staffIndex].push({
+                            const measure: Measure = {
                                 notes: currentMeasureNotes,
                                 voice: voiceLabel,
-                            });
+                            }
+                            voice_arr[staffIndex].push( measure );
+
+                            // if (!sections[currentSection]) {
+                            //     sections[currentSection] = [];
+                            // }                              
+                            
+                            // if (!sections[currentSection][staffIndex]) {
+                            //     sections[currentSection][staffIndex] = [];
+                            // }                            
+                            // sections[currentSection][staffIndex].push(measure);
                             currentMeasureNotes = [];
                         }
                     } else if (item.el_type === 'note') {
@@ -78,6 +123,7 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                         currentMeasureNotes.push({
                             pitches: item.pitches?.map((p: any) => p.name) || [],
                             duration: item.duration || 0,
+
                             lyrics: item.lyric?.map((lyric: any) => lyric.syllable).join(" ") || undefined,
                         });
                     }
@@ -85,10 +131,21 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
 
                 // Speichere den letzten Takt
                 if (currentMeasureNotes.length > 0) {
-                    voice_arr[staffIndex].push({
+                    // voice_arr[staffIndex].push({
+                    //     notes: currentMeasureNotes,
+                    //     voice: voiceLabel,
+                    // });
+                    const measure: Measure = {
                         notes: currentMeasureNotes,
                         voice: voiceLabel,
-                    });
+                    }
+                    voice_arr[staffIndex].push( measure );
+
+                    // if (!sections[currentSection][staffIndex]) {
+                    //     sections[currentSection][staffIndex] = [];
+                    // }                            
+                    // sections[currentSection][staffIndex].push(measure);
+                    currentMeasureNotes = [];                    
                 }
             });
         }
@@ -97,13 +154,14 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
     // Log the results
     console.log("Voice-specific measures:", voice_arr);
 
-    return { 
-        measures_v1: voice_arr[0] || [], 
-        measures_v2: voice_arr[1] || [], 
-        title, 
-        meter, 
-        key, 
-        tempo 
+    return {
+        measures_v1: voice_arr[0] || [],
+        measures_v2: voice_arr[1] || [],
+        title,
+        meter,
+        key,
+        tempo,        
+        sections_range
     };
 };
 
@@ -132,8 +190,8 @@ export const AbcPlayer = (props: Props) => {
 
         const onEvent = (event: NoteTimingEvent) => {
 
-            console.log(" - pitches ", event.measureNumber )
-            props.callback_current_Measure(  event.measureNumber?event.measureNumber:0 )
+            console.log(" - pitches ", event.measureNumber)
+            props.callback_current_Measure(event.measureNumber ? event.measureNumber : 0)
             // // Aktuell gespielte Note
             // console.log(`Aktuelle Note: ${event.note[0]?.name || "Keine Note"}`);
 
@@ -183,7 +241,7 @@ export const AbcPlayer = (props: Props) => {
                 displayRestart: true,
                 displayPlay: true,
                 // displayLoop: true,
-                displayWarp:false,
+                displayWarp: false,
                 displayProgress: false,
                 // displayClock: true,
             });
@@ -221,9 +279,9 @@ export const AbcPlayer = (props: Props) => {
 
     return (
         <Grid container spacing={1} >
-                <Grid item xs={12} >
-                    <div id={"songPaper" + paperId} ref={paperRef}></div>
-                </Grid>
+            <Grid item xs={12} >
+                <div id={"songPaper" + paperId} ref={paperRef}></div>
+            </Grid>
             <Grid item xs={4} >
                 <div id={"audio" + paperId}></div>
             </Grid>
