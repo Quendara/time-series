@@ -16,6 +16,8 @@ interface Note {
     lyrics?: string; // Zugehöriger Text
 }
 
+
+
 export interface Measure {
     notes: Note[]; // Noten im Takt
     voice: string; // Stimme (RH oder LH)
@@ -38,53 +40,37 @@ export const myParseAbc = (abcNotaion: string): TuneObject => {
 
 // Funktion zur Gruppierung der Noten pro Takt
 export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
-
-    // const tune = tunes[0]; // Nimm die erste TuneObject
-    const measures_v1: Measure[] = []; // voice 1
-    const measures_v2: Measure[] = []; // voice 2
-
+    // Use an array to hold measures for each voice
+    const voice_arr: Measure[][] = []; 
 
     // Metadaten des Stücks
     const title = tune.metaText.title || "Unbekannt";
     const meter = tune.getMeter().value?.map(fraction => `${fraction.num}/${fraction.den}`).join(", ") || "Unbekannt";
     const key = tune.getKeySignature().root + (tune.getKeySignature().acc || "") + " " + tune.getKeySignature().mode;
     const tempo = tune.getBpm();
-    tune.getBarLength()
-
-    tune.getMeterFraction()
-    
 
     // Gruppiere Noten nach Stimme und Takt
     tune.lines.forEach((line) => {
         if (line.staff) {
             line.staff.forEach((staff, staffIndex) => {
-                const voiceLabel = `Voice ${staffIndex + 1}`;
+                // Ensure an array exists for the current voice
+                if (!voice_arr[staffIndex]) {
+                    voice_arr[staffIndex] = [];
+                }
 
-                if (staff.voices === undefined) return
+                const voiceLabel = `Voice ${staffIndex + 1}`;
+                if (staff.voices === undefined) return;
                 const voice = staff.voices[0]; // Erste Stimme
                 let currentMeasureNotes: Note[] = [];
 
                 voice.forEach((item: VoiceItem) => {
-
-                    if (item.el_type === 'clef') {
-
-                    }
                     if (item.el_type === 'bar') {
                         // Beende den aktuellen Takt und speichere ihn
                         if (currentMeasureNotes.length > 0) {
-                            if (staffIndex === 0) {
-                                measures_v1.push({
-                                    notes: currentMeasureNotes,
-                                    voice: voiceLabel,
-                                });
-                            }
-                            else {
-                                // if( staffIndex === 0 ){
-                                measures_v2.push({
-                                    notes: currentMeasureNotes,
-                                    voice: voiceLabel,
-                                });
-                            }
+                            voice_arr[staffIndex].push({
+                                notes: currentMeasureNotes,
+                                voice: voiceLabel,
+                            });
                             currentMeasureNotes = [];
                         }
                     } else if (item.el_type === 'note') {
@@ -98,34 +84,26 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
 
                 // Speichere den letzten Takt
                 if (currentMeasureNotes.length > 0) {
-                    if (staffIndex === 0) {
-                        measures_v1.push({
-                            notes: currentMeasureNotes,
-                            voice: voiceLabel,
-                        });
-                    }
-                    else {
-                        // if( staffIndex === 0 ){
-                        measures_v2.push({
-                            notes: currentMeasureNotes,
-                            voice: voiceLabel,
-                        });
-                    }
-
+                    voice_arr[staffIndex].push({
+                        notes: currentMeasureNotes,
+                        voice: voiceLabel,
+                    });
                 }
             });
         }
     });
 
-    // let groups = groupBy(measures, "voice");
+    // Log the results
+    console.log("Voice-specific measures:", voice_arr);
 
-
-    // const measures = groupNotesByMeasure(tunes[0]);
-    console.log("Taktspezifische voice 1:", measures_v1);
-    console.log("Taktspezifische voice 1:", measures_v2);
-
-
-    return { measures_v1, measures_v2, title, meter, key, tempo };
+    return { 
+        measures_v1: voice_arr[0] || [], 
+        measures_v2: voice_arr[1] || [], 
+        title, 
+        meter, 
+        key, 
+        tempo 
+    };
 };
 
 export const AbcPlayer = (props: Props) => {
