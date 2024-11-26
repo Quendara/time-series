@@ -78,6 +78,7 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                         currentMeasureNotes.push({
                             pitches: item.pitches?.map((p: any) => p.name) || [],
                             duration: item.duration || 0,
+                            lyrics: item.lyric?.map((lyric: any) => lyric.syllable).join(" ") || undefined,
                         });
                     }
                 });

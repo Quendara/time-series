@@ -105,6 +105,7 @@ export const SongLearn = (props: SongProps) => {
     const measureToAbc = (measures: Measure[], startIntervall: number, numberOfIntervalls: number) => {
 
         const measures_out : string[] = []
+        const lyrics_out : string[] = []
 
 
         if( startIntervall >= measures.length) return ""
@@ -115,7 +116,11 @@ export const SongLearn = (props: SongProps) => {
             console.log( "measures_out # ", i )
             console.log( "measures_out : ", m )
 
+            
+
             measures_out.push(  m.notes.map((n, nindex) => {
+
+                lyrics_out.push( n.lyrics?n.lyrics:"" )
 
                 const nodeDuration = (n.duration / 0.125) as integer
                 
@@ -133,19 +138,23 @@ export const SongLearn = (props: SongProps) => {
 
          // return measures_out.join("|")            
          let result = "";
+         let lyrics = "";
          for (let i = 0; i < measures_out.length; i++) {
              result += measures_out[i] 
+             lyrics += lyrics_out[i] 
              // avoid last |
              if( i <  (measures_out.length-1) ) {
                result += "|";
+               lyrics += "|";
              } 
              // add new line every 4th
              if ((i + 1) % 4 === 0) {
                  result += "\n";
+                 lyrics += "\n";
              }
          }
      
-         return result.trim();          
+         return result.trim() + "\nw:" + lyrics.trim();          
     }
 
     const getMeasureCount = ( startIntervall: number, numberOfIntervalls: number) => {
