@@ -51,8 +51,9 @@ export const SongLearn = (props: SongProps) => {
             measures_out.push(measure.notes.map((note, nindex) => {
 
                 // 
+                let  nodeDuration = "" + (note.duration / 0.125) 
 
-                const nodeDuration = (note.duration / 0.125) as integer
+                if( nodeDuration === "0.5" ){ nodeDuration = "/2"}
 
                 if (note.pitches.length === 0) {
                     return "z" + nodeDuration

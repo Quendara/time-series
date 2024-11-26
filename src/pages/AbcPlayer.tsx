@@ -191,15 +191,7 @@ export const AbcPlayer = (props: Props) => {
         const onEvent = (event: NoteTimingEvent) => {
 
             console.log(" - pitches ", event.measureNumber)
-            props.callback_current_Measure(event.measureNumber ? event.measureNumber : 0)
-            // // Aktuell gespielte Note
-            // console.log(`Aktuelle Note: ${event.note[0]?.name || "Keine Note"}`);
-
-            // // Noten des aktuellen Takts (falls verfügbar)
-            // if (event.measureStart !== undefined && event.elements) {
-            //     const taktNoten = event.elements.map((element) => element.abcelem.notes.map((note) => note.name));
-            //     console.log("Noten im aktuellen Takt:", taktNoten.flat());
-            // }
+            props.callback_current_Measure(event.measureNumber ? event.measureNumber : 0)       
 
             // console.log(event)
             if (cursorRef.current) {
@@ -209,10 +201,14 @@ export const AbcPlayer = (props: Props) => {
                 cursorRef.current.setAttribute("y2", `${event.top !== undefined && event.height !== undefined ? event.top + event.height : 0}`);
             }
         };
+        
+        const onBeat = (beatNumber: number, totalBeats: number, totalTime: number) => {
+            console.log( "onBeat", beatNumber )
+        }
 
         const onFinished = () => console.log("Finished playback");
 
-        return { onStart, onEvent, onFinished };
+        return { onStart, onEvent, onFinished, onBeat };
     };
 
     useEffect(() => {
@@ -226,7 +222,7 @@ export const AbcPlayer = (props: Props) => {
             {
                 responsive: "resize",
                 // generateDownload: false, // Keine Akkorde oder Extras
-                selectionColor: "", // Optionale Anpassung
+                selectionColor: "", // Optionale Anpassung                
             }
         );
 
@@ -261,6 +257,7 @@ export const AbcPlayer = (props: Props) => {
                     console.error("Error initializing the synthesizer:", error);
                 });
         } else {
+            alert("Error initializing the synthesizer:" )
             console.log("Audio is not supported on this browser");
         }
     }, [props.play]);
