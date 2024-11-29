@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import { getUniqueId } from "../components/helpers";
-import abcjs, { MidiBuffer, NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
+import abcjs, { MidiBuffer, NoteTimingEvent, parseOnly, SynthObjectController, TuneObject, VoiceItem } from "abcjs";
 import "abcjs/abcjs-audio.css";
-import { Grid, Icon, IconButton } from "@mui/material";
+import { Box, Card, Grid, Hidden, Icon, IconButton } from "@mui/material";
 
 interface Props {
     play: string;
@@ -36,7 +36,7 @@ interface AnalysisResult {
     key: string; // Tonart
     tempo: number; // Tempo (QPM)
     // sections: { [section: string]: Measure[][] };
-    sections_range: PartRange[] 
+    sections_range: PartRange[]
 }
 
 
@@ -50,7 +50,7 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
     // Use an array to hold measures for each voice
     const voice_arr: Measure[][] = [];
     // const sections: { [section: string]: Measure[][] } = {}; // To store measures by section
-    const sections_range: PartRange[]  = []; // To store measures by section
+    const sections_range: PartRange[] = []; // To store measures by section
 
     let currentSection = "Part A"; // Default section
 
@@ -61,26 +61,26 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
     const tempo = tune.getBpm();
 
     voice_arr[0] = [];
-    
+
 
     // Gruppiere Noten nach Stimme und Takt
-    tune.lines.forEach((line, index ) => {
+    tune.lines.forEach((line, index) => {
 
         //         
         if (line.text) {
-            console.log(  "text : ", line.text )
+            console.log("text : ", line.text)
             currentSection = "" + line.text.text  // .replace("%%text", "").trim();
             // currentSection = "aaa" + index + line.text.text
             // if (!sections[currentSection]) {
             //     sections[currentSection] = [];
             // }
-               
-            const range : PartRange = { name: currentSection, start: voice_arr[0].length }
-            sections_range.push(range)            
+
+            const range: PartRange = { name: currentSection, start: voice_arr[0].length }
+            sections_range.push(range)
         }
 
         if (line.staff) {
-            
+
 
             line.staff.forEach((staff, staffIndex) => {
                 // Ensure an array exists for the current voice
@@ -93,7 +93,7 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                 const voice = staff.voices[0]; // Erste Stimme
                 let currentMeasureNotes: Note[] = [];
 
-                
+
 
                 voice.forEach((item: VoiceItem) => {
                     // Detect section changes
@@ -106,12 +106,12 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                                 notes: currentMeasureNotes,
                                 voice: voiceLabel,
                             }
-                            voice_arr[staffIndex].push( measure );
+                            voice_arr[staffIndex].push(measure);
 
                             // if (!sections[currentSection]) {
                             //     sections[currentSection] = [];
                             // }                              
-                            
+
                             // if (!sections[currentSection][staffIndex]) {
                             //     sections[currentSection][staffIndex] = [];
                             // }                            
@@ -139,13 +139,13 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                         notes: currentMeasureNotes,
                         voice: voiceLabel,
                     }
-                    voice_arr[staffIndex].push( measure );
+                    voice_arr[staffIndex].push(measure);
 
                     // if (!sections[currentSection][staffIndex]) {
                     //     sections[currentSection][staffIndex] = [];
                     // }                            
                     // sections[currentSection][staffIndex].push(measure);
-                    currentMeasureNotes = [];                    
+                    currentMeasureNotes = [];
                 }
             });
         }
@@ -160,7 +160,7 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
         title,
         meter,
         key,
-        tempo,        
+        tempo,
         sections_range
     };
 };
@@ -169,8 +169,10 @@ export const AbcPlayer = (props: Props) => {
     const paperId = getUniqueId();
     const paperRef = useRef<HTMLDivElement | null>(null);
     const cursorRef = useRef<SVGLineElement | null>(null);
-    const [synth, setSynth] = useState<MidiBuffer | null>(null);
+
+    const [synth, setSynth] = useState<SynthObjectController | null>(null);
     const [playing, setPlay] = useState(false);
+    const [tempoPercent, setTempoPercent] = useState(100);
 
 
     const CursorControl = () => {
@@ -191,7 +193,7 @@ export const AbcPlayer = (props: Props) => {
         const onEvent = (event: NoteTimingEvent) => {
 
             console.log(" - pitches ", event.measureNumber)
-            props.callback_current_Measure(event.measureNumber ? event.measureNumber : 0)       
+            props.callback_current_Measure(event.measureNumber ? event.measureNumber : 0)
 
             // console.log(event)
             if (cursorRef.current) {
@@ -201,9 +203,9 @@ export const AbcPlayer = (props: Props) => {
                 cursorRef.current.setAttribute("y2", `${event.top !== undefined && event.height !== undefined ? event.top + event.height : 0}`);
             }
         };
-        
+
         const onBeat = (beatNumber: number, totalBeats: number, totalTime: number) => {
-            console.log( "onBeat", beatNumber )
+            console.log("onBeat", beatNumber)
         }
 
         const onFinished = () => console.log("Finished playback");
@@ -229,7 +231,7 @@ export const AbcPlayer = (props: Props) => {
         if (abcjs.synth.supportsAudio()) {
             const localsynth: MidiBuffer = new abcjs.synth.CreateSynth();
 
-            setSynth(localsynth)
+
             const cursorControl = CursorControl();
             const synthControl = new abcjs.synth.SynthController();
 
@@ -237,7 +239,7 @@ export const AbcPlayer = (props: Props) => {
                 displayRestart: true,
                 displayPlay: true,
                 // displayLoop: true,
-                displayWarp: false,
+                displayWarp: true,
                 displayProgress: false,
                 // displayClock: true,
             });
@@ -248,6 +250,7 @@ export const AbcPlayer = (props: Props) => {
                 audioContext: new window.AudioContext(),
             })
                 .then(() => {
+                    setSynth(synthControl)
                     synthControl.setTune(tunes[0], true).then(() => {
                         synthControl.restart();
                     });
@@ -257,21 +260,45 @@ export const AbcPlayer = (props: Props) => {
                     console.error("Error initializing the synthesizer:", error);
                 });
         } else {
-            alert("Error initializing the synthesizer:" )
+            alert("Error initializing the synthesizer:")
             console.log("Audio is not supported on this browser");
         }
+
+        return () => {
+            synth?.pause()
+        };
     }, [props.play]);
 
-    async function playMusic() {
+    async function playToggleMusic() {
         if (playing) {
-            synth?.stop()
-            setPlay(false)
+            synth?.pause(); // stop(); // Stop playback
+            setPlay(false); // Update UI state
+        } else {
+            if (synth) {
+                synth?.play()
+                synth.toggleLoop()
+                setPlay(true); // Update UI state                
+            }
         }
-        else {
-            await synth?.prime();
-            synth?.start();
-            setPlay(true)
-        }
+    }
+
+    async function setTempo() {
+
+        const tempos = [50, 75, 100, 125]
+        let percent = 100
+
+        let index = tempos.indexOf(tempoPercent)
+        let newIndex = (index + 1) % tempos.length
+
+        console.log("old/new Index : ", index, newIndex)
+        percent = tempos[newIndex]
+
+
+        console.log("set percent : ", newIndex, percent)
+
+        setTempoPercent(percent)
+        synth?.setWarp(percent);
+
     }
 
     return (
@@ -279,14 +306,21 @@ export const AbcPlayer = (props: Props) => {
             <Grid item xs={12} >
                 <div id={"songPaper" + paperId} ref={paperRef}></div>
             </Grid>
-            <Grid item xs={4} >
-                <div id={"audio" + paperId}></div>
+            <Grid item xs={8} >
+                    <Card sx={{ position: "fixed", right:"30px", bottom: "30px", p:2, zIndex:2 }} >
+                        <IconButton
+                            size="large"
+                            onClick={playToggleMusic} ><Icon>{playing ? "pause" : "play_arrow"} </Icon></IconButton>
+                        <IconButton
+                            size="large"
+                            onClick={() => setTempo()} ><Icon>speed</Icon></IconButton>
+                        {tempoPercent}
+                    </Card>
             </Grid>
-            <Grid item xs={6} >
-                {/* <IconButton
-                    onClick={playMusic} ><Icon>{playing ? "stop" : "play_arrow"} </Icon></IconButton> */}
+            <Grid item xs={12} >
+                <Box sx={{ display: "" }} id={"audio" + paperId}></Box>
+            </Grid>
 
-            </Grid>
         </Grid>
     );
 };

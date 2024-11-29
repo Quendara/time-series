@@ -13,7 +13,7 @@ export const MyCard = styled(Card)( ({ theme }) => ({
 
 export const MyCard2 = styled(Card)({
   // background: 'linear-gradient(45deg, #102027 3%, #2F3E45 90%)',
-  borderRadius: 10,
+  borderRadius: 0,
 });
 
 export const MyDialogContentBlur = styled(DialogContent)({

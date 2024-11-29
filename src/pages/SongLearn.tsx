@@ -1,11 +1,12 @@
 import React, { useEffect } from "react"
-import { TextField, Grid, Slider, Button, ButtonGroup, Divider, IconButton, Icon, listSubheaderClasses, Accordion, AccordionSummary, AccordionDetails } from "@mui/material"
+import { TextField, Grid, Slider, Button, ButtonGroup, Divider, IconButton, Icon, listSubheaderClasses, Accordion, AccordionSummary, AccordionDetails, Card } from "@mui/material"
 import { useState } from "react"
 import { AbcPlayer, groupNotesByMeasure, Measure, myParseAbc, PartRange } from "./AbcPlayer"
 import { PianoPart } from "./Piano"
 
 import abcjs, { NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
 import { integer } from "aws-sdk/clients/cloudfront"
+import { MyCardBlur } from "../components/StyledComponents"
 
 
 interface SongProps {
@@ -27,6 +28,10 @@ export const SongLearn = (props: SongProps) => {
 
     const [currentSongPart, setCurrentSongPart] = useState("");
     const [currentMeasure, setCurrentMeasure] = useState(0); // the current measure, used to show keyboard
+
+    // display
+    const [measuresPerLine, setMmasuresPerLine] = useState(4); // the current measure, used to show keyboard
+
 
 
     const measureToAbc = (measures: Measure[], startIntervall: number, numberOfIntervalls: number) => {
@@ -51,9 +56,9 @@ export const SongLearn = (props: SongProps) => {
             measures_out.push(measure.notes.map((note, nindex) => {
 
                 // 
-                let  nodeDuration = "" + (note.duration / 0.125) 
+                let nodeDuration = "" + (note.duration / 0.125)
 
-                if( nodeDuration === "0.5" ){ nodeDuration = "/2"}
+                if (nodeDuration === "0.5") { nodeDuration = "/2" }
 
                 if (note.pitches.length === 0) {
                     return "z" + nodeDuration
@@ -81,7 +86,7 @@ export const SongLearn = (props: SongProps) => {
                 lyrics += "|";
             }
             // add new line every 4th
-            if ((i + 1) % 4 === 0) {
+            if ((i + 1) % measuresPerLine === 0) {
                 result += notes + "\n"
                 result += "w:" + lyrics.trim() + "\n"
                 notes = "";
@@ -255,37 +260,7 @@ export const SongLearn = (props: SongProps) => {
         <>
 
             <Grid container spacing={4} >
-
-                <Grid item xs={2}  >
-                    <ButtonGroup variant="text" aria-label="Basic button group">
-                        <IconButton onClick={() => {
-                            const newStartIntervall = startIntervall - numberOfIntervalls
-                            setNewStartInterval((newStartIntervall < 0) ? 0 : newStartIntervall)
-                        }}><Icon>navigate_before</Icon></IconButton>
-                        <IconButton onClick={() => {
-                            setNewStartInterval(startIntervall + numberOfIntervalls)
-                        }}><Icon>navigate_next</Icon></IconButton>
-                    </ButtonGroup>
-                </Grid>
-                <Grid item xs={8}  >
-                    <Slider
-                        value={[startIntervall, (startIntervall + numberOfIntervalls)]}
-                        onChange={handleStartIntervallChange}
-                        valueLabelDisplay="auto"
-                        min={0}
-                        max={measures_v1.length}
-                    />
-
-
-                </Grid>
-                <Grid item xs={2}>
-                    <ButtonGroup variant="text" aria-label="Basic button group">
-                        {[1, 2, 4, 8].map((value) => (
-                            <Button variant={(numberOfIntervalls === value) ? "contained" : "text"} onClick={() => { setNumberOfIntervalls(value) }} >{value}</Button>
-                        ))}
-                    </ButtonGroup>
-                </Grid>
-                <Grid item xs={6} >
+                <Grid item xs={8} >
                     <ButtonGroup variant="text" >
                         {
                             songStructure.map(part => {
@@ -299,21 +274,53 @@ export const SongLearn = (props: SongProps) => {
                         <Button onClick={() => { setSongPart('Full') }} > Full </Button>
                     </ButtonGroup>
                 </Grid>
-                <Grid item xs={6} >
+                <Grid item xs={4} >
                     Start : {startIntervall + 1} / {measures_v1.length} | Intervalsize : {numberOfIntervalls}
                 </Grid>
+
                 <Grid item xs={12} >
                     <AbcPlayer
                         play={getSong(measures_v1, measures_v2, false, startIntervall, numberOfIntervalls)}
                         callback_current_Measure={callback_current_Measure}
                     />
                 </Grid>
-
-                <Grid item xs={12} md={6} >
-                    {/* Show the current measure */}
-                    <PianoPart play={getSong(measures_v1, measures_v2, true, currentMeasure, 1)} showNodes={props.showNodes} />
-                </Grid>
             </Grid>
+
+            {/* Show the current measure */}
+            <MyCardBlur sx={{ position: "fixed", bottom: "0px", width: "100vw", p: 1, zIndex: 1 }} >
+                <Grid container spacing={4} >
+                    <Grid item xs={2}  >
+                        <ButtonGroup variant="text" aria-label="Basic button group">
+                            <IconButton onClick={() => {
+                                const newStartIntervall = startIntervall - numberOfIntervalls
+                                setNewStartInterval((newStartIntervall < 0) ? 0 : newStartIntervall)
+                            }}><Icon>navigate_before</Icon></IconButton>
+                            <IconButton onClick={() => {
+                                setNewStartInterval(startIntervall + numberOfIntervalls)
+                            }}><Icon>navigate_next</Icon></IconButton>
+                        </ButtonGroup>
+                    </Grid>
+                    <Grid item xs={8}  >
+                        <Slider
+                            value={[startIntervall, (startIntervall + numberOfIntervalls)]}
+                            onChange={handleStartIntervallChange}
+                            valueLabelDisplay="auto"
+                            min={0}
+                            max={measures_v1.length}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <ButtonGroup variant="text" aria-label="Basic button group">
+                            {[2, 4, 6, 8].map((value) => (
+                                <Button variant={(measuresPerLine === value) ? "contained" : "text"} onClick={() => { setMmasuresPerLine(value) }} >{value}</Button>
+                            ))}
+                        </ButtonGroup>
+                    </Grid>
+                    <Grid item xs={10}>
+                    <PianoPart play={getSong(measures_v1, measures_v2, true, currentMeasure, 1)} showNodes={props.showNodes} />
+                    </Grid>
+                </Grid>
+            </MyCardBlur>
 
             <br />
             <br />
