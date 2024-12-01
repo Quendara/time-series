@@ -6,13 +6,6 @@ import { useParams } from "react-router-dom";
 
 import { AbcPlayer } from "./AbcPlayer"
 
-
-interface PianoProps {
-    play: string[]
-    title: string
-    showNodes: boolean
-}
-
 export const createPianoClasses = (showNodes: boolean) => {
 
     const keyDistance = 25
@@ -75,8 +68,20 @@ export const createPianoClasses = (showNodes: boolean) => {
             position: "absolute",
             borderRadius: "0px 0px 3px 3px",
         },
-        keyHover: {
-            backgroundColor: "blue",
+        keyHover_right_current: {
+            backgroundColor: "#F54645",
+            cursor: "pointer"
+        },
+        keyHover_right_bar: {
+            backgroundColor: "#a2d7fa",
+            cursor: "pointer"
+        },
+        keyHover_left_current: {
+            backgroundColor: "#F54645",
+            cursor: "pointer"
+        },
+        keyHover_left_bar: {
+            backgroundColor: "#1565c0",
             cursor: "pointer"
         }
     }
@@ -154,8 +159,8 @@ export const PianoPart = (props: PartProps) => {
 
                 {ticks.map(tick => {
 
-                    if( tick.trim().length === 0 )
-                        return ( <></>)
+                    if (tick.trim().length === 0)
+                        return (<></>)
 
                     const result = extractStringInQuotes(tick)
 
@@ -167,7 +172,7 @@ export const PianoPart = (props: PartProps) => {
                         <>
                             {notes.length !== 0 &&
                                 <Grid item xs={12} >
-                                    <Piano title={header} play={parseNoteSequence(notes)} showNodes={props.showNodes} />
+                                    <Piano title={header} right_current={parseNoteSequence(notes)} showNodes={props.showNodes} />
                                 </Grid>
                             }
                         </>)
@@ -175,31 +180,50 @@ export const PianoPart = (props: PartProps) => {
             </Box>
         </>
     )
+}
 
+interface PianoProps {
+    right_current?: string[],
+    right_bar?: string[],
+    left_current?: string[],
+    left_bar?: string[],
+    title: string
+    showNodes: boolean
 }
 
 export const Piano = (props: PianoProps) => {
 
-
     const playNote = (play: string) => { }
 
     const isPlayed = (key: string) => {
-        if (props.play.includes(key)) {
-            return pianoClasses.keyHover
+        if (props.right_current?.includes(key)) {
+            return pianoClasses.keyHover_right_current
         }
-        else {
-            return {}
+        if (props.left_current?.includes(key)) {
+            return pianoClasses.keyHover_left_current
         }
+        if (props.right_bar?.includes(key)) {
+            return pianoClasses.keyHover_right_bar
+        }
+        if (props.left_bar?.includes(key)) {
+            return pianoClasses.keyHover_left_bar
+        }
+        return {}
+
     }
-    const playabc = "K:C\nL:1/4\n [ " + props.play.join("") + "]\n"
 
-    useEffect(() => {
+    const playabc = "K:C\nL:1/4\n [ " + props.right_current?.join("") + "]\n"
 
-        // abcjs.renderAbc("notepaper" + playabc, playabc)// "X:1\nK:D\nDD AA|BBA2|\n");
-        <AbcPlayer play={playabc} callback_current_Measure={ (m)=>{} } />
-        // console.log(playabc)
 
-    }, [props.play]);
+    // useEffect(() => {
+    //     
+
+    //     // abcjs.renderAbc("notepaper" + playabc, playabc)// "X:1\nK:D\nDD AA|BBA2|\n");
+
+    //     <AbcPlayer play={playabc} callback_current_Measure={(m) => { } } callback_current_Beat={ (m) => { } } />
+    //     // console.log(playabc)
+
+    // }, [props.right_current, props.right_current, props.left_current, props.left_bar]);
 
     const pianoClasses = createPianoClasses(props.showNodes)
 
@@ -218,6 +242,23 @@ export const Piano = (props: PianoProps) => {
                 }
 
                 <Box sx={pianoClasses.keyOctav}>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('C,,') }} onClick={() => playNote('c6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('D,,') }} onClick={() => playNote('d6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('E,,') }} onClick={() => playNote('e6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('F,,') }} onClick={() => playNote('f6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('G,,') }} onClick={() => playNote('g6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('A,,') }} onClick={() => playNote('a6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('B,,') }} onClick={() => playNote('b6')} ></Box>
+
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(0), ...isPlayed('^C,,') }} onClick={() => playNote('cs6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(1), ...isPlayed('^D,,') }} onClick={() => playNote('ds6')} ></Box>
+
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(3), ...isPlayed('^F,,') }} onClick={() => playNote('fs6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('^G,,') }} onClick={() => playNote('gs6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('^A,,') }} onClick={() => playNote('as6')} ></Box>
+                </Box>
+
+                <Box sx={pianoClasses.keyOctav}>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('C,') }} onClick={() => playNote('c6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('D,') }} onClick={() => playNote('d6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyNormal, ...isPlayed('E,') }} onClick={() => playNote('e6')} ></Box>
@@ -229,7 +270,7 @@ export const Piano = (props: PianoProps) => {
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(0), ...isPlayed('^C,') }} onClick={() => playNote('cs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(1), ...isPlayed('^D,') }} onClick={() => playNote('ds6')} ></Box>
 
-                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(3), ...isPlayed('^F,',) }} onClick={() => playNote('fs6')} ></Box>
+                    <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(3), ...isPlayed('^F,') }} onClick={() => playNote('fs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('^G,') }} onClick={() => playNote('gs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('^A,') }} onClick={() => playNote('as6')} ></Box>
                 </Box>
@@ -265,7 +306,6 @@ export const Piano = (props: PianoProps) => {
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(4), ...isPlayed('^g') }} onClick={() => playNote('gs6')} ></Box>
                     <Box sx={{ ...pianoClasses.keyBlack, ...pianoClasses.calcBlackKeyPos(5), ...isPlayed('^a') }} onClick={() => playNote('as6')} ></Box>
                 </Box>
-
             </Box>
         </Box>
     </>)

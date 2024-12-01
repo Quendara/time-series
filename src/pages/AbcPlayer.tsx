@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import { getUniqueId } from "../components/helpers";
-import abcjs, { MidiBuffer, NoteTimingEvent, parseOnly, SynthObjectController, TuneObject, VoiceItem } from "abcjs";
+import abcjs, { MidiBuffer, MidiPitches, NoteTimingEvent, parseOnly, SynthObjectController, TuneObject, VoiceItem } from "abcjs";
 import "abcjs/abcjs-audio.css";
 import { Box, Card, Grid, Hidden, Icon, IconButton } from "@mui/material";
 
 interface Props {
     play: string;
-    callback_current_Measure: (m: number) => void
+    callback_current_Measure: (m: number, mp: MidiPitches) => void
+    callback_current_Beat: (b: number) => void
 }
 
 // Typdefinitionen
@@ -192,8 +193,15 @@ export const AbcPlayer = (props: Props) => {
 
         const onEvent = (event: NoteTimingEvent) => {
 
-            console.log(" - pitches ", event.measureNumber)
-            props.callback_current_Measure(event.measureNumber ? event.measureNumber : 0)
+            // console.log(" - pitches ", event.measureNumber)
+            if( event ){
+
+                const measure = event.measureNumber?event.measureNumber:0
+                const pitches = event.midiPitches?event.midiPitches:[]
+
+                props.callback_current_Measure( measure, pitches )
+            }
+            // console.log( event )
 
             // console.log(event)
             if (cursorRef.current) {
@@ -205,7 +213,9 @@ export const AbcPlayer = (props: Props) => {
         };
 
         const onBeat = (beatNumber: number, totalBeats: number, totalTime: number) => {
-            console.log("onBeat", beatNumber)
+
+            //console.log("onBeat", beatNumber)
+            // props.callback_current_Beat( beatNumber )
         }
 
         const onFinished = () => console.log("Finished playback");
@@ -218,6 +228,9 @@ export const AbcPlayer = (props: Props) => {
     }, [])
 
     useEffect(() => {
+
+        synth?.pause()
+
         const tunes = abcjs.renderAbc(
             "songPaper" + paperId,
             props.play,
@@ -282,6 +295,11 @@ export const AbcPlayer = (props: Props) => {
         }
     }
 
+    async function setProgress( ev : number ) {
+        
+        synth?.setProgress( ev ); // stop(); // Stop playback
+    }    
+
     async function setTempo() {
 
         const tempos = [50, 75, 100, 125]
@@ -307,15 +325,19 @@ export const AbcPlayer = (props: Props) => {
                 <div id={"songPaper" + paperId} ref={paperRef}></div>
             </Grid>
             <Grid item xs={8} >
-                    <Card sx={{ position: "fixed", right:"30px", bottom: "30px", p:2, zIndex:2 }} >
-                        <IconButton
-                            size="large"
-                            onClick={playToggleMusic} ><Icon>{playing ? "pause" : "play_arrow"} </Icon></IconButton>
-                        <IconButton
-                            size="large"
-                            onClick={() => setTempo()} ><Icon>speed</Icon></IconButton>
-                        {tempoPercent}
-                    </Card>
+                <Card sx={{ position: "fixed", right: "30px", bottom: "30px", p: 2, zIndex: 2 }} >
+                <IconButton
+                        size="large"
+                        onClick={ () => setProgress(0)} ><Icon>skip_previous</Icon></IconButton>
+
+                    <IconButton
+                        size="large"
+                        onClick={playToggleMusic} ><Icon>{playing ? "pause" : "play_arrow"} </Icon></IconButton>
+                    <IconButton
+                        size="large"
+                        onClick={() => setTempo()} ><Icon>speed</Icon></IconButton>
+                    {tempoPercent}
+                </Card>
             </Grid>
             <Grid item xs={12} >
                 <Box sx={{ display: "" }} id={"audio" + paperId}></Box>

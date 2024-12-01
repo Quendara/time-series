@@ -2,9 +2,9 @@ import React, { useEffect } from "react"
 import { TextField, Grid, Slider, Button, ButtonGroup, Divider, IconButton, Icon, listSubheaderClasses, Accordion, AccordionSummary, AccordionDetails, Card } from "@mui/material"
 import { useState } from "react"
 import { AbcPlayer, groupNotesByMeasure, Measure, myParseAbc, PartRange } from "./AbcPlayer"
-import { PianoPart } from "./Piano"
+import { Piano, PianoPart } from "./Piano"
 
-import abcjs, { NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
+import abcjs, { MidiPitches, NoteTimingEvent, parseOnly, TuneObject, VoiceItem } from "abcjs";
 import { integer } from "aws-sdk/clients/cloudfront"
 import { MyCardBlur } from "../components/StyledComponents"
 
@@ -28,13 +28,31 @@ export const SongLearn = (props: SongProps) => {
 
     const [currentSongPart, setCurrentSongPart] = useState("");
     const [currentMeasure, setCurrentMeasure] = useState(0); // the current measure, used to show keyboard
+    const [currentNotes, setCurrentNotes] = useState<string[]>([]); // the current measure, used to show keyboard
 
     // display
     const [measuresPerLine, setMmasuresPerLine] = useState(4); // the current measure, used to show keyboard
 
+    const measureToNotes = (measures: Measure[], startIntervall: number, numberOfIntervalls: number): string[] => {
 
+        const notes_out: string[] = []
 
-    const measureToAbc = (measures: Measure[], startIntervall: number, numberOfIntervalls: number) => {
+        for (let i = startIntervall; i < (startIntervall + numberOfIntervalls); ++i) {
+            const measure = measures.at(i)
+            if (measure === undefined) break;
+
+            measure.notes.map((note, nindex) => {
+                note.pitches.map((p) => {
+                    notes_out.push(p)
+                    return p
+                })
+            })
+
+        }
+        return notes_out
+    }
+
+    const measureToAbc = (measures: Measure[], startIntervall: number, numberOfIntervalls: number): string => {
 
         const measures_out: string[] = []
         const lyrics_out: string[] = []
@@ -217,17 +235,52 @@ export const SongLearn = (props: SongProps) => {
         setNumberOfIntervalls(newValue as number);
     };
 
+    const midiNoteNumberToAbx = (noteNumber: number) => {
+        
+        const noteNameArr = ["C", "^C", "D", "^D", "E", "F", "^F", "G", "^G", "A", "^A", "B"]
 
-    const callback_current_Measure = (m: number) => {
-        // the player gets just a subset of the song
+        let noteName = noteNameArr[noteNumber % noteNameArr.length]
+        let octave = ""
+        if (noteNumber < 48) { octave = ",," }
+        else if (noteNumber < 60) { octave = "," }
+        else if (noteNumber < 72) { octave = "" }
+        else if (noteNumber < 84) { noteName = noteName.toLowerCase() }
+        else { noteName = noteName.toLowerCase() } // must be go to higher (127 is max)
+
+        noteName = noteName+octave
+
+        console.log( "midiNoteNumberToAbx : ", noteNumber, noteName )
+        return noteName
+    }
+
+
+    const callback_current_Measure = (m: number, pitches: MidiPitches) => {
+        // the player gets just a subset of th song
+        console.log("callback_current_Measure", startIntervall + m, pitches)
+
+        
+
+        setCurrentNotes(pitches.map(p => {
+            return midiNoteNumberToAbx(p.pitch)
+        }))
 
         setCurrentMeasure(startIntervall + m)
     }
+    const callback_current_Beat = (b: number) => {
+        const right = measures_v1.at(currentMeasure)
+
+        console.log("currentMeasure, beat", currentMeasure, b)
+        console.log("righ_hand", right)
+        // getSong(measures_v1, measures_v2, true, currentMeasure, 1)
+
+    }
+
+
 
     const getSongParts = () => {
 
         const keys = songStructure.map(part => {
-            console.log("key", part.name, part.start)
+            // console.log("key", part.name, part.start)
             return part.name
         });
         return keys
@@ -249,7 +302,6 @@ export const SongLearn = (props: SongProps) => {
         });
 
         setCurrentSongPart(name)
-
         setNewStartInterval(start);
         setNumberOfIntervalls(stop - start)
 
@@ -282,12 +334,13 @@ export const SongLearn = (props: SongProps) => {
                     <AbcPlayer
                         play={getSong(measures_v1, measures_v2, false, startIntervall, numberOfIntervalls)}
                         callback_current_Measure={callback_current_Measure}
+                        callback_current_Beat={callback_current_Beat}
                     />
                 </Grid>
             </Grid>
 
             {/* Show the current measure */}
-            <MyCardBlur sx={{ position: "fixed", bottom: "0px", width: "100vw", p: 1, zIndex: 1 }} >
+            <MyCardBlur sx={{ position: "fixed", bottom: "0px", left:"0px", width: "100vw", p: 1, zIndex: 1 }} >
                 <Grid container spacing={4} >
                     <Grid item xs={2}  >
                         <ButtonGroup variant="text" aria-label="Basic button group">
@@ -316,8 +369,17 @@ export const SongLearn = (props: SongProps) => {
                             ))}
                         </ButtonGroup>
                     </Grid>
-                    <Grid item xs={10}>
-                    <PianoPart play={getSong(measures_v1, measures_v2, true, currentMeasure, 1)} showNodes={props.showNodes} />
+                    <Grid item xs={12}>
+                        {/* {currentNotes} */}
+                        <Piano left_current={currentNotes}
+                            left_bar={measureToNotes(measures_v2, currentMeasure, 1)}
+                            right_bar={measureToNotes(measures_v1, currentMeasure, 1)}
+                            title={""} showNodes={false} />
+                        {/* <Piano
+                            right_current={['c', 'c,']}
+                            left_current={['C,']} left_bar={['C,', 'E,', "G,"]}
+                            title={""} showNodes={false} /> */}
+                        {/* <PianoPart play={getSong(measures_v1, measures_v2, true, currentMeasure, 1)} showNodes={props.showNodes} /> */}
                     </Grid>
                 </Grid>
             </MyCardBlur>

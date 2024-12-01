@@ -37,7 +37,7 @@ export const PianoSong = (props: SongProps) => {
             }
 
             {props.showAbcOnly ? <>
-                <AbcPlayer play={ play } callback_current_Measure={ (m)=>{} } />
+                <AbcPlayer play={play} callback_current_Measure={(m) => { } } callback_current_Beat={ (m) => { } } />
             </> :
 
                 <Grid container spacing={4} >
