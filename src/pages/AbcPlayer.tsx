@@ -3,6 +3,7 @@ import { getUniqueId } from "../components/helpers";
 import abcjs, { MidiBuffer, MidiPitches, NoteTimingEvent, parseOnly, SynthObjectController, TuneObject, VoiceItem } from "abcjs";
 import "abcjs/abcjs-audio.css";
 import { Box, Card, Grid, Hidden, Icon, IconButton } from "@mui/material";
+import { MyCardBlur } from "../components/StyledComponents";
 
 interface Props {
     play: string;
@@ -235,7 +236,11 @@ export const AbcPlayer = (props: Props) => {
             "songPaper" + paperId,
             props.play,
             {
+                // showDebug:['grid', 'box'],
                 responsive: "resize",
+                scale:2,
+                // visualTranspose: 2,
+                lineThickness:0.1,
                 // generateDownload: false, // Keine Akkorde oder Extras
                 selectionColor: "", // Optionale Anpassung                
             }
@@ -325,7 +330,7 @@ export const AbcPlayer = (props: Props) => {
                 <div id={"songPaper" + paperId} ref={paperRef}></div>
             </Grid>
             <Grid item xs={8} >
-                <Card sx={{ position: "fixed", right: "30px", bottom: "30px", p: 2, zIndex: 2 }} >
+                <MyCardBlur sx={{ position: "fixed", right: "30px", bottom: "80px", pr: 1, zIndex: 2 }} >
                 <IconButton
                         size="large"
                         onClick={ () => setProgress(0)} ><Icon>skip_previous</Icon></IconButton>
@@ -337,7 +342,7 @@ export const AbcPlayer = (props: Props) => {
                         size="large"
                         onClick={() => setTempo()} ><Icon>speed</Icon></IconButton>
                     {tempoPercent}
-                </Card>
+                </MyCardBlur>
             </Grid>
             <Grid item xs={12} >
                 <Box sx={{ display: "" }} id={"audio" + paperId}></Box>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { TextField, Grid, Slider, Button, ButtonGroup, Divider, IconButton, Icon, listSubheaderClasses, Accordion, AccordionSummary, AccordionDetails, Card } from "@mui/material"
+import { TextField, Grid, Slider, Button, ButtonGroup, Divider, IconButton, Icon, listSubheaderClasses, Accordion, AccordionSummary, AccordionDetails, Card, Box } from "@mui/material"
 import { useState } from "react"
 import { AbcPlayer, groupNotesByMeasure, Measure, myParseAbc, PartRange } from "./AbcPlayer"
 import { Piano, PianoPart } from "./Piano"
@@ -20,6 +20,10 @@ export const SongLearn = (props: SongProps) => {
 
     const [parts, setParts] = useState<string[]>([]);
     const [songHeader, setSongHeader] = useState("");
+    const [songKey, setSongKey] = useState("");
+
+    const [showKeyBoard, setShowKeyBoard] = useState(true);
+
 
     const [measures_v1, setVoice1] = useState<Measure[]>([]);
     const [measures_v2, setVoice2] = useState<Measure[]>([]);
@@ -31,7 +35,31 @@ export const SongLearn = (props: SongProps) => {
     const [currentNotes, setCurrentNotes] = useState<string[]>([]); // the current measure, used to show keyboard
 
     // display
-    const [measuresPerLine, setMmasuresPerLine] = useState(4); // the current measure, used to show keyboard
+    const [measuresPerLine, setMmasuresPerLine] = useState(8); // the current measure, used to show keyboard
+
+    const moveNoteBasedOnKey = (sokey: string, note: string) => {
+
+        // Definiert die Anpassungen für jede Tonart
+        const keyAdjustments: { [key: string]: { [note: string]: string } } = {
+            // move right # 
+            "G": { "F": "^F", "f": "^f" },
+            "E m": { "F": "^F", "f": "^f" },
+            "D": { "F": "^F", "f": "^f", "C": "^C", "c": "^C" },
+            "B m": { "F": "^F", "f": "^f", "C": "^C", "c": "^C" },
+
+            // move left # 
+            "F": { "B": "^A", "b": "^a" },
+            "D m": { "B": "^A", "b": "^a" },
+            // Füge weitere Tonarten hinzu
+            // "C": { "B": "^B", "b": "^b" },
+            // "F": { "B": "_B", "b": "_b" },
+            // "D": { "C": "^C", "c": "^c" },
+            // Beispiel für weitere Tonarten
+        };
+        // return note
+        return keyAdjustments[sokey]?.[note] || note;
+    }
+
 
     const measureToNotes = (measures: Measure[], startIntervall: number, numberOfIntervalls: number): string[] => {
 
@@ -43,12 +71,16 @@ export const SongLearn = (props: SongProps) => {
 
             measure.notes.map((note, nindex) => {
                 note.pitches.map((p) => {
-                    notes_out.push(p)
+                    const newPitch = moveNoteBasedOnKey(songKey, p)
+                    // console.log("measureToNotes ", p, "->", newPitch)
+                    notes_out.push(newPitch)
                     return p
                 })
             })
-
         }
+
+        console.log("measureToNotes '", songKey, "' SCALE", notes_out.join(" "))
+
         return notes_out
     }
 
@@ -173,6 +205,7 @@ export const SongLearn = (props: SongProps) => {
 
         setVoice1(measures_v1)
         setVoice2(measures_v2)
+        setSongKey(key.trim())
 
         // T: Set fire to the rain
         // M: 4/4
@@ -203,7 +236,7 @@ export const SongLearn = (props: SongProps) => {
 
 
     const [startIntervall, setStartIntervall] = React.useState<number>(0);
-    const [numberOfIntervalls, setNumberOfIntervalls] = React.useState<number>(4);
+    const [numberOfIntervalls, setNumberOfIntervalls] = React.useState<number>(24);
 
     const setNewStartInterval = (m: number) => {
         setStartIntervall(m)
@@ -236,7 +269,7 @@ export const SongLearn = (props: SongProps) => {
     };
 
     const midiNoteNumberToAbx = (noteNumber: number) => {
-        
+
         const noteNameArr = ["C", "^C", "D", "^D", "E", "F", "^F", "G", "^G", "A", "^A", "B"]
 
         let noteName = noteNameArr[noteNumber % noteNameArr.length]
@@ -247,9 +280,9 @@ export const SongLearn = (props: SongProps) => {
         else if (noteNumber < 84) { noteName = noteName.toLowerCase() }
         else { noteName = noteName.toLowerCase() } // must be go to higher (127 is max)
 
-        noteName = noteName+octave
+        noteName = noteName + octave
 
-        console.log( "midiNoteNumberToAbx : ", noteNumber, noteName )
+        console.log("midiNoteNumberToAbx : ", noteNumber, noteName)
         return noteName
     }
 
@@ -258,7 +291,7 @@ export const SongLearn = (props: SongProps) => {
         // the player gets just a subset of th song
         console.log("callback_current_Measure", startIntervall + m, pitches)
 
-        
+
 
         setCurrentNotes(pitches.map(p => {
             return midiNoteNumberToAbx(p.pitch)
@@ -325,9 +358,12 @@ export const SongLearn = (props: SongProps) => {
                         }
                         <Button onClick={() => { setSongPart('Full') }} > Full </Button>
                     </ButtonGroup>
+
+
                 </Grid>
                 <Grid item xs={4} >
-                    Start : {startIntervall + 1} / {measures_v1.length} | Intervalsize : {numberOfIntervalls}
+                    Key {songKey}
+                    {/* Start : {startIntervall + 1} / {measures_v1.length} | Intervalsize : {numberOfIntervalls} */}
                 </Grid>
 
                 <Grid item xs={12} >
@@ -340,10 +376,20 @@ export const SongLearn = (props: SongProps) => {
             </Grid>
 
             {/* Show the current measure */}
-            <MyCardBlur sx={{ position: "fixed", bottom: "0px", left:"0px", width: "100vw", p: 1, zIndex: 1 }} >
+            <MyCardBlur sx={{ position: "fixed", bottom: "0px", left: "0px", width: "100vw", p: 1, zIndex: 1 }} >
                 <Grid container spacing={4} >
+                    {showKeyBoard &&
+                        <Grid item xs={12}>
+                            <Piano left_current={currentNotes}
+                                left_bar={measureToNotes(measures_v2, currentMeasure, 1)}
+                                right_bar={measureToNotes(measures_v1, currentMeasure, 1)}
+                                title={""} showNodes={false} />
+                        </Grid>
+                    }
                     <Grid item xs={2}  >
-                        <ButtonGroup variant="text" aria-label="Basic button group">
+                            <IconButton sx={{pr:4}} onClick={() => { setShowKeyBoard(!showKeyBoard) }} >
+                                <Icon>{ showKeyBoard?"piano_off":"piano"}</Icon>
+                            </IconButton>
                             <IconButton onClick={() => {
                                 const newStartIntervall = startIntervall - numberOfIntervalls
                                 setNewStartInterval((newStartIntervall < 0) ? 0 : newStartIntervall)
@@ -351,9 +397,9 @@ export const SongLearn = (props: SongProps) => {
                             <IconButton onClick={() => {
                                 setNewStartInterval(startIntervall + numberOfIntervalls)
                             }}><Icon>navigate_next</Icon></IconButton>
-                        </ButtonGroup>
+                     
                     </Grid>
-                    <Grid item xs={8}  >
+                    <Grid item xs={7}  >
                         <Slider
                             value={[startIntervall, (startIntervall + numberOfIntervalls)]}
                             onChange={handleStartIntervallChange}
@@ -362,51 +408,26 @@ export const SongLearn = (props: SongProps) => {
                             max={measures_v1.length}
                         />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <ButtonGroup variant="text" aria-label="Basic button group">
                             {[2, 4, 6, 8].map((value) => (
                                 <Button variant={(measuresPerLine === value) ? "contained" : "text"} onClick={() => { setMmasuresPerLine(value) }} >{value}</Button>
                             ))}
                         </ButtonGroup>
                     </Grid>
-                    <Grid item xs={12}>
-                        {/* {currentNotes} */}
-                        <Piano left_current={currentNotes}
-                            left_bar={measureToNotes(measures_v2, currentMeasure, 1)}
-                            right_bar={measureToNotes(measures_v1, currentMeasure, 1)}
-                            title={""} showNodes={false} />
-                        {/* <Piano
-                            right_current={['c', 'c,']}
-                            left_current={['C,']} left_bar={['C,', 'E,', "G,"]}
-                            title={""} showNodes={false} /> */}
-                        {/* <PianoPart play={getSong(measures_v1, measures_v2, true, currentMeasure, 1)} showNodes={props.showNodes} /> */}
-                    </Grid>
+
                 </Grid>
             </MyCardBlur>
 
             <br />
             <br />
             <br />
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<Icon>expand</Icon>}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                >
-                    Accordion 1
-                </AccordionSummary>
-                <AccordionDetails>
-                    <pre>
-                        {getSongParts()}
-                        <br></br>
+            <br />
+            <br />
+            <br />
 
-                        {/* {getSong(true, startIntervall, numberOfIntervalls)}
-                <Divider />*/}
-                        {getSong(measures_v1, measures_v2, false, startIntervall, numberOfIntervalls)}
 
-                    </pre>
-                </AccordionDetails>
-            </Accordion>
+
         </>
     )
 }
