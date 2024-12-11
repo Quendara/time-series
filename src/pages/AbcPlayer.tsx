@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { getUniqueId } from "../components/helpers";
-import abcjs, { MidiBuffer, MidiPitches, NoteTimingEvent, parseOnly, SynthObjectController, TuneObject, VoiceItem } from "abcjs";
+import abcjs, { AbcElem, ClickListenerAnalysis, ClickListenerDrag, MidiBuffer, MidiPitches, NoteTimingEvent, parseOnly, SynthObjectController, TuneObject, VoiceItem } from "abcjs";
 import "abcjs/abcjs-audio.css";
 import { Box, Card, Grid, Hidden, Icon, IconButton } from "@mui/material";
 import { MyCardBlur } from "../components/StyledComponents";
@@ -70,7 +70,8 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
 
         //         
         if (line.text) {
-            console.log("text : ", line.text)
+            // console.log("text : ", line.text)
+
             currentSection = "" + line.text.text  // .replace("%%text", "").trim();
             // currentSection = "aaa" + index + line.text.text
             // if (!sections[currentSection]) {
@@ -172,9 +173,11 @@ export const AbcPlayer = (props: Props) => {
     const paperRef = useRef<HTMLDivElement | null>(null);
     const cursorRef = useRef<SVGLineElement | null>(null);
 
-    const [synth, setSynth] = useState<SynthObjectController | null>(null);
+    const [synth, setSynth] = useState<MidiBuffer | null>(null);
+    const [synthControll, setSynthController ] = useState<SynthObjectController | null>(null);
     const [playing, setPlay] = useState(false);
     const [tempoPercent, setTempoPercent] = useState(100);
+    
 
 
     const CursorControl = () => {
@@ -224,6 +227,11 @@ export const AbcPlayer = (props: Props) => {
         return { onStart, onEvent, onFinished, onBeat };
     };
 
+    function clickListener(abcElem: AbcElem, tuneNumber: number, classes: string, analysis: ClickListenerAnalysis, drag: ClickListenerDrag)  {
+        console.log( "abcElem : ", abcElem )
+        synthControll?.setProgress( 300 )
+    }
+
     useEffect(() => {
 
     }, [])
@@ -236,6 +244,7 @@ export const AbcPlayer = (props: Props) => {
             "songPaper" + paperId,
             props.play,
             {
+                clickListener: clickListener,
                 // showDebug:['grid', 'box'],
                 responsive: "resize",
                 scale:2,
@@ -247,10 +256,11 @@ export const AbcPlayer = (props: Props) => {
         );
 
         if (abcjs.synth.supportsAudio()) {
-            const localsynth: MidiBuffer = new abcjs.synth.CreateSynth();
-
+            
+            var audioParams = { chordsOff: true };
 
             const cursorControl = CursorControl();
+            const localsynth: MidiBuffer = new abcjs.synth.CreateSynth();
             const synthControl = new abcjs.synth.SynthController();
 
             synthControl.load("#audio" + paperId, cursorControl, {
@@ -262,39 +272,56 @@ export const AbcPlayer = (props: Props) => {
                 // displayClock: true,
             });
 
-            localsynth.init({
-                visualObj: tunes[0],
-                options: { chordsOff: true }, // Akkorde deaktiviert
-                audioContext: new window.AudioContext(),
-            })
-                .then(() => {
-                    setSynth(synthControl)
-                    synthControl.setTune(tunes[0], true).then(() => {
-                        synthControl.restart();
-                    });
-                })
-                .catch((error) => {
-                    alert("Error initializing the synthesizer:" + error)
-                    console.error("Error initializing the synthesizer:", error);
+            
+            localsynth.init({ visualObj: tunes[0], }).then( () => {
+                
+                setSynth( localsynth )
+            
+                synthControl.setTune(tunes[0], false, audioParams).then(function () {
+                    setSynthController( synthControl )
+                    console.log("Audio successfully loaded.")
+                }).catch(function (error) {
+                    console.warn("Audio problem:", error);
                 });
+            }).catch(function (error) {
+                console.warn("Audio problem:", error);
+            });
+            // localsynth.init({
+            //     visualObj: tunes[0],
+            //     options: { chordsOff: true }, // Akkorde deaktiviert
+            //     audioContext: new window.AudioContext(),
+            // })
+            //     .then(() => {
+            //         setSynth(synthControl)
+            //         synthControl.setTune(tunes[0], true).then(() => {
+            //             synthControl.restart();
+            //         });
+            //     })
+            //     .catch((error) => {
+            //         alert("Error initializing the synthesizer:" + error)
+            //         console.error("Error initializing the synthesizer:", error);
+            //     });
         } else {
             alert("Error initializing the synthesizer:")
             console.log("Audio is not supported on this browser");
         }
 
         return () => {
-            synth?.pause()
+            synth?.stop()
         };
     }, [props.play]);
 
     async function playToggleMusic() {
+
         if (playing) {
-            synth?.pause(); // stop(); // Stop playback
+            synthControll?.pause(); // stop(); // Stop playback
             setPlay(false); // Update UI state
         } else {
+            console.log( "playToggleMusic : ", synth  )
             if (synth) {
-                synth?.play()
-                synth.toggleLoop()
+                synthControll?.play()            
+                
+                // synth.toggleLoop()
                 setPlay(true); // Update UI state                
             }
         }
@@ -302,7 +329,8 @@ export const AbcPlayer = (props: Props) => {
 
     async function setProgress( ev : number ) {
         
-        synth?.setProgress( ev ); // stop(); // Stop playback
+        // synth?.setProgress( ev ); // stop(); // Stop playback
+        // synth.s
     }    
 
     async function setTempo() {
@@ -320,7 +348,7 @@ export const AbcPlayer = (props: Props) => {
         console.log("set percent : ", newIndex, percent)
 
         setTempoPercent(percent)
-        synth?.setWarp(percent);
+        // synth?.setWarp(percent);
 
     }
 

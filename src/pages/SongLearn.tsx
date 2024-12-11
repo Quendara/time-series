@@ -79,7 +79,7 @@ export const SongLearn = (props: SongProps) => {
             })
         }
 
-        console.log("measureToNotes '", songKey, "' SCALE", notes_out.join(" "))
+        // console.log("measureToNotes '", songKey, "' SCALE", notes_out.join(" "))
 
         return notes_out
     }
@@ -282,16 +282,14 @@ export const SongLearn = (props: SongProps) => {
 
         noteName = noteName + octave
 
-        console.log("midiNoteNumberToAbx : ", noteNumber, noteName)
+        // console.log("midiNoteNumberToAbx : ", noteNumber, noteName)
         return noteName
     }
 
 
     const callback_current_Measure = (m: number, pitches: MidiPitches) => {
         // the player gets just a subset of th song
-        console.log("callback_current_Measure", startIntervall + m, pitches)
-
-
+        // console.log("callback_current_Measure", startIntervall + m, pitches)
 
         setCurrentNotes(pitches.map(p => {
             return midiNoteNumberToAbx(p.pitch)
@@ -387,7 +385,7 @@ export const SongLearn = (props: SongProps) => {
                         </Grid>
                     }
                     <Grid item xs={2}  >
-                            <IconButton sx={{pr:4}} onClick={() => { setShowKeyBoard(!showKeyBoard) }} >
+                            <IconButton sx={{mr:4}} onClick={() => { setShowKeyBoard(!showKeyBoard) }} >
                                 <Icon>{ showKeyBoard?"piano_off":"piano"}</Icon>
                             </IconButton>
                             <IconButton onClick={() => {
