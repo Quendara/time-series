@@ -401,10 +401,11 @@ export const SongLearn = (props: SongProps) => {
                         <Grid item xs={10}>
                         (LH :) {measureToNotes(measures_v2, currentMeasure, 1)} - (RH) :
                         {measureToNotes(measures_v1, currentMeasure, 1)}
-                            <Piano left_current={currentNotes}
-                                left_bar={measureToNotes(measures_v2, currentMeasure, 1)}
-                                right_bar={measureToNotes(measures_v1, currentMeasure, 1)}
-                                title={""} showNodes={false} />
+                            <Piano
+                                    left_current={currentNotes}
+                                    left_bar={measureToNotes(measures_v2, currentMeasure, 1)}
+                                    right_bar={measureToNotes(measures_v1, currentMeasure, 1)}
+                                    title={""} showNodes={false} />
                         </Grid>
                         </>
                     }
