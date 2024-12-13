@@ -13,6 +13,7 @@ interface Props {
 
 // Typdefinitionen
 interface Note {
+    chord?: string;
     pitches: string[]; // Liste der Notennamen
     duration: number; // Notendauer
     lyrics?: string; // Zugehöriger Text
@@ -21,6 +22,7 @@ interface Note {
 
 
 export interface Measure {
+    
     notes: Note[]; // Noten im Takt
     voice: string; // Stimme (RH oder LH)
 }
@@ -98,10 +100,12 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
 
 
 
-                voice.forEach((item: VoiceItem) => {
+                voice.forEach((item: VoiceItem, index : number ) => {
                     // Detect section changes
 
+
                     if (item.el_type === 'bar') {
+
 
                         // Beende den aktuellen Takt und speichere ihn
                         if (currentMeasureNotes.length > 0) {
@@ -110,23 +114,22 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                                 voice: voiceLabel,
                             }
                             voice_arr[staffIndex].push(measure);
-
-                            // if (!sections[currentSection]) {
-                            //     sections[currentSection] = [];
-                            // }                              
-
-                            // if (!sections[currentSection][staffIndex]) {
-                            //     sections[currentSection][staffIndex] = [];
-                            // }                            
-                            // sections[currentSection][staffIndex].push(measure);
                             currentMeasureNotes = [];
                         }
                     } else if (item.el_type === 'note') {
+
+                        if( index < 5 ){
+                            console.log( "VoiceItem CHORD: ", item.chord?.name ) 
+                            console.log( "VoiceItem ALL  : ", item ) 
+                        }
+                            
+    
+
                         // Füge eine Note hinzu
                         currentMeasureNotes.push({
+                            chord: item.chord?.map((c: any) => c.name).join("") || undefined,
                             pitches: item.pitches?.map((p: any) => p.name) || [],
                             duration: item.duration || 0,
-
                             lyrics: item.lyric?.map((lyric: any) => lyric.syllable).join(" ") || undefined,
                         });
                     }

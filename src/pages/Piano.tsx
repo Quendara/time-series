@@ -75,7 +75,7 @@ export const createPianoClasses = (showNodes: boolean) => {
         },
         keyHover_right_bar: {
             backgroundColor: "#a2d7fa",
-            transition: "background-color 300ms linear",
+            transition: "background-color 100ms linear",
             cursor: "pointer"
         },
         keyHover_left_current: {
@@ -85,7 +85,7 @@ export const createPianoClasses = (showNodes: boolean) => {
         },
         keyHover_left_bar: {
             backgroundColor: "#1565c0",
-            transition: "background-color 300ms linear",
+            transition: "background-color 100ms linear",
             cursor: "pointer"
         }
     }
