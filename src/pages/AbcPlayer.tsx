@@ -22,7 +22,7 @@ interface Note {
 
 
 export interface Measure {
-    
+
     notes: Note[]; // Noten im Takt
     voice: string; // Stimme (RH oder LH)
 }
@@ -100,7 +100,7 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
 
 
 
-                voice.forEach((item: VoiceItem, index : number ) => {
+                voice.forEach((item: VoiceItem, index: number) => {
                     // Detect section changes
 
 
@@ -118,12 +118,12 @@ export const groupNotesByMeasure = (tune: TuneObject): AnalysisResult => {
                         }
                     } else if (item.el_type === 'note') {
 
-                        if( index < 5 ){
-                            console.log( "VoiceItem CHORD: ", item.chord?.name ) 
-                            console.log( "VoiceItem ALL  : ", item ) 
+                        if (index < 5) {
+                            console.log("VoiceItem CHORD: ", item.chord?.name)
+                            console.log("VoiceItem ALL  : ", item)
                         }
-                            
-    
+
+
 
                         // Füge eine Note hinzu
                         currentMeasureNotes.push({
@@ -177,10 +177,11 @@ export const AbcPlayer = (props: Props) => {
     const cursorRef = useRef<SVGLineElement | null>(null);
 
     const [synth, setSynth] = useState<MidiBuffer | null>(null);
-    const [synthControll, setSynthController ] = useState<SynthObjectController | null>(null);
+    const [synthControll, setSynthController] = useState<SynthObjectController | null>(null);
     const [playing, setPlay] = useState(false);
     const [tempoPercent, setTempoPercent] = useState(100);
-    
+
+    const [scrollYPos, setScrollYPos] = useState(0);
 
 
     const CursorControl = () => {
@@ -201,17 +202,20 @@ export const AbcPlayer = (props: Props) => {
         const onEvent = (event: NoteTimingEvent) => {
 
             // console.log(" - pitches ", event.measureNumber)
-            if( event ){
+            if (event) {
 
-                const measure = event.measureNumber?event.measureNumber:0
-                const pitches = event.midiPitches?event.midiPitches:[]
+                const measure = event.measureNumber ? event.measureNumber : 0
+                const pitches = event.midiPitches ? event.midiPitches : []
 
-                props.callback_current_Measure( measure, pitches )
+                props.callback_current_Measure(measure, pitches)
             }
             // console.log( event )
 
             // console.log(event)
             if (cursorRef.current) {
+                setScrollYPos( event.top !== undefined ? event.top : 0 )
+                // paperRef?.current?.setAttribute("scrollTop", `${event.top !== undefined ? event.top : 0}` );
+
                 cursorRef.current.setAttribute("x1", `${event.left !== undefined ? event.left - 2 : 0}`);
                 cursorRef.current.setAttribute("x2", `${event.left !== undefined ? event.left - 2 : 0}`);
                 cursorRef.current.setAttribute("y1", `${event.top !== undefined ? event.top : 0}`);
@@ -230,9 +234,9 @@ export const AbcPlayer = (props: Props) => {
         return { onStart, onEvent, onFinished, onBeat };
     };
 
-    function clickListener(abcElem: AbcElem, tuneNumber: number, classes: string, analysis: ClickListenerAnalysis, drag: ClickListenerDrag)  {
-        console.log( "abcElem : ", abcElem )
-        synthControll?.setProgress( 300 )
+    function clickListener(abcElem: AbcElem, tuneNumber: number, classes: string, analysis: ClickListenerAnalysis, drag: ClickListenerDrag) {
+        console.log("abcElem : ", abcElem)
+        synthControll?.setProgress(300)
     }
 
     useEffect(() => {
@@ -250,16 +254,16 @@ export const AbcPlayer = (props: Props) => {
                 clickListener: clickListener,
                 // showDebug:['grid', 'box'],
                 responsive: "resize",
-                scale:2,
+                scale: 2,
                 // visualTranspose: 2,
-                lineThickness:0.1,
+                lineThickness: 0.1,
                 // generateDownload: false, // Keine Akkorde oder Extras
                 selectionColor: "", // Optionale Anpassung                
             }
         );
 
         if (abcjs.synth.supportsAudio()) {
-            
+
             var audioParams = { chordsOff: true };
 
             const cursorControl = CursorControl();
@@ -275,13 +279,13 @@ export const AbcPlayer = (props: Props) => {
                 // displayClock: true,
             });
 
-            
-            localsynth.init({ visualObj: tunes[0], }).then( () => {
-                
-                setSynth( localsynth )
-            
+
+            localsynth.init({ visualObj: tunes[0], }).then(() => {
+
+                setSynth(localsynth)
+
                 synthControl.setTune(tunes[0], false, audioParams).then(function () {
-                    setSynthController( synthControl )
+                    setSynthController(synthControl)
                     console.log("Audio successfully loaded.")
                 }).catch(function (error) {
                     console.warn("Audio problem:", error);
@@ -316,25 +320,29 @@ export const AbcPlayer = (props: Props) => {
 
     async function playToggleMusic() {
 
+
+
         if (playing) {
             synthControll?.pause(); // stop(); // Stop playback
             setPlay(false); // Update UI state
         } else {
-            console.log( "playToggleMusic : ", synth  )
+            console.log("playToggleMusic : ", synth)
             if (synth) {
-                synthControll?.play()            
-                
+                synthControll?.play()
+
                 // synth.toggleLoop()
                 setPlay(true); // Update UI state                
             }
         }
     }
 
-    async function setProgress( ev : number ) {
-        
+    async function setProgress(ev: number) {
+
+        synthControll?.setProgress( ev )
+        synthControll?.restart()
         // synth?.setProgress( ev ); // stop(); // Stop playback
         // synth.s
-    }    
+    }
 
     async function setTempo() {
 
@@ -358,13 +366,22 @@ export const AbcPlayer = (props: Props) => {
     return (
         <Grid container spacing={1} >
             <Grid item xs={12} >
-                <div id={"songPaper" + paperId} ref={paperRef}></div>
+                <Box    sx={{"position":"relative", "overflow":"scroll", "height":"50vh" }} >
+                <Box    sx={{"position":"absolulte", top: -scrollYPos, transition: "top 1500ms linear", }}
+                        id={"songPaper" + paperId} 
+                        ref={paperRef}></Box>
+                </Box>
             </Grid>
             <Grid item xs={8} >
                 <MyCardBlur sx={{ position: "fixed", right: "30px", bottom: "80px", pr: 1, zIndex: 2 }} >
-                <IconButton
+                    <IconButton
                         size="large"
-                        onClick={ () => setProgress(0)} ><Icon>skip_previous</Icon></IconButton>
+                        onClick={() => synthControll?.toggleLoop()} ><Icon>loop</Icon></IconButton>
+
+
+                    <IconButton
+                        size="large"
+                        onClick={() => setProgress(0)} ><Icon>skip_previous</Icon></IconButton>
 
                     <IconButton
                         size="large"
@@ -373,6 +390,7 @@ export const AbcPlayer = (props: Props) => {
                         size="large"
                         onClick={() => setTempo()} ><Icon>speed</Icon></IconButton>
                     {tempoPercent}
+
                 </MyCardBlur>
             </Grid>
             <Grid item xs={12} >

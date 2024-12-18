@@ -23,12 +23,16 @@ export const SongLearn = (props: SongProps) => {
     const [songKey, setSongKey] = useState("");
 
     const [showKeyBoard, setShowKeyBoard] = useState(true);
+    const [showSettings, setShowSettings] = useState(false);
 
 
     const [measures_v1, setVoice1] = useState<Measure[]>([]);
     const [measures_v2, setVoice2] = useState<Measure[]>([]);
 
     const [songStructure, setSongStructure] = useState<PartRange[]>([]);
+
+    const [startIntervall, setStartIntervall] = React.useState<number>(0);
+    const [numberOfIntervalls, setNumberOfIntervalls] = React.useState<number>(200);
 
     const [currentSongPart, setCurrentSongPart] = useState("");
     const [currentMeasure, setCurrentMeasure] = useState(0); // the current measure, used to show keyboard
@@ -77,9 +81,9 @@ export const SongLearn = (props: SongProps) => {
 
                     let noteName = p;
                     let octaceLetter = "";
-                    if( p.length > 0 ){
+                    if (p.length > 0) {
                         noteName = p[0]
-                        octaceLetter = p.substring( 1 )
+                        octaceLetter = p.substring(1)
                     }
 
                     const newPitch = moveNoteBasedOnKey(songKey, noteName)
@@ -192,6 +196,7 @@ export const SongLearn = (props: SongProps) => {
         if (!headless) {
             val += songHeader
             val += "V:RH\n"
+            // header += "V:RH clef=treble\n"
         }
 
         // val += "///"
@@ -199,10 +204,11 @@ export const SongLearn = (props: SongProps) => {
 
         // val += getMeasureCount(startIntervall, numberOfIntervalls)
 
-
+        
         if (!headless) {
             val += "\n"
-            val += "V:LH\n"
+            // val += "V:LH\n"
+            val += "V:LH clef=bass\n"
         }
         val += measureToAbc(measures_bass, startIntervall, numberOfIntervalls)
 
@@ -238,8 +244,7 @@ export const SongLearn = (props: SongProps) => {
         header += "K:" + key + "\n"
         header += "M:" + meter + "\n"
         header += "Q:" + tempo + "\n"
-        header += "V:RH clef=treble\n"
-        header += "V:LH clef=bass\n"
+
 
 
         setSongHeader(header)
@@ -254,8 +259,7 @@ export const SongLearn = (props: SongProps) => {
 
 
 
-    const [startIntervall, setStartIntervall] = React.useState<number>(0);
-    const [numberOfIntervalls, setNumberOfIntervalls] = React.useState<number>(24);
+
 
     const setNewStartInterval = (m: number) => {
         setStartIntervall(m)
@@ -390,51 +394,72 @@ export const SongLearn = (props: SongProps) => {
                 </Grid>
             </Grid>
 
-            {/* Show the current measure */}
-            <MyCardBlur sx={{ position: "fixed", bottom: "0px", left: "0px", width: "100vw", p: 1, zIndex: 1 }} >
-                <Grid container spacing={4} >
-                  
-                    {showKeyBoard &&
-                    <>
-                    
-                    <Grid item xs={1}></Grid>
-                        <Grid item xs={10}>
-                        (LH :) {measureToNotes(measures_v2, currentMeasure, 1)} - (RH) :
+            {/* Show the current measure 
+                                    (LH :) {measureToNotes(measures_v2, currentMeasure, 1)} - (RH) :
                         {measureToNotes(measures_v1, currentMeasure, 1)}
-                            <Piano
+
+            */}
+            <MyCardBlur sx={{ position: "fixed", bottom: "0px", left: "0px", width: "100vw", p: 1, zIndex: 1 }} >
+                <Grid container spacing={4} alignItems={"center"} >
+
+                    {showKeyBoard &&
+                        <>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={10}>
+                                <Piano
                                     left_current={currentNotes}
                                     left_bar={measureToNotes(measures_v2, currentMeasure, 1)}
                                     right_bar={measureToNotes(measures_v1, currentMeasure, 1)}
                                     title={""} showNodes={false} />
-                        </Grid>
+                            </Grid>
                         </>
+                    }
+                    {showSettings && <>
+                        <Grid item xs={6}>
+
+                            <ButtonGroup variant="text" aria-label="Basic button group">
+                                {[1, 2, 4, 8, 120].map((value) => (
+                                    <Button variant={(measuresPerLine === value) ? "contained" : "text"} onClick={() => { setMmasuresPerLine(value) }} >{value}</Button>
+                                ))}
+                            </ButtonGroup>
+                            Measures per Line
+                        </Grid>
+                        <Grid item xs={6}>
+                            <IconButton onClick={() => {
+                                const newStartIntervall = startIntervall - numberOfIntervalls
+                                setNewStartInterval((newStartIntervall < 0) ? 0 : newStartIntervall)
+                            }}><Icon>navigate_before</Icon></IconButton>
+                            <IconButton onClick={() => {
+                                setNewStartInterval(startIntervall + numberOfIntervalls)
+                            }}><Icon>navigate_next</Icon></IconButton>
+
+                            <ButtonGroup variant="text" aria-label="Basic button group">
+                                {[1, 2, 4, 8].map((value) => (
+                                    <Button variant={(numberOfIntervalls === value) ? "contained" : "text"} onClick={() => { setNumberOfIntervalls(value) }} >{value}</Button>
+                                ))}
+                            </ButtonGroup>
+                            Measures
+                        </Grid>
+                    </>
                     }
                     <Grid item xs={6}  >
                         <IconButton sx={{ mr: 4 }} onClick={() => { setShowKeyBoard(!showKeyBoard) }} >
                             <Icon>{showKeyBoard ? "piano_off" : "piano"}</Icon>
                         </IconButton>
                         <ButtonGroup variant="text" >
-                        {
-                            songStructure.map(part => {
-                                // console.log("key", part.name, part.start)
-                                return <Button
-                                    variant={(part.name === currentSongPart) ? "contained" : "text"}
-                                    onClick={() => { setSongPart(part.name) }} > {part.name} </Button>
+                            {
+                                songStructure.map(part => {
+                                    // console.log("key", part.name, part.start)
+                                    return <Button
+                                        variant={(part.name === currentSongPart) ? "contained" : "text"}
+                                        onClick={() => { setSongPart(part.name) }} > {part.name} </Button>
 
-                            })
-                        }
-                        <Button onClick={() => { setSongPart('Full') }} > Full </Button>
-                    </ButtonGroup>                        
-                        {/* <IconButton onClick={() => {
-                            const newStartIntervall = startIntervall - numberOfIntervalls
-                            setNewStartInterval((newStartIntervall < 0) ? 0 : newStartIntervall)
-                        }}><Icon>navigate_before</Icon></IconButton>
-                        <IconButton onClick={() => {
-                            setNewStartInterval(startIntervall + numberOfIntervalls)
-                        }}><Icon>navigate_next</Icon></IconButton> */}
-
+                                })
+                            }
+                            <Button onClick={() => { setSongPart('Full') }} > Full </Button>
+                        </ButtonGroup>
                     </Grid>
-                    <Grid item xs={5}  >
+                    <Grid item sx={{ "flexGrow": 1 }} >
                         <Slider
                             value={[startIntervall, (startIntervall + numberOfIntervalls)]}
                             onChange={handleStartIntervallChange}
@@ -443,8 +468,11 @@ export const SongLearn = (props: SongProps) => {
                             max={measures_v1.length}
                         />
                     </Grid>
-                
-
+                    <Grid item xs={1}  >
+                        <IconButton onClick={() => { setShowSettings(!showSettings) }} >
+                            <Icon>{showSettings ? "expand_more" : "expand_less"}</Icon>
+                        </IconButton>
+                    </Grid>
                 </Grid>
             </MyCardBlur>
 

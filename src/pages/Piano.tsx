@@ -79,7 +79,7 @@ export const createPianoClasses = (showNodes: boolean) => {
             cursor: "pointer"
         },
         keyHover_left_current: {
-            backgroundColor: "#4CAF50",
+            backgroundColor: "#3D8F40",
             // backgroundColor: "#F54645",            
             cursor: "pointer"
         },
