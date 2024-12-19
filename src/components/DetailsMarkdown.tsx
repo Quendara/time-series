@@ -12,7 +12,7 @@ import remarkTypescript from 'remark-typescript'
 
 
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Accordion, AccordionDetails, AccordionSummary, Alert, AlertColor, AlertTitle, Box, Card, CardContent, CardHeader, Checkbox, Chip, FormControlLabel, Grid, Icon, IconButton, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Alert, AlertColor, AlertTitle, Box, Card, CardContent, CardHeader, Checkbox, Chip, Divider, FormControlLabel, Grid, Icon, IconButton, TextField, Typography } from "@mui/material";
 import { bool } from "aws-sdk/clients/signer";
 
 // import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -471,11 +471,104 @@ export const DetailsMarkdown = (props: Props) => {
     }
 
 
+    const extractMarkdownContent = (markdown: string): { type: "Code" | "Header" | "Text", name: string, block: string }[] => {
+        const content: { type: "Code" | "Header" | "Text", name: string, block: string }[] = [];
+
+        const lines = markdown.split("\n");
+        let currentHeader = "";
+        let currentTextBlock: string[] = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            if (line.startsWith("#")) {
+                // Falls ein Header gefunden wird, vorherigen Textblock abschließen
+                if (currentTextBlock.length > 0) {
+                    content.push({
+                        type: "Text",
+                        name: currentHeader,
+                        block: currentTextBlock.join("\n").trim()
+                    });
+                    currentTextBlock = [];
+                }
+
+                // Header hinzufügen
+                currentHeader = line.replace(/^#+\s*/, "").trim();
+                content.push({
+                    type: "Header",
+                    name: currentHeader,
+                    block: line.trim()
+                });
+            } else if (line.startsWith("```")) {
+
+                currentHeader = line.trim()
+                // Codeblock einlesen
+                const codeLines: string[] = [];
+                i++; // Überspringe die ```-Zeile
+
+                while (i < lines.length && !lines[i].startsWith("```")) {
+                    codeLines.push(lines[i]);
+                    i++;
+                }
+
+                content.push({
+                    type: "Code",
+                    name: currentHeader,
+                    block: codeLines.join("\n").trim()
+                });
+            } else {
+                // Text sammeln
+                currentTextBlock.push(line);
+            }
+        }
+
+        // Letzten Textblock abschließen, falls vorhanden
+        if (currentTextBlock.length > 0) {
+            content.push({
+                type: "Text",
+                name: currentHeader,
+                block: currentTextBlock.join("\n").trim()
+            });
+        }
+
+        return content;
+    }
+
+    const extractMarkdown = (markdown: string) => {
+        const content = extractMarkdownContent(markdown)
+        // return { content };
+        return content.map((c) => {
+
+            if (c.type === "Header") {
+                return (
+                    <Grid item xs={12} >
+                        <h1>{c.name}</h1>
+                        <p>Block : {c.block}</p>
+                    </Grid>
+                )
+            }
+            if (c.type === "Code") {
+                return (<Grid item xs={12} >
+                    {c.name.endsWith("abc") &&
+                        <SongLearn play={c.block} showNodes={false} showAbcOnly={true} />
+                    } )
+                </Grid>)
+            }
+            if (c.type === "Text") {
+                return (<Grid item xs={12} >
+                    Text
+                    <Divider />
+                    <MyMarkdown content={ c.block } />
+                    
+                </Grid>)
+            }
+        })
+    }
 
     return (
         <>
             <Grid container spacing={1}>
-                {parseText(props.value)}
+                {extractMarkdown(props.value)}
             </Grid>
         </>
     )
