@@ -176,7 +176,7 @@ export const PianoPart = (props: PartProps) => {
                         <>
                             {notes.length !== 0 &&
                                 <Grid item xs={12} >
-                                    <Piano title={header} left_current={parseNoteSequence(notes)} showNodes={props.showNodes} />
+                                    <Piano title={header} left_current={parseNoteSequence(notes)}  left_bar={parseNoteSequence(notes)} showNodes={props.showNodes} />
                                 </Grid>
                             }
                         </>)

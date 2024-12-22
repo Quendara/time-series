@@ -176,7 +176,7 @@ export const AbcPlayer = (props: Props) => {
     const paperRef = useRef<HTMLDivElement | null>(null);
     const cursorRef = useRef<SVGLineElement | null>(null);
 
-    const [synth, setSynth] = useState<MidiBuffer | null>(null);
+    // const [synth, setSynth] = useState<MidiBuffer | null>(null);
     const [synthControll, setSynthController] = useState<SynthObjectController | null>(null);
     const [playing, setPlay] = useState(false);
     const [tempoPercent, setTempoPercent] = useState(100);
@@ -213,8 +213,18 @@ export const AbcPlayer = (props: Props) => {
 
             // console.log(event)
             if (cursorRef.current) {
-                setScrollYPos( event.top !== undefined ? event.top : 0 )
+                // setScrollYPos( event.top !== undefined ? event.top : 0 )
+
+                window.scrollTo({
+                    top: event.top !== undefined ? event.top : 0,
+                    left: 0,
+                    behavior: "smooth",
+                  });                
+                
                 // paperRef?.current?.setAttribute("scrollTop", `${event.top !== undefined ? event.top : 0}` );
+
+                // paperRef?.current?.scrollY = event.top !== undefined ? event.top : 0 
+
 
                 cursorRef.current.setAttribute("x1", `${event.left !== undefined ? event.left - 2 : 0}`);
                 cursorRef.current.setAttribute("x2", `${event.left !== undefined ? event.left - 2 : 0}`);
@@ -245,7 +255,8 @@ export const AbcPlayer = (props: Props) => {
 
     useEffect(() => {
 
-        synth?.pause()
+        setScrollYPos( 0 )
+        synthControll?.pause()
 
         const tunes = abcjs.renderAbc(
             "songPaper" + paperId,
@@ -271,18 +282,18 @@ export const AbcPlayer = (props: Props) => {
             const synthControl = new abcjs.synth.SynthController();
 
             synthControl.load("#audio" + paperId, cursorControl, {
+                displayLoop: true,
                 displayRestart: true,
                 displayPlay: true,
-                // displayLoop: true,
                 displayWarp: true,
-                displayProgress: false,
+                displayProgress: true,
                 // displayClock: true,
             });
 
 
             localsynth.init({ visualObj: tunes[0], }).then(() => {
 
-                setSynth(localsynth)
+                // setSynth(localsynth)
 
                 synthControl.setTune(tunes[0], false, audioParams).then(function () {
                     setSynthController(synthControl)
@@ -313,33 +324,30 @@ export const AbcPlayer = (props: Props) => {
             console.log("Audio is not supported on this browser");
         }
 
-        return () => {
-            synth?.stop()
+        return () => {            
+            synthControll?.pause()
+            setPlay(false); 
+            // synth?.stop()
         };
     }, [props.play]);
 
     async function playToggleMusic() {
-
-
-
+        
         if (playing) {
             synthControll?.pause(); // stop(); // Stop playback
             setPlay(false); // Update UI state
-        } else {
-            console.log("playToggleMusic : ", synth)
-            if (synth) {
-                synthControll?.play()
-
-                // synth.toggleLoop()
-                setPlay(true); // Update UI state                
-            }
-        }
+        } 
+        else 
+        {
+            synthControll?.play()
+            setPlay(true); // Update UI state                        
+        }        
     }
 
     async function setProgress(ev: number) {
 
         synthControll?.setProgress( ev )
-        synthControll?.restart()
+        // synthControll?.restart()
         // synth?.setProgress( ev ); // stop(); // Stop playback
         // synth.s
     }
@@ -359,21 +367,21 @@ export const AbcPlayer = (props: Props) => {
         console.log("set percent : ", newIndex, percent)
 
         setTempoPercent(percent)
-        // synth?.setWarp(percent);
-
+        synthControll?.setWarp(percent);
     }
 
     return (
         <Grid container spacing={1} >
             <Grid item xs={12} >
-                <Box    sx={{"position":"relative", "overflow":"scroll", "height":"50vh" }} >
+                {/* <Box    sx={{"position":"relative", "overflow":"scroll", "height":"50vh" }} >
+                </Box> */}
                 <Box    sx={{"position":"absolulte", top: -scrollYPos, transition: "top 1500ms linear", }}
                         id={"songPaper" + paperId} 
                         ref={paperRef}></Box>
-                </Box>
             </Grid>
             <Grid item xs={8} >
-                <MyCardBlur sx={{ position: "fixed", right: "30px", bottom: "80px", pr: 1, zIndex: 2 }} >
+                <MyCardBlur sx={{ position: "fixed", right: "30px", bottom: "80px", width:"500px", pr: 1, zIndex: 2 }} >
+                    <Box sx={{ display: "" }} id={"audio" + paperId}></Box>
                     <IconButton
                         size="large"
                         onClick={() => synthControll?.toggleLoop()} ><Icon>loop</Icon></IconButton>
@@ -381,7 +389,7 @@ export const AbcPlayer = (props: Props) => {
 
                     <IconButton
                         size="large"
-                        onClick={() => setProgress(0)} ><Icon>skip_previous</Icon></IconButton>
+                        onClick={() => setProgress(10)} ><Icon>skip_previous</Icon></IconButton>
 
                     <IconButton
                         size="large"
@@ -393,10 +401,6 @@ export const AbcPlayer = (props: Props) => {
 
                 </MyCardBlur>
             </Grid>
-            <Grid item xs={12} >
-                <Box sx={{ display: "" }} id={"audio" + paperId}></Box>
-            </Grid>
-
         </Grid>
     );
 };

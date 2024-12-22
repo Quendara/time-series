@@ -551,15 +551,17 @@ export const DetailsMarkdown = (props: Props) => {
                 return (<Grid item xs={12} >
                     {c.name.endsWith("abc") &&
                         <SongLearn play={c.block} showNodes={false} showAbcOnly={true} />
-                    } )
+                    } 
+                    {c.name.endsWith("keys") &&
+                        <PianoSong play={c.block} showNodes={false} />
+                    }
                 </Grid>)
             }
             if (c.type === "Text") {
                 return (<Grid item xs={12} >
                     Text
                     <Divider />
-                    <MyMarkdown content={ c.block } />
-                    
+                    <MyMarkdown content={c.block} />
                 </Grid>)
             }
         })
