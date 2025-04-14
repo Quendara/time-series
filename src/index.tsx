@@ -153,31 +153,33 @@ const App = () => {
 
 
         <Router>
-          <Auth jwtTocken={jwtTocken} authSuccessCallback={authSuccessCallback} >
+          <Box sx={{ display: 'flex' }}>
+            <Auth jwtTocken={jwtTocken} authSuccessCallback={authSuccessCallback} >
 
-            <NavLink key={"nl_" + 1332} to={"/"}  >
-              <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
-            </NavLink>
-            <NavLink key={"nl_" + 98978} to={"/mails"}  >
-              <IconButton sx={cssClasses.title}><Mails token={jwtTocken} renderAs="icon" /></IconButton>
-            </NavLink>
+              <NavLink key={"nl_" + 1332} to={"/"}  >
+                <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>
+              </NavLink>
+              <NavLink key={"nl_" + 98978} to={"/mails"}  >
+                <IconButton sx={cssClasses.title}><Mails token={jwtTocken} renderAs="icon" /></IconButton>
+              </NavLink>
 
 
-            {amplifyInitilaized &&
+              {amplifyInitilaized &&
 
-              <MainNavigation
-                horizontally={false}
-                render="navlink"
-                username={username}
-                handleSetConfig={handleSetConfig} />
+                <MainNavigation
+                  horizontally={false}
+                  render="navlink"
+                  username={username}
+                  handleSetConfig={handleSetConfig} />
 
-            }
+              }
 
-            <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
-              {theme.palette.mode === 'dark' ? <Icon>dark_mode</Icon> : <Icon>light_mode</Icon>}
-            </IconButton>
+              <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+                {theme.palette.mode === 'dark' ? <Icon>dark_mode</Icon> : <Icon>light_mode</Icon>}
+              </IconButton>
 
-          </Auth>
+            </Auth>
+          </Box>
 
           <Grid container pt={matchesUpXs ? 0 : 0} justifyContent="center" spacing={1} >
 

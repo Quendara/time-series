@@ -2,6 +2,7 @@
 
 import { purple, lightGreen, pink, lightBlue, red, green } from '@mui/material/colors/';
 import { List, ListItemButton, ListItemAvatar, Avatar, Icon, ListItemText, ListItemSecondaryAction, IconButton, useTheme } from "@mui/material"
+import zIndex from '@mui/material/styles/zIndex';
 
 
 
@@ -73,6 +74,7 @@ export const cssClasses = {
     // backgroundColor: theme.palette.primary.dark,
     top: 'auto',
     bottom: 0,
+    zIndex: 20
   },
   chiplist: {
     display: 'flex',

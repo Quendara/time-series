@@ -281,7 +281,7 @@ const Auth = ( props : Props) => {
     //<li><NavLink className="nav-item nav-link mr-2 " to="/sandbox" activeClassName="blue">Sandbox</NavLink></li>
     return (
       <>
-        <AppBar sx={cssClasses.appBar} position={matchesUpXs ? "static" : "fixed"}  >
+        <AppBar sx={{ zIndex: 20 }} position={matchesUpXs ? "static" : "fixed"}  >
           <Toolbar>
 
             {props.children}
