@@ -13,9 +13,13 @@ import { TodoMainContext } from "./context/TodoMainProvider";
 
 // https://www.npmjs.com/package/amazon-cognito-identity-js
 
-// Or, using CommonJS modules
-require("cross-fetch/polyfill");
-var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
+// // Or, using CommonJS modules
+// require("cross-fetch/polyfill");
+// var AmazonCognitoIdentity = require("amazon-cognito-identity-js");
+
+import "cross-fetch/polyfill";
+// import { Buffer } from 'buffer';
+import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 
 const poolData = {
   UserPoolId: "eu-central-1_8LkzpXcOV",

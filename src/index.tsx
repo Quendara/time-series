@@ -32,7 +32,7 @@ import { CsvToolsPage } from "./pages/CsvToolsPage";
 
 import { TodoMainItem } from "./models/TodoItems"
 
-import { StyleDemo } from "./StyleDemo";
+
 import { Auth } from "./Auth";
 
 import './mstyle.css';
@@ -45,6 +45,8 @@ import { SandboxGPT } from "./pages/SandboxGPT";
 import { PianoSong } from "./pages/PianoSong";
 import { Mails } from "./pages/Mails";
 import { PageJoplin } from "./Joplin/PageJoplin";
+
+import "tailwindcss";
 
 // import { Clock } from "./components/Clock";
 // import { error } from "./components/erros"
@@ -248,7 +250,7 @@ const App = () => {
                             handleSetConfig={handleSetConfig} />
                         } >
                         </Route>
-                        <Route path="/demo" element={<StyleDemo />}></Route>
+                        
                       </Routes>
                     )}
                 </>)}

@@ -55,7 +55,6 @@ const ChatMessage = (props: ChatProps) => {
             setCollapse( props.message.role === "system" )
         },
         [ props.message.role ]
-
     ) 
 
     const copyToClipboardHandle = () => {
@@ -82,11 +81,11 @@ const ChatMessage = (props: ChatProps) => {
         const common = { position: "relative", borderRadius: "5px", padding: "10px" }
         switch (message.role) {
             case "system":
-                return { ...common, ...{ width: "80%", marginLeft: "5%", backgroundColor: "#3B3B3B" } }
+                return { ...common, ...{ width: "95%", marginLeft: "5%", backgroundColor: "#3B3B3B" } }
             case "assistant":
-                return { ...common, ... { width: "80%", marginLeft: "0%", backgroundColor: "#0ea63c" } }
+                return { ...common, ... { width: "95%", marginLeft: "0%", backgroundColor: "#0ea63c" } }
             case "user":
-                return { ...common, ...{ width: "80%", marginLeft: "10%", backgroundColor: "#2C6BED" } }
+                return { ...common, ...{ width: "95%", marginLeft: "5%", backgroundColor: "#2C6BED" } }
         }
     }
 
@@ -106,6 +105,7 @@ const ChatMessage = (props: ChatProps) => {
                         </Box>
                     </Box>
                     <Box sx={{ width: "95%" }}>
+
                         {audioSrc && (
                             <audio autoPlay>
                                 <source src={audioSrc} type="audio/mp3" />
@@ -164,17 +164,13 @@ export const GPTBox = (props: Props) => {
     //     mgs = [
     //         { role: "system", content: systemMessage }
     //     ]
-
     //     if (props.initialUserMessage) {
     //         mgs.push({ role: "user", content: props.initialUserMessage })
     //     }
-
     //     setMessages(mgs)
-
     // }
 
     const callGPT = async (mgs: ChatCompletionMessageParam[]) => {
-        // const key = props.apikey
         const key = context.openAiKey
 
         const openai = new OpenAI({
@@ -182,25 +178,29 @@ export const GPTBox = (props: Props) => {
         });
 
         const response = await openai.chat.completions.create({
-            // model: "gpt-3.5-turbo",
             model: "gpt-4o",
             messages: mgs,
             temperature: 1,
-            max_tokens: 256,
+            max_tokens: 4096,
             top_p: 1,
             frequency_penalty: 0,
             presence_penalty: 0,
+            stream: true,
         });
 
-        console.log("response : ", response.choices.at(0)?.message.content)
+        let assistantMessage = "";
+        const mgs2 = [...mgs, { role: "assistant" as const, content: "" }];
+        setMessages(mgs2);
 
-        const assistant = response.choices.at(0)?.message.content
-
-        if (assistant) {
-            const mgs2 = [...mgs]
-            mgs2.push({ role: "assistant", content: assistant })
-            setMessages(mgs2)
+        for await (const chunk of response) {
+            const content = chunk.choices[0]?.delta?.content || "";
+            assistantMessage += content;
+            
+            const updatedMessages = [...mgs, { role: "assistant" as const, content: assistantMessage }];
+            setMessages(updatedMessages);
         }
+
+        console.log("Complete response : ", assistantMessage);
     }
 
 
@@ -223,11 +223,20 @@ export const GPTBox = (props: Props) => {
         let mgs: ChatCompletionMessageParam[] = []
         mgs = [...messages]
 
+        console.log( "askGPT - mgs.length ", mgs.length )
+
         if (mgs.length === 0) {
             const systemMsg = props.systemMessages.at(0)
+            
+            
             if (systemMsg) {
+                console.log( "askGPT - systemMsg ", systemMsg )
                 mgs.push({ role: "system", content: systemMsg.systemPrompt })
             }
+            else {
+                console.log( "askGPT - systemMsg ", systemMsg )
+                mgs.push({ role: "system", content: "You are a helpful assistant." })
+            }   
         }
 
         // 
@@ -235,6 +244,10 @@ export const GPTBox = (props: Props) => {
         setCurrent("")
 
         setMessages(mgs)
+
+        console.log( "askGPT - callGPT mgs.length ", mgs.length )
+        console.log(  mgs)
+
         callGPT(mgs)
     }
 
@@ -273,9 +286,13 @@ export const GPTBox = (props: Props) => {
                                 onChange={e => setCurrent(e.target.value)}
                             />
 
-                            <Button variant="contained" color="primary" onClick={askGPT} >ASK</Button>
+                        </Stack>
+
+                        <Stack pt={2}    direction={"row"} spacing={2}>
+                            <Button variant="contained" color="primary" startIcon={<Icon>send</Icon>} onClick={askGPT} >ASK</Button>
                             <Button variant="outlined" onClick={() => setMessages([])} ><Icon>clear</Icon></Button>
                         </Stack>
+
                     </>
             }
 

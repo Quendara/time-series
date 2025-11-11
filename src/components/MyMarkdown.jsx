@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import ReactMarkdown from "react-markdown";
 
 // import { remark } from 'remark'
@@ -7,7 +9,7 @@ import remarkGfm from 'remark-gfm'
 // import remarkTypescript from 'remark-typescript'
 
 export const MyMarkdown = ({content}) => {
-    return (
+    return (        
         <ReactMarkdown children={content} remarkPlugins={[remarkGfm, remarkParse ]} />
     )
 }

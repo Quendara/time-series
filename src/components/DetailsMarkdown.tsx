@@ -12,7 +12,7 @@ import remarkTypescript from 'remark-typescript'
 
 
 import { ImageFromPhotos } from "./ImageFromPhotos";
-import { Accordion, AccordionDetails, AccordionSummary, Alert, AlertColor, AlertTitle, Box, Card, CardContent, CardHeader, Checkbox, Chip, Divider, FormControlLabel, Grid, Icon, IconButton, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Alert, AlertColor, AlertTitle, Box, Card, CardContent, CardHeader, Checkbox, Chip, Divider, FormControlLabel, Grid, Icon, IconButton, Paper, TextField, Typography } from "@mui/material";
 import { bool } from "aws-sdk/clients/signer";
 
 // import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -30,6 +30,8 @@ import { MyIcon } from "./MyIcon";
 import { TextEdit } from "./TextEdit";
 import { PianoSong } from "../pages/PianoSong";
 import { SongLearn } from "../pages/SongLearn";
+import { Lyrics } from "../pages/Lyrics";
+import { GPTBox } from "../organisms/GptBox";
 
 
 
@@ -534,6 +536,42 @@ export const DetailsMarkdown = (props: Props) => {
         return content;
     }
 
+    const checkCodeBlock = (name: string, codeBlock: string) => {
+        if (name.endsWith("abc")) {
+            return <SongLearn play={codeBlock} showNodes={false} showAbcOnly={true} />
+        }
+        else if (name.endsWith("keys")) {
+            return <PianoSong play={codeBlock} showNodes={false} />
+        }
+        else if (name.endsWith("lyrics")) {
+            return <Lyrics lyrics={codeBlock} />
+        }
+        else if (name.endsWith("system")) {
+            return <Card >
+                <pre>
+                    {codeBlock}
+                </pre>
+
+                <GPTBox
+                    initialUserMessage={""}
+                    systemMessages={ [{ "systemPrompt":codeBlock, button:"HELLO" } ]} >
+
+                </GPTBox>
+            </Card>
+        }
+        else {
+            let content = ""
+            content += "# UNSUPPORTED CODE BLOCK \n\n"
+            content += "``` \n" + codeBlock + "\n```"
+
+            return (
+
+
+                <MyMarkdown content={content} />
+            )
+        }
+    }
+
     const extractMarkdown = (markdown: string) => {
         const content = extractMarkdownContent(markdown)
         // return { content };
@@ -549,18 +587,13 @@ export const DetailsMarkdown = (props: Props) => {
             }
             if (c.type === "Code") {
                 return (<Grid item xs={12} >
-                    {c.name.endsWith("abc") &&
-                        <SongLearn play={c.block} showNodes={false} showAbcOnly={true} />
-                    } 
-                    {c.name.endsWith("keys") &&
-                        <PianoSong play={c.block} showNodes={false} />
-                    }
-                </Grid>)
+                    {checkCodeBlock(c.name, c.block)}
+                </Grid>
+                )
             }
             if (c.type === "Text") {
                 return (<Grid item xs={12} >
-                    Text
-                    <Divider />
+
                     <MyMarkdown content={c.block} />
                 </Grid>)
             }

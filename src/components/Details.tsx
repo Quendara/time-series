@@ -420,11 +420,11 @@ export const DetailsHeadless = (props: PropsDetails) => {
                             )}
 
                             <Grid item xs={12}>
-                                <GPTBox 
+                                {/* <GPTBox 
                                     initialUserMessage={selectedItemValue}
                                     systemMessages= {findSystemInstruction( selectedItemValue ) } >
 
-                                </GPTBox>
+                                </GPTBox> */}
                             </Grid>
                         </Grid>
 
