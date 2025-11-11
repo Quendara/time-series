@@ -80,7 +80,7 @@ $$
 interface Props {
     value: string;
     initValue: string
-    updateFunction: (s: string) => void;
+    updateFunction: (s: string) => void; // callback to update the markdown
 }
 
 export const DetailsMarkdown = (props: Props) => {
@@ -544,7 +544,7 @@ export const DetailsMarkdown = (props: Props) => {
             return <PianoSong play={codeBlock} showNodes={false} />
         }
         else if (name.endsWith("lyrics")) {
-            return <Lyrics lyrics={codeBlock} />
+            return <Lyrics lyrics={codeBlock} updateFunction={ props.updateFunction } />
         }
         else if (name.endsWith("system")) {
             return <Card >
