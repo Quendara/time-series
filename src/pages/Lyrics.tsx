@@ -76,8 +76,7 @@ export const Lyrics = (props: PartProps) => {
                         setMarkedLines(result)
                     }
                     return null;
-                }
-                
+                }                
             }
 
             const currentLine = line.trim();
