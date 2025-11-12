@@ -50,7 +50,7 @@ const Auth = ( props : Props) => {
   //  const [token, setToken] = useState("");
 
   const [trySend, setTrySend] = useState(false);
-  const [cognitoUser, setCognitoUser] = useState<any>(null);
+  const [cognitoUser, setCognitoUser] = useState<AmazonCognitoIdentity.CognitoUser | null>(null);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); //
 
@@ -82,7 +82,7 @@ const Auth = ( props : Props) => {
           }
           console.log("session validity: " + session.isValid());
 
-          const username = cognitoUser["username"];
+          const username = cognitoUser.getUsername(); // ["username"];
           const jwtToken = session.getIdToken().getJwtToken();
 
           const decoded: any = jwt_decode(jwtToken);

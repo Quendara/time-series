@@ -30,11 +30,18 @@ async function text2Speech(apiKey: string, text: string) {
         voice: "shimmer",
         input: text // "Today is a wonderful day to build something people love!",
     });
+
     // console.log(speechFile);
-    const buffer = Buffer.from(await mp3.arrayBuffer());
+    //const buffer = Buffer.from(await mp3.arrayBuffer());
 
     // Convert the buffer to a Blob
-    const blob = new Blob([buffer], { type: 'audio/mp3' });
+    // const blob = new Blob([buffer], { type: 'audio/mp3' });
+
+    const arrayBuffer = await mp3.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: 'audio/mp3' });
+    
+    
+    
     // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
     // Set the URL as the audio source
