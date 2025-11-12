@@ -82,11 +82,6 @@ export const Lyrics = (props: PartProps) => {
 
             const currentLine = line.trim();
 
-            
-
-            
-            
-
             if (currentLine.startsWith("**")) {
                 currentLime.original = currentLine.slice(2).trim();
 
