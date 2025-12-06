@@ -106,20 +106,20 @@ export const Lyrics = (props: PartProps) => {
     const getClassName = (index: number) => {
 
         if (markedLines.includes(index)) {
-            return " text-yellow-300"
+            return " text-yellow-300 font-bold ";
         }
         return ""
     }
 
 
-    const defaultClassName = "origin-center inline-block origin-center transition duration-300 hover:brightness-125 hover:scale-105";
+    const defaultClassName = "cursor-pointer origin-center inline-block origin-center transition duration-300 hover:brightness-125 hover:scale-105";
 
     return (
         <>
             {lines.map((line, index) => (
                 <Box key={index} style={{ marginBottom: "1em" }}>
 
-                    <Box className={defaultClassName + getClassName(index)} onClick={() => {
+                    <Box className={defaultClassName } onClick={() => {
                         if (markedLines.includes(index)) {
                             updateMarkedLines(markedLines.filter(l => l !== index))
                         }
@@ -128,7 +128,7 @@ export const Lyrics = (props: PartProps) => {
                         }
                     }} >
                         <Box className={getClassName(index)}>{line.original}</Box>
-                        {line.translation && <Box style={{ fontStyle: "italic", color: "gray" }}>{line.translation}</Box>}
+                        {line.translation && <Box className="italic text-gray-400" >{line.translation}</Box>}
                     </Box>
                 </Box>
             ))}

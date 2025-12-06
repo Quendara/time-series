@@ -185,7 +185,7 @@ export const GPTBox = (props: Props) => {
         });
 
         const response = await openai.chat.completions.create({
-            model: "gpt-4o",
+            model: "gpt-4.1",
             messages: mgs,
             temperature: 1,
             max_tokens: 4096,
