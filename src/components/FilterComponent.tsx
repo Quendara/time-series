@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
-import { TextField, InputAdornment, IconButton } from '@mui/material';
+import { TextField, InputAdornment, IconButton, Autocomplete } from '@mui/material';
 import { MyIcon } from './MyIcon';
+import { TodoItem } from '../models/TodoItems';
 
 interface FilterProps {
     filterText: string;
+    options: TodoItem[]; 
     callback: (text: string) => void;
     callbackEnter: () => void;
 };
 
-export const FilterComponent = ({ filterText, callback, callbackEnter }: FilterProps) => {
+export const FilterComponent = ({ filterText, options, callback, callbackEnter }: FilterProps) => {
 
     const [item, setItem] = useState(filterText);
 
@@ -29,30 +31,57 @@ export const FilterComponent = ({ filterText, callback, callbackEnter }: FilterP
         }
     }
 
+    const sortedOptions = useMemo(() => {
+        return [...options].sort((a, b) => {
+            const groupCompare = (a.group || '').localeCompare(b.group || '');
+            if (groupCompare !== 0) return groupCompare;
+            return a.name.localeCompare(b.name);
+        });
+    }, [options]);
+
     return (
-        <TextField
-            value={item}
-            label="Search 2"
+        <Autocomplete
+            freeSolo
+            inputValue={item}
+            onInputChange={(_, newValue) => setFilter(newValue)}
+            options={sortedOptions}
+            groupBy={(option) => option.group || 'Uncategorized'}
+            getOptionLabel={(option) => typeof option === 'string' ? option : option.name}
             fullWidth
-            variant="outlined"
-            InputProps={{
-                startAdornment: (
-                    <InputAdornment position="end" >
-                        <MyIcon icon="search" />
-                    </InputAdornment>
-                ),
-                endAdornment: (
-                    <InputAdornment position="end" >
-                        <IconButton
-                            disabled={item.length === 0}
-                            onClick={() => setFilter("")} >
-                            <MyIcon icon="clear" />
-                        </IconButton>
-                    </InputAdornment>
-                )
-            }}
-            onKeyDown={e => checkEnter(e)}
-            onChange={e => setFilter(e.target.value)}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label="Search"
+                    variant="outlined"
+                    onKeyDown={e => checkEnter(e)}
+                    InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                            <>
+                                <InputAdornment position="start">
+                                    <MyIcon icon="search" />
+                                </InputAdornment>
+                                {params.InputProps.startAdornment}
+                            </>
+                        ),
+                        endAdornment: (
+                            <>
+                                {item.length > 0 && (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setFilter("")}
+                                            size="small"
+                                        >
+                                            <MyIcon icon="clear" />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )}
+                                {params.InputProps.endAdornment}
+                            </>
+                        )
+                    }}
+                />
+            )}
         />
     )
 }

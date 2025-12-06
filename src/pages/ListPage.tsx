@@ -265,7 +265,11 @@ export const ListPage = (props: ListProps) => {
                                                 groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
                                         ) : (
 
-                                            <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
+                                            <FilterComponent 
+                                                filterText={filterText} 
+                                                callback={callbackFilter} callbackEnter={callbackEnter} 
+                                                options={props.todos}
+                                                />  
                                         )}
                                     </Grid>
                                     <Grid item xs={3}  >
