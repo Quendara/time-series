@@ -1,14 +1,26 @@
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import checker from 'vite-plugin-checker'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(),  tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+
+    // 🔥 Add full TypeScript (and optional ESLint) error checking
+    checker({
+      typescript: true,
+      // eslint: {
+      //   lintCommand: 'eslint "./src/**/*.{ts,tsx}"'
+      // }
+    })
+  ],
+
   resolve: {
     alias: {
       './runtimeConfig': './runtimeConfig.browser',

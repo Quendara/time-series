@@ -8,10 +8,11 @@ interface FilterProps {
     filterText: string;
     options: TodoItem[] | TodoMainItem[]; 
     callback: (text: string) => void;
-    callbackSelect: (item: TodoItem | TodoMainItem) => void;
+    callbackSelect?: (item: TodoItem | TodoMainItem) => void;
+    callbackEnter?: () => void;
 };
 
-export const FilterComponent = ({ filterText, options, callback, callbackSelect }: FilterProps) => {
+export const FilterComponent = ({ filterText, options, callback, callbackSelect, callbackEnter }: FilterProps) => {
 
     const [item, setItem] = useState(filterText);
 
@@ -39,7 +40,12 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect 
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && filteredOptions.length === 1) {
             event.preventDefault();
-            callbackSelect(filteredOptions[0]);
+            if (callbackSelect) {
+                callbackSelect(filteredOptions[0]);
+            }
+            if (callbackEnter) {
+                callbackEnter();
+            }
             setItem('');
             callback('');
         }
@@ -57,7 +63,9 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect 
             }}
             onChange={(_, newValue) => {
                 if (newValue && typeof newValue !== 'string') {
-                    callbackSelect(newValue)
+                    if (callbackSelect) {
+                        callbackSelect(newValue)
+                    }
                     setItem('')
                 }
             }}
@@ -65,15 +73,14 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect 
             groupBy={(option) => option.group || 'Uncategorized'}
             getOptionLabel={(option) => typeof option === 'string' ? option : option.name}
             renderOption={(props, option) => {
-                const { key, ...otherProps } = props;
-                const uniqueKey = 'id' in option ? option.id : option.listid;
+                const uniqueKey = 'id' in option ? option.id : (option as TodoMainItem).listid;
                 const isSingleMatch = filteredOptions.length === 1 && filteredOptions[0] === option;
                 return (
                     <li 
                         key={uniqueKey} 
-                        {...otherProps}
+                        {...props}
                         style={{
-                            ...otherProps.style,
+                            ...(props as React.HTMLAttributes<HTMLLIElement>).style,
                             backgroundColor: isSingleMatch ? '#4caf50' : undefined,
                             color: isSingleMatch ? 'white' : undefined,
                         }}
