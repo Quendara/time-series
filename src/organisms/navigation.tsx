@@ -400,7 +400,10 @@ export const MainNavigation = (props: MainNavigationProps) => {
                         <Box p={1}>
                             <Grid container pl={2} alignItems="center" justifyContent="center" spacing={1} >
                                 <Grid item xs={7} lg={6} >
-                                    <FilterComponent filterText={filterText} callback={callbackFilter} callbackEnter={callbackEnter} />
+                                    <FilterComponent 
+                                        filterText={filterText} 
+                                        options={context.todos || []}
+                                        callback={callbackFilter} callbackEnter={callbackEnter} />
                                 </Grid>
                                 <Grid item xs={5} lg={6} >
                                     <Calendar />

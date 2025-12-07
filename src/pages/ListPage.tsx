@@ -97,15 +97,11 @@ export const ListPage = (props: ListProps) => {
     }
 
 
-    const callbackEnter = () => {
-
-        if (filteredTodos.length === 1) {
-
-            setSuccessSnackbarMessage("Uncheck item " + filteredTodos[0].name);
-
-            props.uncheckFunction(filteredTodos[0].id)
-
-            setSelectedItemId(filteredTodos[0].id)
+    const callbackSelect = (item: TodoItem | TodoMainItem) => {
+        if ('id' in item) {
+            setSuccessSnackbarMessage("Uncheck item " + item.name);
+            props.uncheckFunction(item.id)
+            setSelectedItemId(item.id)
             setFilterText("")
         }
     }
@@ -223,6 +219,7 @@ export const ListPage = (props: ListProps) => {
         <>
             <Snackbar
                 open={successSnackbarMessage.length > 0}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 autoHideDuration={2000}
                 message="Saved" >
                 <Alert onClose={handleClose} severity="success">
@@ -267,7 +264,8 @@ export const ListPage = (props: ListProps) => {
 
                                             <FilterComponent 
                                                 filterText={filterText} 
-                                                callback={callbackFilter} callbackEnter={callbackEnter} 
+                                                callback={callbackFilter} 
+                                                callbackSelect={callbackSelect} 
                                                 options={props.todos}
                                                 />  
                                         )}

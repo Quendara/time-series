@@ -2,34 +2,22 @@ import React, { useState, useEffect, useMemo } from 'react';
 
 import { TextField, InputAdornment, IconButton, Autocomplete } from '@mui/material';
 import { MyIcon } from './MyIcon';
-import { TodoItem } from '../models/TodoItems';
+import { TodoItem, TodoMainItem } from '../models/TodoItems';
 
 interface FilterProps {
     filterText: string;
-    options: TodoItem[]; 
+    options: TodoItem[] | TodoMainItem[]; 
     callback: (text: string) => void;
-    callbackEnter: () => void;
+    callbackSelect: (item: TodoItem | TodoMainItem) => void;
 };
 
-export const FilterComponent = ({ filterText, options, callback, callbackEnter }: FilterProps) => {
+export const FilterComponent = ({ filterText, options, callback, callbackSelect }: FilterProps) => {
 
     const [item, setItem] = useState(filterText);
 
     useEffect(() => {
         setItem(filterText)
     }, [filterText]);
-
-    const setFilter = (text: string) => {
-        setItem(text)
-        callback(text)
-    }
-
-    const checkEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === "Enter") {
-            // alert("Enter")            
-            callbackEnter()
-        }
-    }
 
     const sortedOptions = useMemo(() => {
         return [...options].sort((a, b) => {
@@ -43,7 +31,18 @@ export const FilterComponent = ({ filterText, options, callback, callbackEnter }
         <Autocomplete
             freeSolo
             inputValue={item}
-            onInputChange={(_, newValue) => setFilter(newValue)}
+            onInputChange={(_, newValue, reason) => {
+                if (reason === 'input') {
+                    setItem(newValue)
+                    callback(newValue)
+                }
+            }}
+            onChange={(_, newValue) => {
+                if (newValue && typeof newValue !== 'string') {
+                    callbackSelect(newValue)
+                    setItem('')
+                }
+            }}
             options={sortedOptions}
             groupBy={(option) => option.group || 'Uncategorized'}
             getOptionLabel={(option) => typeof option === 'string' ? option : option.name}
@@ -53,7 +52,7 @@ export const FilterComponent = ({ filterText, options, callback, callbackEnter }
                     {...params}
                     label="Search"
                     variant="outlined"
-                    onKeyDown={e => checkEnter(e)}
+                    // onKeyDown={e => checkEnter(e)}
                     InputProps={{
                         ...params.InputProps,
                         startAdornment: (
