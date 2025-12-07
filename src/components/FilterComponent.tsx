@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { TextField, InputAdornment, IconButton, Autocomplete } from '@mui/material';
+import { TextField, InputAdornment, IconButton, Autocomplete, List, ListItem, ListItemText } from '@mui/material';
 import { MyIcon } from './MyIcon';
 import { TodoItem, TodoMainItem } from '../models/TodoItems';
 
@@ -27,6 +27,24 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect 
         });
     }, [options]);
 
+    // Filter options based on current input
+    const filteredOptions = useMemo(() => {
+        if (!item) return sortedOptions;
+        const filterUpper = item.toUpperCase();
+        return sortedOptions.filter(option => 
+            option.name.toUpperCase().includes(filterUpper)
+        );
+    }, [sortedOptions, item]);
+
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' && filteredOptions.length === 1) {
+            event.preventDefault();
+            callbackSelect(filteredOptions[0]);
+            setItem('');
+            callback('');
+        }
+    };
+
     return (
         <Autocomplete
             freeSolo
@@ -46,13 +64,31 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect 
             options={sortedOptions}
             groupBy={(option) => option.group || 'Uncategorized'}
             getOptionLabel={(option) => typeof option === 'string' ? option : option.name}
+            renderOption={(props, option) => {
+                const { key, ...otherProps } = props;
+                const uniqueKey = 'id' in option ? option.id : option.listid;
+                const isSingleMatch = filteredOptions.length === 1 && filteredOptions[0] === option;
+                return (
+                    <li 
+                        key={uniqueKey} 
+                        {...otherProps}
+                        style={{
+                            ...otherProps.style,
+                            backgroundColor: isSingleMatch ? '#4caf50' : undefined,
+                            color: isSingleMatch ? 'white' : undefined,
+                        }}
+                    >
+                        {option.name}
+                    </li>
+                );
+            }}
             fullWidth
             renderInput={(params) => (
                 <TextField
                     {...params}
                     label="Search"
                     variant="outlined"
-                    // onKeyDown={e => checkEnter(e)}
+                    onKeyDown={handleKeyDown}
                     InputProps={{
                         ...params.InputProps,
                         startAdornment: (
@@ -68,7 +104,10 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect 
                                 {item.length > 0 && (
                                     <InputAdornment position="end">
                                         <IconButton
-                                            onClick={() => setFilter("")}
+                                            onClick={() => {
+                                                setItem("");
+                                                callback("");
+                                            }}
                                             size="small"
                                         >
                                             <MyIcon icon="clear" />
