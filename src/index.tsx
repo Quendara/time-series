@@ -155,8 +155,9 @@ const App = () => {
 
 
         <Router>
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', height: "55px" }} >
             <Auth jwtTocken={jwtTocken} authSuccessCallback={authSuccessCallback} >
+
 
               <NavLink key={"nl_" + 1332} to={"/"}  >
                 <IconButton sx={cssClasses.title}><Icon  >home</Icon></IconButton>

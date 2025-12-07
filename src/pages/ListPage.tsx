@@ -146,7 +146,8 @@ export const ListPage = (props: ListProps) => {
     }
 
 
-    const filteredTodos = filterCompleted(props.todos, hideCompleted, filterText)
+    // const filteredTodos = filterCompleted(props.todos, hideCompleted, filterText)
+    const filteredTodos = filterCompleted(props.todos, hideCompleted, "" ); // ignore filterText here, as we handle it in FilterComponent
 
 
     const createLists = (items: TodoItem[]) => {
@@ -295,7 +296,7 @@ export const ListPage = (props: ListProps) => {
 
             {(filteredTodos.length === 1 && filterText.length > 0) && (
                 <>
-                    <Grid container p={2} spacing={2} justifyContent="center">
+                    <Grid sx={{ position:"absolute", top:"300px", zIndex: 1300}} container p={2} spacing={2} justifyContent="center">
                         <Grid item xs={11} md={6}  >
                             <MyCardBlur>
                                 <CardContent>
