@@ -403,7 +403,7 @@ export const MainNavigation = (props: MainNavigationProps) => {
                                     <FilterComponent 
                                         filterText={filterText} 
                                         options={context.todos || []}
-                                        callback={callbackFilter} callbackEnter={callbackEnter} />
+                                        callback={callbackFilter} />
                                 </Grid>
                                 <Grid item xs={5} lg={6} >
                                     <Calendar />

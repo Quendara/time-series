@@ -12,6 +12,7 @@ import { UpdateTodosInput } from "../API"
 import { TodoItem, TodoMainItem } from "../models/TodoItems"
 import { TodoListType } from "../components/List"
 import { TodoContext, TodoProvider } from '../context/TodoProvider';
+import { ListPage_Shopping } from './ListPage_Shopping';
 
 interface ListProps {
     lists: TodoMainItem[];
@@ -65,12 +66,12 @@ export const ListGraphInternal = ({ lists, username, horizontally, listid, listt
     const context = useContext(TodoContext)
 
     const navigate = useNavigate();
-    
+
     useEffect(() => {
 
-        
+
         // context.feedTodoes( items )
-        context.fetchTodos( listid )
+        context.fetchTodos(listid)
         console.log("useEffect.fetchTodos", listid)
 
         // dispatch(UpdateState(items))
@@ -82,18 +83,18 @@ export const ListGraphInternal = ({ lists, username, horizontally, listid, listt
     }
 
     async function toggleFunction(todoid: string) {
-        context.toggleTodo( todoid )
+        context.toggleTodo(todoid)
         // dispatch(ToggleItem(todoid))
     }
 
     async function uncheckFunction(todoid: string) {
-        context.uncheckFunction( todoid )
- 
+        context.uncheckFunction(todoid)
+
         // dispatch(UncheckItem(todoid))
     }
 
     async function updateFunction(inputObject: UpdateTodosInput) {
-        context.updateTodo( inputObject )
+        context.updateTodo(inputObject)
         // dispatch(UpdateItem(inputObject))
     };
 
@@ -114,20 +115,40 @@ export const ListGraphInternal = ({ lists, username, horizontally, listid, listt
             // datum: ""
         }
 
-        context.appendTodo( input, username )
+        context.appendTodo(input, username)
 
         // dispatch(AddItem(input))
     }
 
     async function removeItemHandle(todoid: string) {
         // dispatch(DeleteItem(todoid))
-        context.deleteTodo( todoid )
+        context.deleteTodo(todoid)
 
         // await API.graphql(graphqlOperation(deleteTodos, { input: { id: "" + todoid } }));
     };
 
+    if (listtype === TodoListType.SHOPPING) {
+        return (
+            <ListPage_Shopping
+                todos={context.todos}
+                listtype={listtype}
+                listid={listid}
+                addItemHandle={addItemHandle}
+                horizontally={horizontally}
+                selectedItemId={itemid}
+                color={color}
+                removeItemHandle={removeItemHandle}
+                updateFunction={updateFunction}
+                toggleFunction={toggleFunction}
+                uncheckFunction={uncheckFunction}
+                lists={lists}
+                username={username}
+            />
+        )
+    }
 
     return (
+
         <ListPage
             todos={context.todos}
             listtype={listtype}

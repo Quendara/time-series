@@ -6,13 +6,14 @@ import { TodoItem, TodoMainItem } from '../models/TodoItems';
 
 interface FilterProps {
     filterText: string;
-    options: TodoItem[] | TodoMainItem[]; 
+    options: TodoItem[] | TodoMainItem[];
     callback: (text: string) => void;
     callbackSelect?: (item: TodoItem | TodoMainItem) => void;
-    callbackEnter?: () => void;
+    callbackNotInOptions?: (text: string) => void;
+
 };
 
-export const FilterComponent = ({ filterText, options, callback, callbackSelect, callbackEnter }: FilterProps) => {
+export const FilterComponent = ({ filterText, options, callback, callbackSelect, callbackNotInOptions }: FilterProps) => {
 
     const [item, setItem] = useState(filterText);
 
@@ -32,22 +33,30 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect,
     const filteredOptions = useMemo(() => {
         if (!item) return sortedOptions;
         const filterUpper = item.toUpperCase();
-        return sortedOptions.filter(option => 
+        return sortedOptions.filter(option =>
             option.name.toUpperCase().includes(filterUpper)
         );
     }, [sortedOptions, item]);
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter' && filteredOptions.length === 1) {
-            event.preventDefault();
-            if (callbackSelect) {
-                callbackSelect(filteredOptions[0]);
+        if (event.key === 'Enter') {
+
+            if (filteredOptions.length === 1) {
+                event.preventDefault();
+                if (callbackSelect) {
+                    callbackSelect(filteredOptions[0]);
+                }
+                setItem('');
+                callback('');
             }
-            if (callbackEnter) {
-                callbackEnter();
+
+            if (filteredOptions.length === 0) {
+                if (callbackNotInOptions) {
+                    callbackNotInOptions(item);
+                }
             }
-            setItem('');
-            callback('');
+
+
         }
     };
 
@@ -76,8 +85,8 @@ export const FilterComponent = ({ filterText, options, callback, callbackSelect,
                 const uniqueKey = 'id' in option ? option.id : (option as TodoMainItem).listid;
                 const isSingleMatch = filteredOptions.length === 1 && filteredOptions[0] === option;
                 return (
-                    <li 
-                        key={uniqueKey} 
+                    <li
+                        key={uniqueKey}
                         {...props}
                         style={{
                             ...(props as React.HTMLAttributes<HTMLLIElement>).style,

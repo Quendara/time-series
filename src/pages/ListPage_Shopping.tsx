@@ -28,26 +28,12 @@ import { Calendar } from '../components/Calendar';
 import { useNavigate } from 'react-router-dom';
 import { TodoMainContext } from '../context/TodoMainProvider';
 import { removeMainTodoItemById } from '../context/TodoMainProviderFcns';
+import { ListProps, ListPage } from './ListPage';
 
 
-export interface ListProps {
-    todos: TodoItem[];
-    listtype: TodoListType;
-    listid: string;
-    selectedItemId?: string;
-    horizontally: boolean;
-    color: string;
-    addItemHandle: (linkname: string, linkUrl: string, groupName: string) => void;
-    // getItem: (id:string) => any;
-    removeItemHandle: (id: string) => void;
-    updateFunction: (input: UpdateTodosInput) => void;
-    toggleFunction: (id: string) => void;
-    uncheckFunction: (id: string) => void;
-    lists: TodoMainItem[];
-    username: string;
-}
 
-export const ListPage = (props: ListProps) => {
+export const ListPage_Shopping = (props: ListProps) => {
+
 
     const navigate = useNavigate();
     const context = useContext(TodoMainContext)
@@ -56,11 +42,10 @@ export const ListPage = (props: ListProps) => {
     const [selectedItemId, setSelectedItemId] = useState("");
 
     const [edit, setEdit] = useState(false);
+    const [addNew, setAddNew] = useState(false);
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
     const [stateHorizontally, setHorizontally] = useState(props.horizontally);
-
-    const [showElementOnly, setShowElementOnly] = useState(false);
 
 
     const { scrollX, scrollY } = useWindowScrollPositions()
@@ -139,15 +124,12 @@ export const ListPage = (props: ListProps) => {
             // setSelectedItemId("")
         }
 
-        // if()
-        // 
-
         return filteredItems
     }
 
 
     // const filteredTodos = filterCompleted(props.todos, hideCompleted, filterText)
-    const filteredTodos = filterCompleted(props.todos, hideCompleted, "" ); // ignore filterText here, as we handle it in FilterComponent
+    const filteredTodos = filterCompleted(props.todos, hideCompleted, ""); // ignore filterText here, as we handle it in FilterComponent
 
 
     const createLists = (items: TodoItem[]) => {
@@ -181,7 +163,7 @@ export const ListPage = (props: ListProps) => {
                                         items={sortArrayBy(item.listitems, "name")}
                                         groups={groups}
                                         addItemHandle={props.addItemHandle}
-                                        type={props.listtype}
+                                        type={TodoListType.TODO}
                                         selectFunction={selectHandle}
                                         selectedItemId={selectedItemId}
                                         removeItemHandle={props.removeItemHandle}
@@ -229,8 +211,8 @@ export const ListPage = (props: ListProps) => {
             </Snackbar>
 
             <MyCardBlur>
-                <Grid container alignItems="center" justifyContent="flex-start" >
-                    <Grid item md={4} xs={2} >
+                <Grid container alignItems="center" justifyContent="flex-start" p={1} >
+                    <Grid item md={3} xs={2} >
                         <ListItem >
                             <ListItemAvatar >
                                 <Avatar style={{ marginTop: "10px", marginBottom: "10px", backgroundColor: props.color }}><MyIcon icon={currentList?.icon} /></Avatar>
@@ -252,7 +234,7 @@ export const ListPage = (props: ListProps) => {
                         {props.todos.length > 5 &&
                             < >
                                 <Grid container alignItems="center" justifyContent="flex-start" spacing={2} >
-                                    <Grid item xs={9} >
+                                    <Grid item xs={8} >
                                         {edit ? (
                                             <AddForm
                                                 name=""
@@ -263,19 +245,21 @@ export const ListPage = (props: ListProps) => {
                                                 groups={mapGenericToStringGroup(findUnique(props.todos, "group", false))} ></AddForm>
                                         ) : (
 
-                                            <FilterComponent 
-                                                filterText={filterText} 
-                                                callback={callbackFilter} 
-                                                callbackSelect={callbackSelect} 
+                                            <FilterComponent
+                                                filterText={filterText}
+                                                callback={callbackFilter}
+                                                callbackSelect={callbackSelect}
+                                                callbackNotInOptions={(val) => {
+                                                    setFilterText(val);
+                                                    setAddNew(true);
+                                                }}
+
                                                 options={props.todos}
-                                                />  
+                                            />
                                         )}
                                     </Grid>
-                                    <Grid item xs={3}  >
+                                    <Grid item xs={4}  >
                                         <Grid container justifyContent="flex-end">
-                                            <IconButton onClick={() => setShowElementOnly(!showElementOnly)} >
-                                                <MyIcon icon={showElementOnly ? "close_fullscreen" : "open_in_full"}></MyIcon>
-                                            </IconButton>
 
                                             <IconButton color={stateHorizontally ? "primary" : "default"} onClick={() => setHorizontally(!stateHorizontally)} >
                                                 <MyIcon icon="text_rotation_none"></MyIcon>
@@ -285,34 +269,53 @@ export const ListPage = (props: ListProps) => {
                                             </IconButton>
                                         </Grid>
                                     </Grid>
-
                                 </Grid>
                             </>
                         }
 
                     </Grid>
                 </Grid>
+                <Grid container alignItems="center" justifyContent="flex-start" spacing={2} pb={2} >
+                    <Grid item xs={2} md={3} spacing={2}  ></Grid>
+
+                    <Grid item xs={3} spacing={2}  >
+                        <Card onClick={() => {
+                            setHorizontally(false);
+                            setHideCompleted(true);
+                        }} sx={{ cursor: "pointer" }} >
+                            <ListItem >
+                                <ListItemAvatar >
+                                    <Avatar style={{ marginTop: "10px", marginBottom: "10px", backgroundColor: props.color }}>
+                                        <MyIcon icon="shopping_cart_outlined" />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <Hidden mdDown>
+                                    <ListItemText primary={"Einkaufen"} secondary={currentList?.group} />
+                                </Hidden>
+                            </ListItem>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={3}  >
+                        <Card onClick={() => {
+                            setHorizontally(true);
+                            setHideCompleted(false);
+                        }} sx={{ cursor: "pointer" }} >
+                            <ListItem >
+                                <ListItemAvatar >
+                                    <Avatar style={{ marginTop: "10px", marginBottom: "10px" }}>
+                                        <MyIcon icon="checklist" />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <Hidden mdDown>
+                                    <ListItemText primary={"In Liste stöbern"} secondary={currentList?.group} />
+                                </Hidden>
+                            </ListItem>
+                        </Card>
+                    </Grid>
+                </Grid>
             </MyCardBlur>
 
-            {(filteredTodos.length === 1 && filterText.length > 0) && (
-                <>
-                    <Grid sx={{ position:"absolute", top:"300px", zIndex: 1300}} container p={2} spacing={2} justifyContent="center">
-                        <Grid item xs={11} md={6}  >
-                            <MyCardBlur>
-                                <CardContent>
-                                    <Typography variant="subtitle2" sx={{ fontSize: "2em" }} >
-                                        {filteredTodos[0].name}
-                                    </Typography>
-                                    <Typography>x
-                                        Press Enter to check item <MyIcon icon="task_alt" />
-                                    </Typography>
-                                </CardContent>
-                            </MyCardBlur>
-                        </Grid>
-                    </Grid>
-                </>
-            )}
-            {filteredTodos.length === 0 && (
+            {addNew && (
                 <>
                     <Grid container p={2} spacing={2} justifyContent="center">
                         <Grid item xs={11} md={6}  >
@@ -334,108 +337,50 @@ export const ListPage = (props: ListProps) => {
                 </>
             )}
 
-            {(showElementOnly && selectedItemId) ?
-                <Grid container spacing={2} >
-                    <Grid item xs={12}  >
-                        <DetailsById
-                            itemid={selectedItemId}
-                            readOnly={false}
-                            lists={props.lists}
-                            listtype={props.listtype}
-                            action={
-                                <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
-                                    <MyIcon icon="close" />
-                                </IconButton>
-                            }
-                            username={props.username}
-                        />
+            {filteredTodos.length === 0 && (
+                <Grid container p={2} spacing={2} justifyContent="center">
+                    <Grid item xs={11} md={6}  >
+                        <MyCardBlur>
+                            <CardContent>
+                               <Typography variant='h4' align='center'>🛒 All done!</Typography>
+                               <Typography variant='body1' align='center'>No more shopping items on your list.</Typography>
+                            </CardContent>
+                        </MyCardBlur>
                     </Grid>
                 </Grid>
-                :
-                <>
-                    <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
-                        <Grid container spacing={2} >
 
-                            {props.listtype === TodoListType.TODO_SIMPLE ? (
-                                <Grid item xs={12}  >
-                                    {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                                </Grid>
-                            ) : (
-                                <Grid item md={selectedItemId ? (stateHorizontally ? 8 : 4) : 12}
-                                    sm={selectedItemId ? (stateHorizontally ? 6 : 6) : 12}
-                                    xs={11}  >
-                                    <div className={"my-container-content"} >
-                                        {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                                    </div>
-                                </Grid>
-                            )
-                            }
+            )}
 
-                            {(selectedItemId && filterText.length === 0) &&
-                                <>
-                                    <Grid item md={stateHorizontally ? 4 : 8} sm={stateHorizontally ? 6 : 6} xs={12} >
 
-                                        <div className={"my-container-content"} >
-                                            <DetailsById
-                                                itemid={selectedItemId}
-                                                readOnly={false}
+            <Box p={1} sx={{ display: { sm: 'block', xs: 'none', paddingTop: "1em" } }} >
+                <Grid container spacing={2} >
+                    <Grid item xs={12}  >
+                        {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                    </Grid>
+                </Grid >
+            </Box>
 
-                                                lists={props.lists}
-                                                listtype={props.listtype}
-                                                action={
-                                                    <IconButton onClick={() => { setSelectedItemId("") }} aria-label="open">
-                                                        <MyIcon icon="close" />
-                                                    </IconButton>
-                                                }
-                                                username={props.username}
-                                            />
+            <Box p={1} sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
 
-                                        </div>
-                                        <div>Scroll position is ({scrollX}, {scrollY})</div>
-                                    </Grid>
-                                </>
-                            }
-                        </Grid >
-                    </Box>
+                <HorizontallyGrid horizontally={true}  >
+                    <HorizontallyItem key={"Listsa"} horizontally={true} >
+                        <Grid item xs={12}>
+                            <div className={"my-container-content"} >
+                                {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
+                            </div>
+                        </Grid>
+                    </HorizontallyItem>
 
-                    <Box p={1} sx={{ display: { sm: 'none', xs: 'block' }, position: "relative" }}  >
+                </HorizontallyGrid>
 
-                        <HorizontallyGrid horizontally={true}  >
-                            <HorizontallyItem key={"Listsa"} horizontally={true} >
-                                <Grid item xs={12}>
-                                    <div className={"my-container-content"} >
-                                        {props.todos.length > 0 && <> {createLists(filteredTodos)} </>}
-                                    </div>
-                                </Grid>
-                            </HorizontallyItem>
-                            <HorizontallyItem key={"Listsb"} horizontally={true} >
-                                {(selectedItemId && filterText.length === 0) &&
-                                    <>
-                                        <Grid item xs={12} >
-
-                                            <div className={"my-container-content details-xs"} style={{ position: "relative" }} >
-                                                <DetailsById
-                                                    itemid={selectedItemId}
-                                                    readOnly={false}
-                                                    lists={props.lists}
-                                                    listtype={props.listtype}
-                                                    action={<></>}
-                                                    username={props.username}
-                                                />
-
-                                            </div>
-                                            <div>Scroll position is ({scrollX}, {scrollY})</div>
-                                        </Grid>
-                                    </>
-                                }
-                            </HorizontallyItem>
-                        </HorizontallyGrid>
-
-                    </Box>
-                </>
-            }
-
+            </Box>
         </>
+
+
+
     )
 
-} 
+
+
+
+}

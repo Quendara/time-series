@@ -32,6 +32,7 @@ import { UpdateTodosInput } from "../API"
 export enum TodoListType {
     TODO = 'todo',
     TODO_SIMPLE = 'todo_simple',
+    SHOPPING = 'shopping',
     MESSAGE = 'message',
     LINKS = 'links',
     UNDEFINED = 'undefined',
