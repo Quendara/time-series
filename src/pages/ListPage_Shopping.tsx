@@ -29,7 +29,11 @@ import { useNavigate } from 'react-router-dom';
 import { TodoMainContext } from '../context/TodoMainProvider';
 import { removeMainTodoItemById } from '../context/TodoMainProviderFcns';
 import { ListProps, ListPage } from './ListPage';
+import { b } from 'vite/dist/node/types.d-aGj9QkWt';
 
+
+
+export type ShoppingMode = 'einkaufen' | 'stöbern' | 'none';
 
 
 export const ListPage_Shopping = (props: ListProps) => {
@@ -41,11 +45,16 @@ export const ListPage_Shopping = (props: ListProps) => {
     // const [selectedItem, setSelectedItem] = useState(undefined);
     const [selectedItemId, setSelectedItemId] = useState("");
 
+
+    const [shoppingMode, setShoppingModeVar] = useState<ShoppingMode>('einkaufen'); 
+
     const [edit, setEdit] = useState(false);
     const [addNew, setAddNew] = useState(false);
     const [filterText, setFilterText] = useState("");
     const [hideCompleted, setHideCompleted] = useState(false);
     const [stateHorizontally, setHorizontally] = useState(props.horizontally);
+
+
 
 
     const { scrollX, scrollY } = useWindowScrollPositions()
@@ -58,6 +67,23 @@ export const ListPage_Shopping = (props: ListProps) => {
         }
         setSuccessSnackbarMessage("");
     };
+
+    const setShoppingMode = (mode: ShoppingMode) => {
+
+        switch (mode) {
+            case 'einkaufen':
+                setHorizontally(false);
+                setHideCompleted(true);
+                break;
+            case 'stöbern':
+                setHorizontally(true);
+                setHideCompleted(false);
+                break;
+            default:
+                break;
+        }
+        setShoppingModeVar(mode);
+    }
 
     useEffect(
         () => {
@@ -198,6 +224,15 @@ export const ListPage_Shopping = (props: ListProps) => {
         navigate("/")
     }
 
+    const getSelectedTwClassNames = ( selected : boolean ) => {
+        let classNames = " backdrop-blur-xs cursor-pointer hover:scale-105 transition-all duration-200 ease-in-out "
+
+        if( selected ){
+            classNames += " text-sky-400 "
+        }
+        return  classNames
+    }
+
     return (
         <>
             <Snackbar
@@ -280,34 +315,34 @@ export const ListPage_Shopping = (props: ListProps) => {
 
                     <Grid item xs={3} spacing={2}  >
                         <Card onClick={() => {
-                            setHorizontally(false);
-                            setHideCompleted(true);
-                        }} sx={{ cursor: "pointer" }} >
+                            setShoppingMode('einkaufen');                           
+                        }} 
+                        className={ getSelectedTwClassNames(shoppingMode==='einkaufen')}  >
                             <ListItem >
                                 <ListItemAvatar >
-                                    <Avatar style={{ marginTop: "10px", marginBottom: "10px", backgroundColor: props.color }}>
-                                        <MyIcon icon="shopping_cart_outlined" />
+                                     
+                                    <Avatar sx={  shoppingMode==='einkaufen' ? {backgroundColor: props.color} : undefined  } >
+                                        <MyIcon className={ shoppingMode==='einkaufen' ? "text-sky-300 " : ""  } icon="shopping_cart_outlined" />
                                     </Avatar>
                                 </ListItemAvatar>
                                 <Hidden mdDown>
-                                    <ListItemText primary={"Einkaufen"} secondary={currentList?.group} />
+                                    <ListItemText className={ shoppingMode==='einkaufen' ? "text-sky-300 " : ""  } primary={"Einkaufen"} secondary={"im Laden"} />
                                 </Hidden>
                             </ListItem>
                         </Card>
                     </Grid>
                     <Grid item xs={3}  >
                         <Card onClick={() => {
-                            setHorizontally(true);
-                            setHideCompleted(false);
-                        }} sx={{ cursor: "pointer" }} >
+                            setShoppingMode('stöbern');
+                        }} className={ getSelectedTwClassNames(shoppingMode==='stöbern')} >
                             <ListItem >
                                 <ListItemAvatar >
-                                    <Avatar style={{ marginTop: "10px", marginBottom: "10px" }}>
+                                    <Avatar sx={  shoppingMode==='stöbern' ? {backgroundColor: props.color} : undefined  } >
                                         <MyIcon icon="checklist" />
                                     </Avatar>
                                 </ListItemAvatar>
                                 <Hidden mdDown>
-                                    <ListItemText primary={"In Liste stöbern"} secondary={currentList?.group} />
+                                    <ListItemText className={ shoppingMode==='stöbern' ? "text-sky-300 " : ""  } primary={"In Liste stöbern"} secondary={"plane deinen Einkauf"} />
                                 </Hidden>
                             </ListItem>
                         </Card>
